@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Cart | NicyFoods</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream:    '#FBF1E2',
+            jaggery:  '#5C3A25',
+            ink:      '#3A2417',
+            turmeric: '#E8A33D',
+            marigold: '#F2C14E',
+            kumkum:   '#A63A2E',
+            herbal:   '#5F7A4F',
+          },
+          fontFamily: {
+            display: ['"Rozha One"', 'serif'],
+            body: ['Poppins', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --cream:#FBF1E2; --jaggery:#5C3A25; --ink:#3A2417;
+      --turmeric:#E8A33D; --marigold:#F2C14E; --kumkum:#A63A2E; --herbal:#5F7A4F;
+    }
+    *{box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{ font-family:'Poppins', sans-serif; background:var(--cream); color:var(--ink); overflow-x:hidden; }
+    h1,h2,h3,.font-display{ font-family:'Rozha One', serif; letter-spacing:.01em; }
+
+    .reveal{ opacity:0; transform:translateY(20px); transition:opacity .6s cubic-bezier(.16,.84,.44,1), transform .6s cubic-bezier(.16,.84,.44,1); }
+    .reveal.in{ opacity:1; transform:translateY(0); }
+
+    .grow-underline{ position:relative; display:inline-block; }
+    .grow-underline::after{
+      content:''; position:absolute; left:50%; bottom:-8px; height:2px; width:0;
+      background:linear-gradient(90deg, var(--turmeric), var(--kumkum));
+      transition:width .7s cubic-bezier(.16,.84,.44,1) .1s;
+    }
+    .grow-underline.in::after{ width:56px; margin-left:-28px; }
+
+    .torn-edge{
+      height:20px; background:var(--cream);
+      -webkit-mask-image: linear-gradient(135deg, transparent 10px, #000 10px), linear-gradient(-135deg, transparent 10px, #000 10px);
+      -webkit-mask-size: 20px 20px; -webkit-mask-position: 0 0, 10px 0; -webkit-mask-repeat: repeat-x;
+      mask-image: linear-gradient(135deg, transparent 10px, #000 10px), linear-gradient(-135deg, transparent 10px, #000 10px);
+      mask-size: 20px 20px; mask-position: 0 0, 10px 0; mask-repeat: repeat-x;
+    }
+
+    .kolam-divider path, .kolam-divider circle{
+      stroke-dasharray: 340; stroke-dashoffset: 340;
+      transition: stroke-dashoffset 1.4s cubic-bezier(.16,.84,.44,1);
+    }
+    .kolam-divider.in path, .kolam-divider.in circle{ stroke-dashoffset:0; }
+
+    /* ---------- cart item rows: thali-style ---------- */
+    .cart-row{
+      background:#FFFDF9;
+      box-shadow: inset 0 0 0 1px rgba(92,58,37,.06), 0 1px 2px rgba(92,58,37,.06);
+      transition: box-shadow .3s ease;
+    }
+    .cart-row:hover{ box-shadow: inset 0 0 0 1px rgba(92,58,37,.09), 0 10px 24px -14px rgba(92,58,37,.3); }
+    .cart-row.removing{ opacity:0; transform:translateX(24px); transition:opacity .3s ease, transform .3s ease; }
+
+    .qty-stepper{ display:flex; align-items:center; border:1.5px solid rgba(92,58,37,.15); border-radius:.6rem; overflow:hidden; }
+    .qty-btn{
+      width:32px; height:32px; display:flex; align-items:center; justify-content:center;
+      color:var(--jaggery); font-weight:700; transition:background-color .2s ease;
+    }
+    .qty-btn:hover{ background:rgba(166,58,46,.08); }
+    .qty-val{ width:36px; text-align:center; font-weight:600; font-size:.9rem; }
+
+    .remove-link{ color:#9a8a7c; transition:color .2s ease; }
+    .remove-link:hover{ color:var(--kumkum); }
+
+    /* ---------- order summary ---------- */
+    .summary-card{
+      background:#FFFDF9;
+      box-shadow: inset 0 0 0 1px rgba(92,58,37,.06), 0 4px 16px rgba(92,58,37,.08);
+    }
+
+    .cta-btn{ position:relative; overflow:hidden; }
+    .cta-btn::before{
+      content:''; position:absolute; top:0; left:-60%; width:40%; height:100%;
+      background:linear-gradient(115deg, transparent, rgba(255,255,255,.55), transparent);
+      transform:skewX(-20deg); transition:left .8s ease;
+    }
+    .cta-btn:hover::before{ left:130%; }
+
+    /* ---------- empty state ---------- */
+    .empty-cart{ animation: fadeUp .6s cubic-bezier(.16,.84,.44,1) both; }
+    @keyframes fadeUp{ from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
+    .empty-icon{
+      animation: sway 3.5s ease-in-out infinite;
+      transform-origin: 50% 15%;
+    }
+    @keyframes sway{ 0%,100%{ transform:rotate(-4deg);} 50%{ transform:rotate(4deg);} }
+
+    /* ---------- background bubble drops (matches site-wide signature) ---------- */
+    .bubble-field{ position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
+    .ladoo-particle{
+      position:absolute; border-radius:50%;
+      background:radial-gradient(circle at 32% 26%, #FDE7B0, #F2C14E 45%, #C8791F 80%, #A63A2E 100%);
+      box-shadow: 0 0 18px 3px rgba(232,163,61,.45), inset -2px -3px 6px rgba(92,58,37,.35), inset 2px 3px 5px rgba(255,255,255,.55);
+      opacity:.55;
+    }
+    .ladoo-particle.dim{ opacity:.35; }
+    .bubble-rise{ animation: bubbleRise var(--dur,9s) ease-in-out infinite; animation-delay: var(--delay,0s); }
+    .bubble-rise-alt{ animation: bubbleRiseAlt var(--dur,11s) ease-in-out infinite; animation-delay: var(--delay,0s); }
+    @keyframes bubbleRise{
+      0%{ transform:translate(0,0) scale(.85); opacity:0; }
+      12%{ opacity:1; }
+      50%{ transform:translate(-8px,-30px) scale(1.08); opacity:1; }
+      85%{ opacity:.6; }
+      100%{ transform:translate(6px,-64px) scale(.9); opacity:0; }
+    }
+    @keyframes bubbleRiseAlt{
+      0%{ transform:translate(0,0) scale(.85); opacity:0; }
+      12%{ opacity:1; }
+      50%{ transform:translate(10px,-28px) scale(1.1); opacity:1; }
+      85%{ opacity:.6; }
+      100%{ transform:translate(-8px,-58px) scale(.9); opacity:0; }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
+      .reveal{ opacity:1 !important; transform:none !important; }
+    }
+  </style>
+</head>
+<body class="bg-cream">
+
+  <div id="navbar-placeholder"></div>
+
+  <!-- ============ PAGE HEADER ============ -->
+  <section class="relative overflow-hidden bg-jaggery/[0.04] py-14 md:py-16">
+    <div class="bubble-field">
+      <div class="ladoo-particle dim w-8 h-8 bubble-rise" style="top:70%; left:6%; --dur:10s; --delay:.3s;"></div>
+      <div class="ladoo-particle w-5 h-5 bubble-rise-alt" style="top:80%; right:8%; --dur:9s; --delay:1.5s;"></div>
+    </div>
+    <div class="relative max-w-6xl mx-auto px-6 text-center">
+      <p class="reveal text-kumkum text-xs tracking-[0.3em] uppercase font-semibold mb-3">
+        <a href="index.html" class="hover:underline">Home</a> / Cart
+      </p>
+      <h1 class="reveal grow-underline font-display text-3xl sm:text-4xl text-jaggery">Your Cart</h1>
+    </div>
+  </section>
+
+  <div class="flex justify-center py-2 bg-jaggery/[0.04]">
+    <svg class="kolam-divider w-32 h-8" viewBox="0 0 200 40" fill="none">
+      <path d="M2 20 Q 50 2, 100 20 T 198 20" stroke="#E8A33D" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="2" cy="20" r="3" fill="#A63A2E"/><circle cx="100" cy="20" r="3" fill="#A63A2E"/><circle cx="198" cy="20" r="3" fill="#A63A2E"/>
+    </svg>
+  </div>
+
+  <!-- ============ CART CONTENT ============ -->
+  <section class="max-w-6xl mx-auto px-6 py-12 md:py-16">
+    <div id="cartLoaded" class="hidden grid lg:grid-cols-[1fr_360px] gap-8 items-start">
+
+      <!-- Items list -->
+      <div>
+        <div class="flex items-center justify-between mb-5">
+          <p id="itemCountLabel" class="text-slate-500 text-sm"></p>
+          <a href="products.html" class="text-sm font-semibold text-kumkum hover:underline">Continue Shopping</a>
+        </div>
+        <div id="cartRows" class="space-y-4"></div>
+      </div>
+
+      <!-- Order summary -->
+      <aside class="summary-card rounded-2xl p-6 lg:sticky lg:top-24">
+        <h2 class="font-display text-xl text-jaggery mb-5">Order Summary</h2>
+        <div class="flex items-center justify-between text-sm text-slate-600 mb-2">
+          <span>Items</span>
+          <span id="summaryItemCount">0</span>
+        </div>
+        <div class="flex items-center justify-between text-sm text-slate-600 mb-4 pb-4 border-b border-jaggery/10">
+          <span>Subtotal</span>
+          <span id="summarySubtotal" class="font-semibold text-jaggery">₹0</span>
+        </div>
+        <div class="flex items-center justify-between mb-6">
+          <span class="font-semibold text-jaggery">Total</span>
+          <span id="summaryTotal" class="font-display text-2xl text-kumkum">₹0</span>
+        </div>
+        <a id="checkoutBtn" href="#" target="_blank" rel="noopener"
+           class="cta-btn flex items-center justify-center gap-2 w-full bg-gradient-to-r from-turmeric to-kumkum text-white font-semibold py-3.5 rounded-xl hover:opacity-95 transition-opacity">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1s-.7.9-.9 1-.3.2-.6.1c-.3-.1-1.2-.5-2.3-1.5-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.3-.4.1-.2 0-.4 0-.5C10.3 9 9.8 7.7 9.6 7.2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.3-.1-.1-.3-.2-.6-.3z"/><path d="M12 2C6.5 2 2 6.5 2 12c0 1.9.5 3.6 1.5 5.2L2 22l4.9-1.3c1.5.8 3.2 1.3 5.1 1.3 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.3c-1.7 0-3.4-.5-4.8-1.3l-.3-.2-3.5.9.9-3.4-.2-.4C3.4 14.5 3 13.3 3 12c0-5 4-9 9-9s9 4 9 9-4 9-9 9z"/></svg>
+          Checkout on WhatsApp
+        </a>
+        <p class="text-xs text-slate-400 text-center mt-3">Courier charges are added based on the weight you choose — confirmed with you on WhatsApp before payment.</p>
+      </aside>
+    </div>
+
+    <!-- Empty state -->
+    <div id="cartEmpty" class="hidden empty-cart flex flex-col items-center text-center py-16">
+      <svg class="empty-icon w-16 h-16 text-turmeric mb-5" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2c1 3-2 4-2 7a3 3 0 006 0c0-1-1-2-1-2 2 1 4 3.5 4 6.5A7 7 0 015 13.5C5 9 8 7 8 4c1 1 1.5 2 1.5 3.5C10.5 5 11 3.5 12 2z"/>
+      </svg>
+      <h2 class="font-display text-2xl text-jaggery mb-2">Your cart is empty</h2>
+      <p class="text-slate-500 max-w-sm mb-8">Looks like you haven't added any ladoos yet. Explore our handmade collection and find your favorite.</p>
+      <a href="products.html" class="cta-btn inline-block bg-gradient-to-r from-turmeric to-kumkum text-white font-semibold px-8 py-3 rounded-xl hover:opacity-95 transition-opacity">
+        Browse Products
+      </a>
+    </div>
+  </section>
+
+  <div class="torn-edge"></div>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="js/navbar.js"></script>
+  <script src="js/footer.js"></script>
+
+  <script>
+    /* ================= CART PAGE =================
+       Reads/writes the same localStorage schema already used on the
+       home page and navbar: nicy_cart_items (array of {id,name,img,price,qty})
+       and nicy_cart_count, and fires "nicy:counts-updated" so the navbar
+       badge (js/navbar.js) refreshes itself automatically. */
+    const CART_KEY = "nicy_cart_items";
+    // Your WhatsApp business number. You can include +, spaces, or dashes here —
+    // it gets cleaned up automatically before building the wa.me link below.
+    const WHATSAPP_NUMBER = "+918263001410";
+
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function getCart() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
+        return Array.isArray(raw) ? raw : [];
+      } catch (e) { return []; }
+    }
+
+    function saveCart(items) {
+      localStorage.setItem(CART_KEY, JSON.stringify(items));
+      const totalQty = items.reduce((sum, i) => sum + (i.qty || 1), 0);
+      localStorage.setItem("nicy_cart_count", String(totalQty));
+      window.dispatchEvent(new Event("nicy:counts-updated"));
+    }
+
+    function money(n) {
+      return "₹" + Math.round(n).toLocaleString("en-IN");
+    }
+
+    function renderCart() {
+      const items = getCart();
+      const loadedEl = document.getElementById("cartLoaded");
+      const emptyEl = document.getElementById("cartEmpty");
+      const rowsEl = document.getElementById("cartRows");
+
+      if (items.length === 0) {
+        loadedEl.classList.add("hidden");
+        emptyEl.classList.remove("hidden");
+        return;
+      }
+      loadedEl.classList.remove("hidden");
+      emptyEl.classList.add("hidden");
+
+      const totalQty = items.reduce((sum, i) => sum + (i.qty || 1), 0);
+      document.getElementById("itemCountLabel").textContent =
+        `${totalQty} item${totalQty === 1 ? "" : "s"} in your cart`;
+
+      rowsEl.innerHTML = items.map(item => {
+        const price = parseFloat(item.price) || 0;
+        const qty = item.qty || 1;
+        return `
+          <div class="cart-row rounded-2xl p-4 flex items-center gap-4" data-row="${item.id}">
+            <div class="w-20 h-20 rounded-xl overflow-hidden bg-orange-50 flex-shrink-0">
+              <img src="${item.img || ''}" alt="${item.name}" class="w-full h-full object-cover" onerror="this.style.display='none'">
+            </div>
+            <div class="flex-1 min-w-0">
+              <h3 class="font-display text-base sm:text-lg text-jaggery truncate">${item.name}</h3>
+              <p class="text-kumkum font-bold mt-0.5">${money(price)}</p>
+              <div class="flex items-center gap-4 mt-2">
+                <div class="qty-stepper">
+                  <button class="qty-btn" data-qty-minus="${item.id}" aria-label="Decrease quantity">−</button>
+                  <span class="qty-val">${qty}</span>
+                  <button class="qty-btn" data-qty-plus="${item.id}" aria-label="Increase quantity">+</button>
+                </div>
+                <button class="remove-link text-xs font-semibold" data-remove="${item.id}">Remove</button>
+              </div>
+            </div>
+            <div class="hidden sm:block text-right font-display text-lg text-jaggery flex-shrink-0">
+              ${money(price * qty)}
+            </div>
+          </div>`;
+      }).join("");
+
+      const subtotal = items.reduce((sum, i) => sum + (parseFloat(i.price) || 0) * (i.qty || 1), 0);
+      document.getElementById("summaryItemCount").textContent = totalQty;
+      document.getElementById("summarySubtotal").textContent = money(subtotal);
+      document.getElementById("summaryTotal").textContent = money(subtotal);
+
+      const lines = items.map(i =>
+        `🟠 *${i.name}* — Qty ${i.qty || 1} — ${money((parseFloat(i.price) || 0) * (i.qty || 1))}`
+      );
+      const msg =
+`Hi NicyFoods! 👋 I'd like to place an order:
+
+${lines.join("\n")}
+━━━━━━━━━━━━━━
+*Subtotal: ${money(subtotal)}*
+_Courier charges to be confirmed based on weight_
+
+Please confirm availability and the total with delivery. Thank you! 🙏`;
+
+      const phone = WHATSAPP_NUMBER.replace(/\D/g, "");
+      document.getElementById("checkoutBtn").href = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+    }
+
+    function changeQty(id, delta) {
+      const items = getCart();
+      const item = items.find(i => i.id === id);
+      if (!item) return;
+      item.qty = (item.qty || 1) + delta;
+      const next = item.qty > 0 ? items : items.filter(i => i.id !== id);
+      if (item.qty <= 0) {
+        const row = document.querySelector(`[data-row="${CSS.escape(id)}"]`);
+        if (row && !prefersReduced) {
+          row.classList.add("removing");
+          setTimeout(() => { saveCart(next); renderCart(); }, 280);
+          return;
+        }
+      }
+      saveCart(next);
+      renderCart();
+    }
+
+    function removeItem(id) {
+      const items = getCart().filter(i => i.id !== id);
+      const row = document.querySelector(`[data-row="${CSS.escape(id)}"]`);
+      if (row && !prefersReduced) {
+        row.classList.add("removing");
+        setTimeout(() => { saveCart(items); renderCart(); }, 280);
+        return;
+      }
+      saveCart(items);
+      renderCart();
+    }
+
+    document.getElementById("cartRows").addEventListener("click", (e) => {
+      const plus = e.target.closest("[data-qty-plus]");
+      const minus = e.target.closest("[data-qty-minus]");
+      const remove = e.target.closest("[data-remove]");
+      if (plus) changeQty(plus.dataset.qtyPlus, 1);
+      if (minus) changeQty(minus.dataset.qtyMinus, -1);
+      if (remove) removeItem(remove.dataset.remove);
+    });
+
+    // keep this tab's view in sync if the cart changes in another tab
+    window.addEventListener("storage", (e) => {
+      if (e.key === CART_KEY) renderCart();
+    });
+
+    renderCart();
+
+    // simple reveal-on-load for the header (page is short, no need for IntersectionObserver)
+    document.querySelectorAll(".reveal").forEach((el, i) => {
+      setTimeout(() => el.classList.add("in"), 80 * i);
+    });
+    document.querySelector(".kolam-divider")?.classList.add("in");
+  </script>
+
+</body>
+</html>

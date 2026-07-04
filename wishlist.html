@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Wishlist | NicyFoods</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream:    '#FBF1E2',
+            jaggery:  '#5C3A25',
+            ink:      '#3A2417',
+            turmeric: '#E8A33D',
+            marigold: '#F2C14E',
+            kumkum:   '#A63A2E',
+            herbal:   '#5F7A4F',
+          },
+          fontFamily: {
+            display: ['"Rozha One"', 'serif'],
+            body: ['Poppins', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --cream:#FBF1E2; --jaggery:#5C3A25; --ink:#3A2417;
+      --turmeric:#E8A33D; --marigold:#F2C14E; --kumkum:#A63A2E; --herbal:#5F7A4F;
+    }
+    *{box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{ font-family:'Poppins', sans-serif; background:var(--cream); color:var(--ink); overflow-x:hidden; }
+    h1,h2,h3,.font-display{ font-family:'Rozha One', serif; letter-spacing:.01em; }
+
+    .reveal{ opacity:0; transform:translateY(24px); transition:opacity .7s cubic-bezier(.16,.84,.44,1), transform .7s cubic-bezier(.16,.84,.44,1); }
+    .reveal.in{ opacity:1; transform:translateY(0); }
+    @keyframes fadeUp{ from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
+    .card-in{ animation: fadeUp .55s cubic-bezier(.16,.84,.44,1) both; }
+
+    .rise-card{ transition: transform .4s cubic-bezier(.16,.84,.44,1), box-shadow .4s ease; }
+    .rise-card:hover{ transform:translateY(-6px); box-shadow: 0 22px 40px -18px rgba(92,58,37,.3); }
+    .prod-img{ transition: transform .5s cubic-bezier(.16,.84,.44,1); }
+    .rise-card:hover .prod-img{ transform:scale(1.08); }
+
+    .remove-btn{
+      position:absolute; top:10px; right:10px; z-index:10;
+      width:34px; height:34px; border-radius:9999px;
+      background:rgba(255,255,255,.92);
+      display:flex; align-items:center; justify-content:center;
+      box-shadow:0 4px 10px -3px rgba(92,58,37,.3);
+      transition: transform .3s cubic-bezier(.34,1.56,.64,1), background-color .3s ease;
+      cursor:pointer; border:none;
+    }
+    .remove-btn:hover{ transform:scale(1.1); background:var(--kumkum); }
+    .remove-btn:hover svg{ stroke:#fff; }
+    .remove-btn svg{ width:16px; height:16px; stroke:var(--jaggery); transition: stroke .25s ease; }
+
+    .card-leaving{ animation: cardLeave .35s ease forwards; }
+    @keyframes cardLeave{ to{ opacity:0; transform:scale(.9) translateY(8px); } }
+
+    .cta-btn{ position:relative; overflow:hidden; }
+    .cta-btn::before{
+      content:''; position:absolute; top:0; left:-60%; width:40%; height:100%;
+      background:linear-gradient(115deg, transparent, rgba(255,255,255,.55), transparent);
+      transform:skewX(-20deg); transition:left .8s ease;
+    }
+    .cta-btn:hover::before{ left:130%; }
+
+    .empty-heart{ animation: emptyFloat 4s ease-in-out infinite; }
+    @keyframes emptyFloat{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-10px);} }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
+      .reveal{ opacity:1 !important; transform:none !important; }
+    }
+  </style>
+</head>
+<body class="bg-cream">
+
+  <div id="navbar-placeholder"></div>
+
+  <!-- ============ HERO ============ -->
+  <section class="relative bg-jaggery py-14 md:py-16 text-center px-6 overflow-hidden">
+    <svg class="absolute -right-16 -top-16 w-64 h-64 opacity-10 hidden sm:block" viewBox="0 0 200 200" fill="none">
+      <g stroke="#F2C14E" stroke-width="1.2"><circle cx="100" cy="100" r="90"/><circle cx="100" cy="100" r="65"/></g>
+    </svg>
+    <div class="relative z-10">
+      <p class="text-marigold/90 tracking-[0.25em] uppercase text-xs md:text-sm font-semibold mb-3">Saved For Later</p>
+      <h1 class="font-display text-3xl sm:text-4xl text-cream">My Wishlist</h1>
+    </div>
+  </section>
+
+  <!-- ============ WISHLIST CONTENT ============ -->
+  <section class="max-w-7xl mx-auto px-6 py-16">
+
+    <div id="wishlist-empty" class="hidden reveal in text-center py-10">
+      <svg class="empty-heart w-16 h-16 mx-auto mb-6 text-kumkum/40" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
+      </svg>
+      <h2 class="font-display text-2xl text-jaggery mb-3">Your wishlist is empty</h2>
+      <p class="text-slate-500 max-w-md mx-auto mb-8">
+        Tap the heart on any product to save it here for later — it'll show up the next time you visit.
+      </p>
+      <a href="products.html" class="cta-btn inline-flex items-center gap-2 bg-gradient-to-r from-turmeric to-kumkum text-white font-semibold px-7 py-3 rounded-xl hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300">
+        Browse Products
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+
+    <div id="wishlist-has-items" class="hidden">
+      <div class="reveal in flex items-center justify-between mb-8">
+        <p class="text-slate-500"><span id="wishlist-count" class="font-semibold text-jaggery">0</span> item(s) saved</p>
+        <button id="clear-wishlist" class="text-sm font-semibold text-kumkum hover:underline">Clear all</button>
+      </div>
+      <div id="wishlist-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+    </div>
+
+  </section>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="js/navbar.js"></script>
+  <script src="js/footer.js"></script>
+
+  <script>
+    const STORAGE_KEY = 'nicy_wishlist_items';
+
+    function getWishlist() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        return Array.isArray(raw) ? raw : [];
+      } catch (e) { return []; }
+    }
+
+    function saveWishlist(items) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      localStorage.setItem('nicy_wishlist_count', String(items.length));
+      window.dispatchEvent(new Event('nicy:counts-updated'));
+    }
+
+    function removeItem(id) {
+      const items = getWishlist().filter(i => i.id !== id);
+      saveWishlist(items);
+    }
+
+    function render() {
+      const items = getWishlist();
+      const emptyEl = document.getElementById('wishlist-empty');
+      const listEl = document.getElementById('wishlist-has-items');
+      const grid = document.getElementById('wishlist-grid');
+      const countEl = document.getElementById('wishlist-count');
+
+      if (items.length === 0) {
+        emptyEl.classList.remove('hidden');
+        listEl.classList.add('hidden');
+        return;
+      }
+
+      emptyEl.classList.add('hidden');
+      listEl.classList.remove('hidden');
+      countEl.textContent = items.length;
+
+      grid.innerHTML = '';
+      items.forEach((item, i) => {
+        const card = document.createElement('div');
+        card.className = 'rise-card card-in relative bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col';
+        card.style.animationDelay = `${Math.min(i, 7) * 0.06}s`;
+        card.dataset.id = item.id;
+
+        const priceLine = item.price != null ? `₹${item.price}` : '';
+
+        card.innerHTML = `
+          <button class="remove-btn" aria-label="Remove from wishlist">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
+          </button>
+          <a href="${item.url || '#'}" class="block">
+            <div class="h-44 bg-gradient-to-br from-orange-100 to-amber-50 overflow-hidden">
+              <img src="${item.img || ''}" alt="${item.name || ''}" class="prod-img w-full h-full object-cover"
+                   onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('div'), {className:'w-full h-full flex items-center justify-center text-slate-400 text-sm', innerText:'${(item.name || 'Product').replace(/'/g, "\\'")}'}));" />
+            </div>
+          </a>
+          <div class="p-5 flex flex-col flex-1">
+            ${item.cat ? `<span class="self-start mb-2 text-[11px] font-bold tracking-wide text-kumkum bg-orange-50 px-3 py-1 rounded-full">${item.cat}</span>` : ''}
+            <h3 class="font-display text-lg text-jaggery mb-1">${item.name || 'Product'}</h3>
+            ${priceLine ? `<div class="text-2xl font-extrabold text-kumkum mb-3">${priceLine}</div>` : ''}
+            <a href="${item.url || 'products.html'}" class="cta-btn mt-auto w-full text-center bg-gradient-to-r from-turmeric to-kumkum hover:opacity-95 text-white font-semibold py-2.5 rounded-lg transition-opacity">
+              View Details
+            </a>
+          </div>
+        `;
+
+        card.querySelector('.remove-btn').addEventListener('click', () => {
+          card.classList.add('card-leaving');
+          setTimeout(() => { removeItem(item.id); render(); }, 300);
+        });
+
+        grid.appendChild(card);
+      });
+    }
+
+    document.getElementById('clear-wishlist').addEventListener('click', () => {
+      saveWishlist([]);
+      render();
+    });
+
+    render();
+
+    // Keep this tab in sync if the wishlist changes from another tab.
+    window.addEventListener('storage', (e) => {
+      if (e.key === STORAGE_KEY) render();
+    });
+  </script>
+
+</body>
+</html> 
