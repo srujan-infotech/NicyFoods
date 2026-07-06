@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <g stroke="#F2C14E" stroke-width="1.2">
           <circle cx="100" cy="100" r="90"/><circle cx="100" cy="100" r="65"/>
           <path d="M100 10 L100 190 M10 100 L190 100"/>
-        </g>
+        </g>    
       </svg>
 
       <div class="relative max-w-7xl mx-auto px-6 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">

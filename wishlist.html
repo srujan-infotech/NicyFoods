@@ -45,10 +45,68 @@
     @keyframes fadeUp{ from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
     .card-in{ animation: fadeUp .55s cubic-bezier(.16,.84,.44,1) both; }
 
-    .rise-card{ transition: transform .4s cubic-bezier(.16,.84,.44,1), box-shadow .4s ease; }
-    .rise-card:hover{ transform:translateY(-6px); box-shadow: 0 22px 40px -18px rgba(92,58,37,.3); }
+    /* ---------- eyebrow brush swipe (site-wide signature) ---------- */
+    .eyebrow{ position:relative; display:inline-block; }
+    .eyebrow svg{ display:block; margin:6px auto 0; overflow:visible; }
+    .eyebrow path{ stroke-dasharray:120; stroke-dashoffset:120; animation: brushDraw .9s cubic-bezier(.16,.84,.44,1) .5s forwards; }
+    @keyframes brushDraw{ to{ stroke-dashoffset:0; } }
+
+    /* ---------- ghee pour accent (site-wide signature) ---------- */
+    .ghee-pour-wrap{ height:52px; position:relative; margin:0 auto -4px; width:46px; }
+    .ghee-ribbon path{
+      fill:none; stroke:url(#gheeGradWish); stroke-width:2.5; stroke-linecap:round;
+      stroke-dasharray:150; stroke-dashoffset:150;
+      animation: pourDraw .9s cubic-bezier(.55,0,.35,1) .1s forwards;
+      filter: drop-shadow(0 0 5px rgba(242,193,78,.55));
+    }
+    @keyframes pourDraw{ to{ stroke-dashoffset:0; } }
+    .ghee-pool{
+      position:absolute; left:15px; bottom:2px; width:28px; height:8px; border-radius:50%;
+      background: radial-gradient(ellipse at center, var(--marigold), var(--turmeric) 70%, transparent 100%);
+      opacity:0; transform:scale(.2);
+      box-shadow:0 0 14px 3px rgba(242,193,78,.5);
+      animation: poolPop .6s cubic-bezier(.34,1.56,.64,1) .8s forwards;
+    }
+    @keyframes poolPop{ to{ opacity:1; transform:scale(1); } }
+
+    .torn-edge{
+      height:20px; background:var(--cream);
+      -webkit-mask-image: linear-gradient(135deg, transparent 10px, #000 10px), linear-gradient(-135deg, transparent 10px, #000 10px);
+      -webkit-mask-size: 20px 20px; -webkit-mask-position: 0 0, 10px 0; -webkit-mask-repeat: repeat-x;
+      mask-image: linear-gradient(135deg, transparent 10px, #000 10px), linear-gradient(-135deg, transparent 10px, #000 10px);
+      mask-size: 20px 20px; mask-position: 0 0, 10px 0; mask-repeat: repeat-x;
+    }
+
+    .kolam-divider path, .kolam-divider circle{
+      stroke-dasharray: 340; stroke-dashoffset: 340;
+      transition: stroke-dashoffset 1.4s cubic-bezier(.16,.84,.44,1);
+    }
+    .kolam-divider.in path, .kolam-divider.in circle{ stroke-dashoffset:0; }
+
+    .steam{ position:absolute; bottom:0; border-radius:50%; background:radial-gradient(circle, rgba(242,193,78,.5), rgba(242,193,78,0) 70%); pointer-events:none; }
+    .steam-1{ animation: steamRise 6s ease-in infinite; }
+    .steam-2{ animation: steamRise 8s ease-in infinite; animation-delay:1.5s; }
+    .steam-3{ animation: steamRise 7s ease-in infinite; animation-delay:3s; }
+    @keyframes steamRise{
+      0%{ transform:translateY(0) scale(.6); opacity:0; }
+      15%{ opacity:.7; }
+      100%{ transform:translateY(-160px) scale(1.5); opacity:0; }
+    }
+
+    /* ---------- cards: magnetic tilt + shine ---------- */
+    .rise-card{
+      transition: transform .35s cubic-bezier(.16,.84,.44,1), box-shadow .4s ease;
+      transform-style: preserve-3d; will-change: transform;
+    }
+    .rise-card:hover{ box-shadow: 0 24px 44px -18px rgba(92,58,37,.35); }
     .prod-img{ transition: transform .5s cubic-bezier(.16,.84,.44,1); }
-    .rise-card:hover .prod-img{ transform:scale(1.08); }
+    .rise-card:hover .prod-img{ transform:scale(1.08) rotate(-1deg); }
+    .card-shine{
+      position:absolute; inset:0; pointer-events:none; opacity:0;
+      background:radial-gradient(220px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,.35), transparent 60%);
+      transition: opacity .35s ease; mix-blend-mode: soft-light; z-index:5;
+    }
+    .rise-card:hover .card-shine{ opacity:1; }
 
     .remove-btn{
       position:absolute; top:10px; right:10px; z-index:10;
@@ -74,12 +132,33 @@
     }
     .cta-btn:hover::before{ left:130%; }
 
+    .add-cart-mini{
+      display:flex; align-items:center; justify-content:center; gap:.35rem;
+      width:44px; flex-shrink:0; border:1.5px solid var(--kumkum); color:var(--kumkum);
+      border-radius:.6rem; transition: background-color .25s ease, color .25s ease, transform .25s ease;
+      cursor:pointer; background:none;
+    }
+    .add-cart-mini:hover{ background:var(--kumkum); color:#fff; transform:translateY(-1px); }
+    .add-cart-mini svg{ width:18px; height:18px; }
+    .add-cart-mini.added{ background:var(--herbal); border-color:var(--herbal); color:#fff; }
+
+    .empty-icon-wrap{
+      width:110px; height:110px; border-radius:50%;
+      background:radial-gradient(circle, rgba(166,58,46,.14), transparent 70%);
+      display:flex; align-items:center; justify-content:center;
+    }
     .empty-heart{ animation: emptyFloat 4s ease-in-out infinite; }
     @keyframes emptyFloat{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-10px);} }
+
+    .clear-link{ display:inline-flex; align-items:center; gap:.35rem; }
+    .clear-link svg{ width:14px; height:14px; }
 
     @media (prefers-reduced-motion: reduce){
       *{ animation:none !important; transition:none !important; }
       .reveal{ opacity:1 !important; transform:none !important; }
+      .ghee-ribbon path{ stroke-dashoffset:0 !important; }
+      .ghee-pool{ opacity:1 !important; transform:scale(1) !important; }
+      .eyebrow path{ stroke-dashoffset:0 !important; }
     }
   </style>
 </head>
@@ -88,23 +167,57 @@
   <div id="navbar-placeholder"></div>
 
   <!-- ============ HERO ============ -->
-  <section class="relative bg-jaggery py-14 md:py-16 text-center px-6 overflow-hidden">
+  <section class="relative bg-gradient-to-br from-ink via-jaggery to-ink py-16 md:py-20 text-center px-6 overflow-hidden">
     <svg class="absolute -right-16 -top-16 w-64 h-64 opacity-10 hidden sm:block" viewBox="0 0 200 200" fill="none">
       <g stroke="#F2C14E" stroke-width="1.2"><circle cx="100" cy="100" r="90"/><circle cx="100" cy="100" r="65"/></g>
     </svg>
+    <svg class="absolute -left-14 -bottom-20 w-56 h-56 opacity-10 hidden sm:block" viewBox="0 0 200 200" fill="none">
+      <g stroke="#F2C14E" stroke-width="1.2"><circle cx="100" cy="100" r="75"/><circle cx="100" cy="100" r="52"/></g>
+    </svg>
+
+    <div class="steam steam-1 w-2.5 h-2.5" style="left:30%;"></div>
+    <div class="steam steam-2 w-2 h-2" style="left:55%;"></div>
+    <div class="steam steam-3 w-3 h-3" style="left:68%;"></div>
+
     <div class="relative z-10">
-      <p class="text-marigold/90 tracking-[0.25em] uppercase text-xs md:text-sm font-semibold mb-3">Saved For Later</p>
-      <h1 class="font-display text-3xl sm:text-4xl text-cream">My Wishlist</h1>
+      <div class="ghee-pour-wrap">
+        <svg class="ghee-ribbon" width="46" height="52" viewBox="0 0 46 52" fill="none">
+          <defs>
+            <linearGradient id="gheeGradWish" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#F2C14E"/>
+              <stop offset="100%" stop-color="#E8A33D"/>
+            </linearGradient>
+          </defs>
+          <path d="M21 2 C 17 10, 25 15, 20 24 C 16 31, 23 34, 19 42"/>
+        </svg>
+        <div class="ghee-pool"></div>
+      </div>
+      <p class="eyebrow text-marigold/90 tracking-[0.25em] uppercase text-xs md:text-sm font-semibold">
+        Saved For Later
+        <svg width="90" height="8" viewBox="0 0 90 8"><path d="M2 5 Q 25 -1, 45 4 T 88 3" stroke="#F2C14E" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+      </p>
+      <h1 class="font-display text-3xl sm:text-4xl text-cream mt-2">My Wishlist</h1>
     </div>
   </section>
 
+  <div class="torn-edge"></div>
+
+  <div class="flex justify-center py-4">
+    <svg class="kolam-divider w-32 h-8" viewBox="0 0 200 40" fill="none">
+      <path d="M2 20 Q 50 2, 100 20 T 198 20" stroke="#E8A33D" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="2" cy="20" r="3" fill="#A63A2E"/><circle cx="100" cy="20" r="3" fill="#A63A2E"/><circle cx="198" cy="20" r="3" fill="#A63A2E"/>
+    </svg>
+  </div>
+
   <!-- ============ WISHLIST CONTENT ============ -->
-  <section class="max-w-7xl mx-auto px-6 py-16">
+  <section class="max-w-7xl mx-auto px-6 py-12 md:py-16">
 
     <div id="wishlist-empty" class="hidden reveal in text-center py-10">
-      <svg class="empty-heart w-16 h-16 mx-auto mb-6 text-kumkum/40" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
-      </svg>
+      <div class="empty-icon-wrap mx-auto mb-6">
+        <svg class="empty-heart w-14 h-14 text-kumkum" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
+        </svg>
+      </div>
       <h2 class="font-display text-2xl text-jaggery mb-3">Your wishlist is empty</h2>
       <p class="text-slate-500 max-w-md mx-auto mb-8">
         Tap the heart on any product to save it here for later — it'll show up the next time you visit.
@@ -118,7 +231,10 @@
     <div id="wishlist-has-items" class="hidden">
       <div class="reveal in flex items-center justify-between mb-8">
         <p class="text-slate-500"><span id="wishlist-count" class="font-semibold text-jaggery">0</span> item(s) saved</p>
-        <button id="clear-wishlist" class="text-sm font-semibold text-kumkum hover:underline">Clear all</button>
+        <button id="clear-wishlist" class="clear-link text-sm font-semibold text-kumkum hover:underline">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+          Clear all
+        </button>
       </div>
       <div id="wishlist-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
     </div>
@@ -131,7 +247,10 @@
   <script src="js/footer.js"></script>
 
   <script>
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const STORAGE_KEY = 'nicy_wishlist_items';
+    const CART_KEY = 'nicy_cart_items';
 
     function getWishlist() {
       try {
@@ -149,6 +268,31 @@
     function removeItem(id) {
       const items = getWishlist().filter(i => i.id !== id);
       saveWishlist(items);
+    }
+
+    function getCart() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+        return Array.isArray(raw) ? raw : [];
+      } catch (e) { return []; }
+    }
+
+    function saveCart(items) {
+      localStorage.setItem(CART_KEY, JSON.stringify(items));
+      const totalQty = items.reduce((sum, i) => sum + (i.qty || 1), 0);
+      localStorage.setItem('nicy_cart_count', String(totalQty));
+      window.dispatchEvent(new Event('nicy:counts-updated'));
+    }
+
+    function addToCart(item) {
+      const items = getCart();
+      const existing = items.find(i => i.id === item.id);
+      if (existing) {
+        existing.qty = (existing.qty || 1) + 1;
+      } else {
+        items.push({ id: item.id, name: item.name || '', img: item.img || '', price: item.price || null, qty: 1 });
+      }
+      saveCart(items);
     }
 
     function render() {
@@ -171,17 +315,18 @@
       grid.innerHTML = '';
       items.forEach((item, i) => {
         const card = document.createElement('div');
-        card.className = 'rise-card card-in relative bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col';
+        card.className = 'tilt-card rise-card card-in relative bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col';
         card.style.animationDelay = `${Math.min(i, 7) * 0.06}s`;
         card.dataset.id = item.id;
 
         const priceLine = item.price != null ? `₹${item.price}` : '';
 
         card.innerHTML = `
+          <div class="card-shine"></div>
           <button class="remove-btn" aria-label="Remove from wishlist">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
           </button>
-          <a href="${item.url || '#'}" class="block">
+          <a href="${item.url || '#'}" class="block relative">
             <div class="h-44 bg-gradient-to-br from-orange-100 to-amber-50 overflow-hidden">
               <img src="${item.img || ''}" alt="${item.name || ''}" class="prod-img w-full h-full object-cover"
                    onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('div'), {className:'w-full h-full flex items-center justify-center text-slate-400 text-sm', innerText:'${(item.name || 'Product').replace(/'/g, "\\'")}'}));" />
@@ -191,9 +336,15 @@
             ${item.cat ? `<span class="self-start mb-2 text-[11px] font-bold tracking-wide text-kumkum bg-orange-50 px-3 py-1 rounded-full">${item.cat}</span>` : ''}
             <h3 class="font-display text-lg text-jaggery mb-1">${item.name || 'Product'}</h3>
             ${priceLine ? `<div class="text-2xl font-extrabold text-kumkum mb-3">${priceLine}</div>` : ''}
-            <a href="${item.url || 'products.html'}" class="cta-btn mt-auto w-full text-center bg-gradient-to-r from-turmeric to-kumkum hover:opacity-95 text-white font-semibold py-2.5 rounded-lg transition-opacity">
-              View Details
-            </a>
+            <div class="mt-auto flex items-center gap-2">
+              <button class="wish-add-cart flex-1 cta-btn text-center bg-gradient-to-r from-turmeric to-kumkum hover:opacity-95 text-white font-semibold py-2.5 rounded-lg transition-opacity flex items-center justify-center gap-1.5 text-sm">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                Add to Cart
+              </button>
+              <a href="${item.url || 'products.html'}" class="add-cart-mini" aria-label="View product">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+              </a>
+            </div>
           </div>
         `;
 
@@ -201,6 +352,30 @@
           card.classList.add('card-leaving');
           setTimeout(() => { removeItem(item.id); render(); }, 300);
         });
+
+        const addBtn = card.querySelector('.wish-add-cart');
+        addBtn.addEventListener('click', () => {
+          addToCart(item);
+          const original = addBtn.innerHTML;
+          addBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M20 6L9 17l-5-5"/></svg> Added';
+          setTimeout(() => { addBtn.innerHTML = original; }, 1400);
+        });
+
+        if (!prefersReduced) {
+          card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const rx = ((y / rect.height) - 0.5) * -8;
+            const ry = ((x / rect.width) - 0.5) * 8;
+            card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-6px)`;
+            card.style.setProperty('--mx', `${(x / rect.width) * 100}%`);
+            card.style.setProperty('--my', `${(y / rect.height) * 100}%`);
+          });
+          card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateY(0)';
+          });
+        }
 
         grid.appendChild(card);
       });
@@ -213,11 +388,12 @@
 
     render();
 
-    // Keep this tab in sync if the wishlist changes from another tab.
     window.addEventListener('storage', (e) => {
       if (e.key === STORAGE_KEY) render();
     });
+
+    document.querySelector('.kolam-divider')?.classList.add('in');
   </script>
 
 </body>
-</html> 
+</html>

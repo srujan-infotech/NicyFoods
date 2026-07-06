@@ -43,6 +43,30 @@
     .reveal{ opacity:0; transform:translateY(20px); transition:opacity .6s cubic-bezier(.16,.84,.44,1), transform .6s cubic-bezier(.16,.84,.44,1); }
     .reveal.in{ opacity:1; transform:translateY(0); }
 
+    /* ---------- eyebrow brush swipe (site-wide signature) ---------- */
+    .eyebrow{ position:relative; display:inline-block; }
+    .eyebrow svg{ display:block; margin:6px auto 0; overflow:visible; }
+    .eyebrow path{ stroke-dasharray:120; stroke-dashoffset:120; transition:stroke-dashoffset .9s cubic-bezier(.16,.84,.44,1) .25s; }
+    .reveal.in .eyebrow path{ stroke-dashoffset:0; }
+
+    /* ---------- ghee pour accent (site-wide signature, smaller here) ---------- */
+    .ghee-pour-wrap{ height:48px; position:relative; margin:0 auto -4px; width:44px; }
+    .ghee-ribbon path{
+      fill:none; stroke:url(#gheeGradCart); stroke-width:2.5; stroke-linecap:round;
+      stroke-dasharray:140; stroke-dashoffset:140;
+      animation: pourDraw .9s cubic-bezier(.55,0,.35,1) .15s forwards;
+      filter: drop-shadow(0 0 5px rgba(242,193,78,.5));
+    }
+    @keyframes pourDraw{ to{ stroke-dashoffset:0; } }
+    .ghee-pool{
+      position:absolute; left:14px; bottom:2px; width:26px; height:8px; border-radius:50%;
+      background: radial-gradient(ellipse at center, var(--marigold), var(--turmeric) 70%, transparent 100%);
+      opacity:0; transform:scale(.2);
+      box-shadow:0 0 14px 3px rgba(242,193,78,.5);
+      animation: poolPop .6s cubic-bezier(.34,1.56,.64,1) .85s forwards;
+    }
+    @keyframes poolPop{ to{ opacity:1; transform:scale(1); } }
+
     .grow-underline{ position:relative; display:inline-block; }
     .grow-underline::after{
       content:''; position:absolute; left:50%; bottom:-8px; height:2px; width:0;
@@ -65,31 +89,58 @@
     }
     .kolam-divider.in path, .kolam-divider.in circle{ stroke-dashoffset:0; }
 
-    /* ---------- cart item rows: thali-style ---------- */
+    /* ---------- cart item rows ---------- */
     .cart-row{
-      background:#FFFDF9;
+      background:#FFFDF9; position:relative; overflow:hidden;
       box-shadow: inset 0 0 0 1px rgba(92,58,37,.06), 0 1px 2px rgba(92,58,37,.06);
-      transition: box-shadow .3s ease;
+      transition: box-shadow .35s ease, transform .35s cubic-bezier(.16,.84,.44,1);
     }
-    .cart-row:hover{ box-shadow: inset 0 0 0 1px rgba(92,58,37,.09), 0 10px 24px -14px rgba(92,58,37,.3); }
-    .cart-row.removing{ opacity:0; transform:translateX(24px); transition:opacity .3s ease, transform .3s ease; }
+    .cart-row:hover{ box-shadow: inset 0 0 0 1px rgba(92,58,37,.09), 0 14px 28px -16px rgba(92,58,37,.35); transform:translateY(-2px); }
+    .cart-row::before{
+      content:''; position:absolute; left:0; top:0; bottom:0; width:4px;
+      background:linear-gradient(180deg, var(--turmeric), var(--kumkum));
+      opacity:0; transition:opacity .3s ease;
+    }
+    .cart-row:hover::before{ opacity:1; }
+    .cart-row.removing{ opacity:0; transform:translateX(24px) scale(.98); transition:opacity .3s ease, transform .3s ease; }
 
-    .qty-stepper{ display:flex; align-items:center; border:1.5px solid rgba(92,58,37,.15); border-radius:.6rem; overflow:hidden; }
+    .cart-thumb{
+      position:relative; width:84px; height:84px; border-radius:14px; overflow:hidden; flex-shrink:0;
+      box-shadow: inset 0 0 0 3px rgba(255,255,255,.8);
+    }
+    .cart-thumb img{ transition: transform .5s cubic-bezier(.16,.84,.44,1); }
+    .cart-row:hover .cart-thumb img{ transform:scale(1.08); }
+
+    .qty-stepper{ display:flex; align-items:center; border:1.5px solid rgba(92,58,37,.15); border-radius:.7rem; overflow:hidden; background:#fff; }
     .qty-btn{
       width:32px; height:32px; display:flex; align-items:center; justify-content:center;
-      color:var(--jaggery); font-weight:700; transition:background-color .2s ease;
+      color:var(--jaggery); font-weight:700; transition:background-color .2s ease, color .2s ease;
     }
-    .qty-btn:hover{ background:rgba(166,58,46,.08); }
-    .qty-val{ width:36px; text-align:center; font-weight:600; font-size:.9rem; }
+    .qty-btn:hover{ background:var(--kumkum); color:#fff; }
+    .qty-btn svg{ width:14px; height:14px; }
+    .qty-val{ width:34px; text-align:center; font-weight:600; font-size:.9rem; font-variant-numeric:tabular-nums; }
 
-    .remove-link{ color:#9a8a7c; transition:color .2s ease; }
+    .remove-link{ display:inline-flex; align-items:center; gap:.3rem; color:#9a8a7c; transition:color .2s ease; }
     .remove-link:hover{ color:var(--kumkum); }
+    .remove-link svg{ width:14px; height:14px; }
 
     /* ---------- order summary ---------- */
     .summary-card{
-      background:#FFFDF9;
-      box-shadow: inset 0 0 0 1px rgba(92,58,37,.06), 0 4px 16px rgba(92,58,37,.08);
+      background:#FFFDF9; position:relative; overflow:hidden;
+      box-shadow: inset 0 0 0 1px rgba(92,58,37,.06), 0 8px 28px -12px rgba(92,58,37,.18);
     }
+    .summary-card::before{
+      content:''; position:absolute; top:-40%; right:-30%; width:200px; height:200px; border-radius:50%;
+      background:radial-gradient(circle, rgba(242,193,78,.18), transparent 70%);
+      pointer-events:none;
+    }
+
+    .trust-strip{ display:flex; flex-wrap:wrap; gap:.5rem; }
+    .trust-chip{
+      display:inline-flex; align-items:center; gap:.3rem; font-size:.7rem; font-weight:600;
+      color:var(--herbal); background:rgba(95,122,79,.08); padding:.3rem .55rem; border-radius:9999px;
+    }
+    .trust-chip svg{ width:12px; height:12px; }
 
     .cta-btn{ position:relative; overflow:hidden; }
     .cta-btn::before{
@@ -98,17 +149,21 @@
       transform:skewX(-20deg); transition:left .8s ease;
     }
     .cta-btn:hover::before{ left:130%; }
+    .cta-btn.whatsapp-pulse{ animation: waPulse 2.6s ease-in-out infinite; }
+    @keyframes waPulse{ 0%,100%{ box-shadow:0 0 0 0 rgba(37,211,102,.35);} 50%{ box-shadow:0 0 0 10px rgba(37,211,102,0);} }
 
     /* ---------- empty state ---------- */
     .empty-cart{ animation: fadeUp .6s cubic-bezier(.16,.84,.44,1) both; }
     @keyframes fadeUp{ from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
-    .empty-icon{
-      animation: sway 3.5s ease-in-out infinite;
-      transform-origin: 50% 15%;
+    .empty-icon-wrap{
+      width:110px; height:110px; border-radius:50%;
+      background:radial-gradient(circle, rgba(242,193,78,.18), transparent 70%);
+      display:flex; align-items:center; justify-content:center;
     }
+    .empty-icon{ animation: sway 3.5s ease-in-out infinite; transform-origin: 50% 15%; }
     @keyframes sway{ 0%,100%{ transform:rotate(-4deg);} 50%{ transform:rotate(4deg);} }
 
-    /* ---------- background bubble drops (matches site-wide signature) ---------- */
+    /* ---------- background bubble drops ---------- */
     .bubble-field{ position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
     .ladoo-particle{
       position:absolute; border-radius:50%;
@@ -137,6 +192,8 @@
     @media (prefers-reduced-motion: reduce){
       *{ animation:none !important; transition:none !important; }
       .reveal{ opacity:1 !important; transform:none !important; }
+      .ghee-ribbon path{ stroke-dashoffset:0 !important; }
+      .ghee-pool{ opacity:1 !important; transform:scale(1) !important; }
     }
   </style>
 </head>
@@ -151,8 +208,23 @@
       <div class="ladoo-particle w-5 h-5 bubble-rise-alt" style="top:80%; right:8%; --dur:9s; --delay:1.5s;"></div>
     </div>
     <div class="relative max-w-6xl mx-auto px-6 text-center">
-      <p class="reveal text-kumkum text-xs tracking-[0.3em] uppercase font-semibold mb-3">
+
+      <div class="ghee-pour-wrap">
+        <svg class="ghee-ribbon" width="44" height="48" viewBox="0 0 44 48" fill="none">
+          <defs>
+            <linearGradient id="gheeGradCart" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#F2C14E"/>
+              <stop offset="100%" stop-color="#E8A33D"/>
+            </linearGradient>
+          </defs>
+          <path d="M20 2 C 16 10, 24 14, 19 23 C 15 30, 22 33, 18 40"/>
+        </svg>
+        <div class="ghee-pool"></div>
+      </div>
+
+      <p class="reveal eyebrow text-kumkum text-xs tracking-[0.3em] uppercase font-semibold mb-3">
         <a href="index.html" class="hover:underline">Home</a> / Cart
+        <svg width="80" height="7" viewBox="0 0 80 7"><path d="M2 4 Q 22 -1, 40 3 T 78 3" stroke="#A63A2E" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
       </p>
       <h1 class="reveal grow-underline font-display text-3xl sm:text-4xl text-jaggery">Your Cart</h1>
     </div>
@@ -194,19 +266,36 @@
           <span id="summaryTotal" class="font-display text-2xl text-kumkum">₹0</span>
         </div>
         <a id="checkoutBtn" href="#" target="_blank" rel="noopener"
-           class="cta-btn flex items-center justify-center gap-2 w-full bg-gradient-to-r from-turmeric to-kumkum text-white font-semibold py-3.5 rounded-xl hover:opacity-95 transition-opacity">
+           class="cta-btn whatsapp-pulse flex items-center justify-center gap-2 w-full bg-gradient-to-r from-turmeric to-kumkum text-white font-semibold py-3.5 rounded-xl hover:opacity-95 transition-opacity">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1s-.7.9-.9 1-.3.2-.6.1c-.3-.1-1.2-.5-2.3-1.5-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.3-.4.1-.2 0-.4 0-.5C10.3 9 9.8 7.7 9.6 7.2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.3-.1-.1-.3-.2-.6-.3z"/><path d="M12 2C6.5 2 2 6.5 2 12c0 1.9.5 3.6 1.5 5.2L2 22l4.9-1.3c1.5.8 3.2 1.3 5.1 1.3 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.3c-1.7 0-3.4-.5-4.8-1.3l-.3-.2-3.5.9.9-3.4-.2-.4C3.4 14.5 3 13.3 3 12c0-5 4-9 9-9s9 4 9 9-4 9-9 9z"/></svg>
           Checkout on WhatsApp
         </a>
         <p class="text-xs text-slate-400 text-center mt-3">Courier charges are added based on the weight you choose — confirmed with you on WhatsApp before payment.</p>
+
+        <div class="trust-strip justify-center mt-5 pt-5 border-t border-jaggery/10">
+          <span class="trust-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            Pure Ghee
+          </span>
+          <span class="trust-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            No Preservatives
+          </span>
+          <span class="trust-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            100% Handmade
+          </span>
+        </div>
       </aside>
     </div>
 
     <!-- Empty state -->
     <div id="cartEmpty" class="hidden empty-cart flex flex-col items-center text-center py-16">
-      <svg class="empty-icon w-16 h-16 text-turmeric mb-5" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2c1 3-2 4-2 7a3 3 0 006 0c0-1-1-2-1-2 2 1 4 3.5 4 6.5A7 7 0 015 13.5C5 9 8 7 8 4c1 1 1.5 2 1.5 3.5C10.5 5 11 3.5 12 2z"/>
-      </svg>
+      <div class="empty-icon-wrap mb-5">
+        <svg class="empty-icon w-14 h-14 text-turmeric" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2c1 3-2 4-2 7a3 3 0 006 0c0-1-1-2-1-2 2 1 4 3.5 4 6.5A7 7 0 015 13.5C5 9 8 7 8 4c1 1 1.5 2 1.5 3.5C10.5 5 11 3.5 12 2z"/>
+        </svg>
+      </div>
       <h2 class="font-display text-2xl text-jaggery mb-2">Your cart is empty</h2>
       <p class="text-slate-500 max-w-sm mb-8">Looks like you haven't added any ladoos yet. Explore our handmade collection and find your favorite.</p>
       <a href="products.html" class="cta-btn inline-block bg-gradient-to-r from-turmeric to-kumkum text-white font-semibold px-8 py-3 rounded-xl hover:opacity-95 transition-opacity">
@@ -223,14 +312,7 @@
   <script src="js/footer.js"></script>
 
   <script>
-    /* ================= CART PAGE =================
-       Reads/writes the same localStorage schema already used on the
-       home page and navbar: nicy_cart_items (array of {id,name,img,price,qty})
-       and nicy_cart_count, and fires "nicy:counts-updated" so the navbar
-       badge (js/navbar.js) refreshes itself automatically. */
     const CART_KEY = "nicy_cart_items";
-    // Your WhatsApp business number. You can include +, spaces, or dashes here —
-    // it gets cleaned up automatically before building the wa.me link below.
     const WHATSAPP_NUMBER = "+918263001410";
 
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -276,19 +358,26 @@
         const qty = item.qty || 1;
         return `
           <div class="cart-row rounded-2xl p-4 flex items-center gap-4" data-row="${item.id}">
-            <div class="w-20 h-20 rounded-xl overflow-hidden bg-orange-50 flex-shrink-0">
+            <div class="cart-thumb">
               <img src="${item.img || ''}" alt="${item.name}" class="w-full h-full object-cover" onerror="this.style.display='none'">
             </div>
             <div class="flex-1 min-w-0">
               <h3 class="font-display text-base sm:text-lg text-jaggery truncate">${item.name}</h3>
               <p class="text-kumkum font-bold mt-0.5">${money(price)}</p>
-              <div class="flex items-center gap-4 mt-2">
+              <div class="flex items-center gap-4 mt-2 flex-wrap">
                 <div class="qty-stepper">
-                  <button class="qty-btn" data-qty-minus="${item.id}" aria-label="Decrease quantity">−</button>
+                  <button class="qty-btn" data-qty-minus="${item.id}" aria-label="Decrease quantity">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12h14"/></svg>
+                  </button>
                   <span class="qty-val">${qty}</span>
-                  <button class="qty-btn" data-qty-plus="${item.id}" aria-label="Increase quantity">+</button>
+                  <button class="qty-btn" data-qty-plus="${item.id}" aria-label="Increase quantity">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                  </button>
                 </div>
-                <button class="remove-link text-xs font-semibold" data-remove="${item.id}">Remove</button>
+                <button class="remove-link text-xs font-semibold" data-remove="${item.id}">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                  Remove
+                </button>
               </div>
             </div>
             <div class="hidden sm:block text-right font-display text-lg text-jaggery flex-shrink-0">
@@ -358,14 +447,12 @@ Please confirm availability and the total with delivery. Thank you! 🙏`;
       if (remove) removeItem(remove.dataset.remove);
     });
 
-    // keep this tab's view in sync if the cart changes in another tab
     window.addEventListener("storage", (e) => {
       if (e.key === CART_KEY) renderCart();
     });
 
     renderCart();
 
-    // simple reveal-on-load for the header (page is short, no need for IntersectionObserver)
     document.querySelectorAll(".reveal").forEach((el, i) => {
       setTimeout(() => el.classList.add("in"), 80 * i);
     });

@@ -119,6 +119,7 @@
         #main-image {
             transition: opacity .3s ease, transform .5s cubic-bezier(.16, .84, .44, 1);
         }
+        .gallery-frame{ position: relative; }
         .gallery-frame:hover #main-image {
             transform: scale(1.04);
         }
@@ -132,12 +133,110 @@
             transform: translateY(-2px);
         }
 
+        /* ---------- wishlist heart (matches products.html) ---------- */
+        .wish-btn{
+            position:absolute; top:12px; right:12px; width:40px; height:40px; border-radius:50%;
+            background:rgba(255,255,255,.92); display:flex; align-items:center; justify-content:center;
+            box-shadow:0 4px 10px rgba(92,58,37,.18); transition:transform .25s cubic-bezier(.34,1.56,.64,1), background-color .25s ease;
+            z-index:2; border:none; cursor:pointer;
+        }
+        .wish-btn:hover{ transform:scale(1.1); }
+        .wish-btn svg{ width:19px; height:19px; stroke:var(--kumkum); fill:none; transition:fill .2s ease, stroke .2s ease; }
+        .wish-btn.active svg{ fill:var(--kumkum); }
+        .wish-btn.active{ animation: heartPop .4s cubic-bezier(.34,1.56,.64,1); }
+        @keyframes heartPop{ 0%{ transform:scale(1); } 40%{ transform:scale(1.35); } 100%{ transform:scale(1); } }
+
+        .wish-btn-sm{
+            position:absolute; top:10px; right:10px; width:34px; height:34px; border-radius:50%;
+            background:rgba(255,255,255,.9); display:flex; align-items:center; justify-content:center;
+            box-shadow:0 4px 10px rgba(92,58,37,.18); transition:transform .25s cubic-bezier(.34,1.56,.64,1);
+            z-index:2; border:none; cursor:pointer;
+        }
+        .wish-btn-sm:hover{ transform:scale(1.1); }
+        .wish-btn-sm svg{ width:16px; height:16px; stroke:var(--kumkum); fill:none; transition:fill .2s ease; }
+        .wish-btn-sm.active svg{ fill:var(--kumkum); }
+        .wish-btn-sm.active{ animation: heartPop .4s cubic-bezier(.34,1.56,.64,1); }
+
+        /* ---------- weight selector ---------- */
+        .weight-option{
+            cursor:pointer; user-select:none;
+            border:1.5px solid rgba(92,58,37,.15); background:#fff;
+            transition: border-color .2s ease, background-color .2s ease, transform .15s ease;
+        }
+        .weight-option:hover{ border-color: rgba(166,58,46,.4); }
+        .weight-option.selected{
+            border-color: var(--kumkum); background: rgba(166,58,46,.06);
+        }
+        .weight-option.disabled{
+            opacity:.4; cursor:not-allowed; pointer-events:none;
+        }
+        .weight-option .weight-check{
+            width:16px; height:16px; border-radius:50%; border:1.5px solid rgba(92,58,37,.3);
+            display:flex; align-items:center; justify-content:center; margin:0 auto .5rem;
+            transition: border-color .2s ease, background-color .2s ease;
+        }
+        .weight-option.selected .weight-check{ border-color:var(--kumkum); background:var(--kumkum); }
+        .weight-option .weight-check::after{
+            content:''; width:6px; height:6px; border-radius:50%; background:#fff;
+            transform:scale(0); transition:transform .2s cubic-bezier(.34,1.56,.64,1);
+        }
+        .weight-option.selected .weight-check::after{ transform:scale(1); }
+
+        /* ---------- qty stepper ---------- */
+        .qty-stepper{ display:flex; align-items:center; border:1.5px solid rgba(92,58,37,.15); border-radius:.7rem; overflow:hidden; }
+        .qty-btn{
+            width:40px; height:48px; display:flex; align-items:center; justify-content:center;
+            color:var(--jaggery); font-weight:700; font-size:1.1rem; transition:background-color .2s ease;
+        }
+        .qty-btn:hover{ background:rgba(166,58,46,.08); }
+        .qty-val{ width:44px; text-align:center; font-weight:600; }
+
+        /* ---------- add to cart button ---------- */
+        .add-cart-btn{
+            position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; gap:8px;
+            background:linear-gradient(90deg,var(--turmeric),var(--kumkum)); color:#fff; font-weight:600;
+            padding:.9rem 1.4rem; border-radius:.75rem; transition:opacity .2s ease, transform .15s ease;
+            border:none; cursor:pointer;
+        }
+        .add-cart-btn:active{ transform:scale(.98); }
+        .add-cart-btn.added{ background:linear-gradient(90deg,#4b9560,#2f6f45); }
+
+        /* ---------- small add-to-cart + view actions (similar products) ---------- */
+        .card-actions{ display:flex; gap:8px; }
+        .add-cart-btn-sm{
+            position:relative; overflow:hidden; flex:1; display:flex; align-items:center; justify-content:center; gap:6px;
+            background:linear-gradient(90deg,var(--turmeric),var(--kumkum)); color:#fff; font-weight:600; font-size:.85rem;
+            padding:.6rem 1rem; border-radius:.6rem; transition:opacity .2s ease, transform .15s ease; border:none; cursor:pointer;
+        }
+        .add-cart-btn-sm:active{ transform:scale(.97); }
+        .add-cart-btn-sm.added{ background:linear-gradient(90deg,#4b9560,#2f6f45); }
+        .view-arrow-btn{
+            width:40px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+            border:1.5px solid var(--kumkum); color:var(--kumkum); border-radius:.6rem;
+            transition:background-color .2s ease, color .2s ease, transform .2s ease;
+        }
+        .view-arrow-btn:hover{ background:var(--kumkum); color:#fff; transform:translateX(2px); }
+
+        /* ---------- toast ---------- */
+        .toast{
+            position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(20px);
+            background:var(--jaggery); color:var(--cream); padding:.7rem 1.3rem; border-radius:999px;
+            font-size:.9rem; font-weight:600; z-index:60; opacity:0; pointer-events:none;
+            transition:opacity .3s ease, transform .3s ease; box-shadow:0 10px 24px rgba(58,36,23,.35);
+            display:flex; align-items:center; gap:10px;
+        }
+        .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+        .toast a{ color:var(--marigold); font-weight:700; text-decoration:underline; }
+
         /* ---------- cards ---------- */
         .product-card {
+            background:#FFFDF9;
+            box-shadow: inset 0 0 0 1px rgba(92,58,37,.06), 0 1px 2px rgba(92,58,37,.06);
             transition: box-shadow .35s ease, transform .35s ease;
+            cursor:pointer;
         }
         .product-card:hover {
-            box-shadow: 0 22px 40px -18px rgba(92, 58, 37, .35);
+            box-shadow: inset 0 0 0 1px rgba(92,58,37,.08), 0 22px 40px -18px rgba(92,58,37,.35);
             transform: translateY(-6px);
         }
         .product-card .prod-img {
@@ -474,18 +573,18 @@
             <div class="stagger reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="rise-card bg-white rounded-2xl border border-slate-100 shadow-sm p-8">
                     <div class="step-num w-12 h-12 mx-auto mb-5 rounded-xl bg-gradient-to-br from-sky-400 to-blue-500 text-white flex items-center justify-center font-bold text-lg">1</div>
-                    <h3 class="font-bold text-kumkum mb-2">Select Product</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">Click "Order Now" on the product you want or navigate to our products page.</p>
+                    <h3 class="font-bold text-kumkum mb-2">Add to Cart</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed">Pick your favorites and add them to your cart from any product page.</p>
                 </div>
                 <div class="rise-card bg-white rounded-2xl border border-slate-100 shadow-sm p-8">
                     <div class="step-num w-12 h-12 mx-auto mb-5 rounded-xl bg-gradient-to-br from-sky-400 to-blue-500 text-white flex items-center justify-center font-bold text-lg">2</div>
-                    <h3 class="font-bold text-kumkum mb-2">Send Email/Call</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">Send us an email with your requirements or call us at +91 8263001410 for order details.</p>
+                    <h3 class="font-bold text-kumkum mb-2">Checkout on WhatsApp</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed">From your cart, tap "Checkout on WhatsApp" — it sends us your order pre-filled, ready to confirm.</p>
                 </div>
                 <div class="rise-card bg-white rounded-2xl border border-slate-100 shadow-sm p-8">
                     <div class="step-num w-12 h-12 mx-auto mb-5 rounded-xl bg-gradient-to-br from-sky-400 to-blue-500 text-white flex items-center justify-center font-bold text-lg">3</div>
                     <h3 class="font-bold text-kumkum mb-2">Confirm Details</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">We'll confirm your order quantity, delivery address, and provide pricing information.</p>
+                    <p class="text-sm text-slate-500 leading-relaxed">We'll confirm quantity, delivery address, courier charges, and total with you directly.</p>
                 </div>
                 <div class="rise-card bg-white rounded-2xl border border-slate-100 shadow-sm p-8">
                     <div class="step-num w-12 h-12 mx-auto mb-5 rounded-xl bg-gradient-to-br from-sky-400 to-blue-500 text-white flex items-center justify-center font-bold text-lg">4</div>
@@ -496,6 +595,8 @@
         </div>
     </section>
 
+    <div id="toast" class="toast"><span id="toastMsg">Added to cart</span></div>
+
     <div id="footer-placeholder"></div>
 
     <script src="js/navbar.js">
@@ -505,6 +606,84 @@
     <script src="js/products-data.js">
     </script>
     <script>
+        /* ================= CART + WISHLIST (shared schema) =================
+           Same localStorage keys as index.html, products.html, and cart.html:
+           nicy_cart_items (array of {id,name,img,price,qty,weightLabel}) and
+           nicy_wishlist_items (array of {id,name,img,price,cat,url}).
+           This keeps this page's Add to Cart / Wishlist buttons in sync with
+           the rest of the site and the navbar badges automatically. */
+        const CART_KEY = "nicy_cart_items";
+        const WISH_KEY = "nicy_wishlist_items";
+        const WHATSAPP_NUMBER = "+918263001410";
+
+        function getCart() {
+            try { const r = JSON.parse(localStorage.getItem(CART_KEY) || "[]"); return Array.isArray(r) ? r : []; }
+            catch { return []; }
+        }
+        function saveCart(items) {
+            localStorage.setItem(CART_KEY, JSON.stringify(items));
+            const totalQty = items.reduce((s, i) => s + (i.qty || 1), 0);
+            localStorage.setItem("nicy_cart_count", String(totalQty));
+            window.dispatchEvent(new Event("nicy:counts-updated"));
+        }
+        function getWishlist() {
+            try { const r = JSON.parse(localStorage.getItem(WISH_KEY) || "[]"); return Array.isArray(r) ? r : []; }
+            catch { return []; }
+        }
+        function saveWishlist(items) {
+            localStorage.setItem(WISH_KEY, JSON.stringify(items));
+            localStorage.setItem("nicy_wishlist_count", String(items.length));
+            window.dispatchEvent(new Event("nicy:counts-updated"));
+        }
+        function isWishlisted(id) {
+            return getWishlist().some(i => i.id === String(id));
+        }
+
+        function showToast(html) {
+            const toast = document.getElementById("toast");
+            document.getElementById("toastMsg").innerHTML = html;
+            toast.classList.add("show");
+            clearTimeout(showToast._t);
+            showToast._t = setTimeout(() => toast.classList.remove("show"), 2200);
+        }
+
+        // cartKey identifies a distinct line item: same product + same weight
+        // stack quantity; a different weight of the same product is a separate line.
+        function cartKeyFor(id, weightLabel) {
+            return `${id}::${weightLabel || "default"}`;
+        }
+
+        function addProductToCart(p, qty, weightLabel, unitPrice, btnEl) {
+            const cart = getCart();
+            const key = cartKeyFor(p.id, weightLabel);
+            const existing = cart.find(i => cartKeyFor(i.id, i.weightLabel) === key);
+            if (existing) existing.qty = (existing.qty || 1) + qty;
+            else cart.push({ id: String(p.id), name: p.name, img: p.img, price: unitPrice, weightLabel: weightLabel || null, qty });
+            saveCart(cart);
+            const weightNote = weightLabel ? ` (${weightLabel})` : "";
+            showToast(`Added to cart${weightNote} — <a href="cart.html">View Cart</a>`);
+            if (btnEl) {
+                const original = btnEl.innerHTML;
+                btnEl.classList.add("added");
+                btnEl.innerHTML = "Added ✓";
+                setTimeout(() => { btnEl.classList.remove("added"); btnEl.innerHTML = original; }, 1200);
+            }
+        }
+
+        function toggleWishlistFor(p, btnEl) {
+            const key = String(p.id);
+            const wishlist = getWishlist();
+            const idx = wishlist.findIndex(i => i.id === key);
+            if (idx >= 0) {
+                wishlist.splice(idx, 1);
+                btnEl.classList.remove("active");
+            } else {
+                wishlist.push({ id: key, name: p.name, img: p.img, price: p.price, cat: CATEGORY_LABEL[p.cat], url: `product-detail.html?id=${key}` });
+                btnEl.classList.add("active");
+            }
+            saveWishlist(wishlist);
+        }
+
         const params = new URLSearchParams(window.location.search);
         const id = params.get("id");
         const product = PRODUCTS.find(p => p.id === id) || PRODUCTS[0];
@@ -512,12 +691,20 @@
         function renderDetail(p) {
             const root = document.getElementById("detail-root");
 
-            const weightCards = p.weights.map(w => `
-            <div class="bg-white rounded-xl border border-orange-100 py-5 text-center">
-              <div class="text-slate-500 text-sm mb-1">${w.label}</div>
-              <div class="text-kumkum font-extrabold text-xl">${w.price !== null ? "₹" + w.price : "-"}</div>
-            </div>
-          `).join("");
+            // Index weights so we can look them up by index when a card is clicked.
+            const weightCards = p.weights.map((w, i) => {
+                const disabled = w.price === null || w.price === undefined;
+                return `
+              <button type="button"
+                      class="weight-option rounded-xl py-4 text-center${i === 0 && !disabled ? ' selected' : ''}${disabled ? ' disabled' : ''}"
+                      data-weight-index="${i}"
+                      ${disabled ? 'disabled' : ''}>
+                <div class="weight-check"></div>
+                <div class="text-slate-600 text-sm mb-1">${w.label}</div>
+                <div class="text-kumkum font-extrabold text-xl">${w.price !== null && w.price !== undefined ? "₹" + w.price : "-"}</div>
+              </button>
+            `;
+            }).join("");
 
             const featureItems = p.features.map((f, i) => `
             <li class="check-item flex items-start gap-2 text-slate-600 mb-3" style="animation-delay:${i * 0.08}s">
@@ -537,12 +724,22 @@
             </li>
           `).join("");
 
+            const wished = isWishlisted(p.id);
+
+            // Default selected weight = first weight option that actually has a price.
+            const defaultIndex = p.weights.findIndex(w => w.price !== null && w.price !== undefined);
+
             root.innerHTML = `
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
 
               <!-- Left: Image Gallery -->
               <div class="detail-in">
                 <div class="gallery-frame bg-white rounded-2xl overflow-hidden h-[420px] flex items-center justify-center shadow-sm">
+                  <button id="detailWishBtn" class="wish-btn ${wished ? 'active' : ''}" aria-label="Save to wishlist">
+                    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 21s-6.7-4.35-9.33-8.2C1 10.4 1.4 6.9 4.1 5.1c2.2-1.5 5-.9 6.6 1 .4.5.9 1.1 1.3 1.7.4-.6.9-1.2 1.3-1.7 1.6-1.9 4.4-2.5 6.6-1 2.7 1.8 3.1 5.3 1.43 7.7C18.7 16.65 12 21 12 21z"/>
+                    </svg>
+                  </button>
                   <img id="main-image" src="${p.img}" alt="${p.name}" class="w-full h-full object-contain"
                        onerror="this.onerror=null;this.src='';this.alt='';this.parentElement.innerHTML='<span class=\\'text-slate-400\\'>${p.name}</span>'" />
                 </div>
@@ -560,7 +757,12 @@
                 </span>
                 <h1 class="font-display text-3xl sm:text-4xl text-jaggery mb-4">${p.name}</h1>
                 <p class="text-slate-500 leading-relaxed mb-6">${p.desc}</p>
-                <div class="text-3xl font-extrabold text-kumkum mb-8">₹${p.price}</div>
+                <div id="selectedPriceDisplay" class="text-3xl font-extrabold text-kumkum mb-8">
+                  ₹${defaultIndex >= 0 ? p.weights[defaultIndex].price : p.price}
+                  <span id="selectedWeightNote" class="text-base font-medium text-slate-400">
+                    ${defaultIndex >= 0 ? '/ ' + p.weights[defaultIndex].label : ''}
+                  </span>
+                </div>
 
                 <div class="bg-orange-50 rounded-2xl p-6">
                   <h3 class="flex items-center gap-2 font-bold text-kumkum text-lg mb-4">
@@ -569,9 +771,9 @@
                       <path d="M16 7V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v2"/>
                       <circle cx="16" cy="13" r="1.5"/>
                     </svg>
-                    Pricing &amp; Delivery
+                    Choose Weight
                   </h3>
-                  <div class="grid grid-cols-3 gap-3">
+                  <div id="weightGrid" class="grid grid-cols-3 gap-3">
                     ${weightCards}
                   </div>
                   <p class="flex items-start gap-2 text-xs text-slate-500 mt-4">
@@ -579,24 +781,37 @@
                       <path d="M9 18h6"/><path d="M10 22h4"/>
                       <path d="M12 2a7 7 0 0 0-4 12.7c.6.4 1 1.2 1 2.05V17h6v-2.25c0-.85.4-1.65 1-2.05A7 7 0 0 0 12 2z"/>
                     </svg>
-                    Delivery charges are added based on weight. Contact us for complete pricing details.
+                    Tap a weight to select it — the price and your cart total will update to match.
                   </p>
                 </div>
 
-                <div class="mt-6 flex flex-col sm:flex-row gap-4">
-                  <a href="mailto:orders@nicyfoods.com?subject=Order%20Enquiry%20-%20${encodeURIComponent(p.name)}&body=Hi%20NicyFoods%2C%0A%0AI%20would%20like%20to%20order%3A%20${encodeURIComponent(p.name)}%0AQuantity%3A%20%0ADelivery%20Address%3A%20"
-                     class="cta-btn flex-1 inline-flex items-center justify-center gap-2 text-center bg-gradient-to-r from-turmeric to-kumkum hover:opacity-95 text-white font-semibold py-3.5 rounded-xl transition-all hover:-translate-y-0.5 shadow-sm">
+                <!-- Add to Cart -->
+                <div class="mt-6 flex flex-col sm:flex-row gap-4 items-stretch">
+                  <div class="qty-stepper">
+                    <button id="qtyMinus" class="qty-btn" aria-label="Decrease quantity" type="button">−</button>
+                    <span id="qtyVal" class="qty-val">1</span>
+                    <button id="qtyPlus" class="qty-btn" aria-label="Increase quantity" type="button">+</button>
+                  </div>
+                  <button id="addToCartBtn" class="add-cart-btn flex-1">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M22 6l-10 7L2 6"/><path d="M2 6h20v12H2z"/>
+                      <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
                     </svg>
-                    Order Now via Email
-                  </a>
+                    Add to Cart
+                  </button>
+                </div>
+
+                <div class="mt-4 flex flex-col sm:flex-row gap-4">
                   <a href="tel:+918263001410"
-                     class="flex-1 inline-flex items-center justify-center gap-2 text-center border-2 border-kumkum text-kumkum font-semibold py-3.5 rounded-xl transition-all hover:bg-orange-50 hover:-translate-y-0.5">
+                     class="flex-1 inline-flex items-center justify-center gap-2 text-center border-2 border-kumkum text-kumkum font-semibold py-3 rounded-xl transition-all hover:bg-orange-50 hover:-translate-y-0.5">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
                     </svg>
                     Call: +91 8263001410
+                  </a>
+                  <a href="mailto:nicyfoods5@gmail.com?subject=Order%20Enquiry%20-%20${encodeURIComponent(p.name)}&body=Hi%20NicyFoods%2C%0A%0AI%20would%20like%20to%20order%3A%20${encodeURIComponent(p.name)}%0AQuantity%3A%20%0ADelivery%20Address%3A%20"
+                     class="flex-1 inline-flex items-center justify-center gap-2 text-center text-slate-500 font-medium py-3 rounded-xl hover:text-kumkum transition-colors text-sm">
+                    or email us instead
                   </a>
                 </div>
               </div>
@@ -634,6 +849,53 @@
               </div>
             </div>
           `;
+
+            // ---- weight selection state ----
+            let selectedIndex = defaultIndex >= 0 ? defaultIndex : 0;
+
+            function currentWeight() {
+                return p.weights[selectedIndex];
+            }
+
+            function updatePriceDisplay() {
+                const w = currentWeight();
+                const priceEl = document.getElementById("selectedPriceDisplay");
+                const noteEl = document.getElementById("selectedWeightNote");
+                const valid = w && w.price !== null && w.price !== undefined;
+                priceEl.childNodes[0].textContent = valid ? `₹${w.price} ` : `₹${p.price} `;
+                noteEl.textContent = valid ? `/ ${w.label}` : '';
+            }
+
+            document.getElementById("weightGrid").querySelectorAll(".weight-option").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    if (btn.disabled) return;
+                    selectedIndex = parseInt(btn.dataset.weightIndex, 10);
+                    document.getElementById("weightGrid").querySelectorAll(".weight-option").forEach(b => b.classList.remove("selected"));
+                    btn.classList.add("selected");
+                    updatePriceDisplay();
+                });
+            });
+
+            // ---- wire up qty stepper + add to cart + wishlist for this product ----
+            let qty = 1;
+            const qtyValEl = document.getElementById("qtyVal");
+            document.getElementById("qtyMinus").addEventListener("click", () => {
+                qty = Math.max(1, qty - 1);
+                qtyValEl.textContent = qty;
+            });
+            document.getElementById("qtyPlus").addEventListener("click", () => {
+                qty = Math.min(20, qty + 1);
+                qtyValEl.textContent = qty;
+            });
+            document.getElementById("addToCartBtn").addEventListener("click", (e) => {
+                const w = currentWeight();
+                const unitPrice = (w && w.price !== null && w.price !== undefined) ? w.price : p.price;
+                const weightLabel = (w && w.price !== null && w.price !== undefined) ? w.label : null;
+                addProductToCart(p, qty, weightLabel, unitPrice, e.currentTarget);
+            });
+            document.getElementById("detailWishBtn").addEventListener("click", (e) => {
+                toggleWishlistFor(p, e.currentTarget);
+            });
         }
 
         renderDetail(product);
@@ -656,25 +918,70 @@
                 const weightsLine = p.weights
                     .map(w => `${w.label.replace(" ", "")}₹${w.price ?? "-"}`)
                     .join(" | ");
+                const wished = isWishlisted(p.id);
 
-                const card = document.createElement("a");
-                card.href = `product-detail.html?id=${p.id}`;
-                card.className = "product-card card-in block bg-white rounded-2xl shadow-md overflow-hidden flex flex-col";
+                const card = document.createElement("div");
+                card.className = "product-card card-in rounded-2xl overflow-hidden flex flex-col";
                 card.style.animationDelay = `${i * 0.08}s`;
                 card.innerHTML = `
-                <div class="h-44 bg-gradient-to-br from-orange-100 to-amber-50 overflow-hidden">
-                  <img src="${p.img}" alt="${p.name}" class="prod-img w-full h-full object-cover" onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('div'), {className:'w-full h-full flex items-center justify-center text-slate-400 text-sm', innerText:'${p.name}'}));" />
+                <div class="relative h-44 bg-gradient-to-br from-orange-100 to-amber-50 overflow-hidden">
+                  <button class="wish-btn-sm ${wished ? 'active' : ''}" data-wish="${p.id}" aria-label="Save to wishlist">
+                    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 21s-6.7-4.35-9.33-8.2C1 10.4 1.4 6.9 4.1 5.1c2.2-1.5 5-.9 6.6 1 .4.5.9 1.1 1.3 1.7.4-.6.9-1.2 1.3-1.7 1.6-1.9 4.4-2.5 6.6-1 2.7 1.8 3.1 5.3 1.43 7.7C18.7 16.65 12 21 12 21z"/>
+                    </svg>
+                  </button>
+                  <img src="${p.img}" alt="${p.name}" class="prod-img w-full h-full object-cover" data-nav="${p.id}" onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('div'), {className:'w-full h-full flex items-center justify-center text-slate-400 text-sm', innerText:'${p.name}'}));" />
                 </div>
                 <div class="p-5 flex flex-col flex-1">
                   <span class="self-start mb-2 text-[11px] font-bold tracking-wide text-kumkum bg-orange-50 px-3 py-1 rounded-full">${CATEGORY_LABEL[p.cat]}</span>
-                  <h3 class="font-display text-lg text-jaggery mb-1">${p.name}</h3>
+                  <h3 class="font-display text-lg text-jaggery mb-1 cursor-pointer" data-nav="${p.id}">${p.name}</h3>
                   <p class="text-sm text-slate-500 flex-1 mb-3 leading-snug">${p.desc}</p>
                   <div class="text-2xl font-extrabold text-kumkum mb-2">₹${p.price}</div>
                   <p class="text-xs text-slate-500 mb-4"><span class="font-semibold text-jaggery">Courier Charges:</span> ${weightsLine}</p>
-                  <span class="cta-btn mt-auto w-full text-center bg-gradient-to-r from-turmeric to-kumkum hover:opacity-95 text-white font-semibold py-2.5 rounded-lg transition-opacity">View Details</span>
+                  <div class="card-actions mt-auto">
+                    <button class="add-cart-btn-sm" data-add="${p.id}">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
+                        <path d="M2.5 3h2l2.6 12.4a2 2 0 0 0 2 1.6h8.4a2 2 0 0 0 2-1.6L21 8H6"/>
+                      </svg>
+                      <span class="add-cart-sm-label">Add to Cart</span>
+                    </button>
+                    <a href="product-detail.html?id=${p.id}" class="view-arrow-btn" aria-label="View ${p.name} details">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14"/><path d="M13 6l6 6-6 6"/>
+                      </svg>
+                    </a>
+                  </div>
                 </div>
               `;
                 grid.appendChild(card);
+            });
+
+            // delegated events for similar-product cards
+            grid.addEventListener("click", (e) => {
+                const wishBtn = e.target.closest("[data-wish]");
+                const addBtn = e.target.closest("[data-add]");
+                const navEl = e.target.closest("[data-nav]");
+
+                if (wishBtn) {
+                    const pr = PRODUCTS.find(x => String(x.id) === String(wishBtn.dataset.wish));
+                    if (pr) toggleWishlistFor(pr, wishBtn);
+                    return;
+                }
+                if (addBtn) {
+                    // Similar-product quick-add uses the product's first available weight
+                    // (usually 1 Kg), since there's no per-card weight selector here.
+                    const pr = PRODUCTS.find(x => String(x.id) === String(addBtn.dataset.add));
+                    if (pr) {
+                        const w = pr.weights.find(w => w.price !== null && w.price !== undefined);
+                        addProductToCart(pr, 1, w ? w.label : null, w ? w.price : pr.price, addBtn);
+                    }
+                    return;
+                }
+                if (navEl) {
+                    window.location.href = `product-detail.html?id=${navEl.dataset.nav}`;
+                    return;
+                }
             });
         }
 

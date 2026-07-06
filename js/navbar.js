@@ -25,7 +25,7 @@ function loadNavbar() {
           <li><a href="products.html" data-page="products.html" class="nav-link relative pb-1 hover:text-marigold transition-colors">Products</a></li>
           <li><a href="about.html" data-page="about.html" class="nav-link relative pb-1 hover:text-marigold transition-colors">About Us</a></li>
           <li><a href="contact.html" data-page="contact.html" class="nav-link relative pb-1 hover:text-marigold transition-colors">Contact</a></li>
-          <li><a href="contact.html#faq" data-page="faq.html" class="nav-link relative pb-1 hover:text-marigold transition-colors">FAQ's</a></li>
+          <li><a href="faq.html" data-page="faq.html" class="nav-link relative pb-1 hover:text-marigold transition-colors">FAQ's</a></li>
         </ul>
 
         <div class="flex items-center gap-4 md:gap-5 flex-shrink-0">

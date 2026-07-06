@@ -115,6 +115,16 @@
     .wish-btn.active{ animation: heartPop .4s cubic-bezier(.34,1.56,.64,1); }
     @keyframes heartPop{ 0%{ transform:scale(1); } 40%{ transform:scale(1.35); } 100%{ transform:scale(1); } }
 
+    /* weight select on each card */
+    .weight-select{
+      width:100%; border:1.5px solid rgba(92,58,37,.15); border-radius:.6rem; padding:.5rem .6rem;
+      font-size:.82rem; font-weight:600; color:var(--jaggery); background:#fff;
+      transition:border-color .2s ease; appearance:none;
+      background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235C3A25' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>");
+      background-repeat:no-repeat; background-position:right .6rem center; background-size:14px;
+    }
+    .weight-select:focus{ outline:none; border-color:var(--kumkum); }
+
     /* add-to-cart + view actions row */
     .card-actions{ display:flex; gap:8px; }
     .add-cart-btn{
@@ -321,6 +331,7 @@
       <button data-filter="millet" class="filter-btn px-6 py-2.5 rounded-full border border-slate-300 text-sm font-semibold text-slate-700 hover:border-kumkum hover:text-kumkum">Millet<span class="count-pill" data-count-for="millet">0</span></button>
       <button data-filter="traditional" class="filter-btn px-6 py-2.5 rounded-full border border-slate-300 text-sm font-semibold text-slate-700 hover:border-kumkum hover:text-kumkum">Traditional<span class="count-pill" data-count-for="traditional">0</span></button>
       <button data-filter="herbal" class="filter-btn px-6 py-2.5 rounded-full border border-slate-300 text-sm font-semibold text-slate-700 hover:border-kumkum hover:text-kumkum">Herbal<span class="count-pill" data-count-for="herbal">0</span></button>
+      <button data-filter="snacks" class="filter-btn px-6 py-2.5 rounded-full border border-slate-300 text-sm font-semibold text-slate-700 hover:border-kumkum hover:text-kumkum">Snacks<span class="count-pill" data-count-for="snacks">0</span></button>
     </div>
 
     <!-- Product Grid -->
@@ -373,39 +384,55 @@
   <script>
     const grid = document.getElementById("product-grid");
 
-    /* ================= CART + WISHLIST STATE =================
-       Persisted in localStorage so it survives page navigation
-       and reloads. This is a real site (not a Claude artifact),
-       so localStorage is the right tool here. */
-    const CART_KEY = "nicyfoods_cart";
-    const WISH_KEY = "nicyfoods_wishlist";
+    /* ================= CART + WISHLIST (shared schema across the whole site) =================
+       Same localStorage keys/shapes as index.html, product-detail.html, and wishlist.html:
+       nicy_cart_items      -> array of {id, name, img, price, qty, weightLabel}
+       nicy_wishlist_items  -> array of {id, name, img, price, cat, url}
+       Both also maintain nicy_cart_count / nicy_wishlist_count and fire
+       "nicy:counts-updated" so the navbar badges (built in navbar.js) stay in sync
+       no matter which page the person is adding items from. */
+    const CART_KEY = "nicy_cart_items";
+    const WISH_KEY = "nicy_wishlist_items";
     // Your WhatsApp business number. You can include +, spaces, or dashes here —
     // it gets cleaned up automatically before building the wa.me link above.
     const WHATSAPP_NUMBER = "+918263001410";
 
-    function loadCart() {
-      try { return JSON.parse(localStorage.getItem(CART_KEY)) || {}; }
-      catch { return {}; }
+    function getCart() {
+      try { const r = JSON.parse(localStorage.getItem(CART_KEY) || "[]"); return Array.isArray(r) ? r : []; }
+      catch { return []; }
     }
-    function saveCart(cart) { localStorage.setItem(CART_KEY, JSON.stringify(cart)); }
-
-    function loadWishlist() {
-      try { return new Set(JSON.parse(localStorage.getItem(WISH_KEY)) || []); }
-      catch { return new Set(); }
+    function saveCart(items) {
+      localStorage.setItem(CART_KEY, JSON.stringify(items));
+      const totalQty = items.reduce((s, i) => s + (i.qty || 1), 0);
+      localStorage.setItem("nicy_cart_count", String(totalQty));
+      window.dispatchEvent(new Event("nicy:counts-updated"));
     }
-    function saveWishlist(set) { localStorage.setItem(WISH_KEY, JSON.stringify([...set])); }
+    // A line item is identified by product id + chosen weight, so the same
+    // product at two different weights becomes two separate cart lines.
+    function cartLineKey(id, weightLabel) {
+      return `${id}::${weightLabel || "default"}`;
+    }
 
-    let cart = loadCart();
-    let wishlist = loadWishlist();
+    function getWishlist() {
+      try { const r = JSON.parse(localStorage.getItem(WISH_KEY) || "[]"); return Array.isArray(r) ? r : []; }
+      catch { return []; }
+    }
+    function saveWishlist(items) {
+      localStorage.setItem(WISH_KEY, JSON.stringify(items));
+      localStorage.setItem("nicy_wishlist_count", String(items.length));
+      window.dispatchEvent(new Event("nicy:counts-updated"));
+    }
+    function isWishlisted(id) {
+      return getWishlist().some(i => i.id === String(id));
+    }
 
-    function cartCount() {
-      return Object.values(cart).reduce((sum, qty) => sum + qty, 0);
+    let cart = getCart();
+
+    function cartTotalQty() {
+      return cart.reduce((sum, i) => sum + (i.qty || 1), 0);
     }
     function cartSubtotal() {
-      return Object.entries(cart).reduce((sum, [id, qty]) => {
-        const p = PRODUCTS.find(x => String(x.id) === String(id));
-        return sum + (p ? p.price * qty : 0);
-      }, 0);
+      return cart.reduce((sum, i) => sum + (i.price || 0) * (i.qty || 1), 0);
     }
 
     function showToast(msg) {
@@ -418,20 +445,34 @@
 
     function updateCartBadge() {
       const badge = document.getElementById("cartCount");
-      badge.textContent = cartCount();
+      badge.textContent = cartTotalQty();
       const fab = document.getElementById("cartFab");
       fab.classList.remove("bump");
       void fab.offsetWidth; // restart animation
       fab.classList.add("bump");
     }
 
-    function addToCart(id, btnEl) {
-      const key = String(id);
-      cart[key] = (cart[key] || 0) + 1;
+    // Reads the weight <select> inside a given product card to find the
+    // currently chosen weight option (falls back to the product's first
+    // available weight if something goes wrong).
+    function selectedWeightFor(p, cardEl) {
+      const select = cardEl ? cardEl.querySelector(".weight-select") : null;
+      if (select && select.value !== "") {
+        const w = p.weights[parseInt(select.value, 10)];
+        if (w && w.price !== null && w.price !== undefined) return w;
+      }
+      return p.weights.find(w => w.price !== null && w.price !== undefined) || { label: null, price: p.price };
+    }
+
+    function addToCart(p, weight, btnEl) {
+      const key = cartLineKey(p.id, weight.label);
+      const existing = cart.find(i => cartLineKey(i.id, i.weightLabel) === key);
+      if (existing) existing.qty = (existing.qty || 1) + 1;
+      else cart.push({ id: String(p.id), name: p.name, img: p.img, price: weight.price, weightLabel: weight.label, qty: 1 });
       saveCart(cart);
       updateCartBadge();
       renderCartPanel();
-      showToast("Added to cart");
+      showToast(weight.label ? `Added to cart (${weight.label})` : "Added to cart");
       if (btnEl) {
         const label = btnEl.querySelector(".add-cart-label");
         const original = label.textContent;
@@ -441,34 +482,43 @@
       }
     }
 
-    function changeQty(id, delta) {
-      const key = String(id);
-      cart[key] = (cart[key] || 0) + delta;
-      if (cart[key] <= 0) delete cart[key];
+    function changeQty(id, weightLabel, delta) {
+      const key = cartLineKey(id, weightLabel);
+      const line = cart.find(i => cartLineKey(i.id, i.weightLabel) === key);
+      if (!line) return;
+      line.qty = (line.qty || 1) + delta;
+      if (line.qty <= 0) cart = cart.filter(i => cartLineKey(i.id, i.weightLabel) !== key);
       saveCart(cart);
       updateCartBadge();
       renderCartPanel();
     }
 
-    function removeFromCart(id) {
-      delete cart[String(id)];
+    function removeFromCart(id, weightLabel) {
+      const key = cartLineKey(id, weightLabel);
+      cart = cart.filter(i => cartLineKey(i.id, i.weightLabel) !== key);
       saveCart(cart);
       updateCartBadge();
       renderCartPanel();
     }
 
-    function toggleWishlist(id, btnEl) {
-      const key = String(id);
-      if (wishlist.has(key)) { wishlist.delete(key); btnEl.classList.remove("active"); }
-      else { wishlist.add(key); btnEl.classList.add("active"); }
+    function toggleWishlist(p, btnEl) {
+      const key = String(p.id);
+      const wishlist = getWishlist();
+      const idx = wishlist.findIndex(i => i.id === key);
+      if (idx >= 0) {
+        wishlist.splice(idx, 1);
+        btnEl.classList.remove("active");
+      } else {
+        wishlist.push({ id: key, name: p.name, img: p.img, price: p.price, cat: CATEGORY_LABEL[p.cat], url: `product-detail.html?id=${key}` });
+        btnEl.classList.add("active");
+      }
       saveWishlist(wishlist);
     }
 
     function renderCartPanel() {
       const itemsEl = document.getElementById("cartItems");
-      const entries = Object.entries(cart);
 
-      if (entries.length === 0) {
+      if (cart.length === 0) {
         itemsEl.innerHTML = `
           <div class="cart-empty flex flex-col items-center text-center py-16 text-slate-400">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -478,36 +528,32 @@
             <p>Your cart is empty</p>
           </div>`;
       } else {
-        itemsEl.innerHTML = entries.map(([id, qty]) => {
-          const p = PRODUCTS.find(x => String(x.id) === String(id));
-          if (!p) return "";
-          return `
+        itemsEl.innerHTML = cart.map((item) => `
             <div class="cart-item">
               <div class="w-16 h-16 rounded-lg overflow-hidden bg-orange-50 flex-shrink-0">
-                <img src="${p.img}" alt="${p.name}" class="w-full h-full object-cover" onerror="this.style.display='none'">
+                <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover" onerror="this.style.display='none'">
               </div>
               <div class="flex-1 min-w-0">
-                <p class="font-semibold text-jaggery text-sm truncate">${p.name}</p>
-                <p class="text-kumkum font-bold text-sm mt-0.5">₹${p.price}</p>
+                <p class="font-semibold text-jaggery text-sm truncate">${item.name}</p>
+                <p class="text-xs text-slate-400">${item.weightLabel || ''}</p>
+                <p class="text-kumkum font-bold text-sm mt-0.5">₹${item.price}</p>
                 <div class="flex items-center gap-2 mt-2">
-                  <button class="qty-btn" data-qty-minus="${id}">−</button>
-                  <span class="text-sm w-5 text-center">${qty}</span>
-                  <button class="qty-btn" data-qty-plus="${id}">+</button>
-                  <button class="ml-auto text-xs text-slate-400 hover:text-kumkum transition-colors" data-remove="${id}">Remove</button>
+                  <button class="qty-btn" data-qty-minus="${item.id}" data-weight="${item.weightLabel || ''}">−</button>
+                  <span class="text-sm w-5 text-center">${item.qty}</span>
+                  <button class="qty-btn" data-qty-plus="${item.id}" data-weight="${item.weightLabel || ''}">+</button>
+                  <button class="ml-auto text-xs text-slate-400 hover:text-kumkum transition-colors" data-remove="${item.id}" data-weight="${item.weightLabel || ''}">Remove</button>
                 </div>
               </div>
-            </div>`;
-        }).join("");
+            </div>`).join("");
       }
 
       document.getElementById("cartSubtotal").textContent = `₹${cartSubtotal()}`;
 
-      // Build a WhatsApp order message
-      const lines = entries.map(([id, qty]) => {
-        const p = PRODUCTS.find(x => String(x.id) === String(id));
-        return p ? `🟠 *${p.name}* — Qty ${qty} — ₹${p.price * qty}` : "";
-      }).filter(Boolean);
-      const msg = entries.length
+      // Build a WhatsApp order message, including the weight chosen per line.
+      const lines = cart.map(item =>
+        `🟠 *${item.name}*${item.weightLabel ? ` (${item.weightLabel})` : ''} — Qty ${item.qty} — ₹${item.price * item.qty}`
+      );
+      const msg = cart.length
         ? `Hi NicyFoods! 👋 I'd like to place an order:\n\n${lines.join("\n")}\n━━━━━━━━━━━━━━\n*Subtotal: ₹${cartSubtotal()}*\n_Courier charges to be confirmed based on weight_\n\nPlease confirm availability and the total with delivery. Thank you! 🙏`
         : `Hi NicyFoods! 👋 I'd like to place an order.`;
       const phone = WHATSAPP_NUMBER.replace(/\D/g, "");
@@ -532,9 +578,9 @@
       const plus = e.target.closest("[data-qty-plus]");
       const minus = e.target.closest("[data-qty-minus]");
       const remove = e.target.closest("[data-remove]");
-      if (plus) changeQty(plus.dataset.qtyPlus, 1);
-      if (minus) changeQty(minus.dataset.qtyMinus, -1);
-      if (remove) removeFromCart(remove.dataset.remove);
+      if (plus) changeQty(plus.dataset.qtyPlus, plus.dataset.weight, 1);
+      if (minus) changeQty(minus.dataset.qtyMinus, minus.dataset.weight, -1);
+      if (remove) removeFromCart(remove.dataset.remove, remove.dataset.weight);
     });
 
     // populate filter counts once
@@ -565,14 +611,19 @@
         }
 
         filtered.forEach((p, i) => {
-          const weightsLine = p.weights
-            .map(w => `${w.label.replace(" ", "")}₹${w.price ?? "-"}`)
-            .join(" | ");
+          const defaultIndex = p.weights.findIndex(w => w.price !== null && w.price !== undefined);
+          const defaultWeight = defaultIndex >= 0 ? p.weights[defaultIndex] : { label: null, price: p.price };
+
+          const weightOptions = p.weights.map((w, wi) =>
+            (w.price !== null && w.price !== undefined)
+              ? `<option value="${wi}">${w.label} — ₹${w.price}</option>`
+              : ''
+          ).join("");
 
           const card = document.createElement("div");
           card.className = "product-card card-in relative rounded-2xl overflow-hidden flex flex-col";
           card.style.animationDelay = `${Math.min(i, 7) * 0.06}s`;
-          const isWished = wishlist.has(String(p.id));
+          const isWished = isWishlisted(p.id);
           card.innerHTML = `
             <div class="relative h-44 bg-gradient-to-br from-orange-100 to-amber-50 overflow-hidden">
               <button class="wish-btn ${isWished ? 'active' : ''}" data-wish="${p.id}" aria-label="Save to wishlist">
@@ -586,8 +637,13 @@
               <span class="cat-tag self-start mb-2 text-[11px] font-bold tracking-wide text-kumkum bg-orange-50 px-3 py-1 rounded-full">${CATEGORY_LABEL[p.cat]}</span>
               <h3 class="font-display text-lg text-jaggery mb-1 cursor-pointer" data-nav="${p.id}">${p.name}</h3>
               <p class="text-sm text-slate-500 flex-1 mb-3 leading-snug">${p.desc}</p>
-              <div class="text-2xl font-extrabold text-kumkum mb-2">₹${p.price}</div>
-              <p class="text-xs text-slate-500 mb-4"><span class="font-semibold text-jaggery">Courier Charges:</span> ${weightsLine}</p>
+
+              <div class="text-2xl font-extrabold text-kumkum mb-2" data-price-display>₹${defaultWeight.price}</div>
+
+              <select class="weight-select mb-3" data-weight-select aria-label="Select weight for ${p.name}">
+                ${weightOptions}
+              </select>
+
               <div class="card-actions mt-auto">
                 <button class="add-cart-btn" data-add="${p.id}">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -604,6 +660,16 @@
               </div>
             </div>
           `;
+
+          // Update the big price display live as the weight selection changes.
+          const select = card.querySelector("[data-weight-select]");
+          const priceDisplay = card.querySelector("[data-price-display]");
+          select.addEventListener("click", (e) => e.stopPropagation());
+          select.addEventListener("change", () => {
+            const w = p.weights[parseInt(select.value, 10)];
+            if (w) priceDisplay.textContent = `₹${w.price}`;
+          });
+
           grid.appendChild(card);
         });
 
@@ -625,8 +691,20 @@
       const addBtn = e.target.closest("[data-add]");
       const navEl = e.target.closest("[data-nav]");
 
-      if (wishBtn) { toggleWishlist(wishBtn.dataset.wish, wishBtn); return; }
-      if (addBtn) { addToCart(addBtn.dataset.add, addBtn); return; }
+      if (wishBtn) {
+        const p = PRODUCTS.find(x => String(x.id) === String(wishBtn.dataset.wish));
+        if (p) toggleWishlist(p, wishBtn);
+        return;
+      }
+      if (addBtn) {
+        const p = PRODUCTS.find(x => String(x.id) === String(addBtn.dataset.add));
+        if (p) {
+          const card = addBtn.closest(".product-card");
+          const weight = selectedWeightFor(p, card);
+          addToCart(p, weight, addBtn);
+        }
+        return;
+      }
       if (navEl) { window.location.href = `product-detail.html?id=${navEl.dataset.nav}`; return; }
     });
 
@@ -654,5 +732,5 @@
     });
   </script>
 
-</body>
+</body>       
 </html>
