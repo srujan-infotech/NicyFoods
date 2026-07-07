@@ -50,9 +50,7 @@
     .hero-title-in{ animation: titleIn 1s cubic-bezier(.16,.84,.44,1) both; }
     @keyframes titleIn{ from{ opacity:0; transform:translateY(30px);} to{ opacity:1; transform:translateY(0);} }
 
-    /* ---------- kolam "draw-in" motif (signature, matches About page) ----------
-       Traced once on load/scroll, like a rangoli laid dot-by-dot,
-       rather than looping/spinning decoration. */
+    /* ---------- kolam "draw-in" motif (signature, matches About page) ---------- */
     .kolam-trace path, .kolam-trace circle, .kolam-trace ellipse{
       stroke-dasharray: 620; stroke-dashoffset: 620;
       transition: stroke-dashoffset 2.4s cubic-bezier(.16,.84,.44,1);
@@ -199,34 +197,55 @@
     /* ---------- empty state ---------- */
     .empty-state{ animation: fadeUp .5s cubic-bezier(.16,.84,.44,1) both; }
 
-    /* ---------- background bubble drops ----------
-       Ambient turmeric/ghee-drop bubbles that rise and sway,
-       matching the About page's signature. */
+    /* ================= BACKGROUND BUBBLES (signature) =================
+       Warm ghee/jaggery droplets that rise, sway side to side, and fade —
+       like a kitchen full of gentle warmth. Layered by depth: distant
+       bubbles are smaller, dimmer and blurred; near ones are sharp. */
     .bubble-field{ position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
+
     .ladoo-particle{
       position:absolute; border-radius:50%;
       background:radial-gradient(circle at 32% 26%, #FDE7B0, #F2C14E 45%, #C8791F 80%, #A63A2E 100%);
       box-shadow: 0 0 18px 3px rgba(232,163,61,.45), inset -2px -3px 6px rgba(92,58,37,.35), inset 2px 3px 5px rgba(255,255,255,.55);
       opacity:.55;
     }
+    /* depth variants */
+    .ladoo-particle.far{ opacity:.28; filter:blur(1.5px); }
     .ladoo-particle.dim{ opacity:.4; }
-    .ladoo-particle.sharp{ opacity:.75; box-shadow: 0 0 22px 4px rgba(232,163,61,.55), inset -2px -3px 6px rgba(92,58,37,.35), inset 2px 3px 5px rgba(255,255,255,.6); }
+    .ladoo-particle.mid{ opacity:.55; }
+    .ladoo-particle.sharp{ opacity:.8; box-shadow: 0 0 22px 4px rgba(232,163,61,.55), inset -2px -3px 6px rgba(92,58,37,.35), inset 2px 3px 5px rgba(255,255,255,.6); }
 
+    /* three drift paths so bubbles don't look like they're on rails */
     .bubble-rise{ animation: bubbleRise var(--dur,9s) ease-in-out infinite; animation-delay: var(--delay,0s); }
     .bubble-rise-alt{ animation: bubbleRiseAlt var(--dur,11s) ease-in-out infinite; animation-delay: var(--delay,0s); }
+    .bubble-rise-wide{ animation: bubbleRiseWide var(--dur,13s) ease-in-out infinite; animation-delay: var(--delay,0s); }
+
     @keyframes bubbleRise{
-      0%{ transform:translate(0,0) scale(.85); opacity:0; }
-      12%{ opacity:1; }
-      50%{ transform:translate(-8px,-30px) scale(1.08); opacity:1; }
-      85%{ opacity:.6; }
-      100%{ transform:translate(6px,-64px) scale(.9); opacity:0; }
+      0%{ transform:translate(0,0) scale(.85) rotate(0deg); opacity:0; }
+      10%{ opacity:1; }
+      35%{ transform:translate(-10px,-24px) scale(1.02) rotate(-4deg); }
+      50%{ transform:translate(4px,-40px) scale(1.08) rotate(2deg); opacity:1; }
+      70%{ transform:translate(-6px,-56px) scale(1.02) rotate(-3deg); }
+      85%{ opacity:.55; }
+      100%{ transform:translate(8px,-78px) scale(.9) rotate(3deg); opacity:0; }
     }
     @keyframes bubbleRiseAlt{
-      0%{ transform:translate(0,0) scale(.85); opacity:0; }
-      12%{ opacity:1; }
-      50%{ transform:translate(10px,-28px) scale(1.1); opacity:1; }
-      85%{ opacity:.6; }
-      100%{ transform:translate(-8px,-58px) scale(.9); opacity:0; }
+      0%{ transform:translate(0,0) scale(.85) rotate(0deg); opacity:0; }
+      10%{ opacity:1; }
+      35%{ transform:translate(12px,-22px) scale(1.05) rotate(4deg); }
+      50%{ transform:translate(-6px,-38px) scale(1.1) rotate(-3deg); opacity:1; }
+      70%{ transform:translate(10px,-52px) scale(1.02) rotate(3deg); }
+      85%{ opacity:.55; }
+      100%{ transform:translate(-8px,-72px) scale(.9) rotate(-4deg); opacity:0; }
+    }
+    @keyframes bubbleRiseWide{
+      0%{ transform:translate(0,0) scale(.8) rotate(0deg); opacity:0; }
+      10%{ opacity:.9; }
+      30%{ transform:translate(-18px,-30px) scale(1) rotate(-6deg); }
+      50%{ transform:translate(16px,-58px) scale(1.1) rotate(5deg); opacity:1; }
+      75%{ transform:translate(-14px,-84px) scale(1.02) rotate(-4deg); }
+      90%{ opacity:.4; }
+      100%{ transform:translate(10px,-108px) scale(.85) rotate(3deg); opacity:0; }
     }
 
     @media (prefers-reduced-motion: reduce){
@@ -234,6 +253,7 @@
       .reveal{ opacity:1 !important; transform:none !important; }
       .kolam-trace path, .kolam-trace circle, .kolam-trace ellipse{ stroke-dashoffset:0 !important; }
       .kolam-trace .dot{ opacity:1 !important; transform:scale(1) !important; }
+      .ladoo-particle{ display:none; }
     }
   </style>
 </head>
@@ -272,13 +292,18 @@
       <circle class="dot" cx="100" cy="160" r="2.5" fill="#F2C14E"/>
     </svg>
 
+    <!-- hero bubble field: dense, layered by depth -->
     <div class="bubble-field">
-      <div class="ladoo-particle sharp w-7 h-7 bubble-rise" style="top:78%; left:8%; --dur:8s; --delay:.2s;"></div>
-      <div class="ladoo-particle dim w-5 h-5 bubble-rise-alt" style="top:85%; left:24%; --dur:10s; --delay:1.4s;"></div>
-      <div class="ladoo-particle w-6 h-6 bubble-rise" style="top:70%; left:38%; --dur:9s; --delay:2.1s;"></div>
-      <div class="ladoo-particle sharp w-5 h-5 bubble-rise" style="top:82%; right:16%; --dur:11s; --delay:1.8s;"></div>
-      <div class="ladoo-particle w-7 h-7 bubble-rise-alt" style="top:75%; right:10%; --dur:8.5s; --delay:.9s;"></div>
-      <div class="ladoo-particle dim w-4 h-4 bubble-rise" style="top:88%; right:32%; --dur:9.5s; --delay:2.6s;"></div>
+      <div class="ladoo-particle far w-10 h-10 bubble-rise-wide" style="top:60%; left:4%; --dur:14s; --delay:0s;"></div>
+      <div class="ladoo-particle sharp w-7 h-7 bubble-rise" style="top:78%; left:10%; --dur:8s; --delay:.3s;"></div>
+      <div class="ladoo-particle dim w-5 h-5 bubble-rise-alt" style="top:85%; left:22%; --dur:10s; --delay:1.4s;"></div>
+      <div class="ladoo-particle mid w-6 h-6 bubble-rise" style="top:70%; left:34%; --dur:9s; --delay:2.1s;"></div>
+      <div class="ladoo-particle far w-9 h-9 bubble-rise-wide" style="top:64%; left:46%; --dur:15s; --delay:3.4s;"></div>
+      <div class="ladoo-particle dim w-4 h-4 bubble-rise" style="top:88%; left:58%; --dur:9.5s; --delay:.9s;"></div>
+      <div class="ladoo-particle sharp w-5 h-5 bubble-rise-alt" style="top:82%; right:16%; --dur:11s; --delay:1.8s;"></div>
+      <div class="ladoo-particle mid w-7 h-7 bubble-rise" style="top:75%; right:9%; --dur:8.5s; --delay:.9s;"></div>
+      <div class="ladoo-particle dim w-4 h-4 bubble-rise" style="top:90%; right:28%; --dur:9.5s; --delay:2.6s;"></div>
+      <div class="ladoo-particle far w-11 h-11 bubble-rise-wide" style="top:58%; right:3%; --dur:16s; --delay:2.2s;"></div>
     </div>
 
     <div class="relative z-10 h-full flex flex-col justify-center px-6 md:px-16 max-w-3xl">
@@ -304,10 +329,16 @@
   <section class="relative max-w-7xl mx-auto px-6 py-16 overflow-hidden">
 
     <div class="bubble-field">
-      <div class="ladoo-particle dim w-14 h-14 bubble-rise-alt" style="top:92%; left:1%; --dur:13s; --delay:0s;"></div>
+      <div class="ladoo-particle far w-16 h-16 bubble-rise-wide" style="top:8%; left:1%; --dur:17s; --delay:0s;"></div>
+      <div class="ladoo-particle dim w-14 h-14 bubble-rise-alt" style="top:92%; left:1%; --dur:13s; --delay:.6s;"></div>
+      <div class="ladoo-particle mid w-6 h-6 bubble-rise" style="top:40%; left:6%; --dur:10s; --delay:1.9s;"></div>
       <div class="ladoo-particle w-9 h-9 bubble-rise" style="top:88%; right:3%; --dur:11s; --delay:1.6s;"></div>
       <div class="ladoo-particle sharp w-6 h-6 bubble-rise" style="top:80%; left:20%; --dur:9s; --delay:.7s;"></div>
       <div class="ladoo-particle sharp w-5 h-5 bubble-rise-alt" style="top:85%; right:25%; --dur:8.5s; --delay:2.2s;"></div>
+      <div class="ladoo-particle far w-12 h-12 bubble-rise-wide" style="top:12%; right:4%; --dur:15s; --delay:3s;"></div>
+      <div class="ladoo-particle dim w-5 h-5 bubble-rise-alt" style="top:50%; right:8%; --dur:10.5s; --delay:2.6s;"></div>
+      <div class="ladoo-particle mid w-4 h-4 bubble-rise" style="top:65%; left:44%; --dur:9.5s; --delay:1.2s;"></div>
+      <div class="ladoo-particle far w-10 h-10 bubble-rise-wide" style="top:30%; left:50%; --dur:16s; --delay:4.1s;"></div>
     </div>
 
     <!-- Heading -->
@@ -384,17 +415,8 @@
   <script>
     const grid = document.getElementById("product-grid");
 
-    /* ================= CART + WISHLIST (shared schema across the whole site) =================
-       Same localStorage keys/shapes as index.html, product-detail.html, and wishlist.html:
-       nicy_cart_items      -> array of {id, name, img, price, qty, weightLabel}
-       nicy_wishlist_items  -> array of {id, name, img, price, cat, url}
-       Both also maintain nicy_cart_count / nicy_wishlist_count and fire
-       "nicy:counts-updated" so the navbar badges (built in navbar.js) stay in sync
-       no matter which page the person is adding items from. */
     const CART_KEY = "nicy_cart_items";
     const WISH_KEY = "nicy_wishlist_items";
-    // Your WhatsApp business number. You can include +, spaces, or dashes here —
-    // it gets cleaned up automatically before building the wa.me link above.
     const WHATSAPP_NUMBER = "+918263001410";
 
     function getCart() {
@@ -407,8 +429,6 @@
       localStorage.setItem("nicy_cart_count", String(totalQty));
       window.dispatchEvent(new Event("nicy:counts-updated"));
     }
-    // A line item is identified by product id + chosen weight, so the same
-    // product at two different weights becomes two separate cart lines.
     function cartLineKey(id, weightLabel) {
       return `${id}::${weightLabel || "default"}`;
     }
@@ -448,13 +468,10 @@
       badge.textContent = cartTotalQty();
       const fab = document.getElementById("cartFab");
       fab.classList.remove("bump");
-      void fab.offsetWidth; // restart animation
+      void fab.offsetWidth;
       fab.classList.add("bump");
     }
 
-    // Reads the weight <select> inside a given product card to find the
-    // currently chosen weight option (falls back to the product's first
-    // available weight if something goes wrong).
     function selectedWeightFor(p, cardEl) {
       const select = cardEl ? cardEl.querySelector(".weight-select") : null;
       if (select && select.value !== "") {
@@ -549,7 +566,6 @@
 
       document.getElementById("cartSubtotal").textContent = `₹${cartSubtotal()}`;
 
-      // Build a WhatsApp order message, including the weight chosen per line.
       const lines = cart.map(item =>
         `🟠 *${item.name}*${item.weightLabel ? ` (${item.weightLabel})` : ''} — Qty ${item.qty} — ₹${item.price * item.qty}`
       );
@@ -573,7 +589,6 @@
     document.getElementById("cartCloseBtn").addEventListener("click", closeCart);
     document.getElementById("cartOverlay").addEventListener("click", closeCart);
 
-    // delegated events for qty +/- and remove inside the cart panel
     document.getElementById("cartItems").addEventListener("click", (e) => {
       const plus = e.target.closest("[data-qty-plus]");
       const minus = e.target.closest("[data-qty-minus]");
@@ -583,7 +598,6 @@
       if (remove) removeFromCart(remove.dataset.remove, remove.dataset.weight);
     });
 
-    // populate filter counts once
     document.querySelectorAll(".count-pill").forEach(pill => {
       const f = pill.dataset.countFor;
       const n = f === "all" ? PRODUCTS.length : PRODUCTS.filter(p => p.cat === f).length;
@@ -661,7 +675,6 @@
             </div>
           `;
 
-          // Update the big price display live as the weight selection changes.
           const select = card.querySelector("[data-weight-select]");
           const priceDisplay = card.querySelector("[data-price-display]");
           select.addEventListener("click", (e) => e.stopPropagation());
@@ -685,7 +698,6 @@
       });
     });
 
-    // delegated events for the product grid (wishlist, add-to-cart, navigate)
     grid.addEventListener("click", (e) => {
       const wishBtn = e.target.closest("[data-wish]");
       const addBtn = e.target.closest("[data-add]");
@@ -712,7 +724,6 @@
     updateCartBadge();
     renderCartPanel();
 
-    // Scroll reveal for hero/heading/filter blocks + signature kolam draw-in
     const revealEls = document.querySelectorAll('.reveal, .kolam-divider, .kolam-trace');
     const io = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -724,7 +735,6 @@
     }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
     revealEls.forEach(el => io.observe(el));
 
-    // hero kolams should draw in on load, not wait for scroll (they're already in view)
     window.addEventListener('load', () => {
       document.querySelectorAll('section:first-of-type .kolam-trace').forEach(el => {
         setTimeout(() => el.classList.add('in'), 300);
@@ -732,5 +742,5 @@
     });
   </script>
 
-</body>       
+</body>
 </html>
