@@ -325,7 +325,7 @@
         const payload = { name, email, password };
         if (adminSecret) payload.adminSecret = adminSecret;
 
-        const res = await fetch('https://sidit.in/api/auth/register', {
+        const res = await fetch('https://dbms.srujaninfotech.com/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',

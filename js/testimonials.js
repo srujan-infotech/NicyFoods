@@ -11,7 +11,7 @@
 
 (() => {
   // ---- Config -------------------------------------------------------
-  const API_BASE_URL = "https://sidit.in/api"; // change to your deployed backend URL
+  const API_BASE_URL = "https://dbms.srujaninfotech.com/api"; // change to your deployed backend URL
   const TESTIMONIALS_LIST_URL = `${API_BASE_URL}/testimonials?visible=true&limit=20&sort=-order,-reviewDate`;
 
   // ---- DOM refs -------------------------------------------------------
