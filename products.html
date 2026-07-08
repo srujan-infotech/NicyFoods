@@ -411,14 +411,21 @@
 
   <script src="js/navbar.js"></script>
   <script src="js/footer.js"></script>
-  <script src="js/products-data.js"></script>
-  <script>
-    const grid = document.getElementById("product-grid");
 
+  <!-- ========== BACKEND CONNECTION – products now load from API ========== -->
+  <script>
+    // -------------------- CONFIGURATION --------------------
+    const API_BASE = 'https://sidit.in';   // <-- your backend URL
+    const CATEGORY_LABEL = { millet: "MILLET", traditional: "TRADITIONAL", herbal: "HERBAL", snacks: "SNACKS" };
+    const WHATSAPP_NUMBER = "+918263001410";
     const CART_KEY = "nicy_cart_items";
     const WISH_KEY = "nicy_wishlist_items";
-    const WHATSAPP_NUMBER = "+918263001410";
 
+    // -------------------- GLOBAL STATE --------------------
+    let PRODUCTS = [];   // will be filled from API
+    const grid = document.getElementById("product-grid");
+
+    // -------------------- CART & WISHLIST (unchanged) --------------------
     function getCart() {
       try { const r = JSON.parse(localStorage.getItem(CART_KEY) || "[]"); return Array.isArray(r) ? r : []; }
       catch { return []; }
@@ -432,7 +439,6 @@
     function cartLineKey(id, weightLabel) {
       return `${id}::${weightLabel || "default"}`;
     }
-
     function getWishlist() {
       try { const r = JSON.parse(localStorage.getItem(WISH_KEY) || "[]"); return Array.isArray(r) ? r : []; }
       catch { return []; }
@@ -485,7 +491,7 @@
       const key = cartLineKey(p.id, weight.label);
       const existing = cart.find(i => cartLineKey(i.id, i.weightLabel) === key);
       if (existing) existing.qty = (existing.qty || 1) + 1;
-      else cart.push({ id: String(p.id), name: p.name, img: p.img, price: weight.price, weightLabel: weight.label, qty: 1 });
+      else cart.push({ id: p.id, name: p.name, img: p.img, price: weight.price, weightLabel: weight.label, qty: 1 });
       saveCart(cart);
       updateCartBadge();
       renderCartPanel();
@@ -534,38 +540,34 @@
 
     function renderCartPanel() {
       const itemsEl = document.getElementById("cartItems");
-
       if (cart.length === 0) {
-        itemsEl.innerHTML = `
-          <div class="cart-empty flex flex-col items-center text-center py-16 text-slate-400">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
-              <path d="M2.5 3h2l2.6 12.4a2 2 0 0 0 2 1.6h8.4a2 2 0 0 0 2-1.6L21 8H6"/>
-            </svg>
-            <p>Your cart is empty</p>
-          </div>`;
+        itemsEl.innerHTML = `<div class="cart-empty flex flex-col items-center text-center py-16 text-slate-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
+            <path d="M2.5 3h2l2.6 12.4a2 2 0 0 0 2 1.6h8.4a2 2 0 0 0 2-1.6L21 8H6"/>
+          </svg>
+          <p>Your cart is empty</p>
+        </div>`;
       } else {
         itemsEl.innerHTML = cart.map((item) => `
-            <div class="cart-item">
-              <div class="w-16 h-16 rounded-lg overflow-hidden bg-orange-50 flex-shrink-0">
-                <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover" onerror="this.style.display='none'">
+          <div class="cart-item">
+            <div class="w-16 h-16 rounded-lg overflow-hidden bg-orange-50 flex-shrink-0">
+              <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover" onerror="this.style.display='none'">
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-jaggery text-sm truncate">${item.name}</p>
+              <p class="text-xs text-slate-400">${item.weightLabel || ''}</p>
+              <p class="text-kumkum font-bold text-sm mt-0.5">₹${item.price}</p>
+              <div class="flex items-center gap-2 mt-2">
+                <button class="qty-btn" data-qty-minus="${item.id}" data-weight="${item.weightLabel || ''}">−</button>
+                <span class="text-sm w-5 text-center">${item.qty}</span>
+                <button class="qty-btn" data-qty-plus="${item.id}" data-weight="${item.weightLabel || ''}">+</button>
+                <button class="ml-auto text-xs text-slate-400 hover:text-kumkum transition-colors" data-remove="${item.id}" data-weight="${item.weightLabel || ''}">Remove</button>
               </div>
-              <div class="flex-1 min-w-0">
-                <p class="font-semibold text-jaggery text-sm truncate">${item.name}</p>
-                <p class="text-xs text-slate-400">${item.weightLabel || ''}</p>
-                <p class="text-kumkum font-bold text-sm mt-0.5">₹${item.price}</p>
-                <div class="flex items-center gap-2 mt-2">
-                  <button class="qty-btn" data-qty-minus="${item.id}" data-weight="${item.weightLabel || ''}">−</button>
-                  <span class="text-sm w-5 text-center">${item.qty}</span>
-                  <button class="qty-btn" data-qty-plus="${item.id}" data-weight="${item.weightLabel || ''}">+</button>
-                  <button class="ml-auto text-xs text-slate-400 hover:text-kumkum transition-colors" data-remove="${item.id}" data-weight="${item.weightLabel || ''}">Remove</button>
-                </div>
-              </div>
-            </div>`).join("");
+            </div>
+          </div>`).join("");
       }
-
       document.getElementById("cartSubtotal").textContent = `₹${cartSubtotal()}`;
-
       const lines = cart.map(item =>
         `🟠 *${item.name}*${item.weightLabel ? ` (${item.weightLabel})` : ''} — Qty ${item.qty} — ₹${item.price * item.qty}`
       );
@@ -576,19 +578,19 @@
       document.getElementById("checkoutBtn").href = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
     }
 
-    function openCart() {
+    // -------------------- CART PANEL EVENTS --------------------
+    document.getElementById("cartFab").addEventListener("click", () => {
       document.getElementById("cartOverlay").classList.add("open");
       document.getElementById("cartPanel").classList.add("open");
-    }
-    function closeCart() {
+    });
+    document.getElementById("cartCloseBtn").addEventListener("click", () => {
       document.getElementById("cartOverlay").classList.remove("open");
       document.getElementById("cartPanel").classList.remove("open");
-    }
-
-    document.getElementById("cartFab").addEventListener("click", openCart);
-    document.getElementById("cartCloseBtn").addEventListener("click", closeCart);
-    document.getElementById("cartOverlay").addEventListener("click", closeCart);
-
+    });
+    document.getElementById("cartOverlay").addEventListener("click", () => {
+      document.getElementById("cartOverlay").classList.remove("open");
+      document.getElementById("cartPanel").classList.remove("open");
+    });
     document.getElementById("cartItems").addEventListener("click", (e) => {
       const plus = e.target.closest("[data-qty-plus]");
       const minus = e.target.closest("[data-qty-minus]");
@@ -598,28 +600,21 @@
       if (remove) removeFromCart(remove.dataset.remove, remove.dataset.weight);
     });
 
-    document.querySelectorAll(".count-pill").forEach(pill => {
-      const f = pill.dataset.countFor;
-      const n = f === "all" ? PRODUCTS.length : PRODUCTS.filter(p => p.cat === f).length;
-      pill.textContent = n;
-    });
-
+    // -------------------- RENDER PRODUCTS (uses PRODUCTS array) --------------------
     function render(filter) {
       grid.classList.add("grid-fading");
-
       setTimeout(() => {
         grid.innerHTML = "";
         const filtered = PRODUCTS.filter(p => filter === "all" || p.cat === filter);
 
         if (filtered.length === 0) {
-          grid.innerHTML = `
-            <div class="empty-state col-span-full flex flex-col items-center text-center py-16">
-              <svg class="w-12 h-12 text-turmeric mb-4" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2c1 3-2 4-2 7a3 3 0 006 0c0-1-1-2-1-2 2 1 4 3.5 4 6.5A7 7 0 015 13.5C5 9 8 7 8 4c1 1 1.5 2 1.5 3.5C10.5 5 11 3.5 12 2z"/>
-              </svg>
-              <p class="font-display text-xl text-jaggery mb-1">No ladoos here yet</p>
-              <p class="text-sm text-slate-500">Try another category to see what's available.</p>
-            </div>`;
+          grid.innerHTML = `<div class="empty-state col-span-full flex flex-col items-center text-center py-16">
+            <svg class="w-12 h-12 text-turmeric mb-4" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2c1 3-2 4-2 7a3 3 0 006 0c0-1-1-2-1-2 2 1 4 3.5 4 6.5A7 7 0 015 13.5C5 9 8 7 8 4c1 1 1.5 2 1.5 3.5C10.5 5 11 3.5 12 2z"/>
+            </svg>
+            <p class="font-display text-xl text-jaggery mb-1">No ladoos here yet</p>
+            <p class="text-sm text-slate-500">Try another category to see what's available.</p>
+          </div>`;
           grid.classList.remove("grid-fading");
           return;
         }
@@ -651,13 +646,10 @@
               <span class="cat-tag self-start mb-2 text-[11px] font-bold tracking-wide text-kumkum bg-orange-50 px-3 py-1 rounded-full">${CATEGORY_LABEL[p.cat]}</span>
               <h3 class="font-display text-lg text-jaggery mb-1 cursor-pointer" data-nav="${p.id}">${p.name}</h3>
               <p class="text-sm text-slate-500 flex-1 mb-3 leading-snug">${p.desc}</p>
-
               <div class="text-2xl font-extrabold text-kumkum mb-2" data-price-display>₹${defaultWeight.price}</div>
-
               <select class="weight-select mb-3" data-weight-select aria-label="Select weight for ${p.name}">
                 ${weightOptions}
               </select>
-
               <div class="card-actions mt-auto">
                 <button class="add-cart-btn" data-add="${p.id}">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -690,6 +682,7 @@
       }, 180);
     }
 
+    // -------------------- FILTER BUTTONS --------------------
     document.querySelectorAll(".filter-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
@@ -698,6 +691,7 @@
       });
     });
 
+    // -------------------- GRID EVENT DELEGATION --------------------
     grid.addEventListener("click", (e) => {
       const wishBtn = e.target.closest("[data-wish]");
       const addBtn = e.target.closest("[data-add]");
@@ -720,27 +714,73 @@
       if (navEl) { window.location.href = `product-detail.html?id=${navEl.dataset.nav}`; return; }
     });
 
-    render("all");
-    updateCartBadge();
-    renderCartPanel();
+    // -------------------- FETCH PRODUCTS FROM BACKEND --------------------
+    async function loadProducts() {
+      try {
+        const res = await fetch(`${API_BASE}/api/products`);
+        if (!res.ok) throw new Error('Network response was not ok');
+        const data = await res.json();
 
-    const revealEls = document.querySelectorAll('.reveal, .kolam-divider, .kolam-trace');
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in');
-          io.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
-    revealEls.forEach(el => io.observe(el));
+        // Map backend fields to frontend structure (keep old script intact)
+        PRODUCTS = data.map(p => ({
+          id: p.slug,                     // use slug as id
+          name: p.name,
+          desc: p.description,
+          price: p.price,
+          cat: p.category,
+          img: p.image,
+          weights: p.weightOptions.map(w => ({ label: w.label, price: w.price })),
+          features: p.features || [],
+          ingredients: p.ingredients || [],
+          benefits: p.benefits || [],
+          inStock: p.inStock !== undefined ? p.inStock : true,
+        }));
 
-    window.addEventListener('load', () => {
-      document.querySelectorAll('section:first-of-type .kolam-trace').forEach(el => {
-        setTimeout(() => el.classList.add('in'), 300);
-      });
-    });
+        // Update filter count pills
+        document.querySelectorAll(".count-pill").forEach(pill => {
+          const f = pill.dataset.countFor;
+          const n = f === "all" ? PRODUCTS.length : PRODUCTS.filter(p => p.cat === f).length;
+          pill.textContent = n;
+        });
+
+        render("all");
+        updateCartBadge();
+        renderCartPanel();
+
+        // Re-run reveal animations after render
+        const revealEls = document.querySelectorAll('.reveal, .kolam-divider, .kolam-trace');
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in');
+              io.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+        revealEls.forEach(el => io.observe(el));
+
+        window.addEventListener('load', () => {
+          document.querySelectorAll('section:first-of-type .kolam-trace').forEach(el => {
+            setTimeout(() => el.classList.add('in'), 300);
+          });
+        });
+
+      } catch (error) {
+        console.error('Failed to load products from API:', error);
+        grid.innerHTML = `
+          <div class="empty-state col-span-full flex flex-col items-center text-center py-16 text-slate-500">
+            <svg class="w-12 h-12 text-turmeric mb-4" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2c1 3-2 4-2 7a3 3 0 006 0c0-1-1-2-1-2 2 1 4 3.5 4 6.5A7 7 0 015 13.5C5 9 8 7 8 4c1 1 1.5 2 1.5 3.5C10.5 5 11 3.5 12 2z"/>
+            </svg>
+            <p class="font-display text-xl text-jaggery mb-1">Could not load products</p>
+            <p class="text-sm">Make sure the backend server is running at ${API_BASE}</p>
+          </div>`;
+      }
+    }
+
+    // Start
+    loadProducts();
+
   </script>
-
 </body>
 </html>

@@ -603,19 +603,20 @@
     </script>
     <script src="js/footer.js">
     </script>
-    <script src="js/products-data.js">
-    </script>
+
+    <!-- ========== BACKEND CONNECTION – no static products-data.js ========== -->
     <script>
-        /* ================= CART + WISHLIST (shared schema) =================
-           Same localStorage keys as index.html, products.html, and cart.html:
-           nicy_cart_items (array of {id,name,img,price,qty,weightLabel}) and
-           nicy_wishlist_items (array of {id,name,img,price,cat,url}).
-           This keeps this page's Add to Cart / Wishlist buttons in sync with
-           the rest of the site and the navbar badges automatically. */
+        // -------------------- CONFIGURATION --------------------
+        const API_BASE = 'https://sidit.in';   // <-- your backend URL
+        const CATEGORY_LABEL = { millet: "MILLET", traditional: "TRADITIONAL", herbal: "HERBAL", snacks: "SNACKS" };
+        const WHATSAPP_NUMBER = "+918263001410";
         const CART_KEY = "nicy_cart_items";
         const WISH_KEY = "nicy_wishlist_items";
-        const WHATSAPP_NUMBER = "+918263001410";
 
+        // -------------------- GLOBAL STATE --------------------
+        let PRODUCTS = [];   // will be filled from API
+
+        // -------------------- CART & WISHLIST (unchanged) --------------------
         function getCart() {
             try { const r = JSON.parse(localStorage.getItem(CART_KEY) || "[]"); return Array.isArray(r) ? r : []; }
             catch { return []; }
@@ -647,8 +648,6 @@
             showToast._t = setTimeout(() => toast.classList.remove("show"), 2200);
         }
 
-        // cartKey identifies a distinct line item: same product + same weight
-        // stack quantity; a different weight of the same product is a separate line.
         function cartKeyFor(id, weightLabel) {
             return `${id}::${weightLabel || "default"}`;
         }
@@ -684,171 +683,233 @@
             saveWishlist(wishlist);
         }
 
-        const params = new URLSearchParams(window.location.search);
-        const id = params.get("id");
-        const product = PRODUCTS.find(p => p.id === id) || PRODUCTS[0];
+        // -------------------- FETCH PRODUCTS FROM BACKEND --------------------
+        async function loadProducts() {
+            try {
+                const res = await fetch(`${API_BASE}/api/products`);
+                if (!res.ok) throw new Error('Network response was not ok');
+                const data = await res.json();
 
-        function renderDetail(p) {
+                // Map backend fields to frontend structure (same as products page)
+                PRODUCTS = data.map(p => ({
+                    id: p.slug,                     // use slug as id
+                    name: p.name,
+                    desc: p.description,
+                    price: p.price,
+                    cat: p.category,
+                    img: p.image,
+                    weights: p.weightOptions.map(w => ({ label: w.label, price: w.price })),
+                    features: p.features || [],
+                    ingredients: p.ingredients || [],
+                    benefits: p.benefits || [],
+                    inStock: p.inStock !== undefined ? p.inStock : true,
+                }));
+
+                // Now that we have products, render the detail page
+                renderDetail();
+                renderSimilar();
+
+                // Reveal animations (static sections)
+                const revealEls = document.querySelectorAll('.reveal, .stagger, .kolam-divider');
+                const io = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('in');
+                            io.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+                revealEls.forEach(el => io.observe(el));
+
+            } catch (error) {
+                console.error('Failed to load products:', error);
+                const root = document.getElementById("detail-root");
+                root.innerHTML = `
+                    <div class="text-center py-16 text-slate-500">
+                        <svg class="w-12 h-12 text-turmeric mx-auto mb-4" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2c1 3-2 4-2 7a3 3 0 006 0c0-1-1-2-1-2 2 1 4 3.5 4 6.5A7 7 0 015 13.5C5 9 8 7 8 4c1 1 1.5 2 1.5 3.5C10.5 5 11 3.5 12 2z"/>
+                        </svg>
+                        <p class="font-display text-xl text-jaggery mb-1">Could not load product</p>
+                        <p class="text-sm">Make sure the backend server is running at ${API_BASE}</p>
+                    </div>`;
+            }
+        }
+
+        // -------------------- RENDER DETAIL --------------------
+        function renderDetail() {
+            const params = new URLSearchParams(window.location.search);
+            const slug = params.get("id");
+            const product = PRODUCTS.find(p => p.id === slug) || PRODUCTS[0];
+            if (!product) {
+                document.getElementById("detail-root").innerHTML = `
+                    <div class="text-center py-16 text-slate-500">
+                        <p class="font-display text-xl text-jaggery">Product not found</p>
+                        <a href="products.html" class="text-kumkum underline">Browse all products</a>
+                    </div>`;
+                return;
+            }
+
             const root = document.getElementById("detail-root");
+            const p = product;
 
-            // Index weights so we can look them up by index when a card is clicked.
+            // Index weights so we can look them up by index
             const weightCards = p.weights.map((w, i) => {
                 const disabled = w.price === null || w.price === undefined;
                 return `
-              <button type="button"
-                      class="weight-option rounded-xl py-4 text-center${i === 0 && !disabled ? ' selected' : ''}${disabled ? ' disabled' : ''}"
-                      data-weight-index="${i}"
-                      ${disabled ? 'disabled' : ''}>
-                <div class="weight-check"></div>
-                <div class="text-slate-600 text-sm mb-1">${w.label}</div>
-                <div class="text-kumkum font-extrabold text-xl">${w.price !== null && w.price !== undefined ? "₹" + w.price : "-"}</div>
-              </button>
-            `;
+                    <button type="button"
+                            class="weight-option rounded-xl py-4 text-center${i === 0 && !disabled ? ' selected' : ''}${disabled ? ' disabled' : ''}"
+                            data-weight-index="${i}"
+                            ${disabled ? 'disabled' : ''}>
+                        <div class="weight-check"></div>
+                        <div class="text-slate-600 text-sm mb-1">${w.label}</div>
+                        <div class="text-kumkum font-extrabold text-xl">${w.price !== null && w.price !== undefined ? "₹" + w.price : "-"}</div>
+                    </button>
+                `;
             }).join("");
 
             const featureItems = p.features.map((f, i) => `
-            <li class="check-item flex items-start gap-2 text-slate-600 mb-3" style="animation-delay:${i * 0.08}s">
-              <span class="check-mark mt-0.5">✓</span> ${f}
-            </li>
-          `).join("");
+                <li class="check-item flex items-start gap-2 text-slate-600 mb-3" style="animation-delay:${i * 0.08}s">
+                    <span class="check-mark mt-0.5">✓</span> ${f}
+                </li>
+            `).join("");
 
             const ingredientItems = p.ingredients.map((i2, i) => `
-            <li class="check-item flex items-start gap-2 text-slate-600 mb-3" style="animation-delay:${i * 0.08}s">
-              <span class="check-mark mt-0.5">✓</span> ${i2}
-            </li>
-          `).join("");
+                <li class="check-item flex items-start gap-2 text-slate-600 mb-3" style="animation-delay:${i * 0.08}s">
+                    <span class="check-mark mt-0.5">✓</span> ${i2}
+                </li>
+            `).join("");
 
             const benefitItems = p.benefits.map((b, i) => `
-            <li class="check-item flex items-start gap-2 text-slate-600 mb-3" style="animation-delay:${i * 0.08}s">
-              <span class="check-mark mt-0.5">✓</span> ${b}
-            </li>
-          `).join("");
+                <li class="check-item flex items-start gap-2 text-slate-600 mb-3" style="animation-delay:${i * 0.08}s">
+                    <span class="check-mark mt-0.5">✓</span> ${b}
+                </li>
+            `).join("");
 
             const wished = isWishlisted(p.id);
-
-            // Default selected weight = first weight option that actually has a price.
             const defaultIndex = p.weights.findIndex(w => w.price !== null && w.price !== undefined);
+            const defaultPrice = defaultIndex >= 0 ? p.weights[defaultIndex].price : p.price;
+            const defaultLabel = defaultIndex >= 0 ? p.weights[defaultIndex].label : '';
 
             root.innerHTML = `
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
 
-              <!-- Left: Image Gallery -->
-              <div class="detail-in">
-                <div class="gallery-frame bg-white rounded-2xl overflow-hidden h-[420px] flex items-center justify-center shadow-sm">
-                  <button id="detailWishBtn" class="wish-btn ${wished ? 'active' : ''}" aria-label="Save to wishlist">
-                    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M12 21s-6.7-4.35-9.33-8.2C1 10.4 1.4 6.9 4.1 5.1c2.2-1.5 5-.9 6.6 1 .4.5.9 1.1 1.3 1.7.4-.6.9-1.2 1.3-1.7 1.6-1.9 4.4-2.5 6.6-1 2.7 1.8 3.1 5.3 1.43 7.7C18.7 16.65 12 21 12 21z"/>
-                    </svg>
-                  </button>
-                  <img id="main-image" src="${p.img}" alt="${p.name}" class="w-full h-full object-contain"
-                       onerror="this.onerror=null;this.src='';this.alt='';this.parentElement.innerHTML='<span class=\\'text-slate-400\\'>${p.name}</span>'" />
-                </div>
-                <div class="flex gap-3 mt-4">
-                  <button class="thumb active w-20 h-20 rounded-lg border-2 overflow-hidden bg-white">
-                    <img src="${p.img}" class="w-full h-full object-cover" onerror="this.style.display='none'" />
-                  </button>
-                </div>
-              </div>
+                    <!-- Left: Image Gallery -->
+                    <div class="detail-in">
+                        <div class="gallery-frame bg-white rounded-2xl overflow-hidden h-[420px] flex items-center justify-center shadow-sm">
+                            <button id="detailWishBtn" class="wish-btn ${wished ? 'active' : ''}" aria-label="Save to wishlist">
+                                <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 21s-6.7-4.35-9.33-8.2C1 10.4 1.4 6.9 4.1 5.1c2.2-1.5 5-.9 6.6 1 .4.5.9 1.1 1.3 1.7.4-.6.9-1.2 1.3-1.7 1.6-1.9 4.4-2.5 6.6-1 2.7 1.8 3.1 5.3 1.43 7.7C18.7 16.65 12 21 12 21z"/>
+                                </svg>
+                            </button>
+                            <img id="main-image" src="${p.img}" alt="${p.name}" class="w-full h-full object-contain"
+                                 onerror="this.onerror=null;this.src='';this.alt='';this.parentElement.innerHTML='<span class=\\'text-slate-400\\'>${p.name}</span>'" />
+                        </div>
+                        <div class="flex gap-3 mt-4">
+                            <button class="thumb active w-20 h-20 rounded-lg border-2 overflow-hidden bg-white">
+                                <img src="${p.img}" class="w-full h-full object-cover" onerror="this.style.display='none'" />
+                            </button>
+                        </div>
+                    </div>
 
-              <!-- Right: Info -->
-              <div class="detail-in" style="animation-delay:.12s">
-                <span class="inline-block mb-4 text-xs font-bold tracking-wide text-kumkum bg-orange-50 px-4 py-1.5 rounded-full">
-                  ${CATEGORY_LABEL[p.cat]}
-                </span>
-                <h1 class="font-display text-3xl sm:text-4xl text-jaggery mb-4">${p.name}</h1>
-                <p class="text-slate-500 leading-relaxed mb-6">${p.desc}</p>
-                <div id="selectedPriceDisplay" class="text-3xl font-extrabold text-kumkum mb-8">
-                  ₹${defaultIndex >= 0 ? p.weights[defaultIndex].price : p.price}
-                  <span id="selectedWeightNote" class="text-base font-medium text-slate-400">
-                    ${defaultIndex >= 0 ? '/ ' + p.weights[defaultIndex].label : ''}
-                  </span>
+                    <!-- Right: Info -->
+                    <div class="detail-in" style="animation-delay:.12s">
+                        <span class="inline-block mb-4 text-xs font-bold tracking-wide text-kumkum bg-orange-50 px-4 py-1.5 rounded-full">
+                            ${CATEGORY_LABEL[p.cat]}
+                        </span>
+                        <h1 class="font-display text-3xl sm:text-4xl text-jaggery mb-4">${p.name}</h1>
+                        <p class="text-slate-500 leading-relaxed mb-6">${p.desc}</p>
+                        <div id="selectedPriceDisplay" class="text-3xl font-extrabold text-kumkum mb-8">
+                            ₹${defaultPrice}
+                            <span id="selectedWeightNote" class="text-base font-medium text-slate-400">
+                                ${defaultLabel ? '/ ' + defaultLabel : ''}
+                            </span>
+                        </div>
+
+                        <div class="bg-orange-50 rounded-2xl p-6">
+                            <h3 class="flex items-center gap-2 font-bold text-kumkum text-lg mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                                    <path d="M16 7V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v2"/>
+                                    <circle cx="16" cy="13" r="1.5"/>
+                                </svg>
+                                Choose Weight
+                            </h3>
+                            <div id="weightGrid" class="grid grid-cols-3 gap-3">
+                                ${weightCards}
+                            </div>
+                            <p class="flex items-start gap-2 text-xs text-slate-500 mt-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 18h6"/><path d="M10 22h4"/>
+                                    <path d="M12 2a7 7 0 0 0-4 12.7c.6.4 1 1.2 1 2.05V17h6v-2.25c0-.85.4-1.65 1-2.05A7 7 0 0 0 12 2z"/>
+                                </svg>
+                                Tap a weight to select it — the price and your cart total will update to match.
+                            </p>
+                        </div>
+
+                        <!-- Add to Cart -->
+                        <div class="mt-6 flex flex-col sm:flex-row gap-4 items-stretch">
+                            <div class="qty-stepper">
+                                <button id="qtyMinus" class="qty-btn" aria-label="Decrease quantity" type="button">−</button>
+                                <span id="qtyVal" class="qty-val">1</span>
+                                <button id="qtyPlus" class="qty-btn" aria-label="Increase quantity" type="button">+</button>
+                            </div>
+                            <button id="addToCartBtn" class="add-cart-btn flex-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                                </svg>
+                                Add to Cart
+                            </button>
+                        </div>
+
+                        <div class="mt-4 flex flex-col sm:flex-row gap-4">
+                            <a href="tel:+918263001410"
+                               class="flex-1 inline-flex items-center justify-center gap-2 text-center border-2 border-kumkum text-kumkum font-semibold py-3 rounded-xl transition-all hover:bg-orange-50 hover:-translate-y-0.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                </svg>
+                                Call: +91 8263001410
+                            </a>
+                            <a href="mailto:nicyfoods5@gmail.com?subject=Order%20Enquiry%20-%20${encodeURIComponent(p.name)}&body=Hi%20NicyFoods%2C%0A%0AI%20would%20like%20to%20order%3A%20${encodeURIComponent(p.name)}%0AQuantity%3A%20%0ADelivery%20Address%3A%20"
+                               class="flex-1 inline-flex items-center justify-center gap-2 text-center text-slate-500 font-medium py-3 rounded-xl hover:text-kumkum transition-colors text-sm">
+                                or email us instead
+                            </a>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="bg-orange-50 rounded-2xl p-6">
-                  <h3 class="flex items-center gap-2 font-bold text-kumkum text-lg mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M20 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
-                      <path d="M16 7V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v2"/>
-                      <circle cx="16" cy="13" r="1.5"/>
-                    </svg>
-                    Choose Weight
-                  </h3>
-                  <div id="weightGrid" class="grid grid-cols-3 gap-3">
-                    ${weightCards}
-                  </div>
-                  <p class="flex items-start gap-2 text-xs text-slate-500 mt-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M9 18h6"/><path d="M10 22h4"/>
-                      <path d="M12 2a7 7 0 0 0-4 12.7c.6.4 1 1.2 1 2.05V17h6v-2.25c0-.85.4-1.65 1-2.05A7 7 0 0 0 12 2z"/>
-                    </svg>
-                    Tap a weight to select it — the price and your cart total will update to match.
-                  </p>
+                <!-- Key Features / Ingredients / Health Benefits -->
+                <div class="detail-in grid grid-cols-1 md:grid-cols-3 gap-10 border-t border-slate-200 pt-12" style="animation-delay:.22s">
+                    <div>
+                        <h3 class="flex items-center gap-2 font-bold text-kumkum text-lg mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-turmeric" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                                <path d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6L12 2z"/>
+                                <path d="M19 14l.8 2.4L22 17l-2.2.6L19 20l-.8-2.4L16 17l2.2-.6L19 14z" opacity="0.6"/>
+                            </svg>
+                            Key Features
+                        </h3>
+                        <ul>${featureItems}</ul>
+                    </div>
+                    <div>
+                        <h3 class="flex items-center gap-2 font-bold text-kumkum text-lg mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-herbal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M11 20A7 7 0 0 1 4 13c0-5 4-8 11-9 1 6-1 12-4 16z"/><path d="M4 13c4 0 8 2 10 6"/>
+                            </svg>
+                            Ingredients
+                        </h3>
+                        <ul>${ingredientItems}</ul>
+                    </div>
+                    <div>
+                        <h3 class="flex items-center gap-2 font-bold text-kumkum text-lg mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-herbal" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                                <path d="M12 21s-6.7-4.35-9.33-8.2C1 10.4 1.4 6.9 4.1 5.1c2.2-1.5 5-.9 6.6 1 .4.5.9 1.1 1.3 1.7.4-.6.9-1.2 1.3-1.7 1.6-1.9 4.4-2.5 6.6-1 2.7 1.8 3.1 5.3 1.43 7.7C18.7 16.65 12 21 12 21z"/>
+                            </svg>
+                            Health Benefits
+                        </h3>
+                        <ul>${benefitItems}</ul>
+                    </div>
                 </div>
-
-                <!-- Add to Cart -->
-                <div class="mt-6 flex flex-col sm:flex-row gap-4 items-stretch">
-                  <div class="qty-stepper">
-                    <button id="qtyMinus" class="qty-btn" aria-label="Decrease quantity" type="button">−</button>
-                    <span id="qtyVal" class="qty-val">1</span>
-                    <button id="qtyPlus" class="qty-btn" aria-label="Increase quantity" type="button">+</button>
-                  </div>
-                  <button id="addToCartBtn" class="add-cart-btn flex-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-                      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-                    </svg>
-                    Add to Cart
-                  </button>
-                </div>
-
-                <div class="mt-4 flex flex-col sm:flex-row gap-4">
-                  <a href="tel:+918263001410"
-                     class="flex-1 inline-flex items-center justify-center gap-2 text-center border-2 border-kumkum text-kumkum font-semibold py-3 rounded-xl transition-all hover:bg-orange-50 hover:-translate-y-0.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
-                    </svg>
-                    Call: +91 8263001410
-                  </a>
-                  <a href="mailto:nicyfoods5@gmail.com?subject=Order%20Enquiry%20-%20${encodeURIComponent(p.name)}&body=Hi%20NicyFoods%2C%0A%0AI%20would%20like%20to%20order%3A%20${encodeURIComponent(p.name)}%0AQuantity%3A%20%0ADelivery%20Address%3A%20"
-                     class="flex-1 inline-flex items-center justify-center gap-2 text-center text-slate-500 font-medium py-3 rounded-xl hover:text-kumkum transition-colors text-sm">
-                    or email us instead
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <!-- Key Features / Ingredients / Health Benefits -->
-            <div class="detail-in grid grid-cols-1 md:grid-cols-3 gap-10 border-t border-slate-200 pt-12" style="animation-delay:.22s">
-              <div>
-                <h3 class="flex items-center gap-2 font-bold text-kumkum text-lg mb-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-turmeric" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                    <path d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6L12 2z"/>
-                    <path d="M19 14l.8 2.4L22 17l-2.2.6L19 20l-.8-2.4L16 17l2.2-.6L19 14z" opacity="0.6"/>
-                  </svg>
-                  Key Features
-                </h3>
-                <ul>${featureItems}</ul>
-              </div>
-              <div>
-                <h3 class="flex items-center gap-2 font-bold text-kumkum text-lg mb-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-herbal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M11 20A7 7 0 0 1 4 13c0-5 4-8 11-9 1 6-1 12-4 16z"/><path d="M4 13c4 0 8 2 10 6"/>
-                  </svg>
-                  Ingredients
-                </h3>
-                <ul>${ingredientItems}</ul>
-              </div>
-              <div>
-                <h3 class="flex items-center gap-2 font-bold text-kumkum text-lg mb-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-herbal" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                    <path d="M12 21s-6.7-4.35-9.33-8.2C1 10.4 1.4 6.9 4.1 5.1c2.2-1.5 5-.9 6.6 1 .4.5.9 1.1 1.3 1.7.4-.6.9-1.2 1.3-1.7 1.6-1.9 4.4-2.5 6.6-1 2.7 1.8 3.1 5.3 1.43 7.7C18.7 16.65 12 21 12 21z"/>
-                  </svg>
-                  Health Benefits
-                </h3>
-                <ul>${benefitItems}</ul>
-              </div>
-            </div>
-          `;
+            `;
 
             // ---- weight selection state ----
             let selectedIndex = defaultIndex >= 0 ? defaultIndex : 0;
@@ -896,13 +957,17 @@
             document.getElementById("detailWishBtn").addEventListener("click", (e) => {
                 toggleWishlistFor(p, e.currentTarget);
             });
+
+            document.title = p.name + " | NicyFoods";
         }
 
-        renderDetail(product);
-        renderSimilar(product);
-        document.title = product.name + " | NicyFoods";
+        // -------------------- RENDER SIMILAR PRODUCTS --------------------
+        function renderSimilar() {
+            const params = new URLSearchParams(window.location.search);
+            const slug = params.get("id");
+            const current = PRODUCTS.find(p => p.id === slug);
+            if (!current) return;
 
-        function renderSimilar(current) {
             const grid = document.getElementById("similar-grid");
             let similar = PRODUCTS.filter(p => p.cat === current.cat && p.id !== current.id);
 
@@ -924,36 +989,36 @@
                 card.className = "product-card card-in rounded-2xl overflow-hidden flex flex-col";
                 card.style.animationDelay = `${i * 0.08}s`;
                 card.innerHTML = `
-                <div class="relative h-44 bg-gradient-to-br from-orange-100 to-amber-50 overflow-hidden">
-                  <button class="wish-btn-sm ${wished ? 'active' : ''}" data-wish="${p.id}" aria-label="Save to wishlist">
-                    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M12 21s-6.7-4.35-9.33-8.2C1 10.4 1.4 6.9 4.1 5.1c2.2-1.5 5-.9 6.6 1 .4.5.9 1.1 1.3 1.7.4-.6.9-1.2 1.3-1.7 1.6-1.9 4.4-2.5 6.6-1 2.7 1.8 3.1 5.3 1.43 7.7C18.7 16.65 12 21 12 21z"/>
-                    </svg>
-                  </button>
-                  <img src="${p.img}" alt="${p.name}" class="prod-img w-full h-full object-cover" data-nav="${p.id}" onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('div'), {className:'w-full h-full flex items-center justify-center text-slate-400 text-sm', innerText:'${p.name}'}));" />
-                </div>
-                <div class="p-5 flex flex-col flex-1">
-                  <span class="self-start mb-2 text-[11px] font-bold tracking-wide text-kumkum bg-orange-50 px-3 py-1 rounded-full">${CATEGORY_LABEL[p.cat]}</span>
-                  <h3 class="font-display text-lg text-jaggery mb-1 cursor-pointer" data-nav="${p.id}">${p.name}</h3>
-                  <p class="text-sm text-slate-500 flex-1 mb-3 leading-snug">${p.desc}</p>
-                  <div class="text-2xl font-extrabold text-kumkum mb-2">₹${p.price}</div>
-                  <p class="text-xs text-slate-500 mb-4"><span class="font-semibold text-jaggery">Courier Charges:</span> ${weightsLine}</p>
-                  <div class="card-actions mt-auto">
-                    <button class="add-cart-btn-sm" data-add="${p.id}">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
-                        <path d="M2.5 3h2l2.6 12.4a2 2 0 0 0 2 1.6h8.4a2 2 0 0 0 2-1.6L21 8H6"/>
-                      </svg>
-                      <span class="add-cart-sm-label">Add to Cart</span>
-                    </button>
-                    <a href="product-detail.html?id=${p.id}" class="view-arrow-btn" aria-label="View ${p.name} details">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M5 12h14"/><path d="M13 6l6 6-6 6"/>
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              `;
+                    <div class="relative h-44 bg-gradient-to-br from-orange-100 to-amber-50 overflow-hidden">
+                        <button class="wish-btn-sm ${wished ? 'active' : ''}" data-wish="${p.id}" aria-label="Save to wishlist">
+                            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 21s-6.7-4.35-9.33-8.2C1 10.4 1.4 6.9 4.1 5.1c2.2-1.5 5-.9 6.6 1 .4.5.9 1.1 1.3 1.7.4-.6.9-1.2 1.3-1.7 1.6-1.9 4.4-2.5 6.6-1 2.7 1.8 3.1 5.3 1.43 7.7C18.7 16.65 12 21 12 21z"/>
+                            </svg>
+                        </button>
+                        <img src="${p.img}" alt="${p.name}" class="prod-img w-full h-full object-cover" data-nav="${p.id}" onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('div'), {className:'w-full h-full flex items-center justify-center text-slate-400 text-sm', innerText:'${p.name}'}));" />
+                    </div>
+                    <div class="p-5 flex flex-col flex-1">
+                        <span class="self-start mb-2 text-[11px] font-bold tracking-wide text-kumkum bg-orange-50 px-3 py-1 rounded-full">${CATEGORY_LABEL[p.cat]}</span>
+                        <h3 class="font-display text-lg text-jaggery mb-1 cursor-pointer" data-nav="${p.id}">${p.name}</h3>
+                        <p class="text-sm text-slate-500 flex-1 mb-3 leading-snug">${p.desc}</p>
+                        <div class="text-2xl font-extrabold text-kumkum mb-2">₹${p.price}</div>
+                        <p class="text-xs text-slate-500 mb-4"><span class="font-semibold text-jaggery">Courier Charges:</span> ${weightsLine}</p>
+                        <div class="card-actions mt-auto">
+                            <button class="add-cart-btn-sm" data-add="${p.id}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
+                                    <path d="M2.5 3h2l2.6 12.4a2 2 0 0 0 2 1.6h8.4a2 2 0 0 0 2-1.6L21 8H6"/>
+                                </svg>
+                                <span class="add-cart-sm-label">Add to Cart</span>
+                            </button>
+                            <a href="product-detail.html?id=${p.id}" class="view-arrow-btn" aria-label="View ${p.name} details">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 12h14"/><path d="M13 6l6 6-6 6"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                `;
                 grid.appendChild(card);
             });
 
@@ -969,8 +1034,6 @@
                     return;
                 }
                 if (addBtn) {
-                    // Similar-product quick-add uses the product's first available weight
-                    // (usually 1 Kg), since there's no per-card weight selector here.
                     const pr = PRODUCTS.find(x => String(x.id) === String(addBtn.dataset.add));
                     if (pr) {
                         const w = pr.weights.find(w => w.price !== null && w.price !== undefined);
@@ -985,17 +1048,8 @@
             });
         }
 
-        // Scroll reveal for static sections
-        const revealEls = document.querySelectorAll('.reveal, .stagger, .kolam-divider');
-        const io = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('in');
-                    io.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
-        revealEls.forEach(el => io.observe(el));
+        // -------------------- START --------------------
+        loadProducts();
     </script>
 
 </body>

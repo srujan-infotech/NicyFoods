@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register | NicyFoods</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream:    '#FBF1E2',
+            jaggery:  '#5C3A25',
+            ink:      '#3A2417',
+            turmeric: '#E8A33D',
+            marigold: '#F2C14E',
+            kumkum:   '#A63A2E',
+            herbal:   '#5F7A4F',
+          },
+          fontFamily: {
+            display: ['"Rozha One"', 'serif'],
+            body: ['Poppins', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --cream:#FBF1E2; --jaggery:#5C3A25; --ink:#3A2417;
+      --turmeric:#E8A33D; --marigold:#F2C14E; --kumkum:#A63A2E; --herbal:#5F7A4F;
+    }
+    *{ box-sizing:border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--cream);
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 1rem;
+      overflow-x: hidden;
+      position: relative;
+    }
+    h1, .font-display{ font-family:'Rozha One', serif; letter-spacing:.01em; }
+
+    /* ---------- ambient background: rangoli corners + rising bubbles ---------- */
+    .bg-kolam{
+      position: fixed; pointer-events: none; opacity: .18; z-index: 0;
+      animation: kolamSpin 90s linear infinite;
+    }
+    @keyframes kolamSpin{ to{ transform: rotate(360deg); } }
+    .bg-kolam.rev{ animation-name: kolamSpinRev; opacity:.14; }
+    @keyframes kolamSpinRev{ to{ transform: rotate(-360deg); } }
+
+    .bubble-field{ position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+    .ladoo-particle{
+      position: absolute; border-radius: 50%;
+      background: radial-gradient(circle at 32% 26%, #FDE7B0, #F2C14E 45%, #C8791F 80%, #A63A2E 100%);
+      box-shadow: 0 0 16px 3px rgba(232,163,61,.35);
+      opacity: .35;
+      animation: bubbleRise var(--dur, 10s) ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+    }
+    @keyframes bubbleRise{
+      0%{ transform: translateY(0) scale(.85); opacity: 0; }
+      12%{ opacity: .5; }
+      50%{ transform: translateY(-30px) scale(1.05); opacity: .5; }
+      100%{ transform: translateY(-70px) scale(.9); opacity: 0; }
+    }
+
+    /* ---------- card entrance ---------- */
+    .register-card{
+      position: relative; z-index: 10;
+      background: #fff;
+      border-radius: 1.75rem;
+      box-shadow: 0 24px 60px -20px rgba(58,36,23,.35), inset 0 0 0 1px rgba(92,58,37,.05);
+      max-width: 440px; width: 100%;
+      padding: 2.5rem 2.25rem;
+      animation: cardIn .7s cubic-bezier(.16,.84,.44,1) both;
+    }
+    @keyframes cardIn{ from{ opacity:0; transform: translateY(24px) scale(.98); } to{ opacity:1; transform: translateY(0) scale(1); } }
+
+    .logo-ring{
+      width: 76px; height: 76px; border-radius: 9999px; margin: 0 auto .9rem;
+      padding: 3px;
+      background: conic-gradient(from 0deg, var(--turmeric), var(--marigold), var(--kumkum), var(--turmeric));
+      animation: ringSpin 14s linear infinite;
+    }
+    @keyframes ringSpin{ to{ transform: rotate(360deg); } }
+    .logo-ring img{
+      width: 100%; height: 100%; border-radius: 9999px; object-fit: cover;
+      border: 3px solid #fff; display: block;
+    }
+
+    /* ==========================================================
+       FIELD STYLING — deliberately high specificity + !important
+       on the properties that matter (padding/box-sizing), because
+       Tailwind's CDN script injects/re-injects its own preflight
+       "input { padding:0 }" reset into <head> asynchronously, and
+       can land AFTER this block in the cascade. A bare `input{}`
+       selector here would silently lose that fight and cause the
+       icon to overlap the placeholder text. Scoping to
+       `.field-wrap input` + !important guarantees this always wins.
+       ========================================================== */
+    .field-wrap{ position: relative; }
+    .field-wrap input{
+      box-sizing: border-box !important;
+      border: 1.5px solid rgba(92,58,37,0.15) !important;
+      border-radius: 0.8rem !important;
+      padding: 0.7rem 0.9rem 0.7rem 2.7rem !important;
+      width: 100% !important;
+      font-family: inherit !important;
+      transition: border-color .2s ease, box-shadow .2s ease, transform .15s ease;
+    }
+    .field-wrap input:focus{
+      outline: none !important;
+      border-color: var(--kumkum) !important;
+      box-shadow: 0 0 0 3px rgba(166,58,46,.12);
+      transform: translateY(-1px);
+    }
+    .field-icon{
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      width: 18px; height: 18px; color: var(--jaggery); opacity: .45;
+      pointer-events: none; transition: opacity .2s ease, color .2s ease;
+      z-index: 2;
+    }
+    .field-wrap input:focus ~ .field-icon{ opacity: .9; color: var(--kumkum); }
+
+    /* Plain input (no left icon) — used for the optional admin-secret field,
+       so it doesn't inherit the icon's reserved left padding for no reason. */
+    .plain-input{
+      box-sizing: border-box !important;
+      border: 1.5px solid rgba(92,58,37,0.15) !important;
+      border-radius: 0.8rem !important;
+      padding: 0.65rem 0.9rem !important;
+      width: 100% !important;
+      font-family: inherit !important;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+    .plain-input:focus{
+      outline: none !important;
+      border-color: var(--kumkum) !important;
+      box-shadow: 0 0 0 3px rgba(166,58,46,.12);
+    }
+
+    .password-hint { font-size: 0.75rem; color: #8a7563; margin-top: 0.3rem; padding-left: .2rem; }
+
+    /* admin-secret disclosure */
+    details summary{ list-style:none; }
+    details summary::-webkit-details-marker{ display:none; }
+    details summary{
+      display:flex; align-items:center; gap:6px; cursor:pointer;
+      color:#9a8a78; font-size:.75rem; transition: color .2s ease;
+    }
+    details summary:hover{ color: var(--kumkum); }
+    details summary .chev{ transition: transform .25s cubic-bezier(.16,.84,.44,1); width:12px; height:12px; }
+    details[open] summary .chev{ transform: rotate(90deg); }
+    details .plain-input{ margin-top: .5rem; }
+
+    .btn-primary {
+      position: relative; overflow: hidden;
+      background: linear-gradient(90deg, var(--turmeric), var(--kumkum));
+      color: white; font-weight: 600;
+      padding: 0.85rem 1.5rem; border-radius: 0.8rem; border: none; cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity .2s ease;
+      width: 100%;
+    }
+    .btn-primary::before{
+      content:''; position:absolute; top:0; left:-60%; width:40%; height:100%;
+      background:linear-gradient(115deg, transparent, rgba(255,255,255,.5), transparent);
+      transform:skewX(-20deg); transition:left .8s ease;
+    }
+    .btn-primary:hover::before{ left:130%; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 22px -8px rgba(166,58,46,0.45); }
+    .btn-primary:active { transform: scale(0.97); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .error-msg { color: #dc2626; font-size: 0.9rem; text-align: center; margin-top: 0.75rem; display: none; }
+    .success-msg { color: #16a34a; font-size: 0.9rem; text-align: center; margin-top: 0.75rem; display: none; }
+    .loader { border: 2px solid rgba(255,255,255,.4); border-top: 2px solid #fff; border-radius: 50%; width: 16px; height: 16px; animation: spin 0.8s linear infinite; display: inline-block; margin-right: 0.5rem; vertical-align: -2px; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    .kolam-mini path{
+      stroke-dasharray: 200; stroke-dashoffset: 200;
+      animation: kolamDraw 1.6s cubic-bezier(.16,.84,.44,1) .5s forwards;
+    }
+    @keyframes kolamDraw{ to{ stroke-dashoffset: 0; } }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ambient rangoli corners -->
+  <svg class="bg-kolam" style="top:-80px; left:-80px; width:280px; height:280px;" viewBox="0 0 200 200" fill="none">
+    <g stroke="#A63A2E" stroke-width="1.2"><circle cx="100" cy="100" r="90"/><circle cx="100" cy="100" r="65"/></g>
+  </svg>
+  <svg class="bg-kolam rev" style="bottom:-90px; right:-90px; width:300px; height:300px;" viewBox="0 0 200 200" fill="none">
+    <g stroke="#E8A33D" stroke-width="1.2"><circle cx="100" cy="100" r="90"/><circle cx="100" cy="100" r="70"/></g>
+  </svg>
+
+  <!-- rising ladoo bubbles -->
+  <div class="bubble-field">
+    <div class="ladoo-particle w-5 h-5" style="bottom:10%; left:12%; --dur:9s; --delay:.3s;"></div>
+    <div class="ladoo-particle w-3 h-3" style="bottom:6%; left:30%; --dur:11s; --delay:1.6s;"></div>
+    <div class="ladoo-particle w-4 h-4" style="bottom:14%; right:16%; --dur:10s; --delay:.9s;"></div>
+    <div class="ladoo-particle w-3 h-3" style="bottom:20%; right:32%; --dur:8.5s; --delay:2.2s;"></div>
+  </div>
+
+  <div class="register-card">
+    <div class="text-center mb-6">
+      <div class="logo-ring">
+        <img src="https://nicyfoods.com/images/logo.png" alt="NicyFoods" />
+      </div>
+      <h1 class="font-display text-2xl md:text-3xl" style="color:var(--jaggery);">Create Account</h1>
+      <p class="text-sm text-slate-500 mt-1">Join the NicyFoods family</p>
+      <svg class="kolam-mini mx-auto mt-3" width="90" height="10" viewBox="0 0 90 10" fill="none">
+        <path d="M2 5 Q 25 -1, 45 4 T 88 3" stroke="#E8A33D" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <form id="registerForm">
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-slate-700 mb-1.5">Full Name</label>
+        <div class="field-wrap">
+          <input type="text" id="regName" placeholder="Your name" required />
+          <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-slate-700 mb-1.5">Email</label>
+        <div class="field-wrap">
+          <input type="email" id="regEmail" placeholder="your@email.com" required />
+          <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 6l10 7 10-7"/>
+          </svg>
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-slate-700 mb-1.5">Password</label>
+        <div class="field-wrap">
+          <input type="password" id="regPassword" placeholder="Min 6 characters" required minlength="6" />
+          <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+          </svg>
+        </div>
+        <p class="password-hint">At least 6 characters</p>
+      </div>
+      <div class="mb-5">
+        <label class="block text-sm font-medium text-slate-700 mb-1.5">Confirm Password</label>
+        <div class="field-wrap">
+          <input type="password" id="regConfirm" placeholder="Re-enter password" required />
+          <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Optional admin secret (collapsible) -->
+      <details class="mb-5">
+        <summary>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+          Admin registration (optional)
+        </summary>
+        <input type="text" id="regAdminSecret" placeholder="Admin secret (if applicable)" class="plain-input mt-2" />
+      </details>
+
+      <button type="submit" id="registerBtn" class="btn-primary">
+        <span id="registerBtnText">Create Account</span>
+      </button>
+      <div id="registerError" class="error-msg"></div>
+      <div id="registerSuccess" class="success-msg"></div>
+    </form>
+
+    <p class="text-center text-sm text-slate-500 mt-6">
+      Already have an account? <a href="login.html" class="font-medium hover:underline" style="color:var(--kumkum);">Sign in</a>
+    </p>
+  </div>
+
+  <script src="js/auth-client.js"></script>
+  <script>
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("regName").value.trim();
+      const email = document.getElementById("regEmail").value.trim();
+      const password = document.getElementById("regPassword").value;
+      const confirm = document.getElementById("regConfirm").value;
+      const adminSecret = document.getElementById("regAdminSecret").value.trim();
+
+      const btn = document.getElementById("registerBtn");
+      const btnText = document.getElementById("registerBtnText");
+      const errorEl = document.getElementById("registerError");
+      const successEl = document.getElementById("registerSuccess");
+
+      errorEl.style.display = "none";
+      successEl.style.display = "none";
+
+      if (!name || !email || !password || !confirm) {
+        errorEl.textContent = "Please fill in every field.";
+        errorEl.style.display = "block";
+        return;
+      }
+      if (password.length < 6) {
+        errorEl.textContent = "Password must be at least 6 characters.";
+        errorEl.style.display = "block";
+        return;
+      }
+      if (password !== confirm) {
+        errorEl.textContent = "Passwords do not match.";
+        errorEl.style.display = "block";
+        return;
+      }
+
+      btn.disabled = true;
+      btnText.innerHTML = '<span class="loader"></span> Creating account...';
+
+      try {
+        const payload = { name, email, password };
+        if (adminSecret) payload.adminSecret = adminSecret;
+
+        const res = await fetch('https://sidit.in/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          errorEl.textContent = data.message || 'Registration failed.';
+          errorEl.style.display = 'block';
+          btn.disabled = false;
+          btnText.textContent = 'Create Account';
+          return;
+        }
+
+        // Auto‑login after registration
+        AUTH.setSession(data.token, {
+          name: data.name,
+          email: data.email,
+          role: data.role,
+        });
+
+        successEl.textContent = '✅ Account created! Redirecting...';
+        successEl.style.display = 'block';
+
+        const redirectTo = AUTH.isAdmin() ? 'admin.html' : 'index.html';
+        setTimeout(() => {
+          window.location.href = redirectTo;
+        }, 600);
+
+      } catch (err) {
+        console.error(err);
+        errorEl.textContent = 'Network error. Please check your connection.';
+        errorEl.style.display = 'block';
+        btn.disabled = false;
+        btnText.textContent = 'Create Account';
+      }
+    });
+  </script>
+</body>
+</html>

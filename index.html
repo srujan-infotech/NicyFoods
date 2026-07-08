@@ -309,7 +309,7 @@
       transition: transform .25s ease, background-color .25s ease, color .25s ease; flex-shrink:0;
     }
     .testi-nav-btn:hover{ background:var(--kumkum); color:#fff; transform:scale(1.08); }
-    .testi-dot{ width:7px; height:7px; border-radius:9999px; background:rgba(92,58,37,.2); transition: background-color .3s ease, transform .3s ease; }
+    .testi-dot{ width:7px; height:7px; border-radius:9999px; background:rgba(92,58,37,.2); transition: background-color .3s ease, transform .3s ease; border:none; cursor:pointer; padding:0; }
     .testi-dot.active{ background:var(--kumkum); transform:scale(1.3); }
 
     .contact-strip-icon{
@@ -705,7 +705,7 @@
 
   <div class="torn-edge"></div>
 
-  <!-- ============ TESTIMONIALS ============ -->
+  <!-- ============ TESTIMONIALS (dynamic, loaded from backend API) ============ -->
   <section class="relative py-16 md:py-20 overflow-hidden">
     <div class="ladoo-particle w-12 h-12 float-drift-slow" style="top:6%; left:4%;"></div>
     <div class="ladoo-particle w-8 h-8 float-drift" style="bottom:8%; right:4%;"></div>
@@ -721,200 +721,9 @@
       </div>
 
       <div class="reveal relative">
+        <!-- Cards are injected here at runtime by loadTestimonials() -->
         <div id="testi-track" class="testi-track">
-
-          <div class="testi-card">
-            <div class="testi-card-inner">
-              <div class="flex items-start justify-between mb-3">
-                <div class="flex items-center gap-3">
-                  <div class="testi-avatar" style="background:#A63A2E;">P</div>
-                  <div>
-                    <p class="font-semibold text-jaggery text-sm">Priya Deshmukh</p>
-                    <div class="testi-stars flex gap-0.5 mt-1">
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                    </div>
-                  </div>
-                </div>
-                <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.25 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.85A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.09A6.6 6.6 0 0 1 5.5 12c0-.73.13-1.43.34-2.09V7.06H2.18A11 11 0 0 0 1 12c0 1.77.42 3.45 1.18 4.94z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.85C6.71 7.31 9.14 5.38 12 5.38z"/></svg>
-              </div>
-              <p class="testi-text text-sm text-slate-600 leading-relaxed flex-1">The Ashwagandha ladoo has become part of my daily routine. You can genuinely taste the pure ghee — nothing like the store-bought ones. Delivery to Pune was quick and the packaging kept everything fresh.</p>
-              <button class="testi-read-more text-xs font-semibold text-kumkum mt-2 self-start hover:underline">Read more</button>
-              <p class="text-xs text-slate-400 mt-3">2 months ago</p>
-            </div>
-          </div>
-
-          <div class="testi-card">
-            <div class="testi-card-inner">
-              <div class="flex items-start justify-between mb-3">
-                <div class="flex items-center gap-3">
-                  <div class="testi-avatar" style="background:#E8A33D;">R</div>
-                  <div>
-                    <p class="font-semibold text-jaggery text-sm">Rahul Kulkarni</p>
-                    <div class="testi-stars flex gap-0.5 mt-1">
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                    </div>
-                  </div>
-                </div>
-                <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.25 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.85A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.09A6.6 6.6 0 0 1 5.5 12c0-.73.13-1.43.34-2.09V7.06H2.18A11 11 0 0 0 1 12c0 1.77.42 3.45 1.18 4.94z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.85C6.71 7.31 9.14 5.38 12 5.38z"/></svg>
-              </div>
-              <p class="testi-text text-sm text-slate-600 leading-relaxed flex-1">Ordered the Dink Laddu and Nachni Laddu for my parents. Both loved the taste and said it reminded them of ladoos their own mothers used to make. Will definitely reorder every month.</p>
-              <button class="testi-read-more text-xs font-semibold text-kumkum mt-2 self-start hover:underline">Read more</button>
-              <p class="text-xs text-slate-400 mt-3">3 months ago</p>
-            </div>
-          </div>
-
-          <div class="testi-card">
-            <div class="testi-card-inner">
-              <div class="flex items-start justify-between mb-3">
-                <div class="flex items-center gap-3">
-                  <div class="testi-avatar" style="background:#5F7A4F;">S</div>
-                  <div>
-                    <p class="font-semibold text-jaggery text-sm">Sneha Joshi</p>
-                    <div class="testi-stars flex gap-0.5 mt-1">
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                    </div>
-                  </div>
-                </div>
-                <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.25 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.85A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.09A6.6 6.6 0 0 1 5.5 12c0-.73.13-1.43.34-2.09V7.06H2.18A11 11 0 0 0 1 12c0 1.77.42 3.45 1.18 4.94z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.85C6.71 7.31 9.14 5.38 12 5.38z"/></svg>
-              </div>
-              <p class="testi-text text-sm text-slate-600 leading-relaxed flex-1">Started my son on the baby-friendly ladoos at 9 months on our pediatrician's suggestion. No allergies, easy to digest, and he genuinely enjoys them. So relieved to find something this clean.</p>
-              <button class="testi-read-more text-xs font-semibold text-kumkum mt-2 self-start hover:underline">Read more</button>
-              <p class="text-xs text-slate-400 mt-3">1 month ago</p>
-            </div>
-          </div>
-
-          <div class="testi-card">
-            <div class="testi-card-inner">
-              <div class="flex items-start justify-between mb-3">
-                <div class="flex items-center gap-3">
-                  <div class="testi-avatar" style="background:#F2C14E; color:#3A2417;">A</div>
-                  <div>
-                    <p class="font-semibold text-jaggery text-sm">Amol Pawar</p>
-                    <div class="testi-stars flex gap-0.5 mt-1">
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                    </div>
-                  </div>
-                </div>
-                <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.25 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.85A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.09A6.6 6.6 0 0 1 5.5 12c0-.73.13-1.43.34-2.09V7.06H2.18A11 11 0 0 0 1 12c0 1.77.42 3.45 1.18 4.94z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.85C6.71 7.31 9.14 5.38 12 5.38z"/></svg>
-              </div>
-              <p class="testi-text text-sm text-slate-600 leading-relaxed flex-1">Bulk-ordered for a family function and NicyFoods delivered right on time with everything packed beautifully. Guests kept asking where we got them from. Highly recommend for events.</p>
-              <button class="testi-read-more text-xs font-semibold text-kumkum mt-2 self-start hover:underline">Read more</button>
-              <p class="text-xs text-slate-400 mt-3">5 months ago</p>
-            </div>
-          </div>
-
-          <div class="testi-card">
-            <div class="testi-card-inner">
-              <div class="flex items-start justify-between mb-3">
-                <div class="flex items-center gap-3">
-                  <div class="testi-avatar" style="background:#5C3A25;">M</div>
-                  <div>
-                    <p class="font-semibold text-jaggery text-sm">Manisha Kale</p>
-                    <div class="testi-stars flex gap-0.5 mt-1">
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                    </div>
-                  </div>
-                </div>
-                <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.25 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.85A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.09A6.6 6.6 0 0 1 5.5 12c0-.73.13-1.43.34-2.09V7.06H2.18A11 11 0 0 0 1 12c0 1.77.42 3.45 1.18 4.94z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.85C6.71 7.31 9.14 5.38 12 5.38z"/></svg>
-              </div>
-              <p class="testi-text text-sm text-slate-600 leading-relaxed flex-1">What I appreciate most is the honesty — no preservatives, exactly as promised, and it shows in how quickly they're best consumed. That's how you know it's actually handmade.</p>
-              <button class="testi-read-more text-xs font-semibold text-kumkum mt-2 self-start hover:underline">Read more</button>
-              <p class="text-xs text-slate-400 mt-3">2 weeks ago</p>
-            </div>
-          </div>
-
-          <div class="testi-card">
-            <div class="testi-card-inner">
-              <div class="flex items-start justify-between mb-3">
-                <div class="flex items-center gap-3">
-                  <div class="testi-avatar" style="background:#A63A2E;">V</div>
-                  <div>
-                    <p class="font-semibold text-jaggery text-sm">Vikram Shinde</p>
-                    <div class="testi-stars flex gap-0.5 mt-1">
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                    </div>
-                  </div>
-                </div>
-                <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.25 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.85A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.09A6.6 6.6 0 0 1 5.5 12c0-.73.13-1.43.34-2.09V7.06H2.18A11 11 0 0 0 1 12c0 1.77.42 3.45 1.18 4.94z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.85C6.71 7.31 9.14 5.38 12 5.38z"/></svg>
-              </div>
-              <p class="testi-text text-sm text-slate-600 leading-relaxed flex-1">Tried the millet ladoos after my doctor suggested cutting refined sugar. Genuinely tasty, not just "healthy but bland" like a lot of alternatives I've tried before this.</p>
-              <button class="testi-read-more text-xs font-semibold text-kumkum mt-2 self-start hover:underline">Read more</button>
-              <p class="text-xs text-slate-400 mt-3">6 months ago</p>
-            </div>
-          </div>
-
-          <div class="testi-card">
-            <div class="testi-card-inner">
-              <div class="flex items-start justify-between mb-3">
-                <div class="flex items-center gap-3">
-                  <div class="testi-avatar" style="background:#E8A33D;">N</div>
-                  <div>
-                    <p class="font-semibold text-jaggery text-sm">Nikita Bhosale</p>
-                    <div class="testi-stars flex gap-0.5 mt-1">
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                    </div>
-                  </div>
-                </div>
-                <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.25 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.85A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.09A6.6 6.6 0 0 1 5.5 12c0-.73.13-1.43.34-2.09V7.06H2.18A11 11 0 0 0 1 12c0 1.77.42 3.45 1.18 4.94z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.85C6.71 7.31 9.14 5.38 12 5.38z"/></svg>
-              </div>
-              <p class="testi-text text-sm text-slate-600 leading-relaxed flex-1">Been ordering since 2022 and quality has stayed consistently excellent. The Besan ladoo especially — perfectly grainy texture, not overly sweet. My whole office asks me to order for them now.</p>
-              <button class="testi-read-more text-xs font-semibold text-kumkum mt-2 self-start hover:underline">Read more</button>
-              <p class="text-xs text-slate-400 mt-3">1 year ago</p>
-            </div>
-          </div>
-
-          <div class="testi-card">
-            <div class="testi-card-inner">
-              <div class="flex items-start justify-between mb-3">
-                <div class="flex items-center gap-3">
-                  <div class="testi-avatar" style="background:#5F7A4F;">G</div>
-                  <div>
-                    <p class="font-semibold text-jaggery text-sm">Girish Patwardhan</p>
-                    <div class="testi-stars flex gap-0.5 mt-1">
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 7.5l6.4-.6z"/></svg>
-                    </div>
-                  </div>
-                </div>
-                <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.25 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.85A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.09A6.6 6.6 0 0 1 5.5 12c0-.73.13-1.43.34-2.09V7.06H2.18A11 11 0 0 0 1 12c0 1.77.42 3.45 1.18 4.94z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.85C6.71 7.31 9.14 5.38 12 5.38z"/></svg>
-              </div>
-              <p class="testi-text text-sm text-slate-600 leading-relaxed flex-1">Gifted a box to my in-laws for Diwali and they were genuinely impressed — said it tasted like ladoos made at home, not mass-produced sweets. Packaging looked premium too.</p>
-              <button class="testi-read-more text-xs font-semibold text-kumkum mt-2 self-start hover:underline">Read more</button>
-              <p class="text-xs text-slate-400 mt-3">4 months ago</p>
-            </div>
-          </div>
-
+          <p class="text-sm text-slate-400 px-2 py-6">Loading reviews...</p>
         </div>
 
         <div class="flex items-center justify-center gap-6 mt-2">
@@ -928,11 +737,16 @@
         </div>
       </div>
 
-      <div class="reveal text-center mt-8">
+      <div class="reveal text-center mt-8 flex flex-wrap items-center justify-center gap-4">
         <a href="https://www.google.com/search?q=nicyfoods+reviews" target="_blank" rel="noopener"
            class="cta-btn inline-flex items-center gap-2 bg-gradient-to-r from-turmeric to-kumkum text-white font-semibold px-7 py-3 rounded-xl hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300">
           View All Google Reviews
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="write-review.html"
+           class="cta-btn inline-flex items-center gap-2 border-2 border-kumkum text-kumkum font-semibold px-7 py-3 rounded-xl hover:bg-kumkum hover:text-white hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300">
+          Write a Review
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
         </a>
       </div>
     </div>
@@ -1114,6 +928,7 @@
 
   <script src="js/navbar.js"></script>
   <script src="js/footer.js"></script>
+  <script src="js/testimonials.js"></script>
 
   <script>
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1333,75 +1148,10 @@
       window.location.href = 'cart.html';
     });
 
-    // ---------- Testimonial slider ----------
-    (function () {
-      const track = document.getElementById('testi-track');
-      const prevBtn = document.getElementById('testi-prev');
-      const nextBtn = document.getElementById('testi-next');
-      const dotsWrap = document.getElementById('testi-dots');
-      if (!track) return;
-
-      const cards = Array.from(track.children);
-      const dots = cards.map((_, i) => {
-        const d = document.createElement('button');
-        d.className = 'testi-dot' + (i === 0 ? ' active' : '');
-        d.setAttribute('aria-label', 'Go to review ' + (i + 1));
-        d.addEventListener('click', () => scrollToCard(i));
-        dotsWrap.appendChild(d);
-        return d;
-      });
-
-      function cardStep() {
-        return cards[0].getBoundingClientRect().width + 20;
-      }
-
-      function currentIndex() {
-        return Math.round(track.scrollLeft / cardStep());
-      }
-
-      function updateDots() {
-        const idx = Math.min(currentIndex(), dots.length - 1);
-        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-      }
-
-      function scrollToCard(i) {
-        const clamped = Math.max(0, Math.min(i, cards.length - 1));
-        track.scrollTo({ left: clamped * cardStep(), behavior: 'smooth' });
-      }
-
-      prevBtn.addEventListener('click', () => scrollToCard(currentIndex() - 1));
-      nextBtn.addEventListener('click', () => scrollToCard(currentIndex() + 1));
-      track.addEventListener('scroll', () => { requestAnimationFrame(updateDots); }, { passive: true });
-
-      let autoTimer = null;
-      function startAuto() {
-        if (prefersReduced) return;
-        stopAuto();
-        autoTimer = setInterval(() => {
-          const maxIndex = cards.length - 1;
-          const next = currentIndex() >= maxIndex ? 0 : currentIndex() + 1;
-          scrollToCard(next);
-        }, 4000);
-      }
-      function stopAuto() {
-        if (autoTimer) clearInterval(autoTimer);
-        autoTimer = null;
-      }
-      track.addEventListener('mouseenter', stopAuto);
-      track.addEventListener('mouseleave', startAuto);
-      track.addEventListener('touchstart', stopAuto, { passive: true });
-      track.addEventListener('touchend', () => setTimeout(startAuto, 3000), { passive: true });
-
-      startAuto();
-    })();
-
-    document.querySelectorAll('.testi-read-more').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const text = btn.previousElementSibling;
-        const expanded = text.classList.toggle('expanded');
-        btn.textContent = expanded ? 'Read less' : 'Read more';
-      });
-    });
+    // NOTE: The testimonial slider (fetch, render, prev/next, dots, read-more)
+    // now lives entirely in js/testimonials.js, loaded above. It attaches its
+    // own listeners once the reviews are fetched from the backend API, so
+    // there's no static/inline testimonial script here anymore.
   </script>
 
 </body>
