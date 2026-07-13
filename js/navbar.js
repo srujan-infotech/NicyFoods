@@ -543,7 +543,7 @@
 
 
 // -------------------- CONFIG --------------------
-const NAV_API_BASE_URL = "https://dbms.srujaninfotech.com";
+const NAV_API_BASE_URL = "https://nicyfoods.srujaninfotech.com";
 const NAV_LINKS_URL = `${NAV_API_BASE_URL}/api/navlinks`;
 
 const FALLBACK_NAV_LINKS = [

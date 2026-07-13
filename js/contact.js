@@ -6,7 +6,7 @@
 
 (() => {
   // ---- Config -------------------------------------------------------
-  const API_BASE_URL = "https://dbms.srujaninfotech.com"; // change to your real backend URL in production
+  const API_BASE_URL = "https://nicyfoods.srujaninfotech.com"; // change to your real backend URL in production
   const CONTACT_CREATE_URL = `${API_BASE_URL}/api/contact`;
 
   // ---- DOM refs -------------------------------------------------------

@@ -51,7 +51,7 @@ const AUTH = {
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
-    const response = await fetch(`https://dbms.srujaninfotech.com${endpoint}`, {
+    const response = await fetch(`https://nicyfoods.srujaninfotech.com${endpoint}`, {
       ...options,
       headers,
       credentials: 'include',
