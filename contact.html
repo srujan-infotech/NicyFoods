@@ -46,6 +46,17 @@
     input, textarea{ transition: border-color .3s ease, box-shadow .3s ease, transform .2s ease; }
     input:focus, textarea:focus{ transform:translateY(-1px); }
 
+    /* ---------- field validation states ---------- */
+    input.field-invalid, textarea.field-invalid{
+      border-color:var(--kumkum) !important;
+      box-shadow:0 0 0 3px rgba(166,58,46,0.12) !important;
+    }
+    .field-error{
+      display:none; align-items:center; gap:5px; font-size:.78rem; color:var(--kumkum);
+      margin-top:.4rem; font-weight:500;
+    }
+    .field-error.show{ display:flex; }
+
     /* ---------- scroll reveal ---------- */
     .reveal{ opacity:0; transform:translateY(28px); transition:opacity .8s cubic-bezier(.16,.84,.44,1), transform .8s cubic-bezier(.16,.84,.44,1); }
     .reveal.in{ opacity:1; transform:translateY(0); }
@@ -90,10 +101,14 @@
       transform:skewX(-20deg); transition:left .8s ease;
     }
     .cta-btn:hover::before{ left:130%; }
+    .cta-btn:disabled{ opacity:.65; cursor:not-allowed; transform:none !important; }
 
     /* ---------- submit feedback ---------- */
     .submit-check{ display:inline-flex; align-items:center; justify-content:center; opacity:0; transform:scale(.5); transition:opacity .3s ease, transform .3s cubic-bezier(.34,1.56,.64,1); }
     .submit-check.show{ opacity:1; transform:scale(1); }
+    .cf-status-msg{ font-size:.85rem; margin-top:.75rem; min-height:1.2em; text-align:center; }
+    .cf-status-msg.success{ color:var(--herbal); }
+    .cf-status-msg.error{ color:var(--kumkum); }
 
     /* ---------- floating ladoo particles (HOME/ABOUT style) ---------- */
     .ladoo-particle{
@@ -196,25 +211,40 @@
         <!-- Send us a Message -->
         <div class="reveal bg-white rounded-2xl shadow-md border border-slate-100 p-8">
           <h3 class="font-display text-xl text-kumkum mb-6">Send us a Message</h3>
-          <form id="contact-form" class="space-y-5">
+          <form id="contact-form" class="space-y-5" novalidate>
             <div>
               <label class="block text-sm font-semibold text-slate-700 mb-2">Your Name *</label>
-              <input type="text" id="cf-name" required placeholder="First Name"
+              <input type="text" id="cf-name" name="name" required placeholder="First Name"
+                     maxlength="50" autocomplete="name"
+                     pattern="[A-Za-z\s.'-]+"
+                     title="Name should contain letters only, no numbers"
                      class="w-full border border-slate-300 rounded-lg px-4 py-3 text-slate-700" />
+              <p id="cf-name-error" class="field-error">
+                <svg class="w-3.5 h-3.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+                Name should contain letters only — no numbers.
+              </p>
             </div>
             <div>
               <label class="block text-sm font-semibold text-slate-700 mb-2">Email Address *</label>
-              <input type="email" id="cf-email" required placeholder="customer@example.com"
+              <input type="email" id="cf-email" name="email" required placeholder="customer@example.com"
+                     autocomplete="email"
                      class="w-full border border-slate-300 rounded-lg px-4 py-3 text-slate-700" />
             </div>
             <div>
               <label class="block text-sm font-semibold text-slate-700 mb-2">Phone Number</label>
-              <input type="tel" id="cf-phone" placeholder="+91 XXXXXXXXXX"
+              <input type="tel" id="cf-phone" name="phone" placeholder="98XXXXXXXX"
+                     maxlength="10" inputmode="numeric" autocomplete="tel"
+                     pattern="[6-9][0-9]{9}"
+                     title="Enter a valid 10-digit mobile number"
                      class="w-full border border-slate-300 rounded-lg px-4 py-3 text-slate-700" />
+              <p id="cf-phone-error" class="field-error">
+                <svg class="w-3.5 h-3.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+                Enter a valid 10-digit mobile number.
+              </p>
             </div>
             <div>
               <label class="block text-sm font-semibold text-slate-700 mb-2">Message *</label>
-              <textarea id="cf-message" required rows="5" placeholder="Tell us about your inquiry or order request..."
+              <textarea id="cf-message" name="message" required rows="5" placeholder="Tell us about your inquiry or order request..."
                         class="w-full border border-slate-300 rounded-lg px-4 py-3 text-slate-700 resize-y"></textarea>
             </div>
             <button type="submit" id="cf-submit"
@@ -226,7 +256,8 @@
                 </svg>
               </span>
             </button>
-            <p class="text-xs text-slate-400 text-center">* Required fields. Your message will be sent via your email client.</p>
+            <p id="cf-status-msg" class="cf-status-msg" role="status"></p>
+            <p class="text-xs text-slate-400 text-center">* Required fields. We typically respond within 24 hours.</p>
           </form>
         </div>
 
@@ -515,36 +546,8 @@
 
   <script src="js/navbar.js"></script>
   <script src="js/footer.js"></script>
+  <script src="js/contact.js"></script>
   <script>
-    document.getElementById("contact-form").addEventListener("submit", function (e) {
-      e.preventDefault();
-      const name = document.getElementById("cf-name").value.trim();
-      const email = document.getElementById("cf-email").value.trim();
-      const phone = document.getElementById("cf-phone").value.trim();
-      const message = document.getElementById("cf-message").value.trim();
-
-      const subject = `Website Inquiry from ${name}`;
-      const body =
-        `Name: ${name}\n` +
-        `Email: ${email}\n` +
-        `Phone: ${phone || "-"}\n\n` +
-        `Message:\n${message}`;
-
-      // Brief visual confirmation before handing off to the email client
-      const label = document.getElementById("cf-submit-label");
-      const check = document.getElementById("cf-submit-check");
-      label.textContent = "Opening your email app...";
-      check.classList.add("show");
-
-      window.location.href =
-        `mailto:nicyfoods5@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-      setTimeout(() => {
-        label.textContent = "Send Message";
-        check.classList.remove("show");
-      }, 2500);
-    });
-
     // Scroll reveal
     const revealEls = document.querySelectorAll('.reveal, .stagger, .kolam-divider');
     const io = new IntersectionObserver((entries) => {
@@ -556,6 +559,76 @@
       });
     }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
     revealEls.forEach(el => io.observe(el));
+
+    // -------------------- NAME & PHONE VALIDATION --------------------
+    (function () {
+      const nameInput  = document.getElementById('cf-name');
+      const phoneInput = document.getElementById('cf-phone');
+      const nameError  = document.getElementById('cf-name-error');
+      const phoneError = document.getElementById('cf-phone-error');
+      const form       = document.getElementById('contact-form');
+
+      // Block digits/symbols from ever being typed into the Name field.
+      // Allows letters, spaces, apostrophes, hyphens, and periods (e.g. "O'Brien", "Anne-Marie").
+      nameInput.addEventListener('input', () => {
+        const cleaned = nameInput.value.replace(/[^A-Za-z\s.'-]/g, '');
+        if (cleaned !== nameInput.value) nameInput.value = cleaned;
+        nameError.classList.remove('show');
+        nameInput.classList.remove('field-invalid');
+      });
+      nameInput.addEventListener('keypress', (e) => {
+        if (/[0-9]/.test(e.key)) e.preventDefault();
+      });
+      nameInput.addEventListener('blur', () => {
+        const valid = nameInput.value.trim() === '' || /^[A-Za-z\s.'-]+$/.test(nameInput.value.trim());
+        nameError.classList.toggle('show', !valid);
+        nameInput.classList.toggle('field-invalid', !valid);
+      });
+
+      // Restrict Phone field to digits only, max 10 characters.
+      phoneInput.addEventListener('input', () => {
+        let digitsOnly = phoneInput.value.replace(/\D/g, '').slice(0, 10);
+        phoneInput.value = digitsOnly;
+        phoneError.classList.remove('show');
+        phoneInput.classList.remove('field-invalid');
+      });
+      phoneInput.addEventListener('keypress', (e) => {
+        if (!/[0-9]/.test(e.key)) e.preventDefault();
+      });
+      phoneInput.addEventListener('blur', () => {
+        const val = phoneInput.value.trim();
+        const valid = val === '' || /^[6-9][0-9]{9}$/.test(val);
+        phoneError.classList.toggle('show', !valid);
+        phoneInput.classList.toggle('field-invalid', !valid);
+      });
+
+      // Final guard on submit: block submission (and stop contact.js from running)
+      // if Name or Phone are invalid.
+      form.addEventListener('submit', (e) => {
+        let hasError = false;
+
+        const nameVal = nameInput.value.trim();
+        if (nameVal === '' || !/^[A-Za-z\s.'-]+$/.test(nameVal)) {
+          nameError.classList.add('show');
+          nameInput.classList.add('field-invalid');
+          hasError = true;
+        }
+
+        const phoneVal = phoneInput.value.trim();
+        if (phoneVal !== '' && !/^[6-9][0-9]{9}$/.test(phoneVal)) {
+          phoneError.classList.add('show');
+          phoneInput.classList.add('field-invalid');
+          hasError = true;
+        }
+
+        if (hasError) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          const firstInvalid = form.querySelector('.field-invalid');
+          if (firstInvalid) firstInvalid.focus();
+        }
+      }, true); // capture phase: runs before contact.js's own submit listener
+    })();
   </script>
 
 </body>
