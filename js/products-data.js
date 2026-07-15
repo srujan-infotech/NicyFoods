@@ -23,6 +23,7 @@ const PRODUCTS = [
     ingredients: ["Haliv (Aaliv) Seeds", "Coconut", "Jaggery", "Ghee", "Warming Spices"],
     benefits: ["Rich in Iron and Protein", "Traditional Postnatal Nutrition", "Naturally Warming", "No Refined Sugar"]
   },
+  
   {
     id: "dink-laddu", name: "Dink Laddu (Gond Laddu)", cat: "traditional",
     desc: "Traditional Dink (Gond) laddu with dry fruits, jaggery, and ghee.",

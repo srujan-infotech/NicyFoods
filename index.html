@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NicyFoods | Home</title>
+
+    <!-- ===== FONTAWESOME (FIXES MISSING ICONS) ===== -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
     <script src="https://cdn.tailwindcss.com">
     </script>
     <script>
@@ -14,9 +18,9 @@
                         cream: '#FBF1E2',
                         jaggery: '#5C3A25',
                         ink: '#3A2417',
-                        turmeric: '#E8A33D',
-                        marigold: '#F2C14E',
-                        kumkum: '#A63A2E',
+                        turmeric: '#F5A623',
+                        marigold: '#FFC72C',
+                        kumkum: '#D7263D',
                         herbal: '#5F7A4F',
                     },
                     fontFamily: {
@@ -36,6 +40,7 @@
             },
         };
     </script>
+    <link rel="stylesheet" href="css/style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
@@ -44,9 +49,9 @@
             --cream: #FBF1E2;
             --jaggery: #5C3A25;
             --ink: #3A2417;
-            --turmeric: #E8A33D;
-            --marigold: #F2C14E;
-            --kumkum: #A63A2E;
+            --turmeric: #F5A623;
+            --marigold: #FFC72C;
+            --kumkum: #D7263D;
             --herbal: #5F7A4F;
         }
         * {
@@ -80,310 +85,1036 @@
         .stagger.in>* {
             animation: fadeUp .7s cubic-bezier(.16, .84, .44, 1) both;
         }
-        .stagger.in>*:nth-child(1) { animation-delay: .05s }
-        .stagger.in>*:nth-child(2) { animation-delay: .15s }
-        .stagger.in>*:nth-child(3) { animation-delay: .25s }
-        .stagger.in>*:nth-child(4) { animation-delay: .35s }
-        .stagger.in>*:nth-child(5) { animation-delay: .45s }
-        .stagger.in>*:nth-child(6) { animation-delay: .55s }
+        .stagger.in>*:nth-child(1) {
+            animation-delay: .05s
+        }
+        .stagger.in>*:nth-child(2) {
+            animation-delay: .15s
+        }
+        .stagger.in>*:nth-child(3) {
+            animation-delay: .25s
+        }
+        .stagger.in>*:nth-child(4) {
+            animation-delay: .35s
+        }
+        .stagger.in>*:nth-child(5) {
+            animation-delay: .45s
+        }
+        .stagger.in>*:nth-child(6) {
+            animation-delay: .55s
+        }
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(24px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         .wipe {
             clip-path: inset(0 100% 0 0);
             transition: clip-path 1s cubic-bezier(.16, .84, .44, 1);
         }
-        .wipe.in { clip-path: inset(0 0 0 0); }
-        .eyebrow { position: relative; display: inline-block; }
-        .eyebrow svg { display: block; margin: 6px auto 0; overflow: visible; }
+        .wipe.in {
+            clip-path: inset(0 0 0 0);
+        }
+        .eyebrow {
+            position: relative;
+            display: inline-block;
+        }
+        .eyebrow svg {
+            display: block;
+            margin: 6px auto 0;
+            overflow: visible;
+        }
         .eyebrow path {
             stroke-dasharray: 120;
             stroke-dashoffset: 120;
             transition: stroke-dashoffset .9s cubic-bezier(.16, .84, .44, 1) .15s;
         }
         .reveal.in .eyebrow path,
-        .hero-title-in .eyebrow path { stroke-dashoffset: 0; }
+        .hero-title-in .eyebrow path {
+            stroke-dashoffset: 0;
+        }
         .hero-title-in .eyebrow path {
             animation: brushDraw .9s cubic-bezier(.16, .84, .44, 1) .55s both;
         }
         @keyframes brushDraw {
-            from { stroke-dashoffset: 120; }
-            to { stroke-dashoffset: 0; }
+            from {
+                stroke-dashoffset: 120;
+            }
+            to {
+                stroke-dashoffset: 0;
+            }
         }
-        .hero-parallax { will-change: transform; }
+        .hero-parallax {
+            will-change: transform;
+        }
         .hero-glow {
-            position: absolute; inset: -20%; pointer-events: none;
-            background: radial-gradient(circle at 30% 35%, rgba(242, 193, 78, .35), transparent 55%);
+            position: absolute;
+            inset: -20%;
+            pointer-events: none;
+            background: radial-gradient(circle at 30% 35%, rgba(255, 199, 44, .55), transparent 55%),
+                        radial-gradient(circle at 75% 70%, rgba(215, 38, 61, .4), transparent 60%);
             animation: glowDrift 12s ease-in-out infinite;
         }
         @keyframes glowDrift {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(3%, -2%) scale(1.08); }
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+            50% {
+                transform: translate(3%, -2%) scale(1.08);
+            }
         }
         .light-ray {
-            position: absolute; top: -30%; left: 20%; width: 2px; height: 160%;
-            background: linear-gradient(to bottom, rgba(242, 193, 78, .35), transparent 70%);
+            position: absolute;
+            top: -30%;
+            left: 20%;
+            width: 2px;
+            height: 160%;
+            background: linear-gradient(to bottom, rgba(255, 199, 44, .6), transparent 70%);
             transform-origin: top center;
             animation: raySwing 9s ease-in-out infinite;
             filter: blur(1px);
         }
         @keyframes raySwing {
-            0%, 100% { transform: rotate(8deg); opacity: .5; }
-            50% { transform: rotate(18deg); opacity: .9; }
+            0%,
+            100% {
+                transform: rotate(8deg);
+                opacity: .5;
+            }
+            50% {
+                transform: rotate(18deg);
+                opacity: .9;
+            }
         }
-        .ghee-pour-wrap { height: 64px; position: relative; margin-bottom: -6px; }
+        .ghee-pour-wrap {
+            height: 64px;
+            position: relative;
+            margin-bottom: -6px;
+        }
         .ghee-ribbon path {
-            fill: none; stroke: url(#gheeGrad); stroke-width: 3; stroke-linecap: round;
-            stroke-dasharray: 180; stroke-dashoffset: 180;
+            fill: none;
+            stroke: url(#gheeGrad);
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-dasharray: 180;
+            stroke-dashoffset: 180;
             animation: pourDraw 1s cubic-bezier(.55, 0, .35, 1) .1s forwards;
-            filter: drop-shadow(0 0 6px rgba(242, 193, 78, .55));
+            filter: drop-shadow(0 0 6px rgba(255, 199, 44, .55));
         }
-        @keyframes pourDraw { to { stroke-dashoffset: 0; } }
+        @keyframes pourDraw {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
         .ghee-pool {
-            position: absolute; left: 20px; bottom: 6px; width: 34px; height: 10px; border-radius: 50%;
+            position: absolute;
+            left: 20px;
+            bottom: 6px;
+            width: 34px;
+            height: 10px;
+            border-radius: 50%;
             background: radial-gradient(ellipse at center, var(--marigold), var(--turmeric) 70%, transparent 100%);
-            opacity: 0; transform: scale(.2);
-            box-shadow: 0 0 18px 4px rgba(242, 193, 78, .55);
+            opacity: 0;
+            transform: scale(.2);
+            box-shadow: 0 0 18px 4px rgba(255, 199, 44, .55);
             animation: poolPop .7s cubic-bezier(.34, 1.56, .64, 1) 1s forwards;
         }
-        @keyframes poolPop { to { opacity: 1; transform: scale(1); } }
-        .gild-glow { animation: gildPulse 2.6s ease-in-out 1.6s 2; }
+        @keyframes poolPop {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        .gild-glow {
+            animation: gildPulse 2.6s ease-in-out 1.6s 2;
+        }
         @keyframes gildPulse {
-            0%, 100% { text-shadow: 0 0 0 rgba(242, 193, 78, 0); }
-            50% { text-shadow: 0 0 22px rgba(242, 193, 78, .45); }
+            0%,
+            100% {
+                text-shadow: 0 0 0 rgba(255, 199, 44, 0);
+            }
+            50% {
+                text-shadow: 0 0 22px rgba(255, 199, 44, .45);
+            }
         }
-        .hero-title-in { opacity: 0; animation: titleIn 1s cubic-bezier(.16, .84, .44, 1) both; }
+        .hero-title-in {
+            opacity: 0;
+            animation: titleIn 1s cubic-bezier(.16, .84, .44, 1) both;
+        }
         @keyframes titleIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        .float-y { animation: floatY 5s ease-in-out infinite; }
+        .float-y {
+            animation: floatY 5s ease-in-out infinite;
+        }
         @keyframes floatY {
-            0%, 100% { transform: translateY(-50%); }
-            50% { transform: translateY(-58%); }
+            0%,
+            100% {
+                transform: translateY(-50%);
+            }
+            50% {
+                transform: translateY(-58%);
+            }
         }
-        .scroll-cue { animation: cueBounce 2s ease-in-out infinite; }
+        .scroll-cue {
+            animation: cueBounce 2s ease-in-out infinite;
+        }
         @keyframes cueBounce {
-            0%, 100% { transform: translateY(0); opacity: .6; }
-            50% { transform: translateY(8px); opacity: 1; }
+            0%,
+            100% {
+                transform: translateY(0);
+                opacity: .6;
+            }
+            50% {
+                transform: translateY(8px);
+                opacity: 1;
+            }
         }
         .steam {
-            position: absolute; bottom: 0; border-radius: 50%;
-            background: radial-gradient(circle, rgba(242, 193, 78, .55), rgba(242, 193, 78, 0) 70%);
+            position: absolute;
+            bottom: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 199, 44, .55), rgba(255, 199, 44, 0) 70%);
             pointer-events: none;
         }
-        .steam-1 { animation: steamRise 6s ease-in infinite; }
-        .steam-2 { animation: steamRise 8s ease-in infinite; animation-delay: 1.5s; }
-        .steam-3 { animation: steamRise 7s ease-in infinite; animation-delay: 3s; }
-        .steam-4 { animation: steamRise 9s ease-in infinite; animation-delay: .7s; }
+        .steam-1 {
+            animation: steamRise 6s ease-in infinite;
+        }
+        .steam-2 {
+            animation: steamRise 8s ease-in infinite;
+            animation-delay: 1.5s;
+        }
+        .steam-3 {
+            animation: steamRise 7s ease-in infinite;
+            animation-delay: 3s;
+        }
+        .steam-4 {
+            animation: steamRise 9s ease-in infinite;
+            animation-delay: .7s;
+        }
         @keyframes steamRise {
-            0% { transform: translateY(0) scale(.6); opacity: 0; }
-            15% { opacity: .8; }
-            100% { transform: translateY(-420px) scale(1.6); opacity: 0; }
+            0% {
+                transform: translateY(0) scale(.6);
+                opacity: 0;
+            }
+            15% {
+                opacity: .8;
+            }
+            100% {
+                transform: translateY(-420px) scale(1.6);
+                opacity: 0;
+            }
         }
-        .thali-wrap { width: 280px; height: 280px; }
-        @media (min-width:1024px) { .thali-wrap { width: 340px; height: 340px; } }
-        .thali-orbit { position: absolute; inset: -26px; animation: orbitSpin 11s linear infinite; }
+        .thali-wrap {
+            width: 280px;
+            height: 280px;
+        }
+        @media (min-width:1024px) {
+            .thali-wrap {
+                width: 340px;
+                height: 340px;
+            }
+        }
+        .thali-orbit {
+            position: absolute;
+            inset: -26px;
+            animation: orbitSpin 11s linear infinite;
+        }
         .thali-orbit-dot {
-            position: absolute; top: 0; left: 50%; width: 9px; height: 9px; margin-left: -4.5px;
-            border-radius: 50%; background: var(--kumkum);
-            box-shadow: 0 0 12px 2px rgba(166, 58, 46, .65);
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 9px;
+            height: 9px;
+            margin-left: -4.5px;
+            border-radius: 50%;
+            background: var(--kumkum);
+            box-shadow: 0 0 12px 2px rgba(215, 38, 61, .65);
         }
-        @keyframes orbitSpin { to { transform: rotate(360deg); } }
+        @keyframes orbitSpin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
         .thali-ring {
-            position: absolute; inset: -12px; border-radius: 50%; padding: 4px;
+            position: absolute;
+            inset: -12px;
+            border-radius: 50%;
+            padding: 4px;
             background: conic-gradient(from 0deg, var(--turmeric), var(--marigold), var(--kumkum), var(--turmeric));
             animation: ringSpin 16s linear infinite;
         }
-        @keyframes ringSpin { to { transform: rotate(360deg); } }
-        .thali-ring-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--cream); }
+        @keyframes ringSpin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .thali-ring-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--cream);
+        }
         .thali-photo {
-            position: absolute; inset: 16px; border-radius: 50%; overflow: hidden;
+            position: absolute;
+            inset: 16px;
+            border-radius: 50%;
+            overflow: hidden;
             box-shadow: inset 0 0 0 6px rgba(255, 255, 255, .6);
         }
         .thali-photo img {
-            position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-            opacity: 0; animation: thaliFade 9s infinite;
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            animation: thaliFade 9s infinite;
         }
-        .thali-photo img:nth-child(1) { animation-delay: 0s; }
-        .thali-photo img:nth-child(2) { animation-delay: 3s; }
-        .thali-photo img:nth-child(3) { animation-delay: 6s; }
+        .thali-photo img:nth-child(1) {
+            animation-delay: 0s;
+        }
+        .thali-photo img:nth-child(2) {
+            animation-delay: 3s;
+        }
+        .thali-photo img:nth-child(3) {
+            animation-delay: 6s;
+        }
         @keyframes thaliFade {
-            0% { opacity: 0; } 6% { opacity: 1; } 30% { opacity: 1; } 36% { opacity: 0; } 100% { opacity: 0; }
+            0% {
+                opacity: 0;
+            }
+            6% {
+                opacity: 1;
+            }
+            30% {
+                opacity: 1;
+            }
+            36% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 0;
+            }
         }
-        .stat-num { font-variant-numeric: tabular-nums; }
+        .stat-num {
+            font-variant-numeric: tabular-nums;
+        }
         .torn-edge {
-            height: 22px; background: var(--cream);
+            height: 22px;
+            background: var(--cream);
             -webkit-mask-image: linear-gradient(135deg, transparent 11px, #000 11px), linear-gradient(-135deg, transparent 11px, #000 11px);
-            -webkit-mask-size: 22px 22px; -webkit-mask-position: 0 0, 11px 0; -webkit-mask-repeat: repeat-x;
+            -webkit-mask-size: 22px 22px;
+            -webkit-mask-position: 0 0, 11px 0;
+            -webkit-mask-repeat: repeat-x;
             mask-image: linear-gradient(135deg, transparent 11px, #000 11px), linear-gradient(-135deg, transparent 11px, #000 11px);
-            mask-size: 22px 22px; mask-position: 0 0, 11px 0; mask-repeat: repeat-x;
+            mask-size: 22px 22px;
+            mask-position: 0 0, 11px 0;
+            mask-repeat: repeat-x;
         }
-        .kolam-divider path, .kolam-divider circle.node {
-            stroke-dasharray: 340; stroke-dashoffset: 340;
+        .kolam-divider path,
+        .kolam-divider circle.node {
+            stroke-dasharray: 340;
+            stroke-dashoffset: 340;
             transition: stroke-dashoffset 1.6s cubic-bezier(.16, .84, .44, 1);
         }
-        .kolam-divider.in path, .kolam-divider.in circle.node { stroke-dashoffset: 0; }
+        .kolam-divider.in path,
+        .kolam-divider.in circle.node {
+            stroke-dashoffset: 0;
+        }
         .rise-card {
             transition: transform .35s cubic-bezier(.16, .84, .44, 1), box-shadow .45s ease, border-color .45s ease;
-            transform-style: preserve-3d; will-change: transform;
+            transform-style: preserve-3d;
+            will-change: transform;
         }
-        .rise-card:hover { box-shadow: 0 26px 46px -18px rgba(92, 58, 37, .4); }
-        .prod-img { transition: transform .5s cubic-bezier(.16, .84, .44, 1); }
-        .rise-card:hover .prod-img { transform: scale(1.1) rotate(-2deg); }
-        .badge { transition: background-color .3s ease, color .3s ease, transform .3s ease; }
-        .rise-card:hover .badge { background-color: var(--kumkum); color: #fff; transform: translateY(-1px); }
+        .rise-card:hover {
+            box-shadow: 0 26px 46px -18px rgba(215, 38, 61, .35);
+        }
+        .prod-img {
+            transition: transform .5s cubic-bezier(.16, .84, .44, 1);
+        }
+        .rise-card:hover .prod-img {
+            transform: scale(1.1) rotate(-2deg);
+        }
+        .badge {
+            transition: background-color .3s ease, color .3s ease, transform .3s ease;
+        }
+        .rise-card:hover .badge {
+            background-color: var(--kumkum);
+            color: #fff;
+            transform: translateY(-1px);
+        }
         .card-shine {
-            position: absolute; inset: 0; pointer-events: none; opacity: 0;
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0;
             background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, .35), transparent 60%);
-            transition: opacity .35s ease; mix-blend-mode: soft-light;
+            transition: opacity .35s ease;
+            mix-blend-mode: soft-light;
         }
-        .rise-card:hover .card-shine { opacity: 1; }
-        .cta-btn { position: relative; overflow: hidden; }
+        .rise-card:hover .card-shine {
+            opacity: 1;
+        }
+        .cta-btn {
+            position: relative;
+            overflow: hidden;
+        }
         .cta-btn::before {
-            content: ''; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -60%;
+            width: 40%;
+            height: 100%;
             background: linear-gradient(115deg, transparent, rgba(255, 255, 255, .6), transparent);
-            transform: skewX(-20deg); transition: left .8s ease;
+            transform: skewX(-20deg);
+            transition: left .8s ease;
         }
-        .cta-btn:hover::before { left: 130%; }
-        .icon-spin { transition: transform .5s cubic-bezier(.34, 1.56, .64, 1); }
-        .rise-card:hover .icon-spin { transform: rotate(8deg) scale(1.08); }
+        .cta-btn:hover::before {
+            left: 130%;
+        }
+        .icon-spin {
+            transition: transform .5s cubic-bezier(.34, 1.56, .64, 1);
+        }
+        .rise-card:hover .icon-spin {
+            transform: rotate(8deg) scale(1.08);
+        }
         .wish-btn {
-            position: absolute; top: 10px; right: 10px; z-index: 10; width: 34px; height: 34px;
-            border-radius: 9999px; background: rgba(255, 255, 255, .9); backdrop-filter: blur(2px);
-            display: flex; align-items: center; justify-content: center;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+            width: 34px;
+            height: 34px;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, .9);
+            backdrop-filter: blur(2px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             box-shadow: 0 4px 10px -3px rgba(92, 58, 37, .3);
             transition: transform .3s cubic-bezier(.34, 1.56, .64, 1), background-color .3s ease;
-            cursor: pointer; border: none;
+            cursor: pointer;
+            border: none;
         }
-        .wish-btn:hover { transform: scale(1.1); }
-        .wish-btn svg { width: 18px; height: 18px; stroke: var(--jaggery); fill: none; stroke-width: 2; transition: fill .25s ease, stroke .25s ease; }
-        .wish-btn.liked { background: var(--kumkum); }
-        .wish-btn.liked svg { fill: #fff; stroke: #fff; }
-        .wish-btn.pop svg { animation: wishPop .45s cubic-bezier(.34, 1.56, .64, 1); }
-        @keyframes wishPop { 0% { transform: scale(1); } 40% { transform: scale(1.35); } 100% { transform: scale(1); } }
-        .add-cart-row { display: flex; gap: .5rem; margin-top: 1rem; }
+        .wish-btn:hover {
+            transform: scale(1.1);
+        }
+        .wish-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--jaggery);
+            fill: none;
+            stroke-width: 2;
+            transition: fill .25s ease, stroke .25s ease;
+        }
+        .wish-btn.liked {
+            background: var(--kumkum);
+        }
+        .wish-btn.liked svg {
+            fill: #fff;
+            stroke: #fff;
+        }
+        .wish-btn.pop svg {
+            animation: wishPop .45s cubic-bezier(.34, 1.56, .64, 1);
+        }
+        @keyframes wishPop {
+            0% {
+                transform: scale(1);
+            }
+            40% {
+                transform: scale(1.35);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        .add-cart-row {
+            display: flex;
+            gap: .5rem;
+            margin-top: 1rem;
+        }
         .add-cart-btn {
-            flex: 1; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; gap: .4rem;
-            background: linear-gradient(90deg, var(--turmeric), var(--kumkum)); color: #fff; font-weight: 600; font-size: .875rem;
-            padding: .7rem 1rem; border-radius: .6rem; border: none; cursor: pointer;
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .4rem;
+            background: linear-gradient(90deg, var(--turmeric), var(--kumkum));
+            color: #fff;
+            font-weight: 600;
+            font-size: .875rem;
+            padding: .7rem 1rem;
+            border-radius: .6rem;
+            border: none;
+            cursor: pointer;
             transition: transform .3s cubic-bezier(.34, 1.56, .64, 1), box-shadow .3s ease, opacity .3s ease;
         }
-        .add-cart-btn:hover { box-shadow: 0 10px 20px -8px rgba(166, 58, 46, .5); transform: translateY(-1px); }
-        .add-cart-btn:active { transform: scale(.97); }
-        .add-cart-btn svg { width: 17px; height: 17px; flex-shrink: 0; }
-        .add-cart-btn .btn-label { transition: opacity .2s ease, transform .2s ease; }
-        .add-cart-btn.added .btn-label-default { opacity: 0; transform: translateY(6px); position: absolute; }
-        .add-cart-btn .btn-label-added { opacity: 0; transform: translateY(-6px); position: absolute; }
-        .add-cart-btn.added .btn-label-added { opacity: 1; transform: translateY(0); position: static; }
+        .add-cart-btn:hover {
+            box-shadow: 0 10px 20px -8px rgba(215, 38, 61, .5);
+            transform: translateY(-1px);
+        }
+        .add-cart-btn:active {
+            transform: scale(.97);
+        }
+        .add-cart-btn svg {
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+        }
+        .add-cart-btn .btn-label {
+            transition: opacity .2s ease, transform .2s ease;
+        }
+        .add-cart-btn.added .btn-label-default {
+            opacity: 0;
+            transform: translateY(6px);
+            position: absolute;
+        }
+        .add-cart-btn .btn-label-added {
+            opacity: 0;
+            transform: translateY(-6px);
+            position: absolute;
+        }
+        .add-cart-btn.added .btn-label-added {
+            opacity: 1;
+            transform: translateY(0);
+            position: static;
+        }
         .view-link-btn {
-            width: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-            border: 1.5px solid var(--kumkum); color: var(--kumkum); border-radius: .6rem;
+            width: 44px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px solid var(--kumkum);
+            color: var(--kumkum);
+            border-radius: .6rem;
             transition: background-color .25s ease, color .25s ease, transform .25s ease;
         }
-        .view-link-btn:hover { background: var(--kumkum); color: #fff; transform: translateY(-1px); }
-        .view-link-btn svg { width: 18px; height: 18px; }
+        .view-link-btn:hover {
+            background: var(--kumkum);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+        .view-link-btn svg {
+            width: 18px;
+            height: 18px;
+        }
         .fly-dot {
-            position: fixed; z-index: 9999; border-radius: 9999px; pointer-events: none;
+            position: fixed;
+            z-index: 9999;
+            border-radius: 9999px;
+            pointer-events: none;
             background: radial-gradient(circle at 35% 30%, var(--marigold), var(--kumkum) 75%);
-            box-shadow: 0 4px 14px rgba(166, 58, 46, .5);
+            box-shadow: 0 4px 14px rgba(215, 38, 61, .5);
             transition: transform .7s cubic-bezier(.55, 0, .2, 1), opacity .7s ease .35s;
         }
         .cart-fab {
-            position: fixed; right: 20px; bottom: 20px; z-index: 999; display: flex; align-items: center; gap: .6rem;
-            background: var(--jaggery); color: var(--cream); padding: .8rem 1.1rem; border-radius: 9999px;
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            background: var(--jaggery);
+            color: var(--cream);
+            padding: .8rem 1.1rem;
+            border-radius: 9999px;
             box-shadow: 0 12px 28px -10px rgba(58, 36, 23, .55);
-            transform: translateY(120%); opacity: 0; pointer-events: none;
+            transform: translateY(120%);
+            opacity: 0;
+            pointer-events: none;
             transition: transform .45s cubic-bezier(.34, 1.56, .64, 1), opacity .35s ease, box-shadow .3s ease;
-            cursor: pointer; border: none;
+            cursor: pointer;
+            border: none;
         }
-        .cart-fab.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
-        .cart-fab:hover { box-shadow: 0 16px 34px -8px rgba(58, 36, 23, .65); }
-        .cart-fab svg { width: 20px; height: 20px; }
+        .cart-fab.show {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .cart-fab:hover {
+            box-shadow: 0 16px 34px -8px rgba(58, 36, 23, .65);
+        }
+        .cart-fab svg {
+            width: 20px;
+            height: 20px;
+        }
         .cart-fab .cart-fab-count {
-            background: var(--marigold); color: var(--ink); font-weight: 700; font-size: .75rem;
-            width: 22px; height: 22px; border-radius: 9999px; display: flex; align-items: center; justify-content: center;
+            background: var(--marigold);
+            color: var(--ink);
+            font-weight: 700;
+            font-size: .75rem;
+            width: 22px;
+            height: 22px;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .cart-fab.bump { animation: fabBump .4s cubic-bezier(.34, 1.56, .64, 1); }
-        @keyframes fabBump { 0% { transform: translateY(0) scale(1); } 40% { transform: translateY(0) scale(1.12); } 100% { transform: translateY(0) scale(1); } }
-        .seal { position: relative; border-radius: 50% !important; }
+        .cart-fab.bump {
+            animation: fabBump .4s cubic-bezier(.34, 1.56, .64, 1);
+        }
+        @keyframes fabBump {
+            0% {
+                transform: translateY(0) scale(1);
+            }
+            40% {
+                transform: translateY(0) scale(1.12);
+            }
+            100% {
+                transform: translateY(0) scale(1);
+            }
+        }
+        .seal {
+            position: relative;
+            border-radius: 50% !important;
+        }
         .seal::before {
-            content: ''; position: absolute; inset: -9px; border-radius: 50%;
-            border: 1.5px dashed currentColor; opacity: .35; animation: sealSpin 20s linear infinite;
+            content: '';
+            position: absolute;
+            inset: -9px;
+            border-radius: 50%;
+            border: 1.5px dashed currentColor;
+            opacity: .35;
+            animation: sealSpin 20s linear infinite;
         }
-        @keyframes sealSpin { to { transform: rotate(360deg); } }
-        .grow-underline { position: relative; display: inline-block; }
+        @keyframes sealSpin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .grow-underline {
+            position: relative;
+            display: inline-block;
+        }
         .grow-underline::after {
-            content: ''; position: absolute; left: 50%; bottom: -10px; height: 2px; width: 0;
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -10px;
+            height: 2px;
+            width: 0;
             background: linear-gradient(90deg, var(--turmeric), var(--kumkum));
             transition: width .8s cubic-bezier(.16, .84, .44, 1) .1s, left .8s cubic-bezier(.16, .84, .44, 1) .1s;
         }
-        .reveal.in .grow-underline::after { width: 64px; left: calc(50% - 32px); }
-        .ladoo-particle {
-            position: absolute; border-radius: 50%;
-            background: radial-gradient(circle at 35% 30%, #F2C14E, #C8791F 70%); opacity: .15;
+        .reveal.in .grow-underline::after {
+            width: 64px;
+            left: calc(50% - 32px);
         }
-        .float-drift { animation: driftY 7s ease-in-out infinite; }
-        .float-drift-slow { animation: driftY 10s ease-in-out infinite; }
-        .float-y-slow { animation: driftY 9s ease-in-out infinite; }
+        .ladoo-particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%, #FFC72C, #D7263D 70%);
+            opacity: .28;
+        }
+        .float-drift {
+            animation: driftY 7s ease-in-out infinite;
+        }
+        .float-drift-slow {
+            animation: driftY 10s ease-in-out infinite;
+        }
+        .float-y-slow {
+            animation: driftY 9s ease-in-out infinite;
+        }
         @keyframes driftY {
-            0%, 100% { transform: translateY(0) translateX(0); }
-            50% { transform: translateY(-16px) translateX(6px); }
+            0%,
+            100% {
+                transform: translateY(0) translateX(0);
+            }
+            50% {
+                transform: translateY(-16px) translateX(6px);
+            }
         }
         .testi-track {
-            display: flex; gap: 1.25rem; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
-            padding: .5rem 0 1.5rem; -ms-overflow-style: none; scrollbar-width: none;
+            display: flex;
+            gap: 1.25rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            padding: .5rem 0 1.5rem;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
-        .testi-track::-webkit-scrollbar { display: none; }
-        .testi-card { scroll-snap-align: start; flex: 0 0 auto; width: 82%; }
-        @media (min-width:640px) { .testi-card { width: 46%; } }
-        @media (min-width:1024px) { .testi-card { width: 23.5%; } }
+        .testi-track::-webkit-scrollbar {
+            display: none;
+        }
+        .testi-card {
+            scroll-snap-align: start;
+            flex: 0 0 auto;
+            width: 82%;
+        }
+        @media (min-width:640px) {
+            .testi-card {
+                width: 46%;
+            }
+        }
+        @media (min-width:1024px) {
+            .testi-card {
+                width: 23.5%;
+            }
+        }
         .testi-card-inner {
-            background: #fff; border-radius: 1rem; padding: 1.5rem; height: 100%;
+            background: #fff;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            height: 100%;
             box-shadow: 0 8px 24px -14px rgba(92, 58, 37, .25);
             transition: transform .4s cubic-bezier(.16, .84, .44, 1), box-shadow .4s ease;
-            display: flex; flex-direction: column;
+            display: flex;
+            flex-direction: column;
         }
-        .testi-card-inner:hover { transform: translateY(-6px); box-shadow: 0 20px 36px -16px rgba(92, 58, 37, .35); }
+        .testi-card-inner:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 36px -16px rgba(92, 58, 37, .35);
+        }
         .testi-avatar {
-            width: 40px; height: 40px; border-radius: 9999px; flex-shrink: 0;
-            display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 15px;
+            width: 40px;
+            height: 40px;
+            border-radius: 9999px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 15px;
         }
-        .testi-stars svg { width: 14px; height: 14px; fill: var(--marigold); }
+        .testi-stars svg {
+            width: 14px;
+            height: 14px;
+            fill: var(--marigold);
+        }
         .testi-text {
-            display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
             transition: -webkit-line-clamp .2s ease;
         }
-        .testi-text.expanded { -webkit-line-clamp: unset; }
+        .testi-text.expanded {
+            -webkit-line-clamp: unset;
+        }
         .testi-nav-btn {
-            width: 38px; height: 38px; border-radius: 9999px; background: #fff; color: var(--kumkum);
-            display: flex; align-items: center; justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 9999px;
+            background: #fff;
+            color: var(--kumkum);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             box-shadow: 0 6px 16px -8px rgba(92, 58, 37, .4);
-            transition: transform .25s ease, background-color .25s ease, color .25s ease; flex-shrink: 0;
+            transition: transform .25s ease, background-color .25s ease, color .25s ease;
+            flex-shrink: 0;
         }
-        .testi-nav-btn:hover { background: var(--kumkum); color: #fff; transform: scale(1.08); }
+        .testi-nav-btn:hover {
+            background: var(--kumkum);
+            color: #fff;
+            transform: scale(1.08);
+        }
         .testi-dot {
-            width: 7px; height: 7px; border-radius: 9999px; background: rgba(92, 58, 37, .2);
-            transition: background-color .3s ease, transform .3s ease; border: none; cursor: pointer; padding: 0;
+            width: 7px;
+            height: 7px;
+            border-radius: 9999px;
+            background: rgba(92, 58, 37, .2);
+            transition: background-color .3s ease, transform .3s ease;
+            border: none;
+            cursor: pointer;
+            padding: 0;
         }
-        .testi-dot.active { background: var(--kumkum); transform: scale(1.3); }
+        .testi-dot.active {
+            background: var(--kumkum);
+            transform: scale(1.3);
+        }
         .contact-strip-icon {
-            width: 76px; height: 76px; border-radius: 9999px; display: flex; align-items: center; justify-content: center;
+            width: 76px;
+            height: 76px;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             box-shadow: 0 10px 24px -10px rgba(92, 58, 37, .45);
             transition: transform .35s cubic-bezier(.34, 1.56, .64, 1), box-shadow .35s ease;
         }
         .contact-strip-item:hover .contact-strip-icon,
-        a.contact-strip-icon:hover { transform: translateY(-6px) scale(1.06); box-shadow: 0 16px 30px -10px rgba(92, 58, 37, .55); }
-        .contact-strip-item:hover h3 { color: var(--kumkum); }
-        .contact-strip-item h3 { transition: color .3s ease; }
+        a.contact-strip-icon:hover {
+            transform: translateY(-6px) scale(1.06);
+            box-shadow: 0 16px 30px -10px rgba(92, 58, 37, .55);
+        }
+        .contact-strip-item:hover h3 {
+            color: var(--kumkum);
+        }
+        .contact-strip-item h3 {
+            transition: color .3s ease;
+        }
         @media (prefers-reduced-motion: reduce) {
-            * { animation: none !important; transition: none !important; }
-            .reveal, .wipe { opacity: 1 !important; transform: none !important; clip-path: none !important; }
-            .hero-title-in { opacity: 1 !important; }
-            .ghee-ribbon path { stroke-dashoffset: 0 !important; }
-            .ghee-pool { opacity: 1 !important; transform: scale(1) !important; }
-            .thali-photo img:nth-child(1) { opacity: 1 !important; }
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+            .reveal,
+            .wipe {
+                opacity: 1 !important;
+                transform: none !important;
+                clip-path: none !important;
+            }
+            .hero-title-in {
+                opacity: 1 !important;
+            }
+            .ghee-ribbon path {
+                stroke-dashoffset: 0 !important;
+            }
+            .ghee-pool {
+                opacity: 1 !important;
+                transform: scale(1) !important;
+            }
+            .thali-photo img:nth-child(1) {
+                opacity: 1 !important;
+            }
+        }
+
+        /* ===== CHAT BUTTON FIXES ===== */
+        #chatToggleBtn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 3000;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #F5A623, #D7263D);
+            color: #fff;
+            box-shadow: 0 8px 28px -6px rgba(215, 38, 61, 0.6);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            transition: transform 0.25s ease, box-shadow 0.3s ease;
+        }
+        #chatToggleBtn:hover {
+            transform: scale(1.08) translateY(-2px);
+            box-shadow: 0 12px 36px -8px rgba(215, 38, 61, 0.7);
+        }
+        #chatToggleBtn:active {
+            transform: scale(0.95);
+        }
+        #chatToggleBtn .chat-pulse {
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 2px solid rgba(232, 163, 61, 0.35);
+            animation: chatPulse 2s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes chatPulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1.35);
+                opacity: 0;
+            }
+        }
+        #chatToggleBtn .chat-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #22c55e;
+            color: #fff;
+            font-size: 0.55rem;
+            font-weight: 700;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(34, 197, 94, 0.5);
+        }
+        #chatToggleBtn .chat-tooltip {
+            position: absolute;
+            right: 72px;
+            background: rgba(26, 17, 12, 0.92);
+            color: #FBF1E2;
+            padding: 0.4rem 0.9rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateX(6px);
+        }
+        #chatToggleBtn:hover .chat-tooltip {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Chat panel refinements */
+        #chatPanel {
+            position: fixed;
+            bottom: 96px;
+            right: 24px;
+            z-index: 3000;
+            width: 360px;
+            max-width: 92vw;
+            height: 480px;
+            max-height: 70vh;
+            background: #FDF8F2;
+            border-radius: 1.2rem;
+            box-shadow: 0 24px 60px -16px rgba(26, 17, 12, 0.4);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid rgba(92, 58, 37, 0.08);
+        }
+        #chatPanel .chat-header {
+            background: #1a110c;
+            color: #FBF1E2;
+            padding: 0.9rem 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex-shrink: 0;
+        }
+        #chatPanel .chat-header .chat-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #F5A623, #D7263D);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        #chatPanel .chat-header .chat-title {
+            font-family: 'Rozha One', serif;
+            font-size: 1.05rem;
+            flex: 1;
+        }
+        #chatPanel .chat-header .chat-sub {
+            font-size: 0.6rem;
+            opacity: 0.6;
+            font-weight: 400;
+        }
+        #chatPanel .chat-header .chat-close {
+            background: none;
+            border: none;
+            color: #cbb9ab;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 4px 6px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        #chatPanel .chat-header .chat-close:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        #chatMessages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            font-size: 0.85rem;
+            background: #f9f3eb;
+        }
+        #chatMessages .msg-bot {
+            background: white;
+            padding: 0.6rem 0.9rem;
+            border-radius: 0.8rem;
+            align-self: flex-start;
+            max-width: 85%;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+            color: #3A2417;
+            line-height: 1.5;
+        }
+        #chatMessages .msg-user {
+            padding: 0.6rem 0.9rem;
+            border-radius: 0.8rem;
+            max-width: 85%;
+            line-height: 1.5;
+            align-self: flex-end;
+            background: linear-gradient(135deg, #F5A623, #D7263D);
+            color: #fff;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+        }
+        #chatMessages .msg-typing {
+            background: white;
+            padding: 0.6rem 0.9rem;
+            border-radius: 0.8rem;
+            align-self: flex-start;
+            max-width: 85%;
+            opacity: 0.6;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+            color: #3A2417;
+        }
+        #chatForm {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.7rem;
+            border-top: 1px solid rgba(92, 58, 37, 0.08);
+            background: white;
+            flex-shrink: 0;
+        }
+        #chatForm input {
+            flex: 1;
+            border: 1px solid rgba(92, 58, 37, 0.15);
+            border-radius: 999px;
+            padding: 0.5rem 0.9rem;
+            font-size: 0.85rem;
+            outline: none;
+            transition: border-color 0.25s;
+        }
+        #chatForm input:focus {
+            border-color: var(--kumkum);
+        }
+        #chatForm button {
+            background: linear-gradient(135deg, #F5A623, #D7263D);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: transform 0.2s, box-shadow 0.3s;
+            flex-shrink: 0;
+        }
+        #chatForm button:hover {
+            transform: scale(1.06);
+            box-shadow: 0 4px 14px rgba(215, 38, 61, 0.4);
+        }
+        #chatForm button:disabled {
+            opacity: 0.5;
+            transform: none;
+            box-shadow: none;
         }
     </style>
 </head>
@@ -392,9 +1123,9 @@
     <div id="navbar-placeholder"></div>
 
     <!-- ============ HERO ============ -->
-    <section id="hero" class="relative overflow-hidden bg-gradient-to-br from-ink via-jaggery to-ink">
-        <img id="heroImg" src="" alt="Handmade Ladoos" class="hero-parallax absolute inset-0 w-full h-full object-cover opacity-40 scale-110" style="display:none;">
-        <div class="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/60 to-ink/30"></div>
+    <section id="hero" class="relative overflow-hidden bg-gradient-to-br from-[#2A0A0A] via-kumkum to-[#1A0E08]">
+        <img id="heroImg" src="" alt="Handmade Ladoos" class="hero-parallax absolute inset-0 w-full h-full object-cover opacity-50 scale-110" style="display:none;">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-kumkum/25 to-turmeric/10"></div>
         <div class="hero-glow"></div>
         <div class="light-ray hidden md:block"></div>
 
@@ -410,8 +1141,8 @@
                     <svg class="ghee-ribbon" width="60" height="64" viewBox="0 0 60 64" fill="none">
                         <defs>
                             <linearGradient id="gheeGrad" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stop-color="#F2C14E" />
-                                <stop offset="100%" stop-color="#E8A33D" />
+                                <stop offset="0%" stop-color="#FFC72C" />
+                                <stop offset="100%" stop-color="#F5A623" />
                             </linearGradient>
                         </defs>
                         <path d="M28 2 C 22 14, 34 20, 26 32 C 20 42, 30 46, 24 54" />
@@ -421,7 +1152,7 @@
 
                 <p id="heroEyebrow" class="hero-title-in eyebrow text-marigold/90 tracking-[0.25em] uppercase text-xs md:text-sm font-semibold" style="animation-delay:1.15s">
                     Handmade &middot; Since 2017
-                    <svg width="90" height="8" viewBox="0 0 90 8"><path d="M2 5 Q 25 -1, 45 4 T 88 3" stroke="#E8A33D" stroke-width="2" fill="none" stroke-linecap="round" /></svg>
+                    <svg width="90" height="8" viewBox="0 0 90 8"><path d="M2 5 Q 25 -1, 45 4 T 88 3" stroke="#F5A623" stroke-width="2" fill="none" stroke-linecap="round" /></svg>
                 </p>
 
                 <h1 id="heroTitle" class="hero-title-in gild-glow font-display text-4xl md:text-5xl lg:text-6xl leading-[1.1] mt-4" style="animation-delay:1.3s">
@@ -454,14 +1185,14 @@
                 </div>
             </div>
 
-            <div class="hero-title-in relative mx-auto hidden sm:block" style="animation-delay:1.4s">
+            <div class="hero-title-in relative mx-auto hidden sm:block">
                 <div class="thali-wrap relative">
                     <div class="thali-orbit"><span class="thali-orbit-dot"></span></div>
                     <div class="thali-ring"><div class="thali-ring-inner"></div></div>
                     <div class="thali-photo">
-                        <img src="https://nicyfoods.com/images/products/aaliv_ladoo/1.jpeg" alt="Aaliv Laddu">
-                        <img src="https://nicyfoods.com/images/products/dink_ladoo/1.jpg" alt="Dink Laddu">
-                        <img src="https://nicyfoods.com/images/products/nachni_ladoo/1.jpeg" alt="Nachni Laddu">
+                        <img src="https://nicyfoods.com/images/slogan.jpg" alt="Aaliv Laddu">
+                        <img src="https://nicyfoods.com/images/slogan.jpg" alt="Dink Laddu">
+                        <img src="https://nicyfoods.com/images/slogan.jpg" alt="Nachni Laddu">
                     </div>
                 </div>
             </div>
@@ -482,9 +1213,9 @@
         <div class="ladoo-particle w-9 h-9 float-drift" style="top:80%; right:4%;"></div>
 
         <div class="reveal text-center mb-12">
-            <span class="eyebrow text-kumkum text-xs tracking-[0.3em] uppercase font-semibold">
+            <span class="eyebrow inline-block bg-kumkum/10 text-kumkum text-xs tracking-[0.3em] uppercase font-semibold px-4 py-1.5 rounded-full">
                 Handpicked For You
-                <svg width="90" height="8" viewBox="0 0 90 8"><path d="M2 5 Q 25 -1, 45 4 T 88 3" stroke="#A63A2E" stroke-width="2" fill="none" stroke-linecap="round" /></svg>
+                <svg width="90" height="8" viewBox="0 0 90 8"><path d="M2 5 Q 25 -1, 45 4 T 88 3" stroke="#D7263D" stroke-width="2" fill="none" stroke-linecap="round" /></svg>
             </span>
             <h2 class="wipe font-display text-3xl md:text-4xl text-jaggery mt-1">Featured Top Products</h2>
             <p class="text-slate-500 mt-4 max-w-2xl mx-auto">
@@ -508,20 +1239,20 @@
 
     <div class="flex justify-center py-4">
         <svg class="kolam-divider w-40 h-10" viewBox="0 0 200 40" fill="none">
-            <path d="M2 20 Q 50 2, 100 20 T 198 20" stroke="#E8A33D" stroke-width="2" stroke-linecap="round"/>
-            <circle class="node" cx="2" cy="20" r="3" fill="#A63A2E"/><circle class="node" cx="100" cy="20" r="3" fill="#A63A2E"/><circle class="node" cx="198" cy="20" r="3" fill="#A63A2E"/>
+            <path d="M2 20 Q 50 2, 100 20 T 198 20" stroke="#F5A623" stroke-width="2" stroke-linecap="round"/>
+            <circle class="node" cx="2" cy="20" r="3" fill="#D7263D"/><circle class="node" cx="100" cy="20" r="3" fill="#D7263D"/><circle class="node" cx="198" cy="20" r="3" fill="#D7263D"/>
         </svg>
     </div>
 
     <!-- ============ WHY CHOOSE NICYFOODS ============ -->
-    <section class="relative max-w-7xl mx-auto px-6 py-16 overflow-hidden">
+    <section class="relative max-w-7xl mx-auto px-6 py-16 overflow-hidden rounded-[2.5rem] bg-gradient-to-b from-amber-50 via-orange-50/50 to-cream">
         <div class="ladoo-particle w-12 h-12 float-drift-slow" style="top:4%; right:3%;"></div>
         <div class="ladoo-particle w-8 h-8 float-drift" style="bottom:6%; left:3%;"></div>
 
         <div class="reveal text-center mb-12">
-            <span class="eyebrow text-kumkum text-xs tracking-[0.3em] uppercase font-semibold">
+            <span class="eyebrow inline-block bg-kumkum/10 text-kumkum text-xs tracking-[0.3em] uppercase font-semibold px-4 py-1.5 rounded-full">
                 The NicyFoods Difference
-                <svg width="90" height="8" viewBox="0 0 90 8"><path d="M2 5 Q 25 -1, 45 4 T 88 3" stroke="#A63A2E" stroke-width="2" fill="none" stroke-linecap="round" /></svg>
+                <svg width="90" height="8" viewBox="0 0 90 8"><path d="M2 5 Q 25 -1, 45 4 T 88 3" stroke="#D7263D" stroke-width="2" fill="none" stroke-linecap="round" /></svg>
             </span>
             <h2 class="wipe font-display text-3xl md:text-4xl text-jaggery mt-1">Why Choose NicyFoods?</h2>
             <p class="text-slate-500 mt-4 max-w-2xl mx-auto">
@@ -531,7 +1262,7 @@
 
         <div class="stagger reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="rise-card bg-white rounded-2xl p-8 text-center shadow-sm border border-slate-100">
-                <div class="icon-spin w-14 h-14 mx-auto mb-5 rounded-xl bg-kumkum text-white flex items-center justify-center">
+                <div class="icon-spin w-14 h-14 mx-auto mb-5 rounded-xl bg-gradient-to-br from-kumkum to-red-700 text-white shadow-lg shadow-kumkum/30 flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M3 10.5 12 3l9 7.5"/>
                         <path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"/>
@@ -541,7 +1272,7 @@
                 <p class="text-sm text-slate-500 leading-relaxed">Crafted with love and care using traditional methods in our kitchen, ensuring quality at every step.</p>
             </div>
             <div class="rise-card bg-white rounded-2xl p-8 text-center shadow-sm border border-slate-100">
-                <div class="icon-spin w-14 h-14 mx-auto mb-5 rounded-xl bg-turmeric text-white flex items-center justify-center">
+                <div class="icon-spin w-14 h-14 mx-auto mb-5 rounded-xl bg-gradient-to-br from-turmeric to-amber-600 text-white shadow-lg shadow-turmeric/30 flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 3v3M12 18v3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M3 12h3M18 12h3M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/>
                         <circle cx="12" cy="12" r="3"/>
@@ -551,7 +1282,7 @@
                 <p class="text-sm text-slate-500 leading-relaxed">Only natural ingredients — pure ghee, jaggery, nuts, and herbs. No maida, preservatives, or artificial colors.</p>
             </div>
             <div class="rise-card bg-white rounded-2xl p-8 text-center shadow-sm border border-slate-100">
-                <div class="icon-spin w-14 h-14 mx-auto mb-5 rounded-xl bg-herbal text-white flex items-center justify-center">
+                <div class="icon-spin w-14 h-14 mx-auto mb-5 rounded-xl bg-gradient-to-br from-herbal to-emerald-700 text-white shadow-lg shadow-herbal/30 flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 21c0-5 3-9 8-11-1 6-4 10-8 11Z"/>
                         <path d="M12 21c0-6-3-11-8-13 0 7 3 12 8 13Z"/>
@@ -562,7 +1293,7 @@
                 <p class="text-sm text-slate-500 leading-relaxed">From traditional to herbal, millet-based, and baby-friendly options — there's something for everyone.</p>
             </div>
             <div class="rise-card bg-white rounded-2xl p-8 text-center shadow-sm border border-slate-100">
-                <div class="icon-spin w-14 h-14 mx-auto mb-5 rounded-xl bg-marigold text-jaggery flex items-center justify-center">
+                <div class="icon-spin w-14 h-14 mx-auto mb-5 rounded-xl bg-gradient-to-br from-marigold to-turmeric text-jaggery shadow-lg shadow-marigold/40 flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="9" cy="8" r="3"/>
                         <circle cx="17" cy="9" r="2.5"/>
@@ -587,7 +1318,6 @@
             <div class="pointer-events-none absolute inset-y-0 left-0 w-20 z-10 bg-gradient-to-r from-cream to-transparent"></div>
             <div class="pointer-events-none absolute inset-y-0 right-0 w-20 z-10 bg-gradient-to-l from-cream to-transparent"></div>
 
-            <!-- Dynamic container for company logos -->
             <div id="companyLogosContainer" class="flex w-max animate-logo-scroll group-hover:[animation-play-state:paused] motion-reduce:animate-none">
                 <div class="flex items-center gap-16 md:gap-20 px-8 shrink-0" id="companyLogosTrack">
                     <span class="text-sm text-slate-400">Loading partners...</span>
@@ -601,18 +1331,18 @@
     <div class="torn-edge"></div>
 
     <!-- ============ TESTIMONIALS ============ -->
-    <section class="relative py-16 md:py-20 overflow-hidden">
+    <section class="relative py-16 md:py-20 overflow-hidden bg-gradient-to-b from-cream via-amber-50/50 to-cream">
         <div class="ladoo-particle w-12 h-12 float-drift-slow" style="top:6%; left:4%;"></div>
         <div class="ladoo-particle w-8 h-8 float-drift" style="bottom:8%; right:4%;"></div>
 
         <div class="relative max-w-7xl mx-auto px-6">
             <div class="reveal text-center mb-4">
-                <span class="eyebrow text-kumkum text-xs tracking-[0.3em] uppercase font-semibold">
+                <span class="eyebrow inline-block bg-kumkum/10 text-kumkum text-xs tracking-[0.3em] uppercase font-semibold px-4 py-1.5 rounded-full">
                     Real Reviews
-                    <svg width="90" height="8" viewBox="0 0 90 8"><path d="M2 5 Q 25 -1, 45 4 T 88 3" stroke="#A63A2E" stroke-width="2" fill="none" stroke-linecap="round" /></svg>
+                    <svg width="90" height="8" viewBox="0 0 90 8"><path d="M2 5 Q 25 -1, 45 4 T 88 3" stroke="#D7263D" stroke-width="2" fill="none" stroke-linecap="round" /></svg>
                 </span>
                 <h2 class="wipe font-display text-3xl md:text-4xl text-jaggery mt-1">What Customers Are Saying on Google</h2>
-                <p class="text-slate-500 mt-4">Real customer reviews from Google</p>
+                <p class="text-slate-500 mt-4">Don't believe on reviews, try it and write the review</p>
             </div>
 
             <div class="reveal relative">
@@ -646,7 +1376,7 @@
     <div class="torn-edge"></div>
 
     <!-- ============ MISSION & VISION ============ -->
-    <section class="relative py-20 md:py-24 overflow-hidden bg-jaggery/[0.04]">
+    <section class="relative py-20 md:py-24 overflow-hidden bg-gradient-to-br from-rose-50 via-orange-50 to-amber-50">
         <div class="ladoo-particle w-16 h-16 float-y-slow" style="top:8%; left:6%;"></div>
         <div class="ladoo-particle w-10 h-10 float-y" style="top:70%; left:12%;"></div>
         <div class="ladoo-particle w-8 h-8 float-y-slow" style="top:20%; right:10%;"></div>
@@ -654,7 +1384,7 @@
 
         <div class="relative max-w-6xl mx-auto px-6">
             <div class="reveal text-center mb-12">
-                <span class="text-kumkum text-xs tracking-[0.3em] uppercase font-semibold">What Drives Us</span>
+                <span class="inline-block bg-kumkum/10 text-kumkum text-xs tracking-[0.3em] uppercase font-semibold px-4 py-1.5 rounded-full">What Drives Us</span>
                 <h2 class="font-display text-3xl sm:text-4xl text-jaggery mt-3 grow-underline">Our Mission &amp; Vision</h2>
             </div>
             <div class="stagger reveal grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -696,15 +1426,15 @@
     <div class="torn-edge"></div>
 
     <!-- ============ QUALITY PROMISE ============ -->
-    <section class="py-20 md:py-24 bg-jaggery/[0.04]">
+    <section class="py-20 md:py-24 bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50">
         <div class="max-w-6xl mx-auto px-6">
             <div class="reveal text-center mb-12">
-                <span class="text-kumkum text-xs tracking-[0.3em] uppercase font-semibold">Our Promise</span>
+                <span class="inline-block bg-kumkum/10 text-kumkum text-xs tracking-[0.3em] uppercase font-semibold px-4 py-1.5 rounded-full">Our Promise</span>
                 <h2 class="font-display text-3xl sm:text-4xl text-jaggery mt-3 grow-underline">Our Quality Promise</h2>
             </div>
             <div class="stagger reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="rise-card bg-white rounded-2xl p-8 text-center shadow-sm">
-                    <div class="seal icon-spin w-14 h-14 mx-auto mb-6 bg-emerald-400 text-white flex items-center justify-center">
+                    <div class="seal icon-spin w-14 h-14 mx-auto mb-6 bg-gradient-to-br from-emerald-500 to-herbal text-white shadow-lg shadow-emerald-500/30 flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M20 6L9 17l-5-5"/>
                         </svg>
@@ -713,7 +1443,7 @@
                     <p class="text-sm text-slate-500 leading-relaxed">We source authentic, clarified butter from trusted suppliers. Every batch is verified for purity and nutritional integrity.</p>
                 </div>
                 <div class="rise-card bg-white rounded-2xl p-8 text-center shadow-sm">
-                    <div class="seal icon-spin w-14 h-14 mx-auto mb-6 bg-amber-400 text-white flex items-center justify-center">
+                    <div class="seal icon-spin w-14 h-14 mx-auto mb-6 bg-gradient-to-br from-turmeric to-amber-600 text-white shadow-lg shadow-turmeric/30 flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M8 3h8l1 4H7l1-4z"/><path d="M6 7h12l-1.2 12.2A2 2 0 0 1 14.8 21H9.2a2 2 0 0 1-2-1.8L6 7z"/><path d="M9 11h6"/>
                         </svg>
@@ -722,7 +1452,7 @@
                     <p class="text-sm text-slate-500 leading-relaxed">Unrefined jaggery provides natural sweetness with essential minerals and nutrients, free from refined sugar processing.</p>
                 </div>
                 <div class="rise-card bg-white rounded-2xl p-8 text-center shadow-sm">
-                    <div class="seal icon-spin w-14 h-14 mx-auto mb-6 bg-lime-400 text-white flex items-center justify-center">
+                    <div class="seal icon-spin w-14 h-14 mx-auto mb-6 bg-gradient-to-br from-marigold to-lime-500 text-white shadow-lg shadow-marigold/30 flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M12 22v-8"/><path d="M12 14c-3 0-5-2-5-5 3 0 5 2 5 5z"/><path d="M12 14c3 0 5-2 5-5-3 0-5 2-5 5z"/>
                         </svg>
@@ -731,7 +1461,7 @@
                     <p class="text-sm text-slate-500 leading-relaxed">Nuts, seeds, and herbs are carefully selected and sourced from trusted suppliers ensuring freshness and quality.</p>
                 </div>
                 <div class="rise-card bg-white rounded-2xl p-8 text-center shadow-sm">
-                    <div class="seal icon-spin w-14 h-14 mx-auto mb-6 bg-red-500 text-white flex items-center justify-center">
+                    <div class="seal icon-spin w-14 h-14 mx-auto mb-6 bg-gradient-to-br from-kumkum to-red-700 text-white shadow-lg shadow-kumkum/30 flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6"/><path d="M9 9l6 6"/>
                         </svg>
@@ -791,7 +1521,7 @@
         </div>
 
         <svg class="hidden md:block absolute -right-16 -bottom-16 w-64 h-64 opacity-[0.05] pointer-events-none" viewBox="0 0 200 200" fill="none">
-            <g stroke="#A63A2E" stroke-width="1.2"><circle cx="100" cy="100" r="90"/><circle cx="100" cy="100" r="65"/></g>
+            <g stroke="#D7263D" stroke-width="1.2"><circle cx="100" cy="100" r="90"/><circle cx="100" cy="100" r="65"/></g>
         </svg>
     </section>
 
@@ -854,9 +1584,9 @@
             function renderHero(data) {
                 if (heroEyebrow && data.eyebrow) {
                     heroEyebrow.innerHTML = `
-                        ${data.eyebrow}
-                        <svg width="90" height="8" viewBox="0 0 90 8"><path d="M2 5 Q 25 -1, 45 4 T 88 3" stroke="#E8A33D" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
-                    `;
+                                ${data.eyebrow}
+                                <svg width="90" height="8" viewBox="0 0 90 8"><path d="M2 5 Q 25 -1, 45 4 T 88 3" stroke="#F5A623" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+                            `;
                 }
                 if (heroTitle && data.title) heroTitle.innerHTML = data.title;
                 if (heroSubtitle && data.subtitle) heroSubtitle.textContent = data.subtitle;
@@ -887,6 +1617,7 @@
                                 const suffix = numEl.dataset.suffix || '';
                                 const duration = 1400;
                                 const start = performance.now();
+
                                 function tick(now) {
                                     const p = Math.min((now - start) / duration, 1);
                                     const eased = 1 - Math.pow(1 - p, 3);
@@ -914,13 +1645,22 @@
     </script>
 
     <!-- ============================================================ -->
-    <!-- ===== PRODUCT LOADER SCRIPT ===== -->
+    <!-- ===== PRODUCT LOADER SCRIPT (FIXED: IMAGES NOW SHOW) ===== -->
     <!-- ============================================================ -->
     <script>
         (function loadProducts() {
             const API_BASE_URL = "https://nicyfoods.srujaninfotech.com/api";
+            const IMAGE_BASE_URL = "https://nicyfoods.srujaninfotech.com/uploads/products/";
             const PRODUCTS_API_URL = `${API_BASE_URL}/products`;
             const productGrid = document.getElementById('productGrid');
+
+            function getImageUrl(filename) {
+                if (!filename) return null;
+                if (filename.startsWith('http://') || filename.startsWith('https://')) {
+                    return filename;
+                }
+                return `${IMAGE_BASE_URL}${filename}`;
+            }
 
             async function fetchProducts() {
                 try {
@@ -937,7 +1677,7 @@
 
             function createProductCard(product) {
                 const category = product.category || 'PRODUCT';
-                const imageUrl = product.image || 'https://nicyfoods.com/images/placeholder.jpg';
+                const imageUrl = getImageUrl(product.image) || 'https://nicyfoods.com/images/placeholder.jpg';
                 const isInStock = product.inStock !== false;
                 const price = product.price || '0';
                 const name = product.name || 'Product';
@@ -947,57 +1687,57 @@
                 if (product.weightOptions && product.weightOptions.length > 0) {
                     const weightParts = product.weightOptions.map(w => `${w.label}₹${w.price}`).join(' | ');
                     weightHtml = `<p class="text-sm text-slate-500 mt-2">
-                        <span class="font-semibold text-jaggery">Courier Charges:</span> ${weightParts}
-                    </p>`;
+                                <span class="font-semibold text-jaggery">Courier Charges:</span> ${weightParts}
+                            </p>`;
                 }
 
                 return `
-                    <div class="tilt-card rise-card relative bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden flex flex-col h-full">
-                        <div class="card-shine"></div>
-                        <div class="relative bg-orange-50 h-56 flex items-center justify-center p-4 overflow-hidden shrink-0">
-                            <button class="wish-btn" data-wish-id="${product._id || name.toLowerCase().replace(/\s/g, '-')}" 
-                                    data-wish-name="${name}" 
-                                    data-wish-img="${imageUrl}" 
-                                    data-wish-price="${price}" 
-                                    data-wish-cat="${category.toUpperCase()}" 
-                                    data-wish-url="product-detail.html?id=${product._id || name.toLowerCase().replace(/\s/g, '-')}" 
-                                    aria-label="Add to wishlist">
-                                <svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
-                            </button>
-                            <img src="${imageUrl}" alt="${name}" class="prod-img max-h-full object-contain rounded-lg" loading="lazy" onerror="this.src='https://nicyfoods.com/images/placeholder.jpg'">
-                        </div>
-                        <div class="p-5 flex flex-col flex-1">
-                            <span class="badge inline-block w-fit bg-orange-100 text-kumkum text-xs font-semibold px-3 py-1 rounded-full mb-3">${category.toUpperCase()}</span>
-                            <h3 class="font-display text-lg text-jaggery">${name}</h3>
-                            <p class="text-slate-500 text-sm mt-2 flex-1">${description || 'Handcrafted with pure ingredients'}</p>
-                            <p class="text-kumkum text-2xl font-bold mt-4">₹${price}</p>
-                            ${weightHtml}
-                            <div class="add-cart-row">
-                                <button class="add-cart-btn" data-cart-id="${product._id || name.toLowerCase().replace(/\s/g, '-')}" 
-                                        data-cart-name="${name}" 
-                                        data-cart-img="${imageUrl}" 
-                                        data-cart-price="${price}">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-                                    <span class="btn-label btn-label-default">Add to Cart</span>
-                                    <span class="btn-label btn-label-added">Added &#10003;</span>
-                                </button>
-                                <a href="product-detail.html?id=${product._id || name.toLowerCase().replace(/\s/g, '-')}" class="view-link-btn" aria-label="View product">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
-                                </a>
+                            <div class="tilt-card rise-card relative bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden flex flex-col h-full">
+                                <div class="card-shine"></div>
+                                <div class="relative bg-orange-50 h-56 flex items-center justify-center p-4 overflow-hidden shrink-0">
+                                    <button class="wish-btn" data-wish-id="${product._id || name.toLowerCase().replace(/\s/g, '-')}" 
+                                            data-wish-name="${name}" 
+                                            data-wish-img="${imageUrl}" 
+                                            data-wish-price="${price}" 
+                                            data-wish-cat="${category.toUpperCase()}" 
+                                            data-wish-url="product-detail.html?id=${product._id || name.toLowerCase().replace(/\s/g, '-')}" 
+                                            aria-label="Add to wishlist">
+                                        <svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+                                    </button>
+                                    <img src="${imageUrl}" alt="${name}" class="prod-img max-h-full object-contain rounded-lg" loading="lazy" onerror="this.src='https://nicyfoods.com/images/placeholder.jpg'">
+                                </div>
+                                <div class="p-5 flex flex-col flex-1">
+                                    <span class="badge inline-block w-fit bg-gradient-to-r from-marigold/25 to-turmeric/25 text-kumkum text-xs font-bold px-3 py-1 rounded-full mb-3 border border-turmeric/30">${category.toUpperCase()}</span>
+                                    <h3 class="font-display text-lg text-jaggery">${name}</h3>
+                                    <p class="text-slate-500 text-sm mt-2 flex-1">${description || 'Handcrafted with pure ingredients'}</p>
+                                    <p class="text-kumkum text-2xl font-bold mt-4">₹${price}</p>
+                                    ${weightHtml}
+                                    <div class="add-cart-row">
+                                        <button class="add-cart-btn" data-cart-id="${product._id || name.toLowerCase().replace(/\s/g, '-')}" 
+                                                data-cart-name="${name}" 
+                                                data-cart-img="${imageUrl}" 
+                                                data-cart-price="${price}">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                                            <span class="btn-label btn-label-default">Add to Cart</span>
+                                            <span class="btn-label btn-label-added">Added &#10003;</span>
+                                        </button>
+                                        <a href="product-detail.html?id=${product._id || name.toLowerCase().replace(/\s/g, '-')}" class="view-link-btn" aria-label="View product">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                `;
+                        `;
             }
 
             function renderProducts(products) {
                 if (!products || products.length === 0) {
                     productGrid.innerHTML = `
-                        <div class="col-span-full text-center py-10 text-slate-500">
-                            <i class="fas fa-box-open text-3xl"></i>
-                            <p class="mt-2">No products available at the moment.</p>
-                        </div>
-                    `;
+                                <div class="col-span-full text-center py-10 text-slate-500">
+                                    <i class="fas fa-box-open text-3xl"></i>
+                                    <p class="mt-2">No products available at the moment.</p>
+                                </div>
+                            `;
                     return;
                 }
 
@@ -1170,7 +1910,7 @@
     </script>
 
     <!-- ============================================================ -->
-    <!-- ===== COMPANY LOGOS SCRIPT (Trusted By) - HARDENED URL BUILD ===== -->
+    <!-- ===== COMPANY LOGOS SCRIPT (Trusted By) ===== -->
     <!-- ============================================================ -->
     <script>
         (function loadCompanies() {
@@ -1180,8 +1920,6 @@
             const trackClone = document.getElementById('companyLogosTrackClone');
             const FALLBACK_IMG = 'https://nicyfoods.com/images/placeholder.jpg';
 
-            // Same logic as the admin panel: use logo as-is if it's already a
-            // full URL, otherwise build the path to the uploads/logos folder.
             function buildLogoUrl(logo) {
                 if (!logo) return FALLBACK_IMG;
                 if (logo.startsWith('http')) return logo;
@@ -1209,11 +1947,11 @@
                     const container = document.getElementById('trusted-companies');
                     if (container) {
                         container.innerHTML = `
-                            <div class="text-center py-8 text-slate-400">
-                                <i class="fas fa-building text-2xl"></i>
-                                <p class="mt-2">Trusted by leading companies — coming soon.</p>
-                            </div>
-                        `;
+                                    <div class="text-center py-8 text-slate-400">
+                                        <i class="fas fa-building text-2xl"></i>
+                                        <p class="mt-2">Trusted by leading companies — coming soon.</p>
+                                    </div>
+                                `;
                     }
                     return;
                 }
@@ -1223,22 +1961,20 @@
                 const logoHtml = sorted.map(c => {
                     const logoUrl = buildLogoUrl(c.logo);
                     return `
-                        <img src="${logoUrl}" 
-                             alt="${c.altText || c.name}" 
-                             class="h-9 w-auto object-contain opacity-90 hover:opacity-100 hover:-translate-y-0.5 transition duration-300"
-                             loading="lazy"
-                             onerror="this.onerror=null; this.src='${FALLBACK_IMG}';">
-                    `;
+                                <img src="${logoUrl}" 
+                                     alt="${c.altText || c.name}" 
+                                     class="h-9 w-auto object-contain opacity-90 hover:opacity-100 hover:-translate-y-0.5 transition duration-300"
+                                     loading="lazy"
+                                     onerror="this.onerror=null; this.src='${FALLBACK_IMG}';">
+                            `;
                 }).join('');
 
-                // Populate both tracks for seamless infinite scroll
                 track.innerHTML = logoHtml;
                 trackClone.innerHTML = logoHtml;
 
-                // Re-trigger animation
                 const container = document.getElementById('companyLogosContainer');
                 container.classList.remove('animate-logo-scroll');
-                void container.offsetWidth; // force reflow
+                void container.offsetWidth;
                 container.classList.add('animate-logo-scroll');
             }
 
@@ -1291,7 +2027,142 @@
             });
         }
 
-        console.log('✅ NicyFoods Homepage fully loaded with dynamic content.');
+        console.log('✅ NicyFoods Homepage fully loaded with dynamic content and FIXED images.');
+    </script>
+
+    <!-- ============================================================ -->
+    <!-- ===== NICYFOODS AI ASSISTANT (Groq-powered chat widget) ===== -->
+    <!-- ============================================================ -->
+    <button id="chatToggleBtn" aria-label="Chat with NicyFoods assistant">
+        <span class="chat-pulse"></span>
+        <i class="fas fa-robot" id="chatToggleIcon"></i>
+        <span class="chat-badge">
+            <i class="fas fa-bolt" style="font-size:0.5rem;"></i>
+        </span>
+        <span class="chat-tooltip">Ask about products 🧑‍🍳</span>
+    </button>
+
+    <div id="chatPanel">
+        <div class="chat-header">
+            <div class="chat-avatar"><i class="fas fa-leaf"></i></div>
+            <div>
+                <div class="chat-title">NicyFoods Assistant</div>
+                <div class="chat-sub"><i class="fas fa-circle" style="color:#22c55e;font-size:0.4rem;margin-right:4px;"></i> Online · Ask me anything</div>
+            </div>
+            <button id="chatCloseBtn" class="chat-close" aria-label="Close chat">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div id="chatMessages">
+            <div class="msg-bot">
+                <i class="fas fa-robot" style="color:#F5A623;margin-right:6px;"></i>
+                Hi! 👋 I'm the NicyFoods assistant. Ask me about our ladoos, ingredients, or anything else!
+            </div>
+        </div>
+
+        <form id="chatForm">
+            <input id="chatInput" type="text" placeholder="Type a message..." autocomplete="off" />
+            <button type="submit" id="chatSendBtn" aria-label="Send message">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </form>
+    </div>
+
+    <script>
+        (function() {
+            const CHAT_API_URL = "https://nicyfoods.srujaninfotech.com/api/chat";
+
+            const toggleBtn = document.getElementById('chatToggleBtn');
+            const toggleIcon = document.getElementById('chatToggleIcon');
+            const panel = document.getElementById('chatPanel');
+            const closeBtn = document.getElementById('chatCloseBtn');
+            const messagesEl = document.getElementById('chatMessages');
+            const form = document.getElementById('chatForm');
+            const input = document.getElementById('chatInput');
+            const sendBtn = document.getElementById('chatSendBtn');
+
+            let history = [];
+            let isOpen = false;
+
+            function setOpen(open) {
+                isOpen = open;
+                panel.style.display = open ? 'flex' : 'none';
+                if (open) {
+                    input.focus();
+                    toggleIcon.className = 'fas fa-chevron-down';
+                } else {
+                    toggleIcon.className = 'fas fa-robot';
+                }
+            }
+
+            toggleBtn.addEventListener('click', () => setOpen(!isOpen));
+            closeBtn.addEventListener('click', () => setOpen(false));
+
+            function addBubble(text, role) {
+                const bubble = document.createElement('div');
+                bubble.className = role === 'user' ? 'msg-user' : 'msg-bot';
+                bubble.textContent = text;
+                messagesEl.appendChild(bubble);
+                messagesEl.scrollTop = messagesEl.scrollHeight;
+                return bubble;
+            }
+
+            function addTypingIndicator() {
+                const el = document.createElement('div');
+                el.className = 'msg-typing';
+                el.innerHTML = '<i class="fas fa-robot" style="color:#F5A623;margin-right:6px;"></i> …';
+                el.id = 'chatTypingIndicator';
+                messagesEl.appendChild(el);
+                messagesEl.scrollTop = messagesEl.scrollHeight;
+                return el;
+            }
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const text = input.value.trim();
+                if (!text) return;
+
+                addBubble(text, 'user');
+                history.push({ role: 'user', content: text });
+                input.value = '';
+                input.disabled = true;
+                sendBtn.disabled = true;
+
+                const typingEl = addTypingIndicator();
+
+                try {
+                    const res = await fetch(CHAT_API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: text, history }),
+                    });
+                    const json = await res.json();
+                    typingEl.remove();
+
+                    if (!res.ok || !json.success) {
+                        throw new Error(json.message || `HTTP ${res.status}`);
+                    }
+
+                    const reply = json.data.reply;
+                    addBubble(reply, 'assistant');
+                    history.push({ role: 'assistant', content: reply });
+                } catch (err) {
+                    typingEl.remove();
+                    addBubble("Sorry, I'm having trouble responding right now. Please try again in a moment.", 'assistant');
+                    console.error('Chat error:', err);
+                } finally {
+                    input.disabled = false;
+                    sendBtn.disabled = false;
+                    input.focus();
+                }
+            });
+
+            // Close on Escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && isOpen) setOpen(false);
+            });
+        })();
     </script>
 
 </body>

@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>About Us | NicyFoods</title>
+
+    <!-- ===== FONTAWESOME ===== -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
     <script src="https://cdn.tailwindcss.com">
     </script>
     <script>
@@ -14,9 +18,9 @@
                         cream: '#FBF1E2',
                         jaggery: '#5C3A25',
                         ink: '#3A2417',
-                        turmeric: '#E8A33D',
-                        marigold: '#F2C14E',
-                        kumkum: '#A63A2E',
+                        turmeric: '#F5A623',
+                        marigold: '#FFC72C',
+                        kumkum: '#D7263D',
                         herbal: '#5F7A4F',
                     },
                     fontFamily: {
@@ -31,84 +35,59 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+
     <style>
-        /* ===== All existing styles (unchanged) ===== */
+        /* ===== Updated colors to match index.html ===== */
         :root {
             --cream: #FBF1E2;
             --jaggery: #5C3A25;
             --ink: #3A2417;
-            --turmeric: #E8A33D;
-            --marigold: #F2C14E;
-            --kumkum: #A63A2E;
+            --turmeric: #F5A623;
+            --marigold: #FFC72C;
+            --kumkum: #D7263D;
             --herbal: #5F7A4F;
         }
-        * {
-            box-sizing: border-box;
-        }
-        html {
-            scroll-behavior: smooth;
-        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
         body {
             font-family: 'Poppins', sans-serif;
             background: var(--cream);
             color: var(--ink);
             overflow-x: hidden;
         }
-        h1,
-        h2,
-        h3,
-        .font-display {
+        h1, h2, h3, .font-display {
             font-family: 'Rozha One', serif;
             letter-spacing: .01em;
         }
 
+        /* ---------- reveal animations ---------- */
         .reveal {
             opacity: 0;
             transform: translateY(28px);
             transition: opacity .8s cubic-bezier(.16, .84, .44, 1), transform .8s cubic-bezier(.16, .84, .44, 1);
         }
-        .reveal.in {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .reveal.in { opacity: 1; transform: translateY(0); }
         .reveal-scale {
             opacity: 0;
             transform: scale(.92);
             transition: opacity .7s ease, transform .7s cubic-bezier(.16, .84, .44, 1);
         }
-        .reveal-scale.in {
-            opacity: 1;
-            transform: scale(1);
-        }
+        .reveal-scale.in { opacity: 1; transform: scale(1); }
         .stagger.in>* {
             animation: fadeUp .7s cubic-bezier(.16, .84, .44, 1) both;
         }
-        .stagger.in>*:nth-child(1) {
-            animation-delay: .05s
-        }
-        .stagger.in>*:nth-child(2) {
-            animation-delay: .15s
-        }
-        .stagger.in>*:nth-child(3) {
-            animation-delay: .25s
-        }
-        .stagger.in>*:nth-child(4) {
-            animation-delay: .35s
-        }
-        .stagger.in>*:nth-child(5) {
-            animation-delay: .45s
-        }
+        .stagger.in>*:nth-child(1) { animation-delay: .05s; }
+        .stagger.in>*:nth-child(2) { animation-delay: .15s; }
+        .stagger.in>*:nth-child(3) { animation-delay: .25s; }
+        .stagger.in>*:nth-child(4) { animation-delay: .35s; }
+        .stagger.in>*:nth-child(5) { animation-delay: .45s; }
         @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(24px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity:0; transform:translateY(24px); }
+            to { opacity:1; transform:translateY(0); }
         }
 
+        /* ---------- kolam trace ---------- */
         .kolam-trace path,
         .kolam-trace circle,
         .kolam-trace ellipse {
@@ -118,9 +97,7 @@
         }
         .kolam-trace.in path,
         .kolam-trace.in circle,
-        .kolam-trace.in ellipse {
-            stroke-dashoffset: 0;
-        }
+        .kolam-trace.in ellipse { stroke-dashoffset: 0; }
         .kolam-trace .dot {
             opacity: 0;
             transform: scale(0);
@@ -128,83 +105,43 @@
             transform-origin: center;
             transition: opacity .5s ease, transform .5s cubic-bezier(.34, 1.56, .64, 1);
         }
-        .kolam-trace.in .dot {
-            opacity: 1;
-            transform: scale(1);
-        }
-        .kolam-trace.in .dot:nth-of-type(1) {
-            transition-delay: .2s
-        }
-        .kolam-trace.in .dot:nth-of-type(2) {
-            transition-delay: .5s
-        }
-        .kolam-trace.in .dot:nth-of-type(3) {
-            transition-delay: .8s
-        }
-        .kolam-trace.in .dot:nth-of-type(4) {
-            transition-delay: 1.1s
-        }
-        .kolam-trace.in .dot:nth-of-type(5) {
-            transition-delay: 1.4s
-        }
-        .kolam-trace.in .dot:nth-of-type(6) {
-            transition-delay: 1.7s
-        }
-        .kolam-trace.in .dot:nth-of-type(7) {
-            transition-delay: 2s
-        }
-        .kolam-trace.in .dot:nth-of-type(8) {
-            transition-delay: 2.2s
-        }
+        .kolam-trace.in .dot { opacity:1; transform:scale(1); }
+        .kolam-trace.in .dot:nth-of-type(1) { transition-delay:.2s; }
+        .kolam-trace.in .dot:nth-of-type(2) { transition-delay:.5s; }
+        .kolam-trace.in .dot:nth-of-type(3) { transition-delay:.8s; }
+        .kolam-trace.in .dot:nth-of-type(4) { transition-delay:1.1s; }
+        .kolam-trace.in .dot:nth-of-type(5) { transition-delay:1.4s; }
+        .kolam-trace.in .dot:nth-of-type(6) { transition-delay:1.7s; }
+        .kolam-trace.in .dot:nth-of-type(7) { transition-delay:2.0s; }
+        .kolam-trace.in .dot:nth-of-type(8) { transition-delay:2.2s; }
 
+        /* ---------- ladoo particles ---------- */
         .ladoo-particle {
             position: absolute;
             border-radius: 50%;
-            background: radial-gradient(circle at 35% 30%, #F2C14E, #C8791F 70%);
+            background: radial-gradient(circle at 35% 30%, #FFC72C, #D7263D 70%);
             opacity: .18;
             pointer-events: none;
             z-index: 1;
         }
-        .ladoo-particle.dim {
-            opacity: .10;
-        }
-        .ladoo-particle.glow {
-            opacity: .28;
-            box-shadow: 0 0 24px 6px rgba(242, 193, 78, .25);
-        }
+        .ladoo-particle.dim { opacity: .10; }
+        .ladoo-particle.glow { opacity: .28; box-shadow: 0 0 24px 6px rgba(255,199,44,.25); }
 
-        .float-drift {
-            animation: driftY 7s ease-in-out infinite;
-        }
-        .float-drift-slow {
-            animation: driftY 11s ease-in-out infinite;
-        }
-        .float-y {
-            animation: floatY 5s ease-in-out infinite;
-        }
-        .float-y-slow {
-            animation: floatY 9s ease-in-out infinite;
-        }
+        .float-drift { animation: driftY 7s ease-in-out infinite; }
+        .float-drift-slow { animation: driftY 11s ease-in-out infinite; }
+        .float-y { animation: floatY 5s ease-in-out infinite; }
+        .float-y-slow { animation: floatY 9s ease-in-out infinite; }
 
         @keyframes driftY {
-            0%,
-            100% {
-                transform: translateY(0) translateX(0);
-            }
-            50% {
-                transform: translateY(-18px) translateX(8px);
-            }
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-18px) translateX(8px); }
         }
         @keyframes floatY {
-            0%,
-            100% {
-                transform: translateY(0) rotate(0deg);
-            }
-            50% {
-                transform: translateY(-16px) rotate(6deg);
-            }
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-16px) rotate(6deg); }
         }
 
+        /* ---------- kolam divider ---------- */
         .kolam-divider path,
         .kolam-divider circle {
             stroke-dasharray: 340;
@@ -212,33 +149,34 @@
             transition: stroke-dashoffset 1.6s cubic-bezier(.16, .84, .44, 1);
         }
         .kolam-divider.in path,
-        .kolam-divider.in circle {
-            stroke-dashoffset: 0;
-        }
+        .kolam-divider.in circle { stroke-dashoffset: 0; }
 
+        /* ---------- cards ---------- */
         .thali-card {
             background: #FFFDF9;
-            box-shadow: inset 0 0 0 1px rgba(92, 58, 37, .06), 0 1px 2px rgba(92, 58, 37, .06);
+            box-shadow: inset 0 0 0 1px rgba(92,58,37,.06), 0 1px 2px rgba(92,58,37,.06);
             transition: transform .45s cubic-bezier(.16, .84, .44, 1), box-shadow .45s ease;
         }
         .thali-card:hover {
             transform: translateY(-7px);
-            box-shadow: inset 0 0 0 1px rgba(92, 58, 37, .08), 0 24px 40px -20px rgba(92, 58, 37, .4);
-        }
-        .icon-spin {
-            transition: transform .6s cubic-bezier(.34, 1.56, .64, 1);
-        }
-        .thali-card:hover .icon-spin {
-            transform: rotate(12deg) scale(1.08);
+            box-shadow: inset 0 0 0 1px rgba(92,58,37,.08), 0 24px 40px -20px rgba(92,58,37,.4);
         }
         .tilt-card {
             transition: transform .5s cubic-bezier(.16, .84, .44, 1), box-shadow .5s ease;
         }
         .tilt-card:hover {
             transform: rotate(-1deg) translateY(-6px);
-            box-shadow: 0 20px 36px -16px rgba(92, 58, 37, .3);
+            box-shadow: 0 20px 36px -16px rgba(92,58,37,.3);
+        }
+        .icon-spin {
+            transition: transform .6s cubic-bezier(.34, 1.56, .64, 1);
+        }
+        .thali-card:hover .icon-spin,
+        .tilt-card:hover .icon-spin {
+            transform: rotate(12deg) scale(1.08);
         }
 
+        /* ---------- underline ---------- */
         .grow-underline {
             position: relative;
             display: inline-block;
@@ -255,10 +193,9 @@
             transition: width .7s cubic-bezier(.16, .84, .44, 1);
             border-radius: 2px;
         }
-        .reveal.in .grow-underline::after {
-            width: 64px;
-        }
+        .reveal.in .grow-underline::after { width: 64px; }
 
+        /* ---------- shimmer button ---------- */
         .shimmer-btn {
             position: relative;
             overflow: hidden;
@@ -270,17 +207,14 @@
             left: -60%;
             width: 40%;
             height: 100%;
-            background: linear-gradient(115deg, transparent, rgba(255, 255, 255, .55), transparent);
+            background: linear-gradient(115deg, transparent, rgba(255,255,255,.55), transparent);
             transform: skewX(-20deg);
             transition: left .8s ease;
         }
-        .shimmer-btn:hover::before {
-            left: 130%;
-        }
+        .shimmer-btn:hover::before { left: 130%; }
 
-        .stat-num {
-            font-variant-numeric: tabular-nums;
-        }
+        /* ---------- stat roll ---------- */
+        .stat-num { font-variant-numeric: tabular-nums; }
         .roll-track {
             position: relative;
             height: 6px;
@@ -301,70 +235,42 @@
             height: 12px;
             margin-top: -6px;
             border-radius: 50%;
-            background: radial-gradient(circle at 35% 30%, #F2C14E, #A63A2E 85%);
+            background: radial-gradient(circle at 35% 30%, #FFC72C, #D7263D 85%);
             transition: left 1.4s cubic-bezier(.16, .84, .44, 1);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, .25);
+            box-shadow: 0 2px 5px rgba(0,0,0,.25);
         }
-        .roll-track.in .roll-fill {
-            width: 100%;
-        }
+        .roll-track.in .roll-fill { width: 100%; }
         .roll-track.in .roll-ball {
             left: calc(100% - 12px);
             transform: rotate(900deg);
         }
 
+        /* ---------- hero ---------- */
         .hero-title-in {
             animation: titleIn 1s cubic-bezier(.16, .84, .44, 1) both;
         }
         @keyframes titleIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity:0; transform:translateY(30px); }
+            to { opacity:1; transform:translateY(0); }
         }
         .scroll-cue {
             animation: cueBounce 2s ease-in-out infinite;
         }
         @keyframes cueBounce {
-            0%,
-            100% {
-                transform: translateY(0);
-                opacity: .6;
-            }
-            50% {
-                transform: translateY(8px);
-                opacity: 1;
-            }
+            0%, 100% { transform:translateY(0); opacity:.6; }
+            50% { transform:translateY(8px); opacity:1; }
         }
 
+        /* ---------- reduced motion ---------- */
         @media (prefers-reduced-motion: reduce) {
-            * {
-                animation: none !important;
-                transition: none !important;
-            }
-            .reveal,
-            .reveal-scale {
-                opacity: 1 !important;
-                transform: none !important;
-            }
-            .kolam-trace path,
-            .kolam-trace circle,
-            .kolam-trace ellipse {
-                stroke-dashoffset: 0 !important;
-            }
-            .kolam-trace .dot {
-                opacity: 1 !important;
-                transform: scale(1) !important;
-            }
-            .ladoo-particle {
-                opacity: .12 !important;
-            }
+            * { animation: none !important; transition: none !important; }
+            .reveal, .reveal-scale { opacity:1 !important; transform:none !important; }
+            .kolam-trace path, .kolam-trace circle, .kolam-trace ellipse { stroke-dashoffset:0 !important; }
+            .kolam-trace .dot { opacity:1 !important; transform:scale(1) !important; }
+            .ladoo-particle { opacity:.12 !important; }
         }
 
+        /* ---------- skeleton (just in case) ---------- */
         .story-skeleton {
             background: linear-gradient(90deg, rgba(92,58,37,0.06) 25%, rgba(92,58,37,0.12) 37%, rgba(92,58,37,0.06) 63%);
             background-size: 400% 100%;
@@ -384,46 +290,46 @@
 
     <div id="navbar-placeholder"></div>
 
-    <!-- ============ HERO ============ -->
-    <section class="relative w-full h-[460px] md:h-[560px] overflow-hidden bg-jaggery">
-        <img src="https://nicyfoods.com/images/about_hero.jpg" alt="Handmade ladoo collection" class="absolute inset-0 w-full h-full object-cover opacity-70" />
-        <div class="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/50 to-ink/30"></div>
+    <!-- ============ HERO (same as index) ============ -->
+    <section class="relative w-full h-[460px] md:h-[560px] overflow-hidden bg-gradient-to-br from-[#2A0A0A] via-kumkum to-[#1A0E08]">
+        <img src="https://nicyfoods.com/images/about_hero.jpg" alt="Handmade ladoo collection" class="absolute inset-0 w-full h-full object-cover opacity-60" />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-kumkum/25 to-turmeric/10"></div>
 
         <!-- floating particles -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none z-1">
-            <div class="ladoo-particle glow w-8 h-8 float-drift" style="top:12%; left:6%; --dur:8s; --delay:.2s;"></div>
-            <div class="ladoo-particle dim w-5 h-5 float-drift-slow" style="top:22%; left:18%; --dur:10s; --delay:1.4s;"></div>
-            <div class="ladoo-particle w-6 h-6 float-y" style="top:8%; left:32%; --dur:9s; --delay:2.1s;"></div>
-            <div class="ladoo-particle dim w-4 h-4 float-drift" style="top:18%; left:44%; --dur:7s; --delay:.6s;"></div>
-            <div class="ladoo-particle glow w-7 h-7 float-y-slow" style="top:10%; right:20%; --dur:11s; --delay:1.8s;"></div>
-            <div class="ladoo-particle w-6 h-6 float-drift-slow" style="top:6%; right:8%; --dur:8.5s; --delay:.9s;"></div>
-            <div class="ladoo-particle dim w-5 h-5 float-y" style="top:28%; right:32%; --dur:9.5s; --delay:2.6s;"></div>
-            <div class="ladoo-particle glow w-4 h-4 float-drift" style="bottom:20%; left:8%; --dur:10.5s; --delay:.3s;"></div>
-            <div class="ladoo-particle w-6 h-6 float-y-slow" style="bottom:12%; right:12%; --dur:8s; --delay:1.1s;"></div>
-            <div class="ladoo-particle dim w-5 h-5 float-drift-slow" style="bottom:25%; left:25%; --dur:9s; --delay:1.9s;"></div>
-            <div class="ladoo-particle glow w-7 h-7 float-y" style="bottom:8%; right:28%; --dur:10s; --delay:.5s;"></div>
+            <div class="ladoo-particle glow w-8 h-8 float-drift" style="top:12%; left:6%;"></div>
+            <div class="ladoo-particle dim w-5 h-5 float-drift-slow" style="top:22%; left:18%;"></div>
+            <div class="ladoo-particle w-6 h-6 float-y" style="top:8%; left:32%;"></div>
+            <div class="ladoo-particle dim w-4 h-4 float-drift" style="top:18%; left:44%;"></div>
+            <div class="ladoo-particle glow w-7 h-7 float-y-slow" style="top:10%; right:20%;"></div>
+            <div class="ladoo-particle w-6 h-6 float-drift-slow" style="top:6%; right:8%;"></div>
+            <div class="ladoo-particle dim w-5 h-5 float-y" style="top:28%; right:32%;"></div>
+            <div class="ladoo-particle glow w-4 h-4 float-drift" style="bottom:20%; left:8%;"></div>
+            <div class="ladoo-particle w-6 h-6 float-y-slow" style="bottom:12%; right:12%;"></div>
+            <div class="ladoo-particle dim w-5 h-5 float-drift-slow" style="bottom:25%; left:25%;"></div>
+            <div class="ladoo-particle glow w-7 h-7 float-y" style="bottom:8%; right:28%;"></div>
         </div>
 
         <!-- signature kolam -->
         <svg class="kolam-trace absolute -right-24 -top-16 w-[420px] h-[420px] opacity-25 hidden sm:block" viewBox="0 0 200 200" fill="none">
-            <g stroke="#F2C14E" stroke-width="1.1">
+            <g stroke="#FFC72C" stroke-width="1.1">
                 <circle cx="100" cy="100" r="90"/>
                 <circle cx="100" cy="100" r="70"/>
                 <path d="M100 30 Q120 60 100 100 Q80 140 100 170"/>
                 <path d="M30 100 Q60 80 100 100 Q140 120 170 100"/>
             </g>
-            <circle class="dot" cx="100" cy="10" r="3" fill="#F2C14E"/>
-            <circle class="dot" cx="100" cy="190" r="3" fill="#F2C14E"/>
-            <circle class="dot" cx="10" cy="100" r="3" fill="#F2C14E"/>
-            <circle class="dot" cx="190" cy="100" r="3" fill="#F2C14E"/>
+            <circle class="dot" cx="100" cy="10" r="3" fill="#FFC72C"/>
+            <circle class="dot" cx="100" cy="190" r="3" fill="#FFC72C"/>
+            <circle class="dot" cx="10" cy="100" r="3" fill="#FFC72C"/>
+            <circle class="dot" cx="190" cy="100" r="3" fill="#FFC72C"/>
         </svg>
         <svg class="kolam-trace absolute -left-20 -bottom-16 w-[300px] h-[300px] opacity-20 hidden sm:block" viewBox="0 0 200 200" fill="none">
-            <g stroke="#F2C14E" stroke-width="1.1">
+            <g stroke="#FFC72C" stroke-width="1.1">
                 <circle cx="100" cy="100" r="80"/>
                 <path d="M100 40 Q130 100 100 160 Q70 100 100 40Z"/>
             </g>
-            <circle class="dot" cx="100" cy="40" r="2.5" fill="#F2C14E"/>
-            <circle class="dot" cx="100" cy="160" r="2.5" fill="#F2C14E"/>
+            <circle class="dot" cx="100" cy="40" r="2.5" fill="#FFC72C"/>
+            <circle class="dot" cx="100" cy="160" r="2.5" fill="#FFC72C"/>
         </svg>
 
         <div class="relative z-10 h-full flex flex-col justify-center px-6 md:px-16 max-w-3xl">
@@ -439,7 +345,7 @@
         </div>
     </section>
 
-    <!-- ============ OUR STORY ============ -->
+    <!-- ============ OUR STORY (dynamic) ============ -->
     <section class="relative max-w-5xl mx-auto px-6 py-20 md:py-24 overflow-hidden">
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div class="ladoo-particle w-7 h-7 float-drift-slow" style="top:6%; left:3%;"></div>
@@ -457,14 +363,14 @@
             <div class="reveal-scale flex justify-center md:justify-start">
                 <div class="relative w-48 h-48 md:w-56 md:h-56 flex items-center justify-center">
                     <svg class="kolam-trace absolute inset-0 w-full h-full opacity-30" viewBox="0 0 200 200" fill="none">
-                        <g stroke="#A63A2E" stroke-width="1">
+                        <g stroke="#D7263D" stroke-width="1">
                             <circle cx="100" cy="100" r="95"/>
                             <circle cx="100" cy="100" r="75"/>
                         </g>
-                        <circle class="dot" cx="100" cy="5" r="2.5" fill="#A63A2E"/>
-                        <circle class="dot" cx="195" cy="100" r="2.5" fill="#A63A2E"/>
-                        <circle class="dot" cx="100" cy="195" r="2.5" fill="#A63A2E"/>
-                        <circle class="dot" cx="5" cy="100" r="2.5" fill="#A63A2E"/>
+                        <circle class="dot" cx="100" cy="5" r="2.5" fill="#D7263D"/>
+                        <circle class="dot" cx="195" cy="100" r="2.5" fill="#D7263D"/>
+                        <circle class="dot" cx="100" cy="195" r="2.5" fill="#D7263D"/>
+                        <circle class="dot" cx="5" cy="100" r="2.5" fill="#D7263D"/>
                     </svg>
                     <div class="relative bg-white rounded-full w-40 h-40 md:w-44 md:h-44 shadow-lg flex flex-col items-center justify-center border-4 border-marigold/40">
                         <span class="font-display text-4xl md:text-5xl text-kumkum" id="storyYear">2017</span>
@@ -482,10 +388,10 @@
     <!-- kolam divider -->
     <div class="flex justify-center py-2">
         <svg class="kolam-divider w-40 h-10" viewBox="0 0 200 40" fill="none">
-            <path d="M2 20 Q 50 2, 100 20 T 198 20" stroke="#E8A33D" stroke-width="2" stroke-linecap="round"/>
-            <circle cx="2" cy="20" r="3" fill="#A63A2E"/>
-            <circle cx="100" cy="20" r="3" fill="#A63A2E"/>
-            <circle cx="198" cy="20" r="3" fill="#A63A2E"/>
+            <path d="M2 20 Q 50 2, 100 20 T 198 20" stroke="#F5A623" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="2" cy="20" r="3" fill="#D7263D"/>
+            <circle cx="100" cy="20" r="3" fill="#D7263D"/>
+            <circle cx="198" cy="20" r="3" fill="#D7263D"/>
         </svg>
     </div>
 
@@ -533,7 +439,7 @@
         </div>
     </section>
 
-    <!-- ============ CORE VALUES ============ -->
+    <!-- ============ CORE VALUES (dynamic) ============ -->
     <section class="relative py-20 md:py-24 overflow-hidden">
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div class="ladoo-particle dim w-6 h-6 float-drift" style="top:8%; left:3%;"></div>
@@ -567,7 +473,7 @@
         </div>
 
         <svg class="kolam-trace absolute -right-16 -top-16 w-64 h-64 opacity-10" viewBox="0 0 200 200" fill="none">
-            <g stroke="#F2C14E" stroke-width="1.2"><circle cx="100" cy="100" r="90"/><circle cx="100" cy="100" r="65"/></g>
+            <g stroke="#FFC72C" stroke-width="1.2"><circle cx="100" cy="100" r="90"/><circle cx="100" cy="100" r="65"/></g>
         </svg>
 
         <div class="stagger reveal max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center relative z-10">
@@ -594,7 +500,7 @@
         </div>
     </section>
 
-    <!-- ============ QUALITY PROMISE (DYNAMIC) – PROPER ICON SIZING ============ -->
+    <!-- ============ QUALITY PROMISE (dynamic) ============ -->
     <section class="relative py-20 md:py-24 bg-jaggery/[0.04] overflow-hidden">
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div class="ladoo-particle dim w-5 h-5 float-drift-slow" style="top:8%; left:5%;"></div>
@@ -611,7 +517,6 @@
                 <h2 class="font-display text-3xl sm:text-4xl text-jaggery mt-3 grow-underline">Our Quality Promise</h2>
             </div>
 
-            <!-- Container for dynamic cards -->
             <div id="qualityPromisesGrid" class="stagger reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- populated by JS -->
             </div>
@@ -753,7 +658,7 @@
         </div>
 
         <svg class="kolam-trace absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] opacity-10" viewBox="0 0 200 200" fill="none">
-            <g stroke="#F2C14E" stroke-width="1"><circle cx="100" cy="100" r="95"/><circle cx="100" cy="100" r="75"/><circle cx="100" cy="100" r="55"/></g>
+            <g stroke="#FFC72C" stroke-width="1"><circle cx="100" cy="100" r="95"/><circle cx="100" cy="100" r="75"/><circle cx="100" cy="100" r="55"/></g>
         </svg>
 
         <div class="reveal relative z-10">
@@ -772,19 +677,16 @@
 
     <div id="footer-placeholder"></div>
 
+    <!-- ===== SCRIPTS ===== -->
     <script src="js/navbar.js"></script>
     <script src="js/footer.js"></script>
 
     <script>
         // ============================================================
-        //  CONFIG
+        //  CONFIG – using the same API endpoints as before, but we keep them
         // ============================================================
-        const STORY_API_BASE_URL = "https://dbms.srujaninfotech.com";
-        const STORY_API_URL = `${STORY_API_BASE_URL}/api/story`;
-
-        const CORE_VALUES_API_BASE_URL = "https://dbms.srujaninfotech.com";
-        const CORE_VALUES_API_URL = `${CORE_VALUES_API_BASE_URL}/api/core-values`;
-
+        const STORY_API_URL = "https://dbms.srujaninfotech.com/api/story";
+        const CORE_VALUES_API_URL = "https://dbms.srujaninfotech.com/api/core-values";
         const QUALITY_API_URL = "https://dbms.srujaninfotech.com/api/quality-promise";
 
         // ---------- FALLBACKS ----------
@@ -802,80 +704,26 @@
         };
 
         const FALLBACK_CORE_VALUES = [
-            {
-                title: "Purity",
-                description: "We are committed to sourcing only pure, natural ingredients. No compromises, no shortcuts, no artificial additives - ever.",
-                icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 4 13c0-5 4-8 11-9 1 6-1 12-4 16z"/><path d="M4 13c4 0 8 2 10 6"/></svg>',
-                iconBgColor: "bg-emerald-100",
-                order: 1,
-            },
-            {
-                title: "Care",
-                description: "Every product is crafted with love and meticulous attention. We treat your family's health with the same care we'd use for our own.",
-                icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 21s-6.7-4.35-9.33-8.2C1 10.4 1.4 6.9 4.1 5.1c2.2-1.5 5-.9 6.6 1 .4.5.9 1.1 1.3 1.7.4-.6.9-1.2 1.3-1.7 1.6-1.9 4.4-2.5 6.6-1 2.7 1.8 3.1 5.3 1.43 7.7C18.7 16.65 12 21 12 21z"/></svg>',
-                iconBgColor: "bg-rose-100",
-                order: 2,
-            },
-            {
-                title: "Quality",
-                description: "Superior quality is non-negotiable. We maintain rigorous standards from sourcing through production to delivery.",
-                icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6L12 2z"/><path d="M19 14l.8 2.4L22 17l-2.2.6L19 20l-.8-2.4L16 17l2.2-.6L19 14z" opacity="0.6"/></svg>',
-                iconBgColor: "bg-amber-100",
-                order: 3,
-            },
-            {
-                title: "Integrity",
-                description: "We believe in transparent practices, honest communication, and treating customers with respect and fairness.",
-                icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21c-4-2.5-9-6.5-9-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 1.7-.8 3.3-2 4.7"/><path d="M14 15l3 3 5-6"/></svg>',
-                iconBgColor: "bg-amber-100",
-                order: 4,
-            },
-            {
-                title: "Innovation",
-                description: "While honoring tradition, we continuously innovate to meet evolving health needs and customer preferences.",
-                icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/><path d="M18 6l3-3"/></svg>',
-                iconBgColor: "bg-sky-100",
-                order: 5,
-            },
+            { title: "Purity", description: "We are committed to sourcing only pure, natural ingredients. No compromises, no shortcuts, no artificial additives - ever.", icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 4 13c0-5 4-8 11-9 1 6-1 12-4 16z"/><path d="M4 13c4 0 8 2 10 6"/></svg>', order: 1 },
+            { title: "Care", description: "Every product is crafted with love and meticulous attention. We treat your family's health with the same care we'd use for our own.", icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 21s-6.7-4.35-9.33-8.2C1 10.4 1.4 6.9 4.1 5.1c2.2-1.5 5-.9 6.6 1 .4.5.9 1.1 1.3 1.7.4-.6.9-1.2 1.3-1.7 1.6-1.9 4.4-2.5 6.6-1 2.7 1.8 3.1 5.3 1.43 7.7C18.7 16.65 12 21 12 21z"/></svg>', order: 2 },
+            { title: "Quality", description: "Superior quality is non-negotiable. We maintain rigorous standards from sourcing through production to delivery.", icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6L12 2z"/><path d="M19 14l.8 2.4L22 17l-2.2.6L19 20l-.8-2.4L16 17l2.2-.6L19 14z" opacity="0.6"/></svg>', order: 3 },
+            { title: "Integrity", description: "We believe in transparent practices, honest communication, and treating customers with respect and fairness.", icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21c-4-2.5-9-6.5-9-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 1.7-.8 3.3-2 4.7"/><path d="M14 15l3 3 5-6"/></svg>', order: 4 },
+            { title: "Innovation", description: "While honoring tradition, we continuously innovate to meet evolving health needs and customer preferences.", icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/><path d="M18 6l3-3"/></svg>', order: 5 },
         ];
 
         const FALLBACK_QUALITY_PROMISES = [
-            {
-                title: "100% Pure Ghee",
-                description: "We source authentic, clarified butter from trusted suppliers. Every batch is verified for purity and nutritional integrity.",
-                icon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>',
-                order: 1,
-            },
-            {
-                title: "Natural Jaggery",
-                description: "Unrefined jaggery provides natural sweetness with essential minerals and nutrients, free from refined sugar processing.",
-                icon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l1 4H7l1-4z"/><path d="M6 7h12l-1.2 12.2A2 2 0 0 1 14.8 21H9.2a2 2 0 0 1-2-1.8L6 7z"/><path d="M9 11h6"/></svg>',
-                order: 2,
-            },
-            {
-                title: "Handpicked Ingredients",
-                description: "Nuts, seeds, and herbs are carefully selected and sourced from trusted suppliers ensuring freshness and quality.",
-                icon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-8"/><path d="M12 14c-3 0-5-2-5-5 3 0 5 2 5 5z"/><path d="M12 14c3 0 5-2 5-5-3 0-5 2-5 5z"/></svg>',
-                order: 3,
-            },
-            {
-                title: "Zero Additives",
-                description: "Absolutely no maida, preservatives, artificial essence, synthetic colors, or any harmful substances whatsoever.",
-                icon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6"/><path d="M9 9l6 6"/></svg>',
-                order: 4,
-            },
+            { title: "100% Pure Ghee", description: "We source authentic, clarified butter from trusted suppliers. Every batch is verified for purity and nutritional integrity.", icon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>', order: 1 },
+            { title: "Natural Jaggery", description: "Unrefined jaggery provides natural sweetness with essential minerals and nutrients, free from refined sugar processing.", icon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l1 4H7l1-4z"/><path d="M6 7h12l-1.2 12.2A2 2 0 0 1 14.8 21H9.2a2 2 0 0 1-2-1.8L6 7z"/><path d="M9 11h6"/></svg>', order: 2 },
+            { title: "Handpicked Ingredients", description: "Nuts, seeds, and herbs are carefully selected and sourced from trusted suppliers ensuring freshness and quality.", icon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-8"/><path d="M12 14c-3 0-5-2-5-5 3 0 5 2 5 5z"/><path d="M12 14c3 0 5-2 5-5-3 0-5 2-5 5z"/></svg>', order: 3 },
+            { title: "Zero Additives", description: "Absolutely no maida, preservatives, artificial essence, synthetic colors, or any harmful substances whatsoever.", icon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6"/><path d="M9 9l6 6"/></svg>', order: 4 },
         ];
 
-        // ---------- UTILITY FUNCTIONS ----------
+        // ---------- UTILITY ----------
         function escapeHtml(str) {
             const div = document.createElement('div');
             div.textContent = str;
             return div.innerHTML;
         }
-
-        function textToList(text) { return text.split('\n').map(l => l.trim()).filter(Boolean); }
-
-        function listToText(list) { return (list || []).join('\n'); }
 
         // ---------- STORY ----------
         function renderStory(data) {
@@ -920,6 +768,7 @@
             if (!icon) return '';
             const trimmed = icon.trim();
             if (trimmed.startsWith('<svg')) return trimmed;
+            // assume it's an image URL
             const safeUrl = trimmed.replace(/"/g, '&quot;');
             return `<img src="${safeUrl}" alt="" style="width:52px;height:52px;object-fit:contain;display:block;" />`;
         }
@@ -962,7 +811,7 @@
             }
         }
 
-        // ---------- QUALITY PROMISES (PROPER SIZING - 96px container, 56px SVG) ----------
+        // ---------- QUALITY PROMISES ----------
         function renderQualityPromises(items) {
             const grid = document.getElementById('qualityPromisesGrid');
             if (!grid) return;
@@ -977,16 +826,13 @@
                 if (p.icon) {
                     const trimmed = p.icon.trim();
                     if (trimmed.startsWith('<svg')) {
-                        // SVG fallback – ensure proper size
                         iconHtml = trimmed;
                     } else {
-                        // Uploaded image – display full size with object-fit:contain
                         const safeUrl = trimmed.replace(/"/g, '&quot;');
                         iconHtml = `<img src="${safeUrl}" alt="${escapeHtml(p.title || '')}" style="width:100%;height:100%;object-fit:contain;display:block;" />`;
                     }
                 }
                 if (!iconHtml) {
-                    // Fallback icon (shield with cross) – now w-14 h-14 (56px)
                     iconHtml = `<svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6"/><path d="M9 9l6 6"/></svg>`;
                 }
                 return `
@@ -1060,6 +906,5 @@
         }, { threshold: 0.4 });
         counters.forEach(el => countIo.observe(el));
     </script>
-
 </body>
 </html>

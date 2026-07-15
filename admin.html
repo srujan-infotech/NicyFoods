@@ -6,8 +6,7 @@
     <title>NicyFoods · Admin Dashboard</title>
 
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com">
-    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -39,12 +38,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
 
-    <!-- Font Awesome 6 (FREE) -->
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
     <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
     <style>
         /* ===== RESET & BASE ===== */
@@ -213,7 +211,6 @@
             padding: 1.5rem 2rem 3rem;
             background: #FBF1E2;
         }
-
         #sidebar::-webkit-scrollbar {
             width: 3px;
         }
@@ -535,7 +532,7 @@
             background: rgba(166, 58, 46, 0.05);
         }
 
-        /* ===== FORM – Enhanced ===== */
+        /* ===== FORM ===== */
         input,
         select,
         textarea {
@@ -596,7 +593,7 @@
             }
         }
 
-        /* Image upload – enhanced */
+        /* Image upload (multiple) */
         .image-upload-box {
             border: 2px dashed rgba(92, 58, 37, 0.15);
             border-radius: 0.9rem;
@@ -619,19 +616,6 @@
             cursor: pointer;
             width: 100%;
             height: 100%;
-        }
-        .image-preview {
-            width: 80px;
-            height: 80px;
-            border-radius: 0.8rem;
-            object-fit: cover;
-            margin: 0 auto 0.5rem;
-            display: none;
-            box-shadow: 0 6px 16px -6px rgba(92, 58, 37, 0.2);
-            border: 2px solid white;
-        }
-        .image-preview.show {
-            display: block;
         }
         .image-upload-hint {
             font-size: 0.8rem;
@@ -659,6 +643,50 @@
         }
         .image-upload-status.error {
             color: #dc2626;
+        }
+
+        /* Multi-image preview grid */
+        .image-preview-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+        .image-preview-item {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            border-radius: 0.6rem;
+            overflow: hidden;
+            border: 2px solid #e5e0da;
+            background: #f8f2ea;
+            flex-shrink: 0;
+        }
+        .image-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .image-preview-item .remove-img {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #dc2626;
+            color: white;
+            border: none;
+            font-size: 0.6rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        .image-preview-item .remove-img:hover {
+            transform: scale(1.15);
         }
 
         /* Weight rows */
@@ -1117,7 +1145,6 @@
             text-align: center;
         }
 
-        /* Modal scroll styling */
         .modal-box::-webkit-scrollbar {
             width: 5px;
         }
@@ -1133,7 +1160,6 @@
             background: rgba(166, 58, 46, 0.35);
         }
 
-        /* Extra polish for selects */
         select {
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238a7362' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
@@ -1148,7 +1174,7 @@
 </head>
 <body>
 
-    <!-- ===== SIDEBAR OVERLAY (mobile) ===== -->
+    <!-- SIDEBAR OVERLAY -->
     <div id="sidebarOverlay"></div>
 
     <!-- ===== SIDEBAR ===== -->
@@ -1157,7 +1183,6 @@
             <h1><i class="fas fa-leaf"></i>NicyFoods</h1>
             <span>Administration</span>
         </div>
-
         <nav style="flex:1; padding: 0.4rem 0;">
             <div class="nav-item active" data-tab="dashboard">
                 <span class="icon"><i class="fas fa-chart-pie"></i></span> Dashboard
@@ -1198,8 +1223,11 @@
                 <span class="icon"><i class="fas fa-shield-alt"></i></span> Quality Promises
                 <span class="badge" id="navQualityPromiseCount">0</span>
             </div>
+            <div class="nav-item" data-tab="whyChooseUs">
+                <span class="icon"><i class="fas fa-question-circle"></i></span> Why Choose Us
+                <span class="badge" id="navWhyChooseUsCount">0</span>
+            </div>
         </nav>
-
         <div class="sidebar-footer">
             <div class="user">
                 <div class="avatar" id="sidebarAvatar">A</div>
@@ -1214,7 +1242,6 @@
 
     <!-- ===== MAIN ===== -->
     <div id="main">
-
         <!-- TOP BAR -->
         <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.8rem; flex-wrap:wrap;">
             <button id="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
@@ -1260,7 +1287,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="charts-grid mb-6">
                 <div class="chart-card">
                     <div class="chart-title"><i class="fas fa-chart-pie"></i> Products by Category</div>
@@ -1271,7 +1297,6 @@
                     <div class="chart-wrapper"><canvas id="ordersChart"></canvas></div>
                 </div>
             </div>
-
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="chart-card" style="display:flex; flex-direction:column; gap:0.6rem; padding:1.2rem 1.5rem;">
                     <div style="font-weight:600; color:#5C3A25; font-size:0.9rem; display:flex; align-items:center; gap:0.5rem;">
@@ -1358,7 +1383,7 @@
             </div>
         </div>
 
-        <!-- ===== HERO MANAGEMENT ===== -->
+        <!-- ===== HERO ===== -->
         <div id="tab-hero" class="tab-pane hidden">
             <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
                 <h2 class="font-display text-xl text-jaggery">
@@ -1371,7 +1396,6 @@
                     <i class="fas fa-save"></i> Save Changes
                 </button>
             </div>
-
             <div class="bg-white rounded-xl p-4 mb-4 border border-jaggery/5 shadow-sm">
                 <p class="text-sm text-slate-500 flex items-center gap-2">
                     <i class="fas fa-info-circle text-kumkum"></i>
@@ -1385,7 +1409,6 @@
                     <span>API endpoint not available. Using local fallback. To enable server sync, make sure your backend has <code>/api/hero</code> route mounted.</span>
                 </div>
             </div>
-
             <div class="bg-white rounded-xl p-4 mb-4 border border-jaggery/5 shadow-sm">
                 <h3 class="font-display text-lg text-jaggery mb-3"><i class="fas fa-eye text-kumkum"></i> Live Preview</h3>
                 <div class="hero-preview-box" id="heroPreviewBox">
@@ -1400,7 +1423,6 @@
                     </div>
                 </div>
             </div>
-
             <form id="heroForm" class="bg-white rounded-xl p-6 border border-jaggery/5 shadow-sm">
                 <div class="form-group">
                     <label class="form-label"><i class="fas fa-tag"></i> Eyebrow Text</label>
@@ -1480,7 +1502,7 @@
             </div>
         </div>
 
-        <!-- ===== OUR STORY ===== -->
+        <!-- ===== STORY ===== -->
         <div id="tab-story" class="tab-pane hidden">
             <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
                 <h2 class="font-display text-xl text-jaggery">
@@ -1612,32 +1634,63 @@
             </div>
         </div>
 
+        <!-- ===== WHY CHOOSE US ===== -->
+        <div id="tab-whyChooseUs" class="tab-pane hidden">
+            <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
+                <h2 class="font-display text-xl text-jaggery">
+                    <i class="fas fa-question-circle text-kumkum"></i> Manage Why Choose Us
+                </h2>
+                <button class="btn-primary" onclick="openWhyChooseUsModal()">
+                    <i class="fas fa-plus"></i> Add Item
+                </button>
+            </div>
+            <div class="bg-white rounded-xl p-4 mb-4 border border-jaggery/5 shadow-sm">
+                <p class="text-sm text-slate-500 flex items-center gap-2">
+                    <i class="fas fa-info-circle text-kumkum"></i>
+                    Manage the "Why Choose NicyFoods?" cards shown on the About page. Only active items are displayed, sorted by order.
+                </p>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th style="width:60px;">Icon</th><th>Title</th><th>Description</th><th style="width:70px;">Order</th><th>Featured</th><th style="width:90px;">Status</th><th style="min-width:130px;">Actions</th></tr></thead>
+                    <tbody id="whyChooseUsTableBody">
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-slate-400">
+                                <i class="fas fa-spinner fa-spin mr-2"></i> Loading...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
     <!-- ============================================================ -->
-    <!-- ===== PRODUCT MODAL – Enhanced ===== -->
-    <!-- ============================================================ -->
+    <!-- ===== MODALS ===== -->
+    <!-- ===== PRODUCT MODAL (UPDATED) ===== -->
     <div id="productModal" class="modal-overlay">
         <div class="modal-box">
             <div class="modal-header">
                 <h2 id="productModalTitle"><i class="fas fa-box"></i> Add Product</h2>
                 <button class="modal-close" onclick="closeModal('productModal')"><i class="fas fa-times"></i></button>
             </div>
-            <form id="productForm">
+            <form id="productForm" enctype="multipart/form-data">
                 <input type="hidden" id="productId" />
-                <input type="hidden" id="pImage" />
+                <input type="hidden" id="pExistingImages" value="" />
 
                 <div class="form-card" style="margin-bottom:1.5rem; background:linear-gradient(145deg, #FDF8F2, #fff9f0); border:2px solid rgba(166,58,46,0.06);">
-                    <div class="form-card-title"><i class="fas fa-camera"></i> Product Photo</div>
+                    <div class="form-card-title"><i class="fas fa-camera"></i> Product Photos <span style="font-weight:400; font-size:0.7rem; color:#8a7362;">(max 3)</span></div>
                     <div class="image-upload-box" id="imageUploadBox">
-                        <img id="pImagePreview" class="image-preview" alt="Preview" />
                         <div class="image-upload-hint">
-                            <i class="fas fa-cloud-upload-alt"></i> <strong>Click to upload</strong> or drag a photo<br>
-                            <span style="font-size:0.65rem; color:#bfaea0;">JPG, PNG, WEBP · Max 5MB</span>
+                            <i class="fas fa-cloud-upload-alt"></i> <strong>Click to upload</strong> or drag up to 3 photos<br>
+                            <span style="font-size:0.65rem; color:#bfaea0;">JPG, PNG, WEBP · Max 5MB each</span>
                         </div>
-                        <input type="file" id="pImageFile" accept="image/png, image/jpeg, image/webp, image/gif" />
+                        <input type="file" id="pImageFiles" accept="image/png, image/jpeg, image/webp, image/gif" multiple />
                     </div>
+                    <div id="imagePreviewGrid" class="image-preview-grid"></div>
                     <p id="imageUploadStatus" class="image-upload-status"></p>
+                    <p class="form-hint"><i class="fas fa-info-circle"></i> The first uploaded image will be used as the primary cover.</p>
                 </div>
 
                 <div class="form-row">
@@ -1661,7 +1714,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="form-group">
                     <label class="form-label"><i class="fas fa-align-left"></i> Short Description</label>
                     <div class="input-icon-wrap">
@@ -1669,7 +1721,6 @@
                         <textarea id="pDesc" rows="2" placeholder="One or two lines about this product"></textarea>
                     </div>
                 </div>
-
                 <div class="form-group">
                     <div class="form-section-title"><i class="fas fa-weight-hanging"></i> Weight Options</div>
                     <div id="weightOptionsList"></div>
@@ -1677,7 +1728,6 @@
                         <i class="fas fa-plus"></i> Add weight option
                     </button>
                 </div>
-
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label"><i class="fas fa-list-ul"></i> Features</label>
@@ -1694,7 +1744,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="form-group">
                     <label class="form-label"><i class="fas fa-mortar-pestle"></i> Ingredients</label>
                     <div class="input-icon-wrap">
@@ -1702,7 +1751,6 @@
                         <textarea id="pIngredients" rows="2" placeholder="Nachni flour&#10;Jaggery&#10;Pure ghee"></textarea>
                     </div>
                 </div>
-
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label"><i class="fas fa-rupee-sign"></i> Price (₹)</label>
@@ -1722,7 +1770,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div style="display:flex; justify-content:flex-end; gap:0.8rem; padding-top:1.2rem; border-top:2px solid rgba(166,58,46,0.06); margin-top:0.5rem;">
                     <button type="button" class="text-slate-500 hover:text-slate-700" onclick="closeModal('productModal')" style="font-weight:500; background:transparent; border:none; cursor:pointer; padding:0.4rem 0.8rem; transition:color 0.2s;">Cancel</button>
                     <button type="submit" id="productSaveBtn" class="btn-primary"><i class="fas fa-save"></i> Save Product</button>
@@ -1787,7 +1834,6 @@
             </div>
             <form id="companyForm">
                 <input type="hidden" id="companyId" />
-
                 <div class="form-group">
                     <label class="form-label"><i class="fas fa-image"></i> Company Logo</label>
                     <div class="image-upload-box" id="companyImageUploadBox">
@@ -1801,7 +1847,6 @@
                     <p id="companyImageUploadStatus" class="image-upload-status"></p>
                     <p class="form-hint"><i class="fas fa-info-circle"></i> Required only when adding a new company. Leave empty on edit to keep the existing logo.</p>
                 </div>
-
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label"><i class="fas fa-tag"></i> Company Name</label>
@@ -1818,7 +1863,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="form-group">
                     <label class="form-label"><i class="fas fa-universal-access"></i> Alt Text</label>
                     <div class="input-icon-wrap">
@@ -1826,7 +1870,6 @@
                         <input id="cAltText" required placeholder="e.g. Acme Corp logo" />
                     </div>
                 </div>
-
                 <div class="form-group">
                     <label class="form-label"><i class="fas fa-toggle-on"></i> Active?</label>
                     <div class="toggle-wrap">
@@ -1837,7 +1880,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div style="display:flex; justify-content:flex-end; gap:0.8rem; padding-top:1rem; border-top:1px solid rgba(92,58,37,0.06); margin-top:0.5rem;">
                     <button type="button" class="text-slate-500 hover:text-slate-700" onclick="closeModal('companyModal')" style="font-weight:500; background:transparent; border:none; cursor:pointer; padding:0.4rem 0.8rem;">Cancel</button>
                     <button type="submit" id="companySaveBtn" class="btn-primary"><i class="fas fa-save"></i> Save Company</button>
@@ -1883,7 +1925,6 @@
             </div>
             <form id="coreValueForm">
                 <input type="hidden" id="coreValueId" />
-
                 <div class="form-group">
                     <label class="form-label"><i class="fas fa-image"></i> Icon Image</label>
                     <div class="image-upload-box" id="coreValueImageUploadBox">
@@ -1898,7 +1939,6 @@
                     <input type="hidden" id="cvIcon" required />
                     <p class="form-hint"><i class="fas fa-info-circle"></i> Required only when adding a new value. Leave empty on edit to keep the existing icon.</p>
                 </div>
-
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label"><i class="fas fa-tag"></i> Title</label>
@@ -1915,7 +1955,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="form-group">
                     <label class="form-label"><i class="fas fa-align-left"></i> Description</label>
                     <div class="input-icon-wrap">
@@ -1923,16 +1962,14 @@
                         <textarea id="cvDescription" rows="3" required placeholder="Short description of this value"></textarea>
                     </div>
                 </div>
-
                 <div class="form-group">
                     <label class="form-label"><i class="fas fa-fill-drip"></i> Icon Background Class</label>
                     <div class="input-icon-wrap">
                         <i class="fas fa-palette"></i>
                         <input id="cvIconBgColor" placeholder="e.g. bg-amber-100" value="bg-amber-100" />
                     </div>
-                    <p class="form-hint"><i class="fas fa-info-circle"></i> Tailwind utility class for the icon's background chip, e.g. <code style="background:#f8f2ea; padding:0.05rem 0.3rem; border-radius:0.25rem;">bg-rose-100</code></p>
+                    <p class="form-hint"><i class="fas fa-info-circle"></i> Tailwind utility class for the icon's background chip.</p>
                 </div>
-
                 <div class="form-group">
                     <label class="form-label"><i class="fas fa-toggle-on"></i> Active?</label>
                     <div class="toggle-wrap">
@@ -1943,7 +1980,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div style="display:flex; justify-content:flex-end; gap:0.8rem; padding-top:1rem; border-top:1px solid rgba(92,58,37,0.06); margin-top:0.5rem;">
                     <button type="button" class="text-slate-500 hover:text-slate-700" onclick="closeModal('coreValueModal')" style="font-weight:500; background:transparent; border:none; cursor:pointer; padding:0.4rem 0.8rem;">Cancel</button>
                     <button type="submit" id="coreValueSaveBtn" class="btn-primary"><i class="fas fa-save"></i> Save Core Value</button>
@@ -1962,7 +1998,6 @@
             <form id="qualityPromiseForm">
                 <input type="hidden" id="qualityPromiseId" />
                 <input type="hidden" id="qpIcon" />
-
                 <div class="form-group">
                     <label class="form-label"><i class="fas fa-image"></i> Icon Image</label>
                     <div class="image-upload-box" id="qpImageUploadBox">
@@ -1976,7 +2011,6 @@
                     <p id="qpImageUploadStatus" class="image-upload-status"></p>
                     <p class="form-hint"><i class="fas fa-info-circle"></i> Required when adding a new promise. Leave empty on edit to keep the existing icon.</p>
                 </div>
-
                 <div class="form-group">
                     <label class="form-label"><i class="fas fa-fill-drip"></i> Icon Background Class</label>
                     <div class="input-icon-wrap">
@@ -1985,7 +2019,6 @@
                     </div>
                     <p class="form-hint"><i class="fas fa-info-circle"></i> Tailwind utility class for the icon's background chip.</p>
                 </div>
-
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label"><i class="fas fa-tag"></i> Title</label>
@@ -2002,7 +2035,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="form-group">
                     <label class="form-label"><i class="fas fa-align-left"></i> Description</label>
                     <div class="input-icon-wrap">
@@ -2010,7 +2042,6 @@
                         <textarea id="qpDescription" rows="3" required placeholder="Short description of this promise"></textarea>
                     </div>
                 </div>
-
                 <div class="form-group">
                     <label class="form-label"><i class="fas fa-toggle-on"></i> Active?</label>
                     <div class="toggle-wrap">
@@ -2021,10 +2052,109 @@
                         </div>
                     </div>
                 </div>
-
                 <div style="display:flex; justify-content:flex-end; gap:0.8rem; padding-top:1rem; border-top:1px solid rgba(92,58,37,0.06); margin-top:0.5rem;">
                     <button type="button" class="text-slate-500 hover:text-slate-700" onclick="closeModal('qualityPromiseModal')" style="font-weight:500; background:transparent; border:none; cursor:pointer; padding:0.4rem 0.8rem;">Cancel</button>
                     <button type="submit" id="qualityPromiseSaveBtn" class="btn-primary"><i class="fas fa-save"></i> Save Promise</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== WHY CHOOSE US MODAL ===== -->
+    <div id="whyChooseUsModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2 id="whyChooseUsModalTitle"><i class="fas fa-question-circle"></i> Add Why Choose Us Item</h2>
+                <button class="modal-close" onclick="closeModal('whyChooseUsModal')"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="whyChooseUsForm">
+                <input type="hidden" id="whyChooseUsId" />
+                <input type="hidden" id="wcuIcon" />
+
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-image"></i> Icon Image</label>
+                    <div class="image-upload-box" id="wcuImageUploadBox">
+                        <img id="wcuIconPreview" class="image-preview" alt="Icon preview" />
+                        <div class="image-upload-hint">
+                            <i class="fas fa-cloud-upload-alt"></i> <strong>Click to upload</strong> or drag an icon<br>
+                            <span style="font-size:0.65rem;">JPG, PNG, WEBP, SVG · Max 5MB</span>
+                        </div>
+                        <input type="file" id="wcuIconFile" accept="image/png, image/jpeg, image/webp, image/gif, image/svg+xml" />
+                    </div>
+                    <p id="wcuImageUploadStatus" class="image-upload-status"></p>
+                    <p class="form-hint"><i class="fas fa-info-circle"></i> Required when adding a new item. Leave empty on edit to keep the existing icon.</p>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-arrow-right"></i> Gradient From</label>
+                        <div class="input-icon-wrap">
+                            <i class="fas fa-palette"></i>
+                            <input id="wcuGradientFrom" placeholder="e.g. from-rose-400" value="from-rose-400" />
+                        </div>
+                        <p class="form-hint"><i class="fas fa-info-circle"></i> Tailwind gradient-from utility class.</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-arrow-left"></i> Gradient To</label>
+                        <div class="input-icon-wrap">
+                            <i class="fas fa-palette"></i>
+                            <input id="wcuGradientTo" placeholder="e.g. to-pink-500" value="to-pink-500" />
+                        </div>
+                        <p class="form-hint"><i class="fas fa-info-circle"></i> Tailwind gradient-to utility class.</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-star"></i> Highlighted?</label>
+                    <div class="toggle-wrap">
+                        <span class="toggle-label" id="wcuHighlightedLabel">No (normal card)</span>
+                        <div class="toggle-switch" id="wcuHighlightedToggle" onclick="toggleWcuHighlighted()">
+                            <input type="hidden" id="wcuHighlighted" value="false" />
+                            <div class="toggle-knob"></div>
+                        </div>
+                    </div>
+                    <p class="form-hint"><i class="fas fa-info-circle"></i> Adds a special <code>border-2 border-kumkum/60</code> accent on the About page.</p>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-tag"></i> Title</label>
+                        <div class="input-icon-wrap">
+                            <i class="fas fa-heading"></i>
+                            <input id="wcuTitle" required placeholder="e.g. Trusted Since 2017" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-sort-numeric-down"></i> Display Order</label>
+                        <div class="input-icon-wrap">
+                            <i class="fas fa-arrow-down-wide-short"></i>
+                            <input id="wcuOrder" type="number" step="1" min="0" value="0" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-align-left"></i> Description</label>
+                    <div class="input-icon-wrap">
+                        <i class="fas fa-quote-right" style="top:18px;"></i>
+                        <textarea id="wcuDescription" rows="3" required placeholder="Short description of this benefit"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-toggle-on"></i> Active?</label>
+                    <div class="toggle-wrap">
+                        <span class="toggle-label" id="wcuActiveLabel">Yes, visible on site</span>
+                        <div class="toggle-switch active" id="wcuActiveToggle" onclick="toggleWcuActive()">
+                            <input type="hidden" id="wcuIsActive" value="true" />
+                            <div class="toggle-knob"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:0.8rem; padding-top:1rem; border-top:1px solid rgba(92,58,37,0.06); margin-top:0.5rem;">
+                    <button type="button" class="text-slate-500 hover:text-slate-700" onclick="closeModal('whyChooseUsModal')" style="font-weight:500; background:transparent; border:none; cursor:pointer; padding:0.4rem 0.8rem;">Cancel</button>
+                    <button type="submit" id="wcuSaveBtn" class="btn-primary"><i class="fas fa-save"></i> Save Item</button>
                 </div>
             </form>
         </div>
@@ -2035,11 +2165,10 @@
 
     <!-- ============================================================ -->
     <!-- ===== SCRIPTS ===== -->
-    <script src="js/auth-client.js">
-    </script>
+    <script src="js/auth-client.js"></script>
     <script>
         // ============================================================
-        //  CONFIG
+        //  CONFIG – CHANGE THIS TO YOUR BACKEND URL
         // ============================================================
         const API_BASE_URL = "https://nicyfoods.srujaninfotech.com";
         let categoryChartInstance = null;
@@ -2064,6 +2193,17 @@
 
         let heroData = { ...DEFAULT_HERO };
         let isUsingHeroFallback = false;
+
+        // ============================================================
+        //  WHY CHOOSE US FALLBACK
+        // ============================================================
+        const FALLBACK_WHY_CHOOSE_US = [
+            { _id: 'fallback-1', title: 'Trusted Since 2017', description: 'Over 6+ years of experience and thousands of satisfied customers who trust us for their family\'s health.', icon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/><path d="M18 6l3-3"/></svg>', gradientFrom: 'from-rose-400', gradientTo: 'to-pink-500', highlighted: false, order: 1, isActive: true },
+            { _id: 'fallback-2', title: 'Handmade Excellence', description: 'Every batch is prepared in-house with careful attention to detail, ensuring consistent quality and taste.', icon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V10l6-4 6 4v11"/><path d="M15 21v-7l6-3v10"/><path d="M7 14h.01"/><path d="M7 17h.01"/><path d="M11 14h.01"/><path d="M11 17h.01"/></svg>', gradientFrom: 'from-slate-400', gradientTo: 'to-slate-500', highlighted: false, order: 2, isActive: true },
+            { _id: 'fallback-3', title: 'Fresh Delivery', description: 'Products are prepared and delivered fresh to ensure maximum nutritional value and authentic taste.', icon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8L12 3 3 8"/><path d="M3 8v8l9 5 9-5V8"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/></svg>', gradientFrom: 'from-amber-500', gradientTo: 'to-orange-600', highlighted: false, order: 3, isActive: true },
+            { _id: 'fallback-4', title: '100% Satisfaction', description: 'We stand behind every product. Your satisfaction and your family\'s health are our top priorities.', icon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M9 14l-2 7 5-3 5 3-2-7"/></svg>', gradientFrom: 'from-pink-500', gradientTo: 'to-rose-600', highlighted: false, order: 4, isActive: true }
+        ];
+        let fallbackShown = false;
 
         // ============================================================
         //  AUTH GATE
@@ -2112,7 +2252,8 @@
                 companies: 'Companies',
                 story: 'Our Story',
                 coreValues: 'Core Values',
-                qualityPromises: 'Quality Promises'
+                qualityPromises: 'Quality Promises',
+                whyChooseUs: 'Why Choose Us'
             };
             const icons = {
                 dashboard: 'fa-chart-pie',
@@ -2124,7 +2265,8 @@
                 companies: 'fa-building',
                 story: 'fa-book-open',
                 coreValues: 'fa-gem',
-                qualityPromises: 'fa-shield-alt'
+                qualityPromises: 'fa-shield-alt',
+                whyChooseUs: 'fa-question-circle'
             };
             document.getElementById('pageTitle').innerHTML =
                 `<i class="fas ${icons[tab]} text-kumkum" style="margin-right:0.6rem;"></i>${titles[tab] || 'Dashboard'}`;
@@ -2138,6 +2280,7 @@
             else if (tab === 'story') loadStoryData();
             else if (tab === 'coreValues') loadCoreValues();
             else if (tab === 'qualityPromises') loadQualityPromises();
+            else if (tab === 'whyChooseUs') loadWhyChooseUs();
             else if (tab === 'dashboard') loadDashboard();
 
             if (window.innerWidth < 769) toggleSidebar();
@@ -2196,22 +2339,6 @@
         }
 
         // ============================================================
-        //  UPLOAD FETCH
-        // ============================================================
-        async function uploadFetch(path, formData) {
-            let token = '';
-            try {
-                if (typeof AUTH.getToken === 'function') token = AUTH.getToken() || '';
-                else token = localStorage.getItem('token') || localStorage.getItem('authToken') || '';
-            } catch (e) {}
-            return fetch(path, {
-                method: 'POST',
-                headers: token ? { Authorization: `Bearer ${token}` } : {},
-                body: formData,
-            });
-        }
-
-        // ============================================================
         //  TOGGLE STOCK
         // ============================================================
         function toggleStock() {
@@ -2256,7 +2383,6 @@
 
                 updateCategoryChart(products);
                 updateOrdersChart(orders);
-
             } catch (e) {
                 showToast('Error loading dashboard: ' + e.message, true);
                 console.error(e);
@@ -2270,13 +2396,10 @@
                 const cat = p.category || 'other';
                 categories[cat] = (categories[cat] || 0) + 1;
             });
-
             const labels = Object.keys(categories).map(c => c.charAt(0).toUpperCase() + c.slice(1));
             const data = Object.values(categories);
             const colors = ['#E8A33D', '#A63A2E', '#5F7A4F', '#3b82f6', '#8b5cf6', '#ec4899'];
-
             if (categoryChartInstance) categoryChartInstance.destroy();
-
             categoryChartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
@@ -2292,15 +2415,8 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                boxWidth: 12,
-                                padding: 10,
-                                font: { size: 10, family: 'Poppins' },
-                                color: '#3A2417'
-                            }
-                        }
+                        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10, font: { size: 10,
+                                family: 'Poppins' }, color: '#3A2417' } }
                     },
                     cutout: '60%',
                 }
@@ -2321,12 +2437,9 @@
                 const key = d.toLocaleString('default', { month: 'short' });
                 if (months[key] !== undefined) months[key] += 1;
             });
-
             const labels = Object.keys(months);
             const data = Object.values(months);
-
             if (ordersChartInstance) ordersChartInstance.destroy();
-
             ordersChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -2353,116 +2466,112 @@
         }
 
         // ============================================================
-        //  IMAGE UPLOAD (for products)
+        //  PRODUCTS – MULTI-IMAGE HANDLING (fixed image URLs)
         // ============================================================
-        const imageFileInput = document.getElementById('pImageFile');
-        const imagePreview = document.getElementById('pImagePreview');
+        const imageFilesInput = document.getElementById('pImageFiles');
+        const imagePreviewGrid = document.getElementById('imagePreviewGrid');
         const imageUploadStatus = document.getElementById('imageUploadStatus');
-        const pImageHidden = document.getElementById('pImage');
+        const pExistingImages = document.getElementById('pExistingImages');
 
-        imageFileInput.addEventListener('change', async () => {
-            const file = imageFileInput.files[0];
-            if (!file) return;
-
-            const localPreviewUrl = URL.createObjectURL(file);
-            imagePreview.src = localPreviewUrl;
-            imagePreview.classList.add('show');
-
-            imageUploadStatus.textContent = 'Uploading...';
-            imageUploadStatus.className = 'image-upload-status uploading';
-
-            try {
-                const formData = new FormData();
-                formData.append('image', file);
-                const res = await uploadFetch(`${API_BASE_URL}/api/upload`, formData);
-                const data = await res.json();
-                if (!res.ok || !data.success) throw new Error(data.message || 'Upload failed');
-                pImageHidden.value = data.url;
-                imageUploadStatus.textContent = 'Image uploaded ✓';
-                imageUploadStatus.className = 'image-upload-status success';
-            } catch (e) {
-                console.error(e);
-                imageUploadStatus.textContent = e instanceof TypeError ?
-                    "Can't reach the server. Check backend & API_BASE_URL." :
-                    "Couldn't upload image. Please try again.";
-                imageUploadStatus.className = 'image-upload-status error';
-                pImageHidden.value = '';
+        // Helper: build full image URL from filename
+        function getImageUrl(filename) {
+            if (!filename) return null;
+            if (filename.startsWith('http://') || filename.startsWith('https://')) {
+                return filename;
             }
+            return `${API_BASE_URL}/uploads/products/${filename}`;
+        }
+
+        function renderImagePreviews(files = [], existingUrls = []) {
+            imagePreviewGrid.innerHTML = '';
+            // Show existing images first
+            existingUrls.forEach((url, index) => {
+                const fullUrl = getImageUrl(url);
+                if (!fullUrl) return;
+                const wrapper = document.createElement('div');
+                wrapper.className = 'image-preview-item';
+                wrapper.innerHTML = `
+                        <img src="${fullUrl}" alt="Product image ${index+1}" />
+                        <button type="button" class="remove-img" data-url="${url}" title="Remove image">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                wrapper.querySelector('.remove-img').addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    removeExistingImage(this.dataset.url);
+                });
+                imagePreviewGrid.appendChild(wrapper);
+            });
+
+            // Show newly selected files (local previews)
+            for (let file of files) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'image-preview-item';
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    wrapper.innerHTML = `
+                            <img src="${e.target.result}" alt="New upload" />
+                            <button type="button" class="remove-img" data-file="${file.name}" title="Remove">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        `;
+                    wrapper.querySelector('.remove-img').addEventListener('click', function() {
+                        const currentFiles = Array.from(imageFilesInput.files);
+                        const filtered = currentFiles.filter(f => f.name !== this.dataset.file);
+                        const dataTransfer = new DataTransfer();
+                        filtered.forEach(f => dataTransfer.items.add(f));
+                        imageFilesInput.files = dataTransfer.files;
+                        renderImagePreviews(Array.from(imageFilesInput.files), getCurrentExistingImages());
+                        updateUploadStatus();
+                    });
+                };
+                reader.readAsDataURL(file);
+                imagePreviewGrid.appendChild(wrapper);
+            }
+            updateUploadStatus();
+        }
+
+        function getCurrentExistingImages() {
+            const existing = document.getElementById('pExistingImages').value;
+            return existing ? existing.split(',') : [];
+        }
+
+        function setExistingImages(urls) {
+            document.getElementById('pExistingImages').value = urls.join(',');
+        }
+
+        function removeExistingImage(url) {
+            let existing = getCurrentExistingImages();
+            existing = existing.filter(u => u !== url);
+            setExistingImages(existing);
+            renderImagePreviews(Array.from(imageFilesInput.files), existing);
+        }
+
+        function updateUploadStatus() {
+            const total = getCurrentExistingImages().length + imageFilesInput.files.length;
+            if (total === 0) {
+                imageUploadStatus.textContent = 'No images selected. Please upload at least one.';
+                imageUploadStatus.className = 'image-upload-status error';
+            } else {
+                imageUploadStatus.textContent = `${total} image(s) ready (max 3)`;
+                imageUploadStatus.className = 'image-upload-status success';
+            }
+        }
+
+        imageFilesInput.addEventListener('change', function() {
+            const files = Array.from(this.files);
+            if (files.length + getCurrentExistingImages().length > 3) {
+                alert('You can upload a maximum of 3 images.');
+                this.value = '';
+                return;
+            }
+            renderImagePreviews(files, getCurrentExistingImages());
         });
 
-        // ============================================================
-        //  WEIGHT OPTIONS
-        // ============================================================
-        const weightOptionsList = document.getElementById('weightOptionsList');
-
-        function addWeightRow(label = '', price = '') {
-            const row = document.createElement('div');
-            row.className = 'weight-row';
-            row.innerHTML = `
-            <input type="text" class="weight-label" placeholder="e.g. 1 Kg" value="${label}">
-            <input type="number" class="weight-price" placeholder="Price (₹)" min="0" step="0.01" value="${price}">
-            <button type="button" class="btn-icon-remove" title="Remove" onclick="this.closest('.weight-row').remove()">
-              <i class="fas fa-trash-alt"></i>
-            </button>
-          `;
-            weightOptionsList.appendChild(row);
-        }
-
-        function getWeightOptions() {
-            return [...weightOptionsList.querySelectorAll('.weight-row')]
-                .map(row => ({
-                    label: row.querySelector('.weight-label').value.trim(),
-                    price: parseFloat(row.querySelector('.weight-price').value),
-                }))
-                .filter(w => w.label && !isNaN(w.price));
-        }
-
-        function setWeightOptions(options = []) {
-            weightOptionsList.innerHTML = '';
-            if (!options.length) { addWeightRow(); return; }
-            options.forEach(w => addWeightRow(w.label, w.price));
-        }
-
-        // ============================================================
-        //  LIST HELPERS
-        // ============================================================
-        function textToList(text) { return text.split('\n').map(l => l.trim()).filter(Boolean); }
-
-        function listToText(list = []) { return (list || []).join('\n'); }
-
-        // ============================================================
-        //  PRODUCTS CRUD
-        // ============================================================
-        async function loadProducts() {
-            try {
-                const res = await apiFetch('/api/products');
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const data = await safeJson(res);
-                const tbody = document.getElementById('productsTableBody');
-                if (!data.length) {
-                    tbody.innerHTML =
-                        `<tr><td colspan="6"><div class="empty-state"><i class="fas fa-box-open"></i> No products found</div></td></tr>`;
-                    return;
-                }
-                tbody.innerHTML = data.map(p => `
-              <tr>
-                <td>${p.image ? `<img src="${p.image}" alt="${p.name}" class="w-9 h-9 rounded-lg object-cover">` : '<span style="color:#cbb9ab;"><i class="fas fa-image"></i></span>'}</td>
-                <td class="font-medium">${p.name}</td>
-                <td>₹${p.price}</td>
-                <td><span style="background:#fef3e2;color:#8a5a2a;padding:0.1rem 0.6rem;border-radius:999px;font-size:0.65rem;">${p.category}</span></td>
-                <td>${p.inStock ? '<span style="color:#5F7A4F;"><i class="fas fa-check-circle"></i> In Stock</span>' : '<span style="color:#dc2626;"><i class="fas fa-times-circle"></i> Out of Stock</span>'}</td>
-                <td>
-                  <div class="actions-cell">
-                    <button class="btn-edit" onclick="editProduct('${p._id}')"><i class="fas fa-edit"></i></button>
-                    <button class="btn-danger" onclick="deleteProduct('${p._id}')"><i class="fas fa-trash-alt"></i></button>
-                  </div>
-                </td>
-              </tr>
-            `).join('');
-            } catch (e) {
-                showToast('Failed to load products: ' + e.message, true);
-                console.error(e);
-            }
+        function populateExistingImages(urls) {
+            if (!urls) urls = [];
+            setExistingImages(urls);
+            renderImagePreviews([], urls);
         }
 
         function openProductModal(data = null) {
@@ -2492,13 +2601,9 @@
                 label.textContent = 'No, out of stock';
             }
 
-            pImageHidden.value = data?.image || '';
-            if (data?.image) { imagePreview.src = data.image;
-                imagePreview.classList.add('show'); } else { imagePreview.src = '';
-                imagePreview.classList.remove('show'); }
-            imageUploadStatus.textContent = '';
-            imageUploadStatus.className = 'image-upload-status';
-            imageFileInput.value = '';
+            const images = data?.images || (data?.image ? [data.image] : []);
+            populateExistingImages(images);
+            imageFilesInput.value = '';
 
             setWeightOptions(data?.weightOptions || []);
             openModal('productModal');
@@ -2521,36 +2626,63 @@
             const id = document.getElementById('productId').value;
             const saveBtn = document.getElementById('productSaveBtn');
 
-            if (!pImageHidden.value) {
-                imageUploadStatus.textContent = 'Please upload a product photo before saving.';
+            const existingImages = getCurrentExistingImages();
+            const newFiles = Array.from(imageFilesInput.files);
+
+            if (existingImages.length === 0 && newFiles.length === 0) {
+                imageUploadStatus.textContent = 'Please add at least one product image.';
                 imageUploadStatus.className = 'image-upload-status error';
                 return;
             }
 
-            const payload = {
+            const total = existingImages.length + newFiles.length;
+            if (total > 3) {
+                imageUploadStatus.textContent = `You have ${total} images, maximum is 3.`;
+                imageUploadStatus.className = 'image-upload-status error';
+                return;
+            }
+
+            const formData = new FormData();
+            const fields = {
                 name: document.getElementById('pName').value.trim(),
                 description: document.getElementById('pDesc').value.trim(),
-                price: parseFloat(document.getElementById('pPrice').value),
+                price: document.getElementById('pPrice').value,
                 category: document.getElementById('pCategory').value,
-                image: pImageHidden.value.trim(),
-                weightOptions: getWeightOptions(),
-                features: textToList(document.getElementById('pFeatures').value),
-                ingredients: textToList(document.getElementById('pIngredients').value),
-                benefits: textToList(document.getElementById('pBenefits').value),
-                inStock: document.getElementById('pInStock').value === 'true',
+                features: JSON.stringify(textToList(document.getElementById('pFeatures').value)),
+                ingredients: JSON.stringify(textToList(document.getElementById('pIngredients').value)),
+                benefits: JSON.stringify(textToList(document.getElementById('pBenefits').value)),
+                inStock: document.getElementById('pInStock').value,
+                weightOptions: JSON.stringify(getWeightOptions()),
             };
+            Object.keys(fields).forEach(key => formData.append(key, fields[key]));
+            formData.append('existingImages', JSON.stringify(existingImages));
+            newFiles.forEach(file => formData.append('images', file));
 
             saveBtn.disabled = true;
             saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
 
             try {
-                let res;
-                if (id) {
-                    res = await apiFetch('/api/products/' + id, { method: 'PUT', body: JSON.stringify(payload) });
-                } else {
-                    res = await apiFetch('/api/products', { method: 'POST', body: JSON.stringify(payload) });
+                let token = '';
+                try {
+                    if (typeof AUTH.getToken === 'function') token = AUTH.getToken() || '';
+                    else token = localStorage.getItem('token') || localStorage.getItem('authToken') || '';
+                } catch (e) {}
+
+                const url = id ? `${API_BASE_URL}/api/products/${id}` : `${API_BASE_URL}/api/products`;
+                const method = id ? 'PUT' : 'POST';
+
+                const res = await fetch(url, {
+                    method: method,
+                    headers: token ? { Authorization: `Bearer ${token}` } : {},
+                    body: formData,
+                });
+
+                if (!res.ok) {
+                    const errData = await res.json().catch(() => ({}));
+                    throw new Error(errData.message || `HTTP ${res.status}`);
                 }
-                if (!res.ok) throw new Error('Failed to save product');
+
+                const result = await res.json();
                 showToast(id ? 'Product updated' : 'Product created');
                 closeModal('productModal');
                 loadProducts();
@@ -2563,6 +2695,41 @@
                 saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Product';
             }
         });
+
+        async function loadProducts() {
+            try {
+                const res = await apiFetch('/api/products');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await safeJson(res);
+                const tbody = document.getElementById('productsTableBody');
+                if (!data.length) {
+                    tbody.innerHTML =
+                        `<tr><td colspan="6"><div class="empty-state"><i class="fas fa-box-open"></i> No products found</div></td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = data.map(p => {
+                    const img = p.image || (p.images && p.images.length ? p.images[0] : null);
+                    const imgUrl = img ? getImageUrl(img) : null;
+                    return `
+                        <tr>
+                            <td>${imgUrl ? `<img src="${imgUrl}" alt="${p.name}" class="w-9 h-9 rounded-lg object-cover" />` : '<span style="color:#cbb9ab;"><i class="fas fa-image"></i></span>'}</td>
+                            <td class="font-medium">${p.name}</td>
+                            <td>₹${p.price}</td>
+                            <td><span style="background:#fef3e2;color:#8a5a2a;padding:0.1rem 0.6rem;border-radius:999px;font-size:0.65rem;">${p.category}</span></td>
+                            <td>${p.inStock ? '<span style="color:#5F7A4F;"><i class="fas fa-check-circle"></i> In Stock</span>' : '<span style="color:#dc2626;"><i class="fas fa-times-circle"></i> Out of Stock</span>'}</td>
+                            <td>
+                            <div class="actions-cell">
+                                <button class="btn-edit" onclick="editProduct('${p._id}')"><i class="fas fa-edit"></i></button>
+                                <button class="btn-danger" onclick="deleteProduct('${p._id}')"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                            </td>
+                        </tr>
+                    `}).join('');
+            } catch (e) {
+                showToast('Failed to load products: ' + e.message, true);
+                console.error(e);
+            }
+        }
 
         async function deleteProduct(id) {
             if (!confirm('Delete this product?')) return;
@@ -2593,18 +2760,18 @@
                     return;
                 }
                 tbody.innerHTML = data.map(t => `
-              <tr>
-                <td class="font-medium">${t.name}</td>
-                <td>${'⭐'.repeat(t.rating)}</td>
-                <td class="max-w-xs truncate">${t.text}</td>
-                <td>
-                  <div class="actions-cell">
-                    <button class="btn-edit" onclick="editTestimonial('${t._id}')"><i class="fas fa-edit"></i></button>
-                    <button class="btn-danger" onclick="deleteTestimonial('${t._id}')"><i class="fas fa-trash-alt"></i></button>
-                  </div>
-                </td>
-              </tr>
-            `).join('');
+                        <tr>
+                            <td class="font-medium">${t.name}</td>
+                            <td>${'⭐'.repeat(t.rating)}</td>
+                            <td class="max-w-xs truncate">${t.text}</td>
+                            <td>
+                            <div class="actions-cell">
+                                <button class="btn-edit" onclick="editTestimonial('${t._id}')"><i class="fas fa-edit"></i></button>
+                                <button class="btn-danger" onclick="deleteTestimonial('${t._id}')"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                            </td>
+                        </tr>
+                    `).join('');
             } catch (e) {
                 showToast('Failed to load testimonials: ' + e.message, true);
                 console.error(e);
@@ -2677,7 +2844,7 @@
         }
 
         // ============================================================
-        //  ORDERS CRUD
+        //  ORDERS CRUD (full)
         // ============================================================
         async function loadOrders() {
             try {
@@ -2691,20 +2858,20 @@
                     return;
                 }
                 tbody.innerHTML = data.map(o => `
-              <tr>
-                <td class="font-mono text-xs">#${o._id.slice(-6)}</td>
-                <td>${o.customer.name}<br><span class="text-xs text-slate-400">${o.customer.email}</span></td>
-                <td>₹${o.totalAmount}</td>
-                <td><span class="badge-status ${o.status}">${o.status}</span></td>
-                <td>${new Date(o.createdAt).toLocaleDateString()}</td>
-                <td>
-                  <div class="actions-cell">
-                    <button class="btn-edit" onclick="openOrderStatusModal('${o._id}','${o.status}')"><i class="fas fa-sync-alt"></i></button>
-                    <button class="btn-danger" onclick="deleteOrder('${o._id}')"><i class="fas fa-trash-alt"></i></button>
-                  </div>
-                </td>
-              </tr>
-            `).join('');
+                        <tr>
+                            <td class="font-mono text-xs">#${o._id.slice(-6)}</td>
+                            <td>${o.customer.name}<br><span class="text-xs text-slate-400">${o.customer.email}</span></td>
+                            <td>₹${o.totalAmount}</td>
+                            <td><span class="badge-status ${o.status}">${o.status}</span></td>
+                            <td>${new Date(o.createdAt).toLocaleDateString()}</td>
+                            <td>
+                            <div class="actions-cell">
+                                <button class="btn-edit" onclick="openOrderStatusModal('${o._id}','${o.status}')"><i class="fas fa-sync-alt"></i></button>
+                                <button class="btn-danger" onclick="deleteOrder('${o._id}')"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                            </td>
+                        </tr>
+                    `).join('');
             } catch (e) {
                 showToast('Failed to load orders: ' + e.message, true);
                 console.error(e);
@@ -2748,7 +2915,7 @@
         }
 
         // ============================================================
-        //  CONTACT MESSAGES
+        //  CONTACTS CRUD
         // ============================================================
         async function loadContacts() {
             try {
@@ -2762,16 +2929,16 @@
                     return;
                 }
                 tbody.innerHTML = data.map(c => `
-              <tr>
-                <td class="font-medium">${c.name}</td>
-                <td><a href="mailto:${c.email}" class="text-kumkum underline">${c.email}</a></td>
-                <td class="max-w-xs truncate">${c.message}</td>
-                <td>${new Date(c.createdAt).toLocaleDateString()}</td>
-                <td>
-                  <button class="btn-danger" onclick="deleteContact('${c._id}')"><i class="fas fa-trash-alt"></i></button>
-                </td>
-              </tr>
-            `).join('');
+                        <tr>
+                            <td class="font-medium">${c.name}</td>
+                            <td><a href="mailto:${c.email}" class="text-kumkum underline">${c.email}</a></td>
+                            <td class="max-w-xs truncate">${c.message}</td>
+                            <td>${new Date(c.createdAt).toLocaleDateString()}</td>
+                            <td>
+                            <button class="btn-danger" onclick="deleteContact('${c._id}')"><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                    `).join('');
             } catch (e) {
                 showToast('Failed to load messages: ' + e.message, true);
                 console.error(e);
@@ -2793,7 +2960,7 @@
         }
 
         // ============================================================
-        //  HERO MANAGEMENT
+        //  HERO MANAGEMENT (full)
         // ============================================================
         function renderHeroStats(stats) {
             const container = document.getElementById('heroStatsList');
@@ -2802,10 +2969,10 @@
                 const row = document.createElement('div');
                 row.className = 'hero-stat-row';
                 row.innerHTML = `
-                    <input type="text" class="stat-label" placeholder="Label e.g. Years Crafting" value="${stat.label || ''}" data-index="${index}" />
-                    <input type="text" class="stat-value" placeholder="Value e.g. 9" value="${stat.value || ''}" data-index="${index}" />
-                    <input type="text" class="stat-suffix" placeholder="Suffix e.g. +" value="${stat.suffix || ''}" data-index="${index}" style="max-width:60px;" />
-                `;
+                        <input type="text" class="stat-label" placeholder="Label e.g. Years Crafting" value="${stat.label || ''}" data-index="${index}" />
+                        <input type="text" class="stat-value" placeholder="Value e.g. 9" value="${stat.value || ''}" data-index="${index}" />
+                        <input type="text" class="stat-suffix" placeholder="Suffix e.g. +" value="${stat.suffix || ''}" data-index="${index}" style="max-width:60px;" />
+                    `;
                 container.appendChild(row);
             });
         }
@@ -2832,10 +2999,8 @@
             document.getElementById('previewTitle').innerHTML = data.title || '';
             document.getElementById('previewSubtitle').textContent = data.subtitle || '';
             document.getElementById('previewCta').textContent = (data.ctaText || 'Shop') + ' →';
-
             const statsHtml = (data.stats || []).map(s => `${s.value || '0'}${s.suffix || ''} ${s.label || ''}`).join(' · ');
             document.getElementById('previewStats').innerHTML = statsHtml || '';
-
             const previewDiv = document.getElementById('heroImagePreview');
             if (data.heroImage) {
                 previewDiv.style.backgroundImage = `url('${data.heroImage}')`;
@@ -2865,13 +3030,8 @@
             try {
                 sourceText.textContent = 'Loading...';
                 const res = await apiFetch('/api/hero');
-
-                if (!res.ok) {
-                    throw new Error(`HTTP ${res.status}`);
-                }
-
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await safeJson(res);
-
                 if (data && data.title) {
                     heroData = data;
                     isUsingHeroFallback = false;
@@ -2883,9 +3043,7 @@
                     document.getElementById('navHeroCount').textContent = '1';
                     return;
                 }
-
                 throw new Error('Invalid hero data from server');
-
             } catch (e) {
                 console.warn('⚠️ Using fallback for hero data:', e.message);
                 isUsingHeroFallback = true;
@@ -2936,23 +3094,16 @@
                     saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
                     return;
                 }
-
-                const res = await apiFetch('/api/hero', {
-                    method: 'PUT',
-                    body: JSON.stringify(payload),
-                });
-
+                const res = await apiFetch('/api/hero', { method: 'PUT', body: JSON.stringify(payload) });
                 if (!res.ok) {
                     const errorData = await res.json().catch(() => ({}));
                     throw new Error(errorData.message || `HTTP ${res.status}`);
                 }
-
                 const data = await safeJson(res);
                 heroData = data;
                 updateHeroPreview(data);
                 showToast('✅ Hero section updated successfully!');
                 loadDashboard();
-
             } catch (e) {
                 showToast('❌ Error saving hero: ' + e.message, true);
                 console.error(e);
@@ -2977,20 +3128,8 @@
             }
         });
 
-        document.getElementById('heroImage').addEventListener('input', function() {
-            const previewDiv = document.getElementById('heroImagePreview');
-            const url = this.value.trim();
-            if (url) {
-                previewDiv.style.backgroundImage = `url('${url}')`;
-                previewDiv.textContent = '';
-            } else {
-                previewDiv.style.backgroundImage = 'none';
-                previewDiv.innerHTML = '<i class="fas fa-image mr-2"></i> No image loaded';
-            }
-        });
-
         // ============================================================
-        //  COMPANIES CRUD
+        //  COMPANIES CRUD (full)
         // ============================================================
         const companyImageFileInput = document.getElementById('cLogoFile');
         const companyImagePreview = document.getElementById('cLogoPreview');
@@ -2999,11 +3138,9 @@
         companyImageFileInput.addEventListener('change', () => {
             const file = companyImageFileInput.files[0];
             if (!file) return;
-
             const localPreviewUrl = URL.createObjectURL(file);
             companyImagePreview.src = localPreviewUrl;
             companyImagePreview.classList.add('show');
-
             companyImageUploadStatus.textContent = 'Logo selected ✓';
             companyImageUploadStatus.className = 'image-upload-status success';
         });
@@ -3024,30 +3161,27 @@
                 const json = await safeJson(res);
                 const data = json.data || json;
                 const tbody = document.getElementById('companiesTableBody');
-
                 document.getElementById('navCompanyCount').textContent = data.length;
-
                 if (!data.length) {
                     tbody.innerHTML =
                         `<tr><td colspan="6"><div class="empty-state"><i class="fas fa-building"></i> No companies found</div></td></tr>`;
                     return;
                 }
-
                 tbody.innerHTML = data.map(c => `
-              <tr>
-                <td>${c.logo ? `<img src="${c.logo}" alt="${c.altText || c.name}" class="w-9 h-9 rounded-lg object-cover" style="background:#f8f2ea;">` : '<span style="color:#cbb9ab;"><i class="fas fa-image"></i></span>'}</td>
-                <td class="font-medium">${c.name}</td>
-                <td class="max-w-xs truncate">${c.altText || ''}</td>
-                <td>${c.order ?? 0}</td>
-                <td><span class="status-badge ${c.isActive ? 'active' : 'inactive'}">${c.isActive ? 'Active' : 'Inactive'}</span></td>
-                <td>
-                  <div class="actions-cell">
-                    <button class="btn-edit" onclick="editCompany('${c._id}')"><i class="fas fa-edit"></i></button>
-                    <button class="btn-danger" onclick="deleteCompany('${c._id}')"><i class="fas fa-trash-alt"></i></button>
-                  </div>
-                </td>
-              </tr>
-            `).join('');
+                        <tr>
+                            <td>${c.logo ? `<img src="${c.logo}" alt="${c.altText || c.name}" class="w-9 h-9 rounded-lg object-cover" style="background:#f8f2ea;">` : '<span style="color:#cbb9ab;"><i class="fas fa-image"></i></span>'}</td>
+                            <td class="font-medium">${c.name}</td>
+                            <td class="max-w-xs truncate">${c.altText || ''}</td>
+                            <td>${c.order ?? 0}</td>
+                            <td><span class="status-badge ${c.isActive ? 'active' : 'inactive'}">${c.isActive ? 'Active' : 'Inactive'}</span></td>
+                            <td>
+                            <div class="actions-cell">
+                                <button class="btn-edit" onclick="editCompany('${c._id}')"><i class="fas fa-edit"></i></button>
+                                <button class="btn-danger" onclick="deleteCompany('${c._id}')"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                            </td>
+                        </tr>
+                    `).join('');
             } catch (e) {
                 showToast('Failed to load companies: ' + e.message, true);
                 console.error(e);
@@ -3062,7 +3196,6 @@
             document.getElementById('cName').value = data?.name || '';
             document.getElementById('cAltText').value = data?.altText || '';
             document.getElementById('cOrder').value = data?.order ?? 0;
-
             const isActive = data?.isActive !== undefined ? data.isActive : true;
             const toggle = document.getElementById('companyActiveToggle');
             const hidden = document.getElementById('cIsActive');
@@ -3076,7 +3209,6 @@
                 hidden.value = 'false';
                 label.textContent = 'No, hidden';
             }
-
             if (data?.logo) {
                 companyImagePreview.src = data.logo;
                 companyImagePreview.classList.add('show');
@@ -3087,7 +3219,6 @@
             companyImageUploadStatus.textContent = '';
             companyImageUploadStatus.className = 'image-upload-status';
             companyImageFileInput.value = '';
-
             openModal('companyModal');
         }
 
@@ -3108,16 +3239,13 @@
             const id = document.getElementById('companyId').value;
             const saveBtn = document.getElementById('companySaveBtn');
             const file = companyImageFileInput.files[0];
-
             if (!id && !file) {
                 companyImageUploadStatus.textContent = 'Please select a logo image before saving.';
                 companyImageUploadStatus.className = 'image-upload-status error';
                 return;
             }
-
             saveBtn.disabled = true;
             saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-
             try {
                 const formData = new FormData();
                 formData.append('name', document.getElementById('cName').value.trim());
@@ -3138,12 +3266,10 @@
                     headers: token ? { Authorization: `Bearer ${token}` } : {},
                     body: formData,
                 });
-
                 const json = await res.json().catch(() => ({}));
                 if (!res.ok || json.success === false) {
                     throw new Error(json.message || 'Failed to save company');
                 }
-
                 showToast(id ? 'Company updated' : 'Company created');
                 closeModal('companyModal');
                 loadCompanies();
@@ -3172,7 +3298,7 @@
         }
 
         // ============================================================
-        //  OUR STORY MANAGEMENT
+        //  STORY MANAGEMENT (full)
         // ============================================================
         const DEFAULT_STORY = {
             badge: 'Our Story',
@@ -3195,7 +3321,6 @@
             document.getElementById('storyPreviewHeading').textContent = data.heading || '';
             document.getElementById('storyPreviewYear').textContent = data.year || '';
             document.getElementById('storyPreviewYearLabel').textContent = data.yearLabel || '';
-
             const paras = Array.isArray(data.paragraphs) ? data.paragraphs : [];
             const preview = document.getElementById('storyPreviewParagraphs');
             preview.innerHTML = paras.length ?
@@ -3226,16 +3351,12 @@
             const sourceText = document.getElementById('storySourceText');
             const sourceBadge = document.getElementById('storySourceBadge');
             const apiStatus = document.getElementById('storyApiStatus');
-
             try {
                 sourceText.textContent = 'Loading...';
                 const res = await apiFetch('/api/story');
-
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
                 const json = await safeJson(res);
                 const data = json.data || json;
-
                 if (data && data.heading) {
                     storyData = data;
                     isUsingStoryFallback = false;
@@ -3247,7 +3368,6 @@
                     document.getElementById('navStoryCount').textContent = '1';
                     return;
                 }
-
                 throw new Error('Invalid story data from server');
             } catch (e) {
                 console.warn('⚠️ Using fallback for story data:', e.message);
@@ -3268,16 +3388,13 @@
             const saveBtn = document.querySelector('#tab-story .btn-primary');
             saveBtn.disabled = true;
             saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-
             const payload = getStoryFormData();
-
             if (!payload.heading) {
                 showToast('Please enter a heading.', true);
                 saveBtn.disabled = false;
                 saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
                 return;
             }
-
             try {
                 if (isUsingStoryFallback) {
                     storyData = payload;
@@ -3287,17 +3404,11 @@
                     saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
                     return;
                 }
-
-                const res = await apiFetch('/api/story', {
-                    method: 'PUT',
-                    body: JSON.stringify(payload),
-                });
-
+                const res = await apiFetch('/api/story', { method: 'PUT', body: JSON.stringify(payload) });
                 if (!res.ok) {
                     const errorData = await res.json().catch(() => ({}));
                     throw new Error(errorData.message || `HTTP ${res.status}`);
                 }
-
                 const json = await safeJson(res);
                 const data = json.data || json;
                 storyData = data;
@@ -3319,7 +3430,7 @@
         });
 
         // ============================================================
-        //  CORE VALUES CRUD
+        //  CORE VALUES CRUD (full)
         // ============================================================
         function toggleCoreValueActive() {
             const toggle = document.getElementById('coreValueActiveToggle');
@@ -3338,14 +3449,11 @@
         cvIconFileInput.addEventListener('change', async () => {
             const file = cvIconFileInput.files[0];
             if (!file) return;
-
             const localPreviewUrl = URL.createObjectURL(file);
             cvIconPreview.src = localPreviewUrl;
             cvIconPreview.classList.add('show');
-
             cvIconUploadStatus.textContent = 'Uploading...';
             cvIconUploadStatus.className = 'image-upload-status uploading';
-
             try {
                 const formData = new FormData();
                 formData.append('image', file);
@@ -3379,30 +3487,27 @@
                 const json = await safeJson(res);
                 const data = (json.data || json).slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
                 const tbody = document.getElementById('coreValuesTableBody');
-
                 document.getElementById('navCoreValueCount').textContent = data.length;
-
                 if (!data.length) {
                     tbody.innerHTML =
                         `<tr><td colspan="6"><div class="empty-state"><i class="fas fa-gem"></i> No core values found</div></td></tr>`;
                     return;
                 }
-
                 tbody.innerHTML = data.map(v => `
-              <tr>
-                <td>${renderCoreValueIconCell(v)}</td>
-                <td class="font-medium">${v.title}</td>
-                <td class="max-w-xs truncate">${v.description || ''}</td>
-                <td>${v.order ?? 0}</td>
-                <td><span class="status-badge ${v.isActive ? 'active' : 'inactive'}">${v.isActive ? 'Active' : 'Inactive'}</span></td>
-                <td>
-                  <div class="actions-cell">
-                    <button class="btn-edit" onclick="editCoreValue('${v._id}')"><i class="fas fa-edit"></i></button>
-                    <button class="btn-danger" onclick="deleteCoreValue('${v._id}')"><i class="fas fa-trash-alt"></i></button>
-                  </div>
-                </td>
-              </tr>
-            `).join('');
+                        <tr>
+                            <td>${renderCoreValueIconCell(v)}</td>
+                            <td class="font-medium">${v.title}</td>
+                            <td class="max-w-xs truncate">${v.description || ''}</td>
+                            <td>${v.order ?? 0}</td>
+                            <td><span class="status-badge ${v.isActive ? 'active' : 'inactive'}">${v.isActive ? 'Active' : 'Inactive'}</span></td>
+                            <td>
+                            <div class="actions-cell">
+                                <button class="btn-edit" onclick="editCoreValue('${v._id}')"><i class="fas fa-edit"></i></button>
+                                <button class="btn-danger" onclick="deleteCoreValue('${v._id}')"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                            </td>
+                        </tr>
+                    `).join('');
             } catch (e) {
                 showToast('Failed to load core values: ' + e.message, true);
                 console.error(e);
@@ -3418,7 +3523,6 @@
             document.getElementById('cvDescription').value = data?.description || '';
             document.getElementById('cvIconBgColor').value = data?.iconBgColor || 'bg-amber-100';
             document.getElementById('cvOrder').value = data?.order ?? 0;
-
             cvIconHidden.value = data?.icon || '';
             if (data?.icon) {
                 cvIconPreview.src = data.icon;
@@ -3430,7 +3534,6 @@
             cvIconUploadStatus.textContent = '';
             cvIconUploadStatus.className = 'image-upload-status';
             cvIconFileInput.value = '';
-
             const isActive = data?.isActive !== undefined ? data.isActive : true;
             const toggle = document.getElementById('coreValueActiveToggle');
             const hidden = document.getElementById('cvIsActive');
@@ -3444,7 +3547,6 @@
                 hidden.value = 'false';
                 label.textContent = 'No, hidden';
             }
-
             openModal('coreValueModal');
         }
 
@@ -3464,13 +3566,11 @@
             e.preventDefault();
             const id = document.getElementById('coreValueId').value;
             const saveBtn = document.getElementById('coreValueSaveBtn');
-
             if (!cvIconHidden.value) {
                 cvIconUploadStatus.textContent = 'Please upload an icon image before saving.';
                 cvIconUploadStatus.className = 'image-upload-status error';
                 return;
             }
-
             const payload = {
                 title: document.getElementById('cvTitle').value.trim(),
                 description: document.getElementById('cvDescription').value.trim(),
@@ -3479,10 +3579,8 @@
                 order: parseInt(document.getElementById('cvOrder').value, 10) || 0,
                 isActive: document.getElementById('cvIsActive').value === 'true',
             };
-
             saveBtn.disabled = true;
             saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-
             try {
                 let res;
                 if (id) {
@@ -3520,9 +3618,8 @@
         }
 
         // ============================================================
-        //  QUALITY PROMISES CRUD
+        //  QUALITY PROMISES CRUD (full)
         // ============================================================
-
         function toggleQualityPromiseActive() {
             const toggle = document.getElementById('qualityPromiseActiveToggle');
             const hidden = document.getElementById('qpIsActive');
@@ -3547,28 +3644,26 @@
                 const data = (json.data || json).slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
                 const tbody = document.getElementById('qualityPromisesTableBody');
                 document.getElementById('navQualityPromiseCount').textContent = data.length;
-
                 if (!data.length) {
                     tbody.innerHTML =
                         `<tr><td colspan="6"><div class="empty-state"><i class="fas fa-shield-alt"></i> No quality promises found</div></td></tr>`;
                     return;
                 }
-
                 tbody.innerHTML = data.map(p => `
-                    <tr>
-                        <td>${renderQualityPromiseIconCell(p)}</td>
-                        <td class="font-medium">${p.title}</td>
-                        <td class="max-w-xs truncate">${p.description || ''}</td>
-                        <td>${p.order ?? 0}</td>
-                        <td><span class="status-badge ${p.isActive ? 'active' : 'inactive'}">${p.isActive ? 'Active' : 'Inactive'}</span></td>
-                        <td>
+                        <tr>
+                            <td>${renderQualityPromiseIconCell(p)}</td>
+                            <td class="font-medium">${p.title}</td>
+                            <td class="max-w-xs truncate">${p.description || ''}</td>
+                            <td>${p.order ?? 0}</td>
+                            <td><span class="status-badge ${p.isActive ? 'active' : 'inactive'}">${p.isActive ? 'Active' : 'Inactive'}</span></td>
+                            <td>
                             <div class="actions-cell">
                                 <button class="btn-edit" onclick="editQualityPromise('${p._id}')"><i class="fas fa-edit"></i></button>
                                 <button class="btn-danger" onclick="deleteQualityPromise('${p._id}')"><i class="fas fa-trash-alt"></i></button>
                             </div>
-                        </td>
-                    </tr>
-                `).join('');
+                            </td>
+                        </tr>
+                    `).join('');
             } catch (e) {
                 showToast('Failed to load quality promises: ' + e.message, true);
                 console.error(e);
@@ -3583,14 +3678,11 @@
         qpIconFileInput.addEventListener('change', async () => {
             const file = qpIconFileInput.files[0];
             if (!file) return;
-
             const localPreviewUrl = URL.createObjectURL(file);
             qpIconPreview.src = localPreviewUrl;
             qpIconPreview.classList.add('show');
-
             qpIconUploadStatus.textContent = 'Uploading...';
             qpIconUploadStatus.className = 'image-upload-status uploading';
-
             try {
                 const formData = new FormData();
                 formData.append('image', file);
@@ -3619,7 +3711,6 @@
             document.getElementById('qpDescription').value = data?.description || '';
             document.getElementById('qpIconBgColor').value = data?.iconBgColor || 'bg-emerald-400';
             document.getElementById('qpOrder').value = data?.order ?? 0;
-
             qpIconHidden.value = data?.icon || '';
             if (data?.icon) {
                 qpIconPreview.src = data.icon;
@@ -3631,7 +3722,6 @@
             qpIconUploadStatus.textContent = '';
             qpIconUploadStatus.className = 'image-upload-status';
             qpIconFileInput.value = '';
-
             const isActive = data?.isActive !== undefined ? data.isActive : true;
             const toggle = document.getElementById('qualityPromiseActiveToggle');
             const hidden = document.getElementById('qpIsActive');
@@ -3645,7 +3735,6 @@
                 hidden.value = 'false';
                 label.textContent = 'No, hidden';
             }
-
             openModal('qualityPromiseModal');
         }
 
@@ -3665,13 +3754,11 @@
             e.preventDefault();
             const id = document.getElementById('qualityPromiseId').value;
             const saveBtn = document.getElementById('qualityPromiseSaveBtn');
-
             if (!id && !qpIconHidden.value) {
                 qpIconUploadStatus.textContent = 'Please upload an icon image before saving.';
                 qpIconUploadStatus.className = 'image-upload-status error';
                 return;
             }
-
             const payload = {
                 title: document.getElementById('qpTitle').value.trim(),
                 description: document.getElementById('qpDescription').value.trim(),
@@ -3680,15 +3767,12 @@
                 order: parseInt(document.getElementById('qpOrder').value, 10) || 0,
                 isActive: document.getElementById('qpIsActive').value === 'true',
             };
-
             if (!payload.title || !payload.description) {
                 showToast('Please fill in all required fields (title, description).', true);
                 return;
             }
-
             saveBtn.disabled = true;
             saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-
             try {
                 let res;
                 if (id) {
@@ -3727,18 +3811,301 @@
             }
         }
 
-        window.openQualityPromiseModal = openQualityPromiseModal;
-        window.editQualityPromise = editQualityPromise;
-        window.deleteQualityPromise = deleteQualityPromise;
-        window.toggleQualityPromiseActive = toggleQualityPromiseActive;
-        window.loadQualityPromises = loadQualityPromises;
+        // ============================================================
+        //  WHY CHOOSE US CRUD (full)
+        // ============================================================
+        function toggleWcuActive() {
+            const toggle = document.getElementById('wcuActiveToggle');
+            const hidden = document.getElementById('wcuIsActive');
+            const label = document.getElementById('wcuActiveLabel');
+            const isActive = toggle.classList.toggle('active');
+            hidden.value = isActive ? 'true' : 'false';
+            label.textContent = isActive ? 'Yes, visible on site' : 'No, hidden';
+        }
+
+        function toggleWcuHighlighted() {
+            const toggle = document.getElementById('wcuHighlightedToggle');
+            const hidden = document.getElementById('wcuHighlighted');
+            const label = document.getElementById('wcuHighlightedLabel');
+            const isActive = toggle.classList.toggle('active');
+            hidden.value = isActive ? 'true' : 'false';
+            label.textContent = isActive ? 'Yes (highlighted)' : 'No (normal card)';
+        }
+
+        function renderWcuIconCell(item) {
+            const gradient = `bg-gradient-to-br ${item.gradientFrom || 'from-rose-400'} ${item.gradientTo || 'to-pink-500'}`;
+            return item.icon ?
+                `<div class="qp-icon-preview ${gradient}"><img src="${item.icon}" alt="${item.title}" /></div>` :
+                `<div class="qp-icon-preview ${gradient}"><i class="fas fa-question-circle"></i></div>`;
+        }
+
+        async function loadWhyChooseUs() {
+            const tbody = document.getElementById('whyChooseUsTableBody');
+            try {
+                const res = await apiFetch('/api/why-choose-us');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const json = await safeJson(res);
+                const data = (json.data || json).slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+                const count = data.length;
+                document.getElementById('navWhyChooseUsCount').textContent = count;
+                if (!data.length) {
+                    tbody.innerHTML =
+                        `<tr><td colspan="7"><div class="empty-state"><i class="fas fa-question-circle"></i> No items found</div></td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = data.map(item => `
+                        <tr>
+                            <td>${renderWcuIconCell(item)}</td>
+                            <td class="font-medium">${item.title}</td>
+                            <td class="max-w-xs truncate">${item.description || ''}</td>
+                            <td>${item.order ?? 0}</td>
+                            <td>${item.highlighted ? '<span class="badge-status" style="background:#fef3c7;color:#854d0e;">Featured</span>' : ''}</td>
+                            <td><span class="status-badge ${item.isActive ? 'active' : 'inactive'}">${item.isActive ? 'Active' : 'Inactive'}</span></td>
+                            <td>
+                            <div class="actions-cell">
+                                <button class="btn-edit" onclick="editWhyChooseUs('${item._id}')"><i class="fas fa-edit"></i></button>
+                                <button class="btn-danger" onclick="deleteWhyChooseUs('${item._id}')"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                            </td>
+                        </tr>
+                    `).join('');
+            } catch (e) {
+                console.warn('Why Choose Us API unavailable – using fallback data.', e);
+                const fallbackData = FALLBACK_WHY_CHOOSE_US.map(item => ({ ...item, _id: item._id || 'fallback-' + Date
+                        .now() + Math.random() }));
+                document.getElementById('navWhyChooseUsCount').textContent = fallbackData.length;
+                tbody.innerHTML = fallbackData.map(item => `
+                        <tr>
+                            <td>${renderWcuIconCell(item)}</td>
+                            <td class="font-medium">${item.title}</td>
+                            <td class="max-w-xs truncate">${item.description || ''}</td>
+                            <td>${item.order ?? 0}</td>
+                            <td>${item.highlighted ? '<span class="badge-status" style="background:#fef3c7;color:#854d0e;">Featured</span>' : ''}</td>
+                            <td><span class="status-badge ${item.isActive ? 'active' : 'inactive'}">${item.isActive ? 'Active' : 'Inactive'}</span></td>
+                            <td>
+                            <span class="text-xs text-slate-400 italic">(fallback – API unavailable)</span>
+                            </td>
+                        </tr>
+                    `).join('');
+                if (!fallbackShown) {
+                    fallbackShown = true;
+                    showToast('⚠️ Why Choose Us: using fallback data (API not available).', true);
+                }
+            }
+        }
+
+        const wcuIconFileInput2 = document.getElementById('wcuIconFile');
+        const wcuIconPreview2 = document.getElementById('wcuIconPreview');
+        const wcuIconUploadStatus2 = document.getElementById('wcuImageUploadStatus');
+        const wcuIconHidden2 = document.getElementById('wcuIcon');
+
+        wcuIconFileInput2.addEventListener('change', async () => {
+            const file = wcuIconFileInput2.files[0];
+            if (!file) return;
+            const localPreviewUrl = URL.createObjectURL(file);
+            wcuIconPreview2.src = localPreviewUrl;
+            wcuIconPreview2.classList.add('show');
+            wcuIconUploadStatus2.textContent = 'Uploading...';
+            wcuIconUploadStatus2.className = 'image-upload-status uploading';
+            try {
+                const formData = new FormData();
+                formData.append('image', file);
+                const res = await uploadFetch(`${API_BASE_URL}/api/upload`, formData);
+                const data = await res.json();
+                if (!res.ok || !data.success) throw new Error(data.message || 'Upload failed');
+                wcuIconHidden2.value = data.url;
+                wcuIconUploadStatus2.textContent = 'Icon uploaded ✓';
+                wcuIconUploadStatus2.className = 'image-upload-status success';
+            } catch (e) {
+                console.error(e);
+                wcuIconUploadStatus2.textContent = e instanceof TypeError ?
+                    "Can't reach the server. Check backend & API_BASE_URL." :
+                    "Couldn't upload icon. Please try again.";
+                wcuIconUploadStatus2.className = 'image-upload-status error';
+                wcuIconHidden2.value = '';
+            }
+        });
+
+        function openWhyChooseUsModal(data = null) {
+            const isEdit = !!data;
+            document.getElementById('whyChooseUsModalTitle').innerHTML =
+                `<i class="fas fa-question-circle"></i> ${isEdit ? 'Edit Why Choose Us Item' : 'Add Why Choose Us Item'}`;
+            document.getElementById('whyChooseUsId').value = data?._id || '';
+            document.getElementById('wcuTitle').value = data?.title || '';
+            document.getElementById('wcuDescription').value = data?.description || '';
+            document.getElementById('wcuGradientFrom').value = data?.gradientFrom || 'from-rose-400';
+            document.getElementById('wcuGradientTo').value = data?.gradientTo || 'to-pink-500';
+            document.getElementById('wcuOrder').value = data?.order ?? 0;
+            wcuIconHidden2.value = data?.icon || '';
+            if (data?.icon) {
+                wcuIconPreview2.src = data.icon;
+                wcuIconPreview2.classList.add('show');
+            } else {
+                wcuIconPreview2.src = '';
+                wcuIconPreview2.classList.remove('show');
+            }
+            wcuIconUploadStatus2.textContent = '';
+            wcuIconUploadStatus2.className = 'image-upload-status';
+            wcuIconFileInput2.value = '';
+            const highlighted = data?.highlighted || false;
+            const toggle = document.getElementById('wcuHighlightedToggle');
+            const hidden = document.getElementById('wcuHighlighted');
+            const label = document.getElementById('wcuHighlightedLabel');
+            if (highlighted) {
+                toggle.classList.add('active');
+                hidden.value = 'true';
+                label.textContent = 'Yes (highlighted)';
+            } else {
+                toggle.classList.remove('active');
+                hidden.value = 'false';
+                label.textContent = 'No (normal card)';
+            }
+            const isActive = data?.isActive !== undefined ? data.isActive : true;
+            const activeToggle = document.getElementById('wcuActiveToggle');
+            const activeHidden = document.getElementById('wcuIsActive');
+            const activeLabel = document.getElementById('wcuActiveLabel');
+            if (isActive) {
+                activeToggle.classList.add('active');
+                activeHidden.value = 'true';
+                activeLabel.textContent = 'Yes, visible on site';
+            } else {
+                activeToggle.classList.remove('active');
+                activeHidden.value = 'false';
+                activeLabel.textContent = 'No, hidden';
+            }
+            openModal('whyChooseUsModal');
+        }
+
+        async function editWhyChooseUs(id) {
+            try {
+                const res = await apiFetch('/api/why-choose-us/' + id);
+                if (!res.ok) throw new Error('Item not found');
+                const json = await safeJson(res);
+                openWhyChooseUsModal(json.data || json);
+            } catch (e) {
+                showToast('Error loading item: ' + e.message, true);
+                console.error(e);
+            }
+        }
+
+        document.getElementById('whyChooseUsForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('whyChooseUsId').value;
+            const saveBtn = document.getElementById('wcuSaveBtn');
+            if (!id && !wcuIconHidden2.value) {
+                wcuIconUploadStatus2.textContent = 'Please upload an icon image before saving.';
+                wcuIconUploadStatus2.className = 'image-upload-status error';
+                return;
+            }
+            const payload = {
+                title: document.getElementById('wcuTitle').value.trim(),
+                description: document.getElementById('wcuDescription').value.trim(),
+                icon: wcuIconHidden2.value.trim(),
+                gradientFrom: document.getElementById('wcuGradientFrom').value.trim() || 'from-rose-400',
+                gradientTo: document.getElementById('wcuGradientTo').value.trim() || 'to-pink-500',
+                highlighted: document.getElementById('wcuHighlighted').value === 'true',
+                order: parseInt(document.getElementById('wcuOrder').value, 10) || 0,
+                isActive: document.getElementById('wcuIsActive').value === 'true',
+            };
+            if (!payload.title || !payload.description) {
+                showToast('Please fill in all required fields (title, description).', true);
+                return;
+            }
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            try {
+                let res;
+                if (id) {
+                    res = await apiFetch('/api/why-choose-us/' + id, { method: 'PUT', body: JSON.stringify(payload) });
+                } else {
+                    res = await apiFetch('/api/why-choose-us', { method: 'POST', body: JSON.stringify(payload) });
+                }
+                if (!res.ok) {
+                    const errorData = await res.json().catch(() => ({}));
+                    throw new Error(errorData.message || 'Failed to save item');
+                }
+                showToast(id ? 'Item updated' : 'Item created');
+                closeModal('whyChooseUsModal');
+                loadWhyChooseUs();
+                loadDashboard();
+            } catch (e) {
+                showToast('Error saving item: ' + e.message, true);
+                console.error(e);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Item';
+            }
+        });
+
+        async function deleteWhyChooseUs(id) {
+            if (!confirm('Delete this item?')) return;
+            try {
+                const res = await apiFetch('/api/why-choose-us/' + id, { method: 'DELETE' });
+                if (!res.ok) throw new Error('Delete failed');
+                showToast('Item deleted');
+                loadWhyChooseUs();
+                loadDashboard();
+            } catch (e) {
+                showToast('Error deleting item: ' + e.message, true);
+                console.error(e);
+            }
+        }
 
         // ============================================================
-        //  INIT
+        //  WEIGHT OPTIONS HELPERS
         // ============================================================
-        document.querySelector('.nav-item[data-tab="dashboard"]')?.classList.add('active');
-        console.log('NicyFoods Admin · Ready');
+        function addWeightRow(label = '', price = '') {
+            const row = document.createElement('div');
+            row.className = 'weight-row';
+            row.innerHTML = `
+                    <input type="text" class="weight-label" placeholder="e.g. 1 Kg" value="${label}">
+                    <input type="number" class="weight-price" placeholder="Price (₹)" min="0" step="0.01" value="${price}">
+                    <button type="button" class="btn-icon-remove" title="Remove" onclick="this.closest('.weight-row').remove()">
+                    <i class="fas fa-trash-alt"></i>
+                    </button>
+                `;
+            document.getElementById('weightOptionsList').appendChild(row);
+        }
 
+        function getWeightOptions() {
+            return [...document.querySelectorAll('#weightOptionsList .weight-row')]
+                .map(row => ({
+                    label: row.querySelector('.weight-label').value.trim(),
+                    price: parseFloat(row.querySelector('.weight-price').value),
+                }))
+                .filter(w => w.label && !isNaN(w.price));
+        }
+
+        function setWeightOptions(options = []) {
+            const container = document.getElementById('weightOptionsList');
+            container.innerHTML = '';
+            if (!options.length) { addWeightRow(); return; }
+            options.forEach(w => addWeightRow(w.label, w.price));
+        }
+
+        function textToList(text) { return text.split('\n').map(l => l.trim()).filter(Boolean); }
+
+        function listToText(list = []) { return (list || []).join('\n'); }
+
+        // ============================================================
+        //  UPLOAD FETCH (for core values / quality promises / why choose us)
+        // ============================================================
+        async function uploadFetch(path, formData) {
+            let token = '';
+            try {
+                if (typeof AUTH.getToken === 'function') token = AUTH.getToken() || '';
+                else token = localStorage.getItem('token') || localStorage.getItem('authToken') || '';
+            } catch (e) {}
+            return fetch(path, {
+                method: 'POST',
+                headers: token ? { Authorization: `Bearer ${token}` } : {},
+                body: formData,
+            });
+        }
+
+        // ============================================================
+        //  EXPOSE FUNCTIONS TO WINDOW
+        // ============================================================
         window.switchTab = switchTab;
         window.toggleSidebar = toggleSidebar;
         window.openProductModal = openProductModal;
@@ -3767,6 +4134,23 @@
         window.deleteCoreValue = deleteCoreValue;
         window.toggleCoreValueActive = toggleCoreValueActive;
         window.loadCoreValues = loadCoreValues;
+        window.openQualityPromiseModal = openQualityPromiseModal;
+        window.editQualityPromise = editQualityPromise;
+        window.deleteQualityPromise = deleteQualityPromise;
+        window.toggleQualityPromiseActive = toggleQualityPromiseActive;
+        window.loadQualityPromises = loadQualityPromises;
+        window.openWhyChooseUsModal = openWhyChooseUsModal;
+        window.editWhyChooseUs = editWhyChooseUs;
+        window.deleteWhyChooseUs = deleteWhyChooseUs;
+        window.toggleWcuActive = toggleWcuActive;
+        window.toggleWcuHighlighted = toggleWcuHighlighted;
+        window.loadWhyChooseUs = loadWhyChooseUs;
+
+        // ============================================================
+        //  INIT
+        // ============================================================
+        document.querySelector('.nav-item[data-tab="dashboard"]')?.classList.add('active');
+        console.log('NicyFoods Admin · Ready with fixed image URLs and all sections fully expanded.');
     </script>
 </body>
 </html>
