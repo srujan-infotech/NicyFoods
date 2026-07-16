@@ -541,7 +541,6 @@
 
 
 
-
 // -------------------- CONFIG --------------------
 const NAV_API_BASE_URL = "https://nicyfoods.srujaninfotech.com";
 const NAV_LINKS_URL = `${NAV_API_BASE_URL}/api/navlinks`;
@@ -559,29 +558,29 @@ function loadNavbar() {
 
   const navHTML = `
     <div id="site-navbar" class="fixed top-0 left-0 w-full z-[9999]">
-      <nav id="nav-bar-inner" class="bg-jaggery flex items-center justify-between gap-1 sm:gap-2 md:gap-4 px-3 sm:px-4 md:px-10 py-2 sm:py-3 md:py-4 transition-shadow duration-300" style="font-family:'Poppins', sans-serif;">
+      <nav id="nav-bar-inner" class="flex items-center justify-between gap-1 sm:gap-2 md:gap-4 px-3 sm:px-4 md:px-10 py-2 sm:py-3 md:py-4 transition-shadow duration-300" style="font-family:'Poppins', sans-serif;">
 
         <!-- Logo -->
         <div class="flex items-center gap-1.5 sm:gap-2 md:gap-3 flex-shrink-0">
           <a href="index.html" class="flex items-center gap-1.5 sm:gap-2 md:gap-3 group">
             <img src="https://nicyfoods.com/images/logo.png" 
                  alt="NicyFoods Logo" 
-                 class="w-7 h-7 sm:w-9 sm:h-9 md:w-11 md:h-11 rounded-md object-cover ring-2 ring-marigold/30 transition-transform duration-300 group-hover:scale-105"
+                 class="w-7 h-7 sm:w-9 sm:h-9 md:w-11 md:h-11 rounded-md object-cover ring-2 ring-kumkum/25 transition-transform duration-300 group-hover:scale-105"
                  width="44" height="44"
                  onerror="this.style.display='none'">
-            <span class="text-cream text-base sm:text-xl md:text-2xl" style="font-family:'Rozha One', serif;">NicyFoods</span>
+            <span class="text-jaggery text-base sm:text-xl md:text-2xl" style="font-family:'Rozha One', serif;">NicyFoods</span>
           </a>
         </div>
 
         <!-- Desktop Menu -->
-        <ul id="nav-desktop-links" class="hidden md:flex items-center gap-6 lg:gap-8 text-cream font-semibold text-base flex-1 justify-center">
-          <li class="text-cream/50 text-sm">Loading menu…</li>
+        <ul id="nav-desktop-links" class="hidden md:flex items-center gap-6 lg:gap-8 text-jaggery font-semibold text-base flex-1 justify-center">
+          <li class="text-jaggery/50 text-sm">Loading menu…</li>
         </ul>
 
         <!-- Right Icons -->
         <div class="flex items-center gap-1.5 sm:gap-2 md:gap-4 flex-shrink-0">
           <div class="relative hidden sm:block">
-            <button id="search-btn" aria-label="Search" class="nav-icon-btn text-cream hover:text-marigold transition-colors p-1.5">
+            <button id="search-btn" aria-label="Search" class="nav-icon-btn text-jaggery hover:text-kumkum transition-colors p-1.5">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
               </svg>
@@ -597,7 +596,7 @@ function loadNavbar() {
           </div>
 
           <div id="account-container" class="relative">
-            <button id="account-btn" aria-label="Account" class="nav-icon-btn text-cream hover:text-marigold transition-colors flex items-center gap-0.5 p-1.5">
+            <button id="account-btn" aria-label="Account" class="nav-icon-btn text-jaggery hover:text-kumkum transition-colors flex items-center gap-0.5 p-1.5">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
               </svg>
@@ -611,14 +610,14 @@ function loadNavbar() {
             </div>
           </div>
 
-          <a href="wishlist.html" id="wishlist-link" aria-label="Wishlist" class="nav-icon-btn relative text-cream hover:text-marigold transition-colors p-1.5 hidden sm:block">
+          <a href="wishlist.html" id="wishlist-link" aria-label="Wishlist" class="nav-icon-btn relative text-jaggery hover:text-kumkum transition-colors p-1.5 hidden sm:block">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
             </svg>
             <span id="wishlist-badge" class="nav-badge hidden">0</span>
           </a>
 
-          <a href="cart.html" id="cart-link" aria-label="Cart" class="nav-icon-btn relative text-cream hover:text-marigold transition-colors p-1.5">
+          <a href="cart.html" id="cart-link" aria-label="Cart" class="nav-icon-btn relative text-jaggery hover:text-kumkum transition-colors p-1.5">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
               <path d="M1 1h4l2.6 13.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6L23 6H6"/>
@@ -626,7 +625,7 @@ function loadNavbar() {
             <span id="cart-badge" class="nav-badge hidden">0</span>
           </a>
 
-          <button id="menu-btn" class="md:hidden text-cream focus:outline-none p-1.5 hover:text-marigold transition-colors" aria-label="Toggle menu">
+          <button id="menu-btn" class="md:hidden text-jaggery focus:outline-none p-1.5 hover:text-kumkum transition-colors" aria-label="Toggle menu">
             <svg id="menu-icon-open" xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 sm:h-8 sm:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
@@ -639,7 +638,7 @@ function loadNavbar() {
       </nav>
 
       <!-- Mobile menu -->
-      <ul id="mobile-menu" class="mobile-menu-collapsed md:hidden bg-jaggery text-cream font-semibold text-base sm:text-lg flex flex-col gap-0.5 px-4 sm:px-6 overflow-hidden" style="font-family:'Poppins', sans-serif;">
+      <ul id="mobile-menu" class="mobile-menu-collapsed md:hidden text-jaggery font-semibold text-base sm:text-lg flex flex-col gap-0.5 px-4 sm:px-6 overflow-hidden" style="font-family:'Poppins', sans-serif;">
         <div id="mobile-nav-links"></div>
         <div id="mobile-rbac-links"></div>
       </ul>
@@ -649,22 +648,23 @@ function loadNavbar() {
     <div id="navbar-spacer" style="display:block; height:70px; width:100%; flex-shrink:0;"></div>
 
     <style>
-      /* ─── Base navbar styles ─── */
+      /* ─── Base navbar styles (bright / light theme) ─── */
       #site-navbar {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         z-index: 9999;
-        background-color: #5C3A25;
-        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
+        background: linear-gradient(120deg, #FFF8EC 0%, #FFECC7 50%, #FFDCAE 100%);
+        box-shadow: 0 2px 20px rgba(92, 58, 37, 0.12);
       }
       #site-navbar #nav-bar-inner {
-        background-color: #5C3A25;
-        transition: box-shadow 0.3s ease;
+        background: linear-gradient(120deg, #FFF8EC 0%, #FFECC7 50%, #FFDCAE 100%);
+        transition: box-shadow 0.3s ease, background 0.3s ease;
       }
       #site-navbar #nav-bar-inner.nav-scrolled {
-        box-shadow: 0 8px 28px -6px rgba(0, 0, 0, 0.5);
+        background: linear-gradient(120deg, #FFF3DC 0%, #FFE3B0 50%, #FFD79A 100%);
+        box-shadow: 0 8px 28px -6px rgba(92, 58, 37, 0.25);
       }
       #site-navbar .nav-link::after {
         content: '';
@@ -673,7 +673,7 @@ function loadNavbar() {
         bottom: -2px;
         width: 0;
         height: 2px;
-        background: linear-gradient(90deg, #E8A33D, #F2C14E);
+        background: linear-gradient(90deg, #F5A623, #D7263D);
         border-radius: 2px;
         transition: width 0.3s cubic-bezier(0.16, 0.84, 0.44, 1);
       }
@@ -683,7 +683,7 @@ function loadNavbar() {
       }
       #site-navbar .nav-link.nav-active,
       #site-navbar .nav-link-mobile.nav-active {
-        color: #F2C14E;
+        color: #D7263D;
       }
 
       #site-navbar #mobile-menu {
@@ -692,12 +692,16 @@ function loadNavbar() {
         padding-top: 0;
         padding-bottom: 0;
         overflow: hidden;
-        background-color: #5C3A25;
+        background: linear-gradient(180deg, #FFF3DC, #FFE7CE);
       }
       #site-navbar #mobile-menu.mobile-menu-open {
         max-height: 600px;
         padding-top: 0.5rem;
         padding-bottom: 0.5rem;
+      }
+      #site-navbar #mobile-menu a,
+      #site-navbar #mobile-menu button {
+        border-bottom-color: rgba(92, 58, 37, 0.12) !important;
       }
 
       #site-navbar .nav-icon-btn {
@@ -715,8 +719,8 @@ function loadNavbar() {
         position: absolute;
         top: -4px;
         right: -4px;
-        background: #F2C14E;
-        color: #3A2417;
+        background: #D7263D;
+        color: #FFFFFF;
         font-size: 9px;
         font-weight: 700;
         min-width: 16px;
@@ -727,7 +731,7 @@ function loadNavbar() {
         justify-content: center;
         padding: 0 3px;
         line-height: 1;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 2px 6px rgba(215, 38, 61, 0.35);
       }
 
       #site-navbar .nav-search-collapsed {
@@ -772,8 +776,8 @@ function loadNavbar() {
       }
       #account-dropdown a:hover,
       #account-dropdown button:hover {
-        background: rgba(166,58,46,0.08);
-        color: #A63A2E;
+        background: rgba(215,38,61,0.08);
+        color: #D7263D;
       }
       #account-dropdown .dropdown-divider {
         border-top: 1px solid rgba(92,58,37,0.1);
@@ -887,7 +891,7 @@ function loadNavbar() {
         (link) => `
           <li>
             <a href="${escapeHtml(link.url)}" data-page="${escapeHtml(link.url)}"
-               class="nav-link relative pb-1 hover:text-marigold transition-colors">
+               class="nav-link relative pb-1 hover:text-kumkum transition-colors">
               ${escapeHtml(link.label)}
             </a>
           </li>`
@@ -900,7 +904,7 @@ function loadNavbar() {
         (link) => `
           <li>
             <a href="${escapeHtml(link.url)}" data-page="${escapeHtml(link.url)}"
-               class="nav-link-mobile block py-3 border-b border-cream/10 hover:text-marigold hover:pl-2 transition-all">
+               class="nav-link-mobile block py-3 border-b border-jaggery/10 hover:text-kumkum hover:pl-2 transition-all">
               ${escapeHtml(link.label)}
             </a>
           </li>`
@@ -1061,14 +1065,14 @@ function loadNavbar() {
 
     let mobileHtml = "";
     if (isAdmin) {
-      mobileHtml += `<li><a href="admin.html" class="block py-3 border-b border-cream/10 hover:text-marigold hover:pl-2 transition-all">⚙️ Admin</a></li>`;
+      mobileHtml += `<li><a href="admin.html" class="block py-3 border-b border-jaggery/10 hover:text-kumkum hover:pl-2 transition-all">⚙️ Admin</a></li>`;
     }
     if (isLoggedIn) {
-      mobileHtml += `<li><button id="mobile-logout-btn" class="block w-full text-left py-3 hover:text-marigold hover:pl-2 transition-all">🚪 Logout</button></li>`;
+      mobileHtml += `<li><button id="mobile-logout-btn" class="block w-full text-left py-3 hover:text-kumkum hover:pl-2 transition-all">🚪 Logout</button></li>`;
     } else {
       mobileHtml += `
-        <li><a href="login.html" class="block py-3 border-b border-cream/10 hover:text-marigold hover:pl-2 transition-all">🔑 Login</a></li>
-        <li><a href="register.html" class="block py-3 hover:text-marigold hover:pl-2 transition-all">📝 Register</a></li>
+        <li><a href="login.html" class="block py-3 border-b border-jaggery/10 hover:text-kumkum hover:pl-2 transition-all">🔑 Login</a></li>
+        <li><a href="register.html" class="block py-3 hover:text-kumkum hover:pl-2 transition-all">📝 Register</a></li>
       `;
     }
     if (mobileRbacLinks) mobileRbacLinks.innerHTML = mobileHtml;

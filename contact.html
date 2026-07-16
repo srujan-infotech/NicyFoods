@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Contact Us | NicyFoods</title>
 
-    <!-- ===== FONTAWESOME (for icons, though we use SVGs, keep for compatibility) ===== -->
+    <!-- ===== FONTAWESOME ===== -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
     <script src="https://cdn.tailwindcss.com">
@@ -15,13 +15,14 @@
             theme: {
                 extend: {
                     colors: {
-                        cream: '#FBF1E2',
+                        cream: '#FFFFFF',
                         jaggery: '#5C3A25',
                         ink: '#3A2417',
                         turmeric: '#F5A623',
                         marigold: '#FFC72C',
                         kumkum: '#D7263D',
                         herbal: '#5F7A4F',
+                        sand: '#F8F4F0',
                     },
                     fontFamily: {
                         display: ['"Rozha One"', 'serif'],
@@ -37,15 +38,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
 
     <style>
-        /* ===== UPDATED COLORS TO MATCH INDEX ===== */
+        /* ===== Updated colors to match index.html ===== */
         :root {
-            --cream: #FBF1E2;
+            --cream: #FFFFFF;
             --jaggery: #5C3A25;
             --ink: #3A2417;
             --turmeric: #F5A623;
             --marigold: #FFC72C;
             --kumkum: #D7263D;
             --herbal: #5F7A4F;
+            --sand: #F8F4F0;
         }
 
         * { box-sizing: border-box; }
@@ -61,10 +63,249 @@
             letter-spacing: .01em;
         }
 
+        /* ---------- reveal animations ---------- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity .8s cubic-bezier(.16, .84, .44, 1), transform .8s cubic-bezier(.16, .84, .44, 1);
+        }
+        .reveal.in { opacity: 1; transform: translateY(0); }
+        .stagger.in>* {
+            animation: fadeUp .7s cubic-bezier(.16, .84, .44, 1) both;
+        }
+        .stagger.in>*:nth-child(1) { animation-delay: .05s; }
+        .stagger.in>*:nth-child(2) { animation-delay: .15s; }
+        .stagger.in>*:nth-child(3) { animation-delay: .25s; }
+        .stagger.in>*:nth-child(4) { animation-delay: .35s; }
+        .stagger.in>*:nth-child(5) { animation-delay: .45s; }
+        .stagger.in>*:nth-child(6) { animation-delay: .55s; }
+        @keyframes fadeUp {
+            from { opacity:0; transform:translateY(24px); }
+            to { opacity:1; transform:translateY(0); }
+        }
+
+        /* ---------- kolam trace ---------- */
+        .kolam-trace path,
+        .kolam-trace circle,
+        .kolam-trace ellipse {
+            stroke-dasharray: 620;
+            stroke-dashoffset: 620;
+            transition: stroke-dashoffset 2.4s cubic-bezier(.16, .84, .44, 1);
+        }
+        .kolam-trace.in path,
+        .kolam-trace.in circle,
+        .kolam-trace.in ellipse { stroke-dashoffset: 0; }
+        .kolam-trace .dot {
+            opacity: 0;
+            transform: scale(0);
+            transform-box: fill-box;
+            transform-origin: center;
+            transition: opacity .5s ease, transform .5s cubic-bezier(.34, 1.56, .64, 1);
+        }
+        .kolam-trace.in .dot { opacity:1; transform:scale(1); }
+        .kolam-trace.in .dot:nth-of-type(1) { transition-delay:.2s; }
+        .kolam-trace.in .dot:nth-of-type(2) { transition-delay:.5s; }
+        .kolam-trace.in .dot:nth-of-type(3) { transition-delay:.8s; }
+        .kolam-trace.in .dot:nth-of-type(4) { transition-delay:1.1s; }
+
+        /* ---------- ladoo particles ---------- */
+        .ladoo-particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%, #FFC72C, #D7263D 70%);
+            opacity: .15;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .ladoo-particle.dim { opacity: .08; }
+        .ladoo-particle.glow { opacity: .20; box-shadow: 0 0 24px 6px rgba(255,199,44,.15); }
+
+        .float-drift { animation: driftY 7s ease-in-out infinite; }
+        .float-drift-slow { animation: driftY 11s ease-in-out infinite; }
+        .float-y { animation: floatY 5s ease-in-out infinite; }
+        .float-y-slow { animation: floatY 9s ease-in-out infinite; }
+
+        @keyframes driftY {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-18px) translateX(8px); }
+        }
+        @keyframes floatY {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-16px) rotate(6deg); }
+        }
+
+        /* ---------- kolam divider ---------- */
+        .kolam-divider path,
+        .kolam-divider circle {
+            stroke-dasharray: 340;
+            stroke-dashoffset: 340;
+            transition: stroke-dashoffset 1.6s cubic-bezier(.16, .84, .44, 1);
+        }
+        .kolam-divider.in path,
+        .kolam-divider.in circle { stroke-dashoffset: 0; }
+
+        /* ---------- cards ---------- */
+        .rise-card {
+            transition: transform .45s cubic-bezier(.16, .84, .44, 1), box-shadow .45s ease;
+        }
+        .rise-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 22px 40px -18px rgba(92, 58, 37, .2);
+        }
+        .icon-spin {
+            transition: transform .6s cubic-bezier(.34, 1.56, .64, 1);
+        }
+        .rise-card:hover .icon-spin {
+            transform: rotate(12deg) scale(1.08);
+        }
+
+        /* ---------- underline ---------- */
+        .grow-underline {
+            position: relative;
+            display: inline-block;
+        }
+        .grow-underline::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -10px;
+            height: 3px;
+            width: 0;
+            background: linear-gradient(90deg, var(--turmeric), var(--kumkum));
+            transform: translateX(-50%);
+            transition: width .7s cubic-bezier(.16, .84, .44, 1);
+            border-radius: 2px;
+        }
+        .reveal.in .grow-underline::after { width: 64px; }
+
+        /* ---------- shimmer button ---------- */
+        .shimmer-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -60%;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(115deg, transparent, rgba(255,255,255,.5), transparent);
+            transform: skewX(-20deg);
+            transition: left .8s ease;
+        }
+        .shimmer-btn:hover::before { left: 130%; }
+
+        /* ---------- hero (lighter, matches index) ---------- */
+        .hero-title-in {
+            animation: titleIn 1s cubic-bezier(.16, .84, .44, 1) both;
+        }
+        @keyframes titleIn {
+            from { opacity:0; transform:translateY(30px); }
+            to { opacity:1; transform:translateY(0); }
+        }
+        .hero-glow {
+            position: absolute;
+            inset: -20%;
+            pointer-events: none;
+            background: radial-gradient(circle at 30% 35%, rgba(255, 199, 44, .2), transparent 55%),
+                radial-gradient(circle at 75% 70%, rgba(215, 38, 61, .1), transparent 60%);
+            animation: glowDrift 12s ease-in-out infinite;
+        }
+        @keyframes glowDrift {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(3%, -2%) scale(1.08); }
+        }
+        .light-ray {
+            position: absolute;
+            top: -30%;
+            left: 20%;
+            width: 2px;
+            height: 160%;
+            background: linear-gradient(to bottom, rgba(255, 199, 44, .2), transparent 70%);
+            transform-origin: top center;
+            animation: raySwing 9s ease-in-out infinite;
+            filter: blur(1px);
+        }
+        @keyframes raySwing {
+            0%, 100% { transform: rotate(8deg); opacity: .3; }
+            50% { transform: rotate(18deg); opacity: .6; }
+        }
+        .scroll-cue {
+            animation: cueBounce 2s ease-in-out infinite;
+        }
+        @keyframes cueBounce {
+            0%, 100% { transform:translateY(0); opacity:.4; }
+            50% { transform:translateY(8px); opacity:.8; }
+        }
+
+        /* ---------- steam ---------- */
+        .steam {
+            position: absolute;
+            bottom: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 199, 44, .2), rgba(255, 199, 44, 0) 70%);
+            pointer-events: none;
+        }
+        .steam-1 { animation: steamRise 6s ease-in infinite; }
+        .steam-2 { animation: steamRise 8s ease-in infinite; animation-delay: 1.5s; }
+        .steam-3 { animation: steamRise 7s ease-in infinite; animation-delay: 3s; }
+        .steam-4 { animation: steamRise 9s ease-in infinite; animation-delay: .7s; }
+        @keyframes steamRise {
+            0% { transform: translateY(0) scale(.6); opacity: 0; }
+            15% { opacity: .5; }
+            100% { transform: translateY(-420px) scale(1.6); opacity: 0; }
+        }
+
+        /* ---------- ghee pour ---------- */
+        .ghee-pour-wrap {
+            height: 64px;
+            position: relative;
+            margin-bottom: -6px;
+            width: 60px;
+        }
+        .ghee-ribbon path {
+            fill: none;
+            stroke: url(#gheeGrad);
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-dasharray: 180;
+            stroke-dashoffset: 180;
+            animation: pourDraw 1s cubic-bezier(.55, 0, .35, 1) .1s forwards;
+            filter: drop-shadow(0 0 6px rgba(255, 199, 44, .3));
+        }
+        @keyframes pourDraw {
+            to { stroke-dashoffset: 0; }
+        }
+        .ghee-pool {
+            position: absolute;
+            left: 20px;
+            bottom: 6px;
+            width: 34px;
+            height: 10px;
+            border-radius: 50%;
+            background: radial-gradient(ellipse at center, var(--marigold), var(--turmeric) 70%, transparent 100%);
+            opacity: 0;
+            transform: scale(.2);
+            box-shadow: 0 0 18px 4px rgba(255, 199, 44, .3);
+            animation: poolPop .7s cubic-bezier(.34, 1.56, .64, 1) 1s forwards;
+        }
+        @keyframes poolPop {
+            to { opacity: 1; transform: scale(1); }
+        }
+        .gild-glow {
+            animation: gildPulse 2.6s ease-in-out 1.6s 2;
+        }
+        @keyframes gildPulse {
+            0%, 100% { text-shadow: 0 0 0 rgba(255, 199, 44, 0); }
+            50% { text-shadow: 0 0 22px rgba(255, 199, 44, .15); }
+        }
+
+        /* ---------- field validation ---------- */
         input:focus, textarea:focus {
             outline: none;
             border-color: var(--kumkum);
-            box-shadow: 0 0 0 3px rgba(215, 38, 61, 0.15);
+            box-shadow: 0 0 0 3px rgba(215, 38, 61, 0.1);
         }
         input, textarea {
             transition: border-color .3s ease, box-shadow .3s ease, transform .2s ease;
@@ -73,10 +314,9 @@
             transform: translateY(-1px);
         }
 
-        /* field validation */
         input.field-invalid, textarea.field-invalid {
             border-color: var(--kumkum) !important;
-            box-shadow: 0 0 0 3px rgba(215, 38, 61, 0.12) !important;
+            box-shadow: 0 0 0 3px rgba(215, 38, 61, 0.08) !important;
         }
         .field-error {
             display: none;
@@ -89,101 +329,15 @@
         }
         .field-error.show { display: flex; }
 
-        /* ---------- reveal ---------- */
-        .reveal {
-            opacity: 0;
-            transform: translateY(28px);
-            transition: opacity .8s cubic-bezier(.16, .84, .44, 1), transform .8s cubic-bezier(.16, .84, .44, 1);
-        }
-        .reveal.in { opacity: 1; transform: translateY(0); }
-        .stagger.in > * {
-            animation: fadeUp .7s cubic-bezier(.16, .84, .44, 1) both;
-        }
-        .stagger.in > *:nth-child(1) { animation-delay: .05s; }
-        .stagger.in > *:nth-child(2) { animation-delay: .15s; }
-        .stagger.in > *:nth-child(3) { animation-delay: .25s; }
-        .stagger.in > *:nth-child(4) { animation-delay: .35s; }
-        .stagger.in > *:nth-child(5) { animation-delay: .45s; }
-        .stagger.in > *:nth-child(6) { animation-delay: .55s; }
-        @keyframes fadeUp {
-            from { opacity:0; transform:translateY(22px); }
-            to { opacity:1; transform:translateY(0); }
+        /* ---------- reduced motion ---------- */
+        @media (prefers-reduced-motion: reduce) {
+            * { animation: none !important; transition: none !important; }
+            .reveal { opacity:1 !important; transform:none !important; }
+            .kolam-trace path, .kolam-trace circle, .kolam-trace ellipse { stroke-dashoffset:0 !important; }
+            .kolam-trace .dot { opacity:1 !important; transform:scale(1) !important; }
+            .ladoo-particle { opacity:.06 !important; }
         }
 
-        /* ---------- hero ---------- */
-        .hero-kolam {
-            animation: spinSlow 90s linear infinite;
-            transform-origin: center;
-        }
-        @keyframes spinSlow { to { transform:rotate(360deg); } }
-        .hero-kolam-rev {
-            animation: spinSlowRev 70s linear infinite;
-            transform-origin: center;
-        }
-        @keyframes spinSlowRev { to { transform:rotate(-360deg); } }
-        .hero-title-in {
-            animation: titleIn 1s cubic-bezier(.16, .84, .44, 1) both;
-        }
-        @keyframes titleIn {
-            from { opacity:0; transform:translateY(24px); }
-            to { opacity:1; transform:translateY(0); }
-        }
-
-        /* ---------- kolam divider ---------- */
-        .kolam-divider path, .kolam-divider circle {
-            stroke-dasharray: 340;
-            stroke-dashoffset: 340;
-            transition: stroke-dashoffset 1.6s cubic-bezier(.16, .84, .44, 1);
-        }
-        .kolam-divider.in path, .kolam-divider.in circle { stroke-dashoffset: 0; }
-
-        /* ---------- cards ---------- */
-        .rise-card {
-            transition: transform .45s cubic-bezier(.16, .84, .44, 1), box-shadow .45s ease;
-        }
-        .rise-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 22px 40px -18px rgba(92, 58, 37, .3);
-        }
-        .icon-spin {
-            transition: transform .6s cubic-bezier(.34, 1.56, .64, 1);
-        }
-        .rise-card:hover .icon-spin {
-            transform: rotate(12deg) scale(1.08);
-        }
-        .faq-card {
-            transition: transform .4s cubic-bezier(.16, .84, .44, 1), box-shadow .4s ease, border-color .4s ease;
-        }
-        .faq-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 16px 32px -16px rgba(92, 58, 37, .25);
-            border-color: var(--turmeric);
-        }
-
-        /* ---------- CTA buttons ---------- */
-        .cta-btn {
-            position: relative;
-            overflow: hidden;
-        }
-        .cta-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -60%;
-            width: 40%;
-            height: 100%;
-            background: linear-gradient(115deg, transparent, rgba(255, 255, 255, .55), transparent);
-            transform: skewX(-20deg);
-            transition: left .8s ease;
-        }
-        .cta-btn:hover::before { left: 130%; }
-        .cta-btn:disabled {
-            opacity: .65;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        /* submit feedback */
         .submit-check {
             display: inline-flex;
             align-items: center;
@@ -201,48 +355,18 @@
         }
         .cf-status-msg.success { color: var(--herbal); }
         .cf-status-msg.error { color: var(--kumkum); }
-
-        /* ---------- ladoo particles ---------- */
-        .ladoo-particle {
-            position: absolute;
-            border-radius: 50%;
-            background: radial-gradient(circle at 35% 30%, #FFC72C, #D7263D 70%);
-            opacity: .18;
-            pointer-events: none;
-            z-index: 1;
-        }
-        .ladoo-particle.dim { opacity: .10; }
-        .ladoo-particle.glow { opacity: .28; box-shadow: 0 0 24px 6px rgba(255, 199, 44, .25); }
-
-        .float-drift { animation: driftY 7s ease-in-out infinite; }
-        .float-drift-slow { animation: driftY 11s ease-in-out infinite; }
-        .float-y { animation: floatY 5s ease-in-out infinite; }
-        .float-y-slow { animation: floatY 9s ease-in-out infinite; }
-
-        @keyframes driftY {
-            0%, 100% { transform: translateY(0) translateX(0); }
-            50% { transform: translateY(-18px) translateX(8px); }
-        }
-        @keyframes floatY {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-16px) rotate(6deg); }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            * { animation: none !important; transition: none !important; }
-            .reveal { opacity: 1 !important; transform: none !important; }
-            .ladoo-particle { opacity: .12 !important; }
-        }
     </style>
 </head>
 <body class="bg-cream">
 
     <div id="navbar-placeholder"></div>
 
-    <!-- ============ HERO (SAME AS INDEX) ============ -->
-    <section class="relative w-full h-[460px] md:h-[520px] overflow-hidden bg-gradient-to-br from-[#2A0A0A] via-kumkum to-[#1A0E08]">
-        <img src="https://nicyfoods.com/images/contact_hero.jpg" alt="Contact NicyFoods" class="absolute inset-0 w-full h-full object-cover opacity-60" />
-        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-kumkum/25 to-turmeric/10"></div>
+    <!-- ============ HERO (Lighter, matches index) ============ -->
+    <section class="relative w-full h-[460px] md:h-[520px] overflow-hidden bg-gradient-to-br from-amber-200 via-marigold to-turmeric">
+        <img src="https://nicyfoods.com/images/contact_hero.jpg" alt="Contact NicyFoods" class="absolute inset-0 w-full h-full object-cover opacity-25 scale-110" />
+        <div class="absolute inset-0 bg-gradient-to-t from-white/15 via-cream/5 to-transparent"></div>
+        <div class="hero-glow"></div>
+        <div class="light-ray hidden md:block"></div>
 
         <!-- floating particles -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none z-1">
@@ -257,24 +381,46 @@
         </div>
 
         <!-- signature kolam -->
-        <svg class="hero-kolam absolute -right-20 -top-20 w-80 h-80 opacity-15 hidden sm:block" viewBox="0 0 200 200" fill="none">
-            <g stroke="#FFC72C" stroke-width="1.2">
+        <svg class="kolam-trace absolute -right-24 -top-16 w-[420px] h-[420px] opacity-15 hidden sm:block" viewBox="0 0 200 200" fill="none">
+            <g stroke="#FFC72C" stroke-width="1.1">
                 <circle cx="100" cy="100" r="90"/>
-                <circle cx="100" cy="100" r="65"/>
-                <path d="M100 10 L100 190 M10 100 L190 100"/>
+                <circle cx="100" cy="100" r="70"/>
+                <path d="M100 30 Q120 60 100 100 Q80 140 100 170"/>
+                <path d="M30 100 Q60 80 100 100 Q140 120 170 100"/>
             </g>
+            <circle class="dot" cx="100" cy="10" r="3" fill="#FFC72C"/>
+            <circle class="dot" cx="100" cy="190" r="3" fill="#FFC72C"/>
+            <circle class="dot" cx="10" cy="100" r="3" fill="#FFC72C"/>
+            <circle class="dot" cx="190" cy="100" r="3" fill="#FFC72C"/>
         </svg>
-        <svg class="hero-kolam-rev absolute -left-16 -bottom-16 w-64 h-64 opacity-10 hidden sm:block" viewBox="0 0 200 200" fill="none">
-            <g stroke="#FFC72C" stroke-width="1.2"><circle cx="100" cy="100" r="80"/></g>
+        <svg class="kolam-trace absolute -left-20 -bottom-16 w-[300px] h-[300px] opacity-12 hidden sm:block" viewBox="0 0 200 200" fill="none">
+            <g stroke="#FFC72C" stroke-width="1.1">
+                <circle cx="100" cy="100" r="80"/>
+                <path d="M100 40 Q130 100 100 160 Q70 100 100 40Z"/>
+            </g>
+            <circle class="dot" cx="100" cy="40" r="2.5" fill="#FFC72C"/>
+            <circle class="dot" cx="100" cy="160" r="2.5" fill="#FFC72C"/>
         </svg>
 
         <div class="relative z-10 h-full flex flex-col justify-center px-6 md:px-16 max-w-3xl">
-            <p class="hero-title-in text-marigold/90 tracking-[0.25em] uppercase text-xs md:text-sm font-semibold mb-4" style="animation-delay:.1s">We're Here To Help</p>
-            <h1 class="hero-title-in font-display text-4xl sm:text-5xl md:text-6xl text-cream leading-[1.1] mb-5" style="animation-delay:.25s">Get in Touch</h1>
-            <p class="hero-title-in text-base sm:text-lg md:text-xl text-cream/85 font-light max-w-xl" style="animation-delay:.4s">We'd love to hear from you. Contact us for orders, inquiries, or feedback.</p>
+            <div class="ghee-pour-wrap">
+                <svg class="ghee-ribbon" width="60" height="64" viewBox="0 0 60 64" fill="none">
+                    <defs>
+                        <linearGradient id="gheeGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#FFC72C" />
+                            <stop offset="100%" stop-color="#F5A623" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M28 2 C 22 14, 34 20, 26 32 C 20 42, 30 46, 24 54" />
+                </svg>
+                <div class="ghee-pool"></div>
+            </div>
+            <p class="hero-title-in text-jaggery/70 tracking-[0.25em] uppercase text-xs md:text-sm font-semibold mb-4" style="animation-delay:.1s">We're Here To Help</p>
+            <h1 class="hero-title-in gild-glow font-display text-4xl sm:text-5xl md:text-6xl text-jaggery leading-[1.1]" style="animation-delay:.25s">Get in Touch</h1>
+            <p class="hero-title-in text-base sm:text-lg md:text-xl text-ink/60 font-light max-w-xl" style="animation-delay:.4s">We'd love to hear from you. Contact us for orders, inquiries, or feedback.</p>
         </div>
 
-        <div class="scroll-cue absolute bottom-6 left-1/2 -translate-x-1/2 text-cream/70">
+        <div class="scroll-cue absolute bottom-6 left-1/2 -translate-x-1/2 text-jaggery/30">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 5v14"/><path d="M6 13l6 6 6-6"/>
             </svg>
@@ -307,7 +453,7 @@
             <div class="reveal text-center mb-12">
                 <span class="text-kumkum text-xs tracking-[0.3em] uppercase font-semibold">Reach Out</span>
                 <h2 class="font-display text-3xl sm:text-4xl text-jaggery mt-3 grow-underline">Contact Information &amp; Order Form</h2>
-                <p class="text-slate-500 max-w-2xl mx-auto leading-relaxed mt-4">
+                <p class="text-slate-400 max-w-2xl mx-auto leading-relaxed mt-4">
                     Have a question about our products? Want to place an order? Fill out the form below
                     and we'll get back to you within 24 hours. You can also reach us directly using the contact details.
                 </p>
@@ -316,7 +462,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
                 <!-- Send us a Message -->
-                <div class="reveal bg-white rounded-2xl shadow-md border border-slate-100 p-8">
+                <div class="reveal bg-white rounded-2xl shadow-sm border border-stone/30 p-8">
                     <h3 class="font-display text-xl text-kumkum mb-6">Send us a Message</h3>
                     <form id="contact-form" class="space-y-5" novalidate>
                         <div>
@@ -325,7 +471,7 @@
                                    maxlength="50" autocomplete="name"
                                    pattern="[A-Za-z\s.'-]+"
                                    title="Name should contain letters only, no numbers"
-                                   class="w-full border border-slate-300 rounded-lg px-4 py-3 text-slate-700" />
+                                   class="w-full border border-stone-300 rounded-lg px-4 py-3 text-slate-700" />
                             <p id="cf-name-error" class="field-error">
                                 <svg class="w-3.5 h-3.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
                                 Name should contain letters only — no numbers.
@@ -335,7 +481,7 @@
                             <label class="block text-sm font-semibold text-slate-700 mb-2">Email Address *</label>
                             <input type="email" id="cf-email" name="email" required placeholder="customer@example.com"
                                    autocomplete="email"
-                                   class="w-full border border-slate-300 rounded-lg px-4 py-3 text-slate-700" />
+                                   class="w-full border border-stone-300 rounded-lg px-4 py-3 text-slate-700" />
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 mb-2">Phone Number</label>
@@ -343,7 +489,7 @@
                                    maxlength="10" inputmode="numeric" autocomplete="tel"
                                    pattern="[6-9][0-9]{9}"
                                    title="Enter a valid 10-digit mobile number"
-                                   class="w-full border border-slate-300 rounded-lg px-4 py-3 text-slate-700" />
+                                   class="w-full border border-stone-300 rounded-lg px-4 py-3 text-slate-700" />
                             <p id="cf-phone-error" class="field-error">
                                 <svg class="w-3.5 h-3.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
                                 Enter a valid 10-digit mobile number.
@@ -352,10 +498,10 @@
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 mb-2">Message *</label>
                             <textarea id="cf-message" name="message" required rows="5" placeholder="Tell us about your inquiry or order request..."
-                                      class="w-full border border-slate-300 rounded-lg px-4 py-3 text-slate-700 resize-y"></textarea>
+                                      class="w-full border border-stone-300 rounded-lg px-4 py-3 text-slate-700 resize-y"></textarea>
                         </div>
                         <button type="submit" id="cf-submit"
-                                class="cta-btn w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-turmeric to-kumkum hover:opacity-95 text-white font-semibold py-3.5 rounded-lg transition-all hover:-translate-y-0.5">
+                                class="shimmer-btn w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-turmeric to-kumkum hover:opacity-95 text-white font-semibold py-3.5 rounded-lg transition-all hover:-translate-y-0.5">
                             <span id="cf-submit-label">Send Message</span>
                             <span id="cf-submit-check" class="submit-check">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -369,11 +515,11 @@
                 </div>
 
                 <!-- Contact Details -->
-                <div class="reveal bg-orange-50 rounded-2xl p-8">
+                <div class="reveal bg-sand/60 rounded-2xl p-8">
                     <h3 class="font-display text-xl text-kumkum mb-6">Contact Details</h3>
 
                     <div class="stagger reveal space-y-7">
-                        <div class="rise-card bg-white/60 rounded-xl p-4 -m-4">
+                        <div class="rise-card bg-white/80 rounded-xl p-4 -m-4">
                             <h4 class="flex items-center gap-2 font-bold text-kumkum mb-1">
                                 <svg class="icon-spin w-5 h-5 text-kumkum" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
@@ -381,10 +527,10 @@
                                 Customer Care
                             </h4>
                             <a href="tel:+918263001410" class="block text-kumkum font-semibold mb-1">+91 8263001410</a>
-                            <p class="text-sm text-slate-500">Call us for immediate assistance with orders and inquiries.</p>
+                            <p class="text-sm text-slate-400">Call us for immediate assistance with orders and inquiries.</p>
                         </div>
 
-                        <div class="rise-card bg-white/60 rounded-xl p-4 -m-4">
+                        <div class="rise-card bg-white/80 rounded-xl p-4 -m-4">
                             <h4 class="flex items-center gap-2 font-bold text-kumkum mb-1">
                                 <svg class="icon-spin w-5 h-5 text-kumkum" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M22 6l-10 7L2 6"/><path d="M2 6h20v12H2z"/>
@@ -392,26 +538,26 @@
                                 Email Us
                             </h4>
                             <a href="mailto:nicyfoods5@gmail.com" class="block text-kumkum font-semibold mb-1">nicyfoods5@gmail.com</a>
-                            <p class="text-sm text-slate-500">Send us your inquiries, order requests, or feedback. We respond within 24 hours.</p>
+                            <p class="text-sm text-slate-400">Send us your inquiries, order requests, or feedback. We respond within 24 hours.</p>
                         </div>
 
-                        <div class="rise-card bg-white/60 rounded-xl p-4 -m-4">
+                        <div class="rise-card bg-white/80 rounded-xl p-4 -m-4">
                             <h4 class="flex items-center gap-2 font-bold text-kumkum mb-1">
                                 <svg class="icon-spin w-5 h-5 text-kumkum" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
                                 </svg>
                                 Office Address
                             </h4>
-                            <p class="text-slate-600 leading-relaxed">
+                            <p class="text-slate-500 leading-relaxed">
                                 Plot No 20, Saikrupa Society<br>
                                 Ingale Nagar, Warje Jakat Naka<br>
                                 Warje, Pune – 411052<br>
                                 Maharashtra, India
                             </p>
-                            <p class="text-sm text-slate-500 mt-1">Visit us or place orders over the phone for fresh delivery in Pune.</p>
+                            <p class="text-sm text-slate-400 mt-1">Visit us or place orders over the phone for fresh delivery in Pune.</p>
                         </div>
 
-                        <div class="rise-card bg-white/60 rounded-xl p-4 -m-4">
+                        <div class="rise-card bg-white/80 rounded-xl p-4 -m-4">
                             <h4 class="flex items-center gap-2 font-bold text-kumkum mb-2">
                                 <svg class="icon-spin w-5 h-5 text-kumkum" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07l-1.5 1.5"/>
@@ -420,7 +566,7 @@
                                 Quick Links
                             </h4>
                             <ul class="space-y-1.5 text-sm">
-                                <li><a href="home.html" class="text-kumkum font-semibold hover:underline">→ Home</a></li>
+                                <li><a href="index.html" class="text-kumkum font-semibold hover:underline">→ Home</a></li>
                                 <li><a href="about.html" class="text-kumkum font-semibold hover:underline">→ About Us</a></li>
                                 <li><a href="products.html" class="text-kumkum font-semibold hover:underline">→ Browse Products</a></li>
                             </ul>
@@ -440,7 +586,7 @@
             <div class="ladoo-particle w-7 h-7 float-drift-slow" style="top:40%; right:10%;"></div>
         </div>
 
-        <div class="relative z-10 rounded-2xl overflow-hidden shadow-md border border-slate-100 h-[380px]">
+        <div class="relative z-10 rounded-2xl overflow-hidden shadow-sm border border-stone/30 h-[380px]">
             <iframe
                 title="NicyFoods Location"
                 class="w-full h-full border-0"
@@ -452,7 +598,7 @@
     </section>
 
     <!-- ============ FAQ ============ -->
-    <section class="relative py-16 bg-jaggery/[0.04] overflow-hidden">
+    <section class="relative py-16 bg-gradient-to-b from-sand/40 via-cream to-sand/20 overflow-hidden">
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div class="ladoo-particle glow w-14 h-14 float-drift-slow" style="top:4%; left:2%;"></div>
             <div class="ladoo-particle w-9 h-9 float-y" style="top:10%; right:4%;"></div>
@@ -472,64 +618,64 @@
 
             <div class="stagger reveal grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                <div class="faq-card bg-white rounded-xl border-l-4 border-turmeric shadow-sm p-7">
+                <div class="bg-white rounded-xl border-l-4 border-turmeric shadow-sm p-7 transition-transform hover:-translate-y-1 hover:shadow-md duration-300">
                     <h3 class="flex items-center gap-2 font-bold text-kumkum text-lg mb-3">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-turmeric flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="10"/>
                         </svg>
                         How do I place an order?
                     </h3>
-                    <p class="text-slate-600 leading-relaxed">You can place an order by calling us at +91 8263001410 or emailing nicyfoods5@gmail.com. Use the contact form to get in touch with your specific requirements.</p>
+                    <p class="text-slate-500 leading-relaxed">You can place an order by calling us at +91 8263001410 or emailing nicyfoods5@gmail.com. Use the contact form to get in touch with your specific requirements.</p>
                 </div>
 
-                <div class="faq-card bg-white rounded-xl border-l-4 border-turmeric shadow-sm p-7">
+                <div class="bg-white rounded-xl border-l-4 border-turmeric shadow-sm p-7 transition-transform hover:-translate-y-1 hover:shadow-md duration-300">
                     <h3 class="flex items-center gap-2 font-bold text-kumkum text-lg mb-3">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-turmeric flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="10"/>
                         </svg>
                         What is the minimum order quantity?
                     </h3>
-                    <p class="text-slate-600 leading-relaxed">We accept orders of any quantity. For bulk orders or special requests, please contact us directly for best pricing and availability.</p>
+                    <p class="text-slate-500 leading-relaxed">We accept orders of any quantity. For bulk orders or special requests, please contact us directly for best pricing and availability.</p>
                 </div>
 
-                <div class="faq-card bg-white rounded-xl border-l-4 border-turmeric shadow-sm p-7">
+                <div class="bg-white rounded-xl border-l-4 border-turmeric shadow-sm p-7 transition-transform hover:-translate-y-1 hover:shadow-md duration-300">
                     <h3 class="flex items-center gap-2 font-bold text-kumkum text-lg mb-3">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-turmeric flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="10"/>
                         </svg>
                         Do you deliver outside Pune?
                     </h3>
-                    <p class="text-slate-600 leading-relaxed">Currently, we primarily deliver in and around Pune. For inquiries about delivery to other areas, please contact us to discuss shipping options.</p>
+                    <p class="text-slate-500 leading-relaxed">Currently, we primarily deliver in and around Pune. For inquiries about delivery to other areas, please contact us to discuss shipping options.</p>
                 </div>
 
-                <div class="faq-card bg-white rounded-xl border-l-4 border-turmeric shadow-sm p-7">
+                <div class="bg-white rounded-xl border-l-4 border-turmeric shadow-sm p-7 transition-transform hover:-translate-y-1 hover:shadow-md duration-300">
                     <h3 class="flex items-center gap-2 font-bold text-kumkum text-lg mb-3">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-turmeric flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="10"/>
                         </svg>
                         Are your products suitable for diabetics?
                     </h3>
-                    <p class="text-slate-600 leading-relaxed">While we use natural jaggery instead of refined sugar, we recommend consulting with your healthcare provider. Our millet varieties are also a good low-glycemic option.</p>
+                    <p class="text-slate-500 leading-relaxed">While we use natural jaggery instead of refined sugar, we recommend consulting with your healthcare provider. Our millet varieties are also a good low-glycemic option.</p>
                 </div>
 
-                <div class="faq-card bg-white rounded-xl border-l-4 border-turmeric shadow-sm p-7">
+                <div class="bg-white rounded-xl border-l-4 border-turmeric shadow-sm p-7 transition-transform hover:-translate-y-1 hover:shadow-md duration-300">
                     <h3 class="flex items-center gap-2 font-bold text-kumkum text-lg mb-3">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-turmeric flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="10"/>
                         </svg>
                         What about quality and freshness?
                     </h3>
-                    <p class="text-slate-600 leading-relaxed">All our products are handmade and delivered fresh. We don't use preservatives, so products should be consumed within 7-10 days for optimal taste and nutritional value.</p>
+                    <p class="text-slate-500 leading-relaxed">All our products are handmade and delivered fresh. We don't use preservatives, so products should be consumed within 7-10 days for optimal taste and nutritional value.</p>
                 </div>
 
-                <div class="faq-card bg-white rounded-xl border-l-4 border-turmeric shadow-sm p-7">
+                <div class="bg-white rounded-xl border-l-4 border-turmeric shadow-sm p-7 transition-transform hover:-translate-y-1 hover:shadow-md duration-300">
                     <h3 class="flex items-center gap-2 font-bold text-kumkum text-lg mb-3">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-turmeric flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="10"/>
                         </svg>
                         Can you customize orders?
                     </h3>
-                    <p class="text-slate-600 leading-relaxed">Yes! We can customize orders based on your preferences. Contact us to discuss custom varieties, packaging, or bulk requirements.</p>
+                    <p class="text-slate-500 leading-relaxed">Yes! We can customize orders based on your preferences. Contact us to discuss custom varieties, packaging, or bulk requirements.</p>
                 </div>
 
             </div>
@@ -548,7 +694,7 @@
             <div class="ladoo-particle dim w-10 h-10 float-drift-slow" style="bottom:20%; left:25%;"></div>
         </div>
 
-        <svg class="hero-kolam absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[460px] h-[460px] opacity-10" viewBox="0 0 200 200" fill="none">
+        <svg class="kolam-trace absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[460px] h-[460px] opacity-8" viewBox="0 0 200 200" fill="none">
             <g stroke="#FFC72C" stroke-width="1"><circle cx="100" cy="100" r="95"/><circle cx="100" cy="100" r="75"/><circle cx="100" cy="100" r="55"/></g>
         </svg>
 
@@ -557,20 +703,20 @@
                 <span class="text-marigold">Interested in Bulk Orders or</span>
                 <span class="text-cream"> Partnership?</span>
             </h2>
-            <p class="text-cream/75 max-w-2xl mx-auto mb-8 leading-relaxed">
+            <p class="text-cream/60 max-w-2xl mx-auto mb-8 leading-relaxed">
                 We offer special pricing for bulk orders, corporate gifts, and business partnerships.
                 Contact us directly to discuss your requirements and get a custom quote.
             </p>
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a href="tel:+918263001410"
-                   class="cta-btn inline-flex items-center gap-2 bg-gradient-to-r from-turmeric to-kumkum hover:opacity-95 text-white font-semibold px-8 py-3.5 rounded-xl transition-all hover:-translate-y-0.5">
+                   class="shimmer-btn inline-flex items-center gap-2 bg-gradient-to-r from-turmeric to-kumkum hover:opacity-95 text-white font-semibold px-8 py-3.5 rounded-xl transition-all hover:-translate-y-0.5">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
                     </svg>
                     Call +91 8263001410
                 </a>
                 <a href="mailto:nicyfoods5@gmail.com"
-                   class="inline-flex items-center gap-2 border-2 border-cream/60 text-cream font-semibold px-8 py-3.5 rounded-xl hover:bg-cream/10 transition-all hover:-translate-y-0.5">
+                   class="inline-flex items-center gap-2 border-2 border-cream/40 text-cream font-semibold px-8 py-3.5 rounded-xl hover:bg-cream/10 transition-all hover:-translate-y-0.5">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M22 6l-10 7L2 6"/><path d="M2 6h20v12H2z"/>
                     </svg>
@@ -581,7 +727,7 @@
     </section>
 
     <!-- ============ WHY CHOOSE US ============ -->
-    <section class="relative py-16 bg-jaggery/[0.04] overflow-hidden">
+    <section class="relative py-16 bg-gradient-to-b from-sand/40 via-cream to-sand/20 overflow-hidden">
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div class="ladoo-particle glow w-10 h-10 float-drift-slow" style="top:6%; left:4%;"></div>
             <div class="ladoo-particle dim w-6 h-6 float-y" style="top:12%; right:6%;"></div>
@@ -607,17 +753,17 @@
                         </svg>
                     </div>
                     <h3 class="font-bold text-kumkum text-lg mb-3">Premium Quality</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">100% handmade with pure ghee, natural jaggery, and no harmful additives. Excellence in every bite.</p>
+                    <p class="text-sm text-slate-400 leading-relaxed">100% handmade with pure ghee, natural jaggery, and no harmful additives. Excellence in every bite.</p>
                 </div>
 
-                <div class="rise-card bg-white rounded-2xl shadow-sm p-8 text-center border-2 border-kumkum/60">
+                <div class="rise-card bg-white rounded-2xl shadow-sm p-8 text-center border-2 border-kumkum/30">
                     <div class="icon-spin w-14 h-14 mx-auto mb-5 rounded-xl bg-gradient-to-br from-amber-400 to-yellow-500 text-white flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M11 21c-4-2.5-9-6.5-9-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 1.7-.8 3.3-2 4.7"/><path d="M14 15l3 3 5-6"/>
                         </svg>
                     </div>
                     <h3 class="font-bold text-kumkum text-lg mb-3">Customer Care</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">Dedicated customer service team ready to help with orders, inquiries, and custom requests.</p>
+                    <p class="text-sm text-slate-400 leading-relaxed">Dedicated customer service team ready to help with orders, inquiries, and custom requests.</p>
                 </div>
 
                 <div class="rise-card bg-white rounded-2xl shadow-sm p-8 text-center">
@@ -628,7 +774,7 @@
                         </svg>
                     </div>
                     <h3 class="font-bold text-kumkum text-lg mb-3">Fresh Delivery</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">Products prepared fresh and delivered in secure packaging to ensure quality and taste.</p>
+                    <p class="text-sm text-slate-400 leading-relaxed">Products prepared fresh and delivered in secure packaging to ensure quality and taste.</p>
                 </div>
 
                 <div class="rise-card bg-white rounded-2xl shadow-sm p-8 text-center">
@@ -638,7 +784,7 @@
                         </svg>
                     </div>
                     <h3 class="font-bold text-kumkum text-lg mb-3">Health Focused</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">Formulated for health and wellness. Products for all ages, from babies to seniors.</p>
+                    <p class="text-sm text-slate-400 leading-relaxed">Formulated for health and wellness. Products for all ages, from babies to seniors.</p>
                 </div>
 
             </div>
@@ -647,12 +793,13 @@
 
     <div id="footer-placeholder"></div>
 
+    <!-- ===== SCRIPTS ===== -->
     <script src="js/navbar.js"></script>
     <script src="js/footer.js"></script>
-    <script src="js/contact.js"></script>
+
     <script>
         // ---------- SCROLL REVEAL ----------
-        const revealEls = document.querySelectorAll('.reveal, .stagger, .kolam-divider, .grow-underline');
+        const revealEls = document.querySelectorAll('.reveal, .stagger, .kolam-divider, .grow-underline, .kolam-trace');
         const io = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -725,5 +872,6 @@
             }, true);
         })();
     </script>
+
 </body>
 </html>

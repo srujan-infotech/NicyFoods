@@ -4,19 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact &amp; FAQ | NicyFoods</title>
+
+  <!-- ===== FONTAWESOME ===== -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            cream:    '#FBF1E2',
-            jaggery:  '#5C3A25',
-            ink:      '#3A2417',
+            cream: '#FFFFFF',
+            jaggery: '#5C3A25',
+            ink: '#3A2417',
             turmeric: '#F5A623',
             marigold: '#FFC72C',
-            kumkum:   '#D7263D',
-            herbal:   '#5F7A4F',
+            kumkum: '#D7263D',
+            herbal: '#5F7A4F',
+            sand: '#F8F4F0',
           },
           fontFamily: {
             display: ['"Rozha One"', 'serif'],
@@ -30,15 +35,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
   <style>
-    :root{
-      --cream: #FBF1E2;
+    :root {
+      --cream: #FFFFFF;
       --jaggery: #5C3A25;
       --ink: #3A2417;
       --turmeric: #F5A623;
       --marigold: #FFC72C;
       --kumkum: #D7263D;
       --herbal: #5F7A4F;
+      --sand: #F8F4F0;
     }
     *{box-sizing:border-box;}
     html{scroll-behavior:smooth;}
@@ -83,7 +90,7 @@
     }
     .kolam-divider.in path, .kolam-divider.in circle{ stroke-dashoffset:0; }
 
-    /* ---------- hero: staggered entrance + signature kolam draw-in ---------- */
+    /* ---------- hero (lighter, matches index) ---------- */
     .hero-title-in{ animation: titleIn 1s cubic-bezier(.16,.84,.44,1) both; }
     @keyframes titleIn{ from{ opacity:0; transform:translateY(26px);} to{ opacity:1; transform:translateY(0);} }
 
@@ -103,27 +110,80 @@
     .kolam-trace.in .dot:nth-of-type(4){ transition-delay:1.1s }
 
     .hero-scroll-cue{ animation: cueBounce 2s ease-in-out infinite; }
-    @keyframes cueBounce{ 0%,100%{ transform:translateY(0); opacity:.6;} 50%{ transform:translateY(8px); opacity:1;} }
+    @keyframes cueBounce{ 0%,100%{ transform:translateY(0); opacity:.4;} 50%{ transform:translateY(8px); opacity:.8;} }
 
     .hero-glow{
       position:absolute; inset:-20%; pointer-events:none;
-      background: radial-gradient(circle at 30% 35%, rgba(255,199,44,.3), transparent 55%),
-                  radial-gradient(circle at 75% 70%, rgba(215,38,61,.2), transparent 60%);
+      background: radial-gradient(circle at 30% 35%, rgba(255,199,44,.2), transparent 55%),
+                  radial-gradient(circle at 75% 70%, rgba(215,38,61,.1), transparent 60%);
       animation: glowDrift 12s ease-in-out infinite;
     }
     @keyframes glowDrift{ 0%,100%{ transform:translate(0,0) scale(1);} 50%{ transform:translate(3%,-2%) scale(1.08);} }
 
-    /* ---------- background bubble drops (site-wide signature) ---------- */
+    /* ---------- ghee pour ---------- */
+    .ghee-pour-wrap {
+      height: 64px;
+      position: relative;
+      margin-bottom: -6px;
+      width: 60px;
+    }
+    .ghee-ribbon path {
+      fill: none;
+      stroke: url(#gheeGrad);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-dasharray: 180;
+      stroke-dashoffset: 180;
+      animation: pourDraw 1s cubic-bezier(.55, 0, .35, 1) .1s forwards;
+      filter: drop-shadow(0 0 6px rgba(255, 199, 44, .3));
+    }
+    @keyframes pourDraw { to { stroke-dashoffset: 0; } }
+    .ghee-pool {
+      position: absolute;
+      left: 20px;
+      bottom: 6px;
+      width: 34px;
+      height: 10px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, var(--marigold), var(--turmeric) 70%, transparent 100%);
+      opacity: 0;
+      transform: scale(.2);
+      box-shadow: 0 0 18px 4px rgba(255, 199, 44, .3);
+      animation: poolPop .7s cubic-bezier(.34, 1.56, .64, 1) 1s forwards;
+    }
+    @keyframes poolPop { to { opacity:1; transform:scale(1); } }
+    .gild-glow { animation: gildPulse 2.6s ease-in-out 1.6s 2; }
+    @keyframes gildPulse { 0%,100%{ text-shadow: 0 0 0 rgba(255, 199, 44, 0); } 50%{ text-shadow: 0 0 22px rgba(255, 199, 44, .15); } }
+
+    /* ---------- steam ---------- */
+    .steam {
+      position: absolute;
+      bottom: 0;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 199, 44, .2), rgba(255, 199, 44, 0) 70%);
+      pointer-events: none;
+    }
+    .steam-1 { animation: steamRise 6s ease-in infinite; }
+    .steam-2 { animation: steamRise 8s ease-in infinite; animation-delay: 1.5s; }
+    .steam-3 { animation: steamRise 7s ease-in infinite; animation-delay: 3s; }
+    .steam-4 { animation: steamRise 9s ease-in infinite; animation-delay: .7s; }
+    @keyframes steamRise {
+      0% { transform: translateY(0) scale(.6); opacity: 0; }
+      15% { opacity: .5; }
+      100% { transform: translateY(-420px) scale(1.6); opacity: 0; }
+    }
+
+    /* ---------- background bubble drops ---------- */
     .bubble-field{ position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
     .ladoo-particle{
       position:absolute; border-radius:50%;
       background:radial-gradient(circle at 35% 30%, #FFC72C, #D7263D 70%);
-      opacity:.18;
+      opacity:.15;
       pointer-events:none;
       z-index:1;
     }
-    .ladoo-particle.dim{ opacity:.10; }
-    .ladoo-particle.glow{ opacity:.28; box-shadow:0 0 24px 6px rgba(255,199,44,.25); }
+    .ladoo-particle.dim{ opacity:.08; }
+    .ladoo-particle.glow{ opacity:.20; box-shadow:0 0 24px 6px rgba(255,199,44,.15); }
 
     .bubble-rise{ animation: bubbleRise var(--dur,9s) ease-in-out infinite; animation-delay: var(--delay,0s); }
     .bubble-rise-alt{ animation: bubbleRiseAlt var(--dur,11s) ease-in-out infinite; animation-delay: var(--delay,0s); }
@@ -142,32 +202,32 @@
       100%{ transform:translate(-8px,-58px) scale(.9); opacity:0; }
     }
 
-    /* ---------- contact strip (matches home page) ---------- */
+    /* ---------- contact strip ---------- */
     .contact-icon{
       width:72px; height:72px; border-radius:9999px;
       display:flex; align-items:center; justify-content:center;
-      box-shadow:0 10px 24px -10px rgba(92,58,37,.45);
+      box-shadow:0 10px 24px -10px rgba(92,58,37,.25);
       transition: transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s ease;
     }
-    .contact-item:hover .contact-icon{ transform: translateY(-6px) scale(1.06); box-shadow:0 16px 30px -10px rgba(92,58,37,.55); }
+    .contact-item:hover .contact-icon{ transform: translateY(-6px) scale(1.06); box-shadow:0 16px 30px -10px rgba(92,58,37,.35); }
     .contact-item:hover h3{ color:var(--kumkum); }
     .contact-item h3{ transition: color .3s ease; }
 
-    /* ---------- FAQ accordion, thali-card style ---------- */
+    /* ---------- FAQ accordion ---------- */
     .faq-item{
       background:#FFFDF9;
-      box-shadow: inset 0 0 0 1px rgba(92,58,37,.06), 0 1px 2px rgba(92,58,37,.06);
+      box-shadow: inset 0 0 0 1px rgba(92,58,37,.04), 0 1px 2px rgba(92,58,37,.04);
       transition: box-shadow .3s ease, border-color .3s ease;
       border-radius: 1rem;
       border-left: 3px solid transparent;
       position: relative; overflow: hidden;
     }
     .faq-item.is-open{
-      box-shadow: inset 0 0 0 1px rgba(215,38,61,.18), 0 12px 28px -16px rgba(92,58,37,.35);
+      box-shadow: inset 0 0 0 1px rgba(215,38,61,.12), 0 12px 28px -16px rgba(92,58,37,.2);
       border-left-color: var(--kumkum);
     }
     .faq-q{ cursor:pointer; transition: background-color .25s ease; }
-    .faq-q:hover{ background-color: rgba(215,38,61,.03); }
+    .faq-q:hover{ background-color: rgba(215,38,61,.02); }
     .faq-q .chev{ transition: transform .3s cubic-bezier(.16,.84,.44,1); color: var(--kumkum); flex-shrink:0; }
     .faq-item.is-open .chev{ transform: rotate(180deg); }
     .faq-a{
@@ -186,27 +246,27 @@
     /* ---------- category cards ---------- */
     .cat-card{
       background:#FFFDF9;
-      box-shadow: inset 0 0 0 1px rgba(92,58,37,.06), 0 1px 2px rgba(92,58,37,.06);
+      box-shadow: inset 0 0 0 1px rgba(92,58,37,.04), 0 1px 2px rgba(92,58,37,.04);
       transition: transform .4s cubic-bezier(.16,.84,.44,1), box-shadow .4s ease;
     }
-    .cat-card:hover{ transform: translateY(-7px); box-shadow: inset 0 0 0 1px rgba(92,58,37,.08), 0 22px 40px -18px rgba(92,58,37,.4); }
+    .cat-card:hover{ transform: translateY(-7px); box-shadow: inset 0 0 0 1px rgba(92,58,37,.06), 0 22px 40px -18px rgba(92,58,37,.25); }
     .cat-card .icon-spin{ transition: transform .5s cubic-bezier(.34,1.56,.64,1); }
     .cat-card:hover .icon-spin{ transform: rotate(10deg) scale(1.08); }
 
-    .cta-btn{ position:relative; overflow:hidden; }
-    .cta-btn::before{
+    .shimmer-btn{ position:relative; overflow:hidden; }
+    .shimmer-btn::before{
       content:''; position:absolute; top:0; left:-60%; width:40%; height:100%;
-      background:linear-gradient(115deg, transparent, rgba(255,255,255,.55), transparent);
+      background:linear-gradient(115deg, transparent, rgba(255,255,255,.5), transparent);
       transform:skewX(-20deg); transition:left .8s ease;
     }
-    .cta-btn:hover::before{ left:130%; }
+    .shimmer-btn:hover::before{ left:130%; }
 
     /* ---------- sticky WhatsApp ribbon ---------- */
     .side-ribbon{
       transition: padding .3s ease, box-shadow .3s ease;
-      box-shadow: 0 10px 24px -10px rgba(215,38,61,.5);
+      box-shadow: 0 10px 24px -10px rgba(215,38,61,.3);
     }
-    .side-ribbon:hover{ box-shadow: 0 14px 30px -8px rgba(215,38,61,.6); }
+    .side-ribbon:hover{ box-shadow: 0 14px 30px -8px rgba(215,38,61,.4); }
 
     @media (prefers-reduced-motion: reduce){
       *{ animation:none !important; transition:none !important; }
@@ -225,18 +285,14 @@
     💬 Chat With Us
   </a>
 
-  <!-- ============ PAGE HERO ============ -->
-  <section class="relative w-full h-[460px] md:h-[520px] overflow-hidden bg-gradient-to-br from-[#2A0A0A] via-kumkum to-[#1A0E08]">
-    <img
-      src="https://nicyfoods.com/images/contact_hero.jpg"
-      alt="Handmade ladoo collection"
-      class="absolute inset-0 w-full h-full object-cover opacity-50"
-    />
-    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-kumkum/25 to-turmeric/10"></div>
+  <!-- ============ PAGE HERO (Lighter) ============ -->
+  <section class="relative w-full h-[460px] md:h-[520px] overflow-hidden bg-gradient-to-br from-amber-200 via-marigold to-turmeric">
+    <img src="https://nicyfoods.com/images/contact_hero.jpg" alt="Handmade ladoo collection" class="absolute inset-0 w-full h-full object-cover opacity-25 scale-110" />
+    <div class="absolute inset-0 bg-gradient-to-t from-white/15 via-cream/5 to-transparent"></div>
     <div class="hero-glow"></div>
 
-    <!-- signature kolam, drawn in once -->
-    <svg class="kolam-trace absolute -right-20 -top-16 w-[340px] h-[340px] opacity-20 hidden sm:block" viewBox="0 0 200 200" fill="none">
+    <!-- signature kolam -->
+    <svg class="kolam-trace absolute -right-20 -top-16 w-[340px] h-[340px] opacity-15 hidden sm:block" viewBox="0 0 200 200" fill="none">
       <g stroke="#FFC72C" stroke-width="1.1">
         <circle cx="100" cy="100" r="90"/>
         <circle cx="100" cy="100" r="70"/>
@@ -248,7 +304,7 @@
       <circle class="dot" cx="10" cy="100" r="3" fill="#FFC72C"/>
       <circle class="dot" cx="190" cy="100" r="3" fill="#FFC72C"/>
     </svg>
-    <svg class="kolam-trace absolute -left-16 -bottom-16 w-[260px] h-[260px] opacity-15 hidden sm:block" viewBox="0 0 200 200" fill="none">
+    <svg class="kolam-trace absolute -left-16 -bottom-16 w-[260px] h-[260px] opacity-12 hidden sm:block" viewBox="0 0 200 200" fill="none">
       <g stroke="#FFC72C" stroke-width="1.1">
         <circle cx="100" cy="100" r="80"/>
         <path d="M100 40 Q130 100 100 160 Q70 100 100 40Z"/>
@@ -265,16 +321,28 @@
     </div>
 
     <div class="relative z-10 h-full flex flex-col justify-center px-6 md:px-16 max-w-3xl mx-auto text-center">
-      <p class="hero-title-in text-marigold/90 tracking-[0.25em] uppercase text-xs md:text-sm font-semibold mb-4" style="animation-delay:.1s">
-        <a href="index.html" class="hover:underline">Home</a> / Contact &amp; FAQ
+      <div class="ghee-pour-wrap mx-auto">
+        <svg class="ghee-ribbon" width="60" height="64" viewBox="0 0 60 64" fill="none">
+          <defs>
+            <linearGradient id="gheeGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#FFC72C" />
+              <stop offset="100%" stop-color="#F5A623" />
+            </linearGradient>
+          </defs>
+          <path d="M28 2 C 22 14, 34 20, 26 32 C 20 42, 30 46, 24 54" />
+        </svg>
+        <div class="ghee-pool"></div>
+      </div>
+      <p class="hero-title-in text-jaggery/60 tracking-[0.25em] uppercase text-xs md:text-sm font-semibold mb-4" style="animation-delay:.1s">
+        <a href="index.html" class="hover:underline text-jaggery/40">Home</a> / Contact &amp; FAQ
       </p>
-      <h1 class="hero-title-in font-display text-4xl sm:text-5xl md:text-6xl text-cream leading-[1.1] mb-5" style="animation-delay:.25s">We're Here to Help</h1>
-      <p class="hero-title-in text-base sm:text-lg md:text-xl text-cream/85 font-light max-w-xl mx-auto" style="animation-delay:.4s">
+      <h1 class="hero-title-in gild-glow font-display text-4xl sm:text-5xl md:text-6xl text-jaggery leading-[1.1] mb-5" style="animation-delay:.25s">We're Here to Help</h1>
+      <p class="hero-title-in text-base sm:text-lg md:text-xl text-ink/50 font-light max-w-xl mx-auto" style="animation-delay:.4s">
         Questions about our ladoos, an order, or delivery? Find quick answers below, or reach us directly — we typically reply within a few hours.
       </p>
     </div>
 
-    <div class="hero-scroll-cue absolute bottom-6 left-1/2 -translate-x-1/2 text-cream/70">
+    <div class="hero-scroll-cue absolute bottom-6 left-1/2 -translate-x-1/2 text-jaggery/20">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12 5v14"/><path d="M6 13l6 6 6-6"/>
       </svg>
@@ -299,7 +367,7 @@
           </svg>
         </div>
         <h3 class="font-display text-lg text-jaggery mt-4 tracking-wide">EMAIL</h3>
-        <p class="text-sm text-slate-500 mt-1">nicyfoods5@gmail.com</p>
+        <p class="text-sm text-slate-400 mt-1">nicyfoods5@gmail.com</p>
       </a>
 
       <a href="tel:+918263001410" class="contact-item group">
@@ -309,7 +377,7 @@
           </svg>
         </div>
         <h3 class="font-display text-lg text-jaggery mt-4 tracking-wide">CALL / WHATSAPP</h3>
-        <p class="text-sm text-slate-500 mt-1">+91 8263001410</p>
+        <p class="text-sm text-slate-400 mt-1">+91 8263001410</p>
       </a>
 
       <div class="contact-item">
@@ -319,7 +387,7 @@
           </svg>
         </div>
         <h3 class="font-display text-lg text-jaggery mt-4 tracking-wide">HOURS</h3>
-        <p class="text-sm text-slate-500 mt-1">Everyday, 8am – 11pm</p>
+        <p class="text-sm text-slate-400 mt-1">Everyday, 8am – 11pm</p>
       </div>
 
     </div>
@@ -335,7 +403,7 @@
         <span class="text-kumkum text-xs tracking-[0.3em] uppercase font-semibold">Common Questions</span>
         <h2 class="font-display text-3xl sm:text-4xl text-jaggery mt-3 grow-underline">Frequently Asked Questions</h2>
       </div>
-      <p class="reveal text-slate-500 text-center max-w-2xl mx-auto mb-10">
+      <p class="reveal text-slate-400 text-center max-w-2xl mx-auto mb-10">
         Answers to what people usually ask before their first order. Can't find yours?
         <a href="mailto:nicyfoods5@gmail.com" class="text-kumkum font-semibold underline">Email us</a> and we'll get back to you.
       </p>
@@ -344,8 +412,8 @@
       <div class="reveal flex items-center gap-4 mb-10 flex-wrap justify-center">
         <label for="topicFilter" class="font-semibold text-jaggery text-sm">Filter by topic</label>
         <select id="topicFilter"
-          class="bg-white border border-jaggery/15 rounded-lg px-4 py-2.5 pr-10 text-sm text-jaggery
-                 min-w-[220px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-kumkum/40">
+          class="bg-white border border-jaggery/10 rounded-lg px-4 py-2.5 pr-10 text-sm text-jaggery
+                 min-w-[220px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-kumkum/30">
           <option value="all">All Topics</option>
           <option value="product">Product &amp; Quality</option>
           <option value="shipping">Shipping &amp; Delivery</option>
@@ -358,10 +426,10 @@
         <!-- Sidebar -->
         <div class="reveal">
           <h3 class="font-display text-xl text-jaggery grow-underline-left mb-5">Need a hand?</h3>
-          <p class="text-sm text-slate-500 leading-relaxed mb-4">
+          <p class="text-sm text-slate-400 leading-relaxed mb-4">
             For anything urgent — a same-day order, a delivery question — WhatsApp is the fastest way to reach us.
           </p>
-          <p class="text-sm text-slate-500 leading-relaxed">
+          <p class="text-sm text-slate-400 leading-relaxed">
             Otherwise, drop us an email and we'll usually reply within a few hours during our working hours.
           </p>
         </div>
@@ -382,7 +450,7 @@
                   <span>What ingredients go into your ladoos?</span>
                   <svg class="chev w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
-                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-500">We use pure ghee, natural jaggery, and hand-picked nuts, seeds, and herbs — no maida, preservatives, artificial essence, or synthetic colors.</p></div>
+                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-400">We use pure ghee, natural jaggery, and hand-picked nuts, seeds, and herbs — no maida, preservatives, artificial essence, or synthetic colors.</p></div>
               </div>
 
               <div class="faq-item overflow-hidden">
@@ -390,7 +458,7 @@
                   <span>Are all your ladoos made fresh?</span>
                   <svg class="chev w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
-                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-500">Yes — every batch is hand-rolled to order in small quantities, so you receive them at their freshest and most flavorful.</p></div>
+                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-400">Yes — every batch is hand-rolled to order in small quantities, so you receive them at their freshest and most flavorful.</p></div>
               </div>
 
               <div class="faq-item overflow-hidden">
@@ -398,7 +466,7 @@
                   <span>Do your products contain preservatives?</span>
                   <svg class="chev w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
-                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-500">No. Nothing artificial goes in — freshness comes from traditional preparation and proper packaging, not preservatives. This also means most ladoos are best enjoyed within a couple of weeks.</p></div>
+                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-400">No. Nothing artificial goes in — freshness comes from traditional preparation and proper packaging, not preservatives. This also means most ladoos are best enjoyed within a couple of weeks.</p></div>
               </div>
 
               <div class="faq-item overflow-hidden">
@@ -406,7 +474,7 @@
                   <span>Are they suitable for babies and elderly family members?</span>
                   <svg class="chev w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
-                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-500">Yes — our baby-friendly range is formulated for babies from 8 months onward with gentle, easy-to-digest ingredients, and our full range is designed to suit every age group.</p></div>
+                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-400">Yes — our baby-friendly range is formulated for babies from 8 months onward with gentle, easy-to-digest ingredients, and our full range is designed to suit every age group.</p></div>
               </div>
 
               <div class="faq-item overflow-hidden">
@@ -414,7 +482,7 @@
                   <span>Do you have gluten-free or low-sugar options?</span>
                   <svg class="chev w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
-                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-500">Yes — our millet-based ladoos (ragi, millet) are naturally gluten-free, and jaggery is used in place of refined sugar throughout our range. Check individual product pages or ask us for specifics.</p></div>
+                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-400">Yes — our millet-based ladoos (ragi, millet) are naturally gluten-free, and jaggery is used in place of refined sugar throughout our range. Check individual product pages or ask us for specifics.</p></div>
               </div>
 
               <div class="faq-item overflow-hidden">
@@ -422,7 +490,7 @@
                   <span>How should I store them after they arrive?</span>
                   <svg class="chev w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
-                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-500">Keep them in an airtight container in a cool, dry place. Most varieties stay fresh for 2-3 weeks at room temperature; refrigerating extends this a little further.</p></div>
+                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-400">Keep them in an airtight container in a cool, dry place. Most varieties stay fresh for 2-3 weeks at room temperature; refrigerating extends this a little further.</p></div>
               </div>
 
             </div>
@@ -441,7 +509,7 @@
                   <span>Do you deliver across India?</span>
                   <svg class="chev w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
-                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-500">Yes, we ship pan-India via trusted couriers, with the quickest delivery times around Pune and Maharashtra.</p></div>
+                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-400">Yes, we ship pan-India via trusted couriers, with the quickest delivery times around Pune and Maharashtra.</p></div>
               </div>
 
               <div class="faq-item overflow-hidden">
@@ -449,7 +517,7 @@
                   <span>How long does delivery take?</span>
                   <svg class="chev w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
-                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-500">Typically 2-4 business days within Maharashtra, and 4-7 business days for the rest of India, depending on your location.</p></div>
+                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-400">Typically 2-4 business days within Maharashtra, and 4-7 business days for the rest of India, depending on your location.</p></div>
               </div>
 
               <div class="faq-item overflow-hidden">
@@ -457,7 +525,7 @@
                   <span>How are the ladoos packed for transit?</span>
                   <svg class="chev w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
-                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-500">Every order goes in food-grade, airtight containers with extra cushioning, so they arrive fresh and intact.</p></div>
+                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-400">Every order goes in food-grade, airtight containers with extra cushioning, so they arrive fresh and intact.</p></div>
               </div>
 
               <div class="faq-item overflow-hidden">
@@ -465,7 +533,7 @@
                   <span>What are the courier charges?</span>
                   <svg class="chev w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
-                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-500">Courier charges depend on the weight you order (250g / 500g / 1kg) and are shown on each product page. We'll confirm the exact total with you on WhatsApp before you pay.</p></div>
+                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-400">Courier charges depend on the weight you order (250g / 500g / 1kg) and are shown on each product page. We'll confirm the exact total with you on WhatsApp before you pay.</p></div>
               </div>
 
               <div class="faq-item overflow-hidden">
@@ -473,7 +541,7 @@
                   <span>Do you ship internationally?</span>
                   <svg class="chev w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
-                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-500">Not at the moment — we currently ship within India only. If you have a special request, message us and we'll see what's possible.</p></div>
+                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-400">Not at the moment — we currently ship within India only. If you have a special request, message us and we'll see what's possible.</p></div>
               </div>
 
             </div>
@@ -492,7 +560,7 @@
                   <span>How do I place an order?</span>
                   <svg class="chev w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
-                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-500">Add whatever you'd like to your cart from the <a href="products.html" class="text-kumkum underline font-medium">Products</a> page, then tap "Checkout on WhatsApp" — it opens a pre-filled message with your order so we can confirm details and payment directly with you.</p></div>
+                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-400">Add whatever you'd like to your cart from the <a href="products.html" class="text-kumkum underline font-medium">Products</a> page, then tap "Checkout on WhatsApp" — it opens a pre-filled message with your order so we can confirm details and payment directly with you.</p></div>
               </div>
 
               <div class="faq-item overflow-hidden">
@@ -500,7 +568,7 @@
                   <span>Can I change or cancel my order?</span>
                   <svg class="chev w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
-                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-500">Yes, as long as it hasn't gone into preparation yet. Message us on WhatsApp as soon as possible and we'll sort it out.</p></div>
+                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-400">Yes, as long as it hasn't gone into preparation yet. Message us on WhatsApp as soon as possible and we'll sort it out.</p></div>
               </div>
 
               <div class="faq-item overflow-hidden">
@@ -508,7 +576,7 @@
                   <span>What payment methods do you accept?</span>
                   <svg class="chev w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
-                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-500">We accept UPI and bank transfer — payment details are shared once your order is confirmed over WhatsApp.</p></div>
+                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-400">We accept UPI and bank transfer — payment details are shared once your order is confirmed over WhatsApp.</p></div>
               </div>
 
               <div class="faq-item overflow-hidden">
@@ -516,7 +584,7 @@
                   <span>What's your return or refund policy?</span>
                   <svg class="chev w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
-                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-500">Since these are fresh, handmade food items, we can't accept returns. If something arrives damaged, incorrect, or defective, tell us within 24 hours of delivery and we'll sort out a replacement or refund.</p></div>
+                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-400">Since these are fresh, handmade food items, we can't accept returns. If something arrives damaged, incorrect, or defective, tell us within 24 hours of delivery and we'll sort out a replacement or refund.</p></div>
               </div>
 
               <div class="faq-item overflow-hidden">
@@ -524,7 +592,7 @@
                   <span>I received a damaged item — what do I do?</span>
                   <svg class="chev w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
-                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-500">Email us a photo of the item along with your order details within 24 hours of delivery, and we'll arrange a replacement or refund promptly.</p></div>
+                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-400">Email us a photo of the item along with your order details within 24 hours of delivery, and we'll arrange a replacement or refund promptly.</p></div>
               </div>
 
               <div class="faq-item overflow-hidden">
@@ -532,7 +600,7 @@
                   <span>Do you take bulk or gifting orders?</span>
                   <svg class="chev w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
-                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-500">Yes — we do bulk orders for festivals, weddings, and corporate gifting, with options for nice packaging. Message us on WhatsApp with your requirements and timeline.</p></div>
+                <div class="faq-a"><p class="px-5 pb-5 text-sm leading-relaxed text-slate-400">Yes — we do bulk orders for festivals, weddings, and corporate gifting, with options for nice packaging. Message us on WhatsApp with your requirements and timeline.</p></div>
               </div>
 
             </div>
@@ -546,13 +614,13 @@
   <div class="torn-edge"></div>
 
   <!-- ============ SHOP BY CATEGORY ============ -->
-  <section class="py-16 md:py-20 bg-jaggery/[0.04]">
+  <section class="py-16 md:py-20 bg-gradient-to-b from-sand/40 via-cream to-sand/20">
     <div class="max-w-6xl mx-auto px-6">
       <div class="reveal text-center mb-4">
         <span class="text-kumkum text-xs tracking-[0.3em] uppercase font-semibold">For Every Family Member</span>
         <h2 class="font-display text-3xl sm:text-4xl text-jaggery mt-3 grow-underline">Something for Every Ghar</h2>
       </div>
-      <p class="reveal text-slate-500 text-center max-w-2xl mx-auto mb-12">
+      <p class="reveal text-slate-400 text-center max-w-2xl mx-auto mb-12">
         Still deciding what to try first? Here's where most people start.
       </p>
 
@@ -566,7 +634,7 @@
             </svg>
           </div>
           <h4 class="font-display text-lg text-jaggery mb-2">Traditional Ladoos</h4>
-          <p class="text-sm text-slate-500 leading-relaxed">Classic favorites like Peanut, Dink, and Mug laddu made the time-tested way.</p>
+          <p class="text-sm text-slate-400 leading-relaxed">Classic favorites like Peanut, Dink, and Mug laddu made the time-tested way.</p>
         </a>
 
         <a href="products.html" class="cat-card rounded-2xl p-8 text-center block">
@@ -576,7 +644,7 @@
             </svg>
           </div>
           <h4 class="font-display text-lg text-jaggery mb-2">Herbal Ladoos</h4>
-          <p class="text-sm text-slate-500 leading-relaxed">Ashwagandha, Tulsi, Moringa, and other Ayurvedic blends for everyday wellness.</p>
+          <p class="text-sm text-slate-400 leading-relaxed">Ashwagandha, Tulsi, Moringa, and other Ayurvedic blends for everyday wellness.</p>
         </a>
 
         <a href="products.html" class="cat-card rounded-2xl p-8 text-center block">
@@ -586,7 +654,7 @@
             </svg>
           </div>
           <h4 class="font-display text-lg text-jaggery mb-2">Millet Ladoos</h4>
-          <p class="text-sm text-slate-500 leading-relaxed">Gluten-free Ragi and Millet ladoos for sustainable, everyday nutrition.</p>
+          <p class="text-sm text-slate-400 leading-relaxed">Gluten-free Ragi and Millet ladoos for sustainable, everyday nutrition.</p>
         </a>
 
         <a href="products.html" class="cat-card rounded-2xl p-8 text-center block">
@@ -598,7 +666,7 @@
             </svg>
           </div>
           <h4 class="font-display text-lg text-jaggery mb-2">Baby-Friendly</h4>
-          <p class="text-sm text-slate-500 leading-relaxed">Gentle, easy-to-digest ladoos formulated for babies from 8 months onward.</p>
+          <p class="text-sm text-slate-400 leading-relaxed">Gentle, easy-to-digest ladoos formulated for babies from 8 months onward.</p>
         </a>
 
       </div>
@@ -613,9 +681,9 @@
     </div>
     <div class="reveal relative z-10">
       <h2 class="font-display text-2xl sm:text-3xl text-cream mb-3">Still have a question?</h2>
-      <p class="text-cream/75 max-w-xl mx-auto mb-7">We're happy to help — message us on WhatsApp and we'll get back to you quickly.</p>
+      <p class="text-cream/60 max-w-xl mx-auto mb-7">We're happy to help — message us on WhatsApp and we'll get back to you quickly.</p>
       <a href="https://wa.me/918263001410" target="_blank" rel="noopener"
-         class="cta-btn inline-flex items-center gap-2 bg-gradient-to-r from-turmeric to-kumkum hover:opacity-95 text-white font-semibold px-8 py-3.5 rounded-xl transition-transform hover:-translate-y-0.5">
+         class="shimmer-btn inline-flex items-center gap-2 bg-gradient-to-r from-turmeric to-kumkum hover:opacity-95 text-white font-semibold px-8 py-3.5 rounded-xl transition-transform hover:-translate-y-0.5">
         Chat on WhatsApp
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M5 12h14"/><path d="M13 6l6 6-6 6"/>
@@ -630,8 +698,7 @@
   <script src="js/footer.js"></script>
 
   <script>
-    // Populate per-category question counts (badge next to each heading,
-    // and appended to each dropdown option so people know what to expect).
+    // Populate per-category question counts
     document.querySelectorAll('.faq-category').forEach((cat) => {
       const topic = cat.dataset.topic;
       const count = cat.querySelectorAll('.faq-item').length;
@@ -651,7 +718,6 @@
         const answer = item.querySelector('.faq-a');
         const isOpen = item.classList.contains('is-open');
 
-        // close sibling items within the same category
         item.closest('.faq-category').querySelectorAll('.faq-item').forEach((i) => {
           i.classList.remove('is-open');
           i.querySelector('.faq-a').style.maxHeight = null;
@@ -673,7 +739,7 @@
     });
 
     // Scroll reveal
-    const revealEls = document.querySelectorAll('.reveal, .stagger, .kolam-divider');
+    const revealEls = document.querySelectorAll('.reveal, .stagger, .kolam-divider, .grow-underline, .kolam-trace');
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -684,13 +750,10 @@
     }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
     revealEls.forEach((el) => io.observe(el));
 
-    // If arriving via #faq, make sure the section is visible immediately
     if (window.location.hash === '#faq') {
       document.querySelectorAll('#faq .reveal, #faq .stagger').forEach((el) => el.classList.add('in'));
     }
 
-    // Hero kolam traces are already in view on load, so they shouldn't
-    // wait for a scroll event to draw themselves in.
     window.addEventListener('load', () => {
       document.querySelectorAll('section:first-of-type .kolam-trace').forEach((el) => {
         setTimeout(() => el.classList.add('in'), 300);

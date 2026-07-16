@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Product Details | NicyFoods</title>
+
+    <!-- ===== FONTAWESOME ===== -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
     <script src="https://cdn.tailwindcss.com">
     </script>
     <script>
@@ -11,13 +15,14 @@
             theme: {
                 extend: {
                     colors: {
-                        cream: '#FBF1E2',
+                        cream: '#FFFFFF',
                         jaggery: '#5C3A25',
                         ink: '#3A2417',
-                        turmeric: '#E8A33D',
-                        marigold: '#F2C14E',
-                        kumkum: '#A63A2E',
+                        turmeric: '#F5A623',
+                        marigold: '#FFC72C',
+                        kumkum: '#D7263D',
                         herbal: '#5F7A4F',
+                        sand: '#F8F4F0',
                     },
                     fontFamily: {
                         display: ['"Rozha One"', 'serif'],
@@ -31,15 +36,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+
     <style>
+        /* ===== UPDATED COLORS TO MATCH INDEX ===== */
         :root {
-            --cream: #FBF1E2;
+            --cream: #FFFFFF;
             --jaggery: #5C3A25;
             --ink: #3A2417;
-            --turmeric: #E8A33D;
-            --marigold: #F2C14E;
-            --kumkum: #A63A2E;
+            --turmeric: #F5A623;
+            --marigold: #FFC72C;
+            --kumkum: #D7263D;
             --herbal: #5F7A4F;
+            --sand: #F8F4F0;
         }
         * {
             box-sizing: border-box;
@@ -74,27 +82,13 @@
         .stagger.in>* {
             animation: fadeUp .7s cubic-bezier(.16, .84, .44, 1) both;
         }
-        .stagger.in>*:nth-child(1) {
-            animation-delay: .05s
-        }
-        .stagger.in>*:nth-child(2) {
-            animation-delay: .15s
-        }
-        .stagger.in>*:nth-child(3) {
-            animation-delay: .25s
-        }
-        .stagger.in>*:nth-child(4) {
-            animation-delay: .35s
-        }
+        .stagger.in>*:nth-child(1) { animation-delay: .05s; }
+        .stagger.in>*:nth-child(2) { animation-delay: .15s; }
+        .stagger.in>*:nth-child(3) { animation-delay: .25s; }
+        .stagger.in>*:nth-child(4) { animation-delay: .35s; }
         @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(22px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(22px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .card-in {
             animation: fadeUp .6s cubic-bezier(.16, .84, .44, 1) both;
@@ -119,124 +113,311 @@
         #main-image {
             transition: opacity .3s ease, transform .5s cubic-bezier(.16, .84, .44, 1);
         }
-        .gallery-frame{ position: relative; }
+        .gallery-frame {
+            position: relative;
+            background: #FFFFFF;
+            border-radius: 1.25rem;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(92, 58, 37, .04);
+        }
         .gallery-frame:hover #main-image {
-            transform: scale(1.04);
+            transform: scale(1.02);
         }
         .thumb {
-            transition: border-color .3s ease, transform .3s ease;
+            transition: all .3s ease;
+            border: 2px solid transparent;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            cursor: pointer;
+            width: 72px;
+            height: 72px;
+            flex-shrink: 0;
         }
         .thumb.active {
             border-color: var(--kumkum);
+            box-shadow: 0 0 0 2px rgba(215, 38, 61, .08);
         }
         .thumb:hover {
             transform: translateY(-2px);
+            border-color: var(--turmeric);
+        }
+        .thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        /* ---------- wishlist heart (matches products.html) ---------- */
-        .wish-btn{
-            position:absolute; top:12px; right:12px; width:40px; height:40px; border-radius:50%;
-            background:rgba(255,255,255,.92); display:flex; align-items:center; justify-content:center;
-            box-shadow:0 4px 10px rgba(92,58,37,.18); transition:transform .25s cubic-bezier(.34,1.56,.64,1), background-color .25s ease;
-            z-index:2; border:none; cursor:pointer;
+        /* ---------- wishlist heart ---------- */
+        .wish-btn {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .92);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(92, 58, 37, .08);
+            transition: transform .25s cubic-bezier(.34, 1.56, .64, 1), background-color .25s ease;
+            z-index: 2;
+            border: none;
+            cursor: pointer;
         }
-        .wish-btn:hover{ transform:scale(1.1); }
-        .wish-btn svg{ width:19px; height:19px; stroke:var(--kumkum); fill:none; transition:fill .2s ease, stroke .2s ease; }
-        .wish-btn.active svg{ fill:var(--kumkum); }
-        .wish-btn.active{ animation: heartPop .4s cubic-bezier(.34,1.56,.64,1); }
-        @keyframes heartPop{ 0%{ transform:scale(1); } 40%{ transform:scale(1.35); } 100%{ transform:scale(1); } }
+        .wish-btn:hover {
+            transform: scale(1.1);
+        }
+        .wish-btn svg {
+            width: 19px;
+            height: 19px;
+            stroke: var(--kumkum);
+            fill: none;
+            transition: fill .2s ease, stroke .2s ease;
+        }
+        .wish-btn.active svg {
+            fill: var(--kumkum);
+        }
+        .wish-btn.active {
+            animation: heartPop .4s cubic-bezier(.34, 1.56, .64, 1);
+        }
+        @keyframes heartPop {
+            0% { transform: scale(1); }
+            40% { transform: scale(1.35); }
+            100% { transform: scale(1); }
+        }
 
-        .wish-btn-sm{
-            position:absolute; top:10px; right:10px; width:34px; height:34px; border-radius:50%;
-            background:rgba(255,255,255,.9); display:flex; align-items:center; justify-content:center;
-            box-shadow:0 4px 10px rgba(92,58,37,.18); transition:transform .25s cubic-bezier(.34,1.56,.64,1);
-            z-index:2; border:none; cursor:pointer;
+        .wish-btn-sm {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(92, 58, 37, .08);
+            transition: transform .25s cubic-bezier(.34, 1.56, .64, 1);
+            z-index: 2;
+            border: none;
+            cursor: pointer;
         }
-        .wish-btn-sm:hover{ transform:scale(1.1); }
-        .wish-btn-sm svg{ width:16px; height:16px; stroke:var(--kumkum); fill:none; transition:fill .2s ease; }
-        .wish-btn-sm.active svg{ fill:var(--kumkum); }
-        .wish-btn-sm.active{ animation: heartPop .4s cubic-bezier(.34,1.56,.64,1); }
+        .wish-btn-sm:hover {
+            transform: scale(1.1);
+        }
+        .wish-btn-sm svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--kumkum);
+            fill: none;
+            transition: fill .2s ease;
+        }
+        .wish-btn-sm.active svg {
+            fill: var(--kumkum);
+        }
+        .wish-btn-sm.active {
+            animation: heartPop .4s cubic-bezier(.34, 1.56, .64, 1);
+        }
 
         /* ---------- weight selector ---------- */
-        .weight-option{
-            cursor:pointer; user-select:none;
-            border:1.5px solid rgba(92,58,37,.15); background:#fff;
+        .weight-option {
+            cursor: pointer;
+            user-select: none;
+            border: 1.5px solid rgba(92, 58, 37, .1);
+            background: #fff;
             transition: border-color .2s ease, background-color .2s ease, transform .15s ease;
+            border-radius: 0.75rem;
+            padding: 0.75rem 0.5rem;
+            text-align: center;
         }
-        .weight-option:hover{ border-color: rgba(166,58,46,.4); }
-        .weight-option.selected{
-            border-color: var(--kumkum); background: rgba(166,58,46,.06);
+        .weight-option:hover {
+            border-color: rgba(215, 38, 61, .3);
         }
-        .weight-option.disabled{
-            opacity:.4; cursor:not-allowed; pointer-events:none;
+        .weight-option.selected {
+            border-color: var(--kumkum);
+            background: rgba(215, 38, 61, .04);
         }
-        .weight-option .weight-check{
-            width:16px; height:16px; border-radius:50%; border:1.5px solid rgba(92,58,37,.3);
-            display:flex; align-items:center; justify-content:center; margin:0 auto .5rem;
+        .weight-option.disabled {
+            opacity: .4;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .weight-option .weight-check {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(92, 58, 37, .2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.4rem;
             transition: border-color .2s ease, background-color .2s ease;
         }
-        .weight-option.selected .weight-check{ border-color:var(--kumkum); background:var(--kumkum); }
-        .weight-option .weight-check::after{
-            content:''; width:6px; height:6px; border-radius:50%; background:#fff;
-            transform:scale(0); transition:transform .2s cubic-bezier(.34,1.56,.64,1);
+        .weight-option.selected .weight-check {
+            border-color: var(--kumkum);
+            background: var(--kumkum);
         }
-        .weight-option.selected .weight-check::after{ transform:scale(1); }
+        .weight-option .weight-check::after {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #fff;
+            transform: scale(0);
+            transition: transform .2s cubic-bezier(.34, 1.56, .64, 1);
+        }
+        .weight-option.selected .weight-check::after {
+            transform: scale(1);
+        }
 
         /* ---------- qty stepper ---------- */
-        .qty-stepper{ display:flex; align-items:center; border:1.5px solid rgba(92,58,37,.15); border-radius:.7rem; overflow:hidden; }
-        .qty-btn{
-            width:40px; height:48px; display:flex; align-items:center; justify-content:center;
-            color:var(--jaggery); font-weight:700; font-size:1.1rem; transition:background-color .2s ease;
+        .qty-stepper {
+            display: flex;
+            align-items: center;
+            border: 1.5px solid rgba(92, 58, 37, .08);
+            border-radius: .7rem;
+            overflow: hidden;
+            background: #fff;
         }
-        .qty-btn:hover{ background:rgba(166,58,46,.08); }
-        .qty-val{ width:44px; text-align:center; font-weight:600; }
+        .qty-btn {
+            width: 40px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--jaggery);
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: background-color .2s ease;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+        }
+        .qty-btn:hover {
+            background: rgba(215, 38, 61, .04);
+        }
+        .qty-val {
+            width: 44px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1rem;
+        }
 
         /* ---------- add to cart button ---------- */
-        .add-cart-btn{
-            position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; gap:8px;
-            background:linear-gradient(90deg,var(--turmeric),var(--kumkum)); color:#fff; font-weight:600;
-            padding:.9rem 1.4rem; border-radius:.75rem; transition:opacity .2s ease, transform .15s ease;
-            border:none; cursor:pointer;
+        .add-cart-btn {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(90deg, var(--turmeric), var(--kumkum));
+            color: #fff;
+            font-weight: 600;
+            padding: .9rem 1.4rem;
+            border-radius: .75rem;
+            transition: opacity .2s ease, transform .15s ease;
+            border: none;
+            cursor: pointer;
+            flex: 1;
         }
-        .add-cart-btn:active{ transform:scale(.98); }
-        .add-cart-btn.added{ background:linear-gradient(90deg,#4b9560,#2f6f45); }
+        .add-cart-btn:active {
+            transform: scale(.98);
+        }
+        .add-cart-btn.added {
+            background: linear-gradient(90deg, #4b9560, #2f6f45);
+        }
 
-        /* ---------- small add-to-cart + view actions (similar products) ---------- */
-        .card-actions{ display:flex; gap:8px; }
-        .add-cart-btn-sm{
-            position:relative; overflow:hidden; flex:1; display:flex; align-items:center; justify-content:center; gap:6px;
-            background:linear-gradient(90deg,var(--turmeric),var(--kumkum)); color:#fff; font-weight:600; font-size:.85rem;
-            padding:.6rem 1rem; border-radius:.6rem; transition:opacity .2s ease, transform .15s ease; border:none; cursor:pointer;
+        /* ---------- small add-to-cart + view actions ---------- */
+        .card-actions {
+            display: flex;
+            gap: 8px;
         }
-        .add-cart-btn-sm:active{ transform:scale(.97); }
-        .add-cart-btn-sm.added{ background:linear-gradient(90deg,#4b9560,#2f6f45); }
-        .view-arrow-btn{
-            width:40px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
-            border:1.5px solid var(--kumkum); color:var(--kumkum); border-radius:.6rem;
-            transition:background-color .2s ease, color .2s ease, transform .2s ease;
+        .add-cart-btn-sm {
+            position: relative;
+            overflow: hidden;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: linear-gradient(90deg, var(--turmeric), var(--kumkum));
+            color: #fff;
+            font-weight: 600;
+            font-size: .85rem;
+            padding: .6rem 1rem;
+            border-radius: .6rem;
+            transition: opacity .2s ease, transform .15s ease;
+            border: none;
+            cursor: pointer;
         }
-        .view-arrow-btn:hover{ background:var(--kumkum); color:#fff; transform:translateX(2px); }
+        .add-cart-btn-sm:active {
+            transform: scale(.97);
+        }
+        .add-cart-btn-sm.added {
+            background: linear-gradient(90deg, #4b9560, #2f6f45);
+        }
+        .view-arrow-btn {
+            width: 40px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px solid var(--kumkum);
+            color: var(--kumkum);
+            border-radius: .6rem;
+            transition: background-color .2s ease, color .2s ease, transform .2s ease;
+            text-decoration: none;
+        }
+        .view-arrow-btn:hover {
+            background: var(--kumkum);
+            color: #fff;
+            transform: translateX(2px);
+        }
 
         /* ---------- toast ---------- */
-        .toast{
-            position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(20px);
-            background:var(--jaggery); color:var(--cream); padding:.7rem 1.3rem; border-radius:999px;
-            font-size:.9rem; font-weight:600; z-index:60; opacity:0; pointer-events:none;
-            transition:opacity .3s ease, transform .3s ease; box-shadow:0 10px 24px rgba(58,36,23,.35);
-            display:flex; align-items:center; gap:10px;
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 26px;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--jaggery);
+            color: var(--cream);
+            padding: .7rem 1.3rem;
+            border-radius: 999px;
+            font-size: .9rem;
+            font-weight: 600;
+            z-index: 60;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .3s ease, transform .3s ease;
+            box-shadow: 0 10px 24px rgba(58, 36, 23, .2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
-        .toast a{ color:var(--marigold); font-weight:700; text-decoration:underline; }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        .toast a {
+            color: var(--marigold);
+            font-weight: 700;
+            text-decoration: underline;
+        }
 
         /* ---------- cards ---------- */
         .product-card {
-            background:#FFFDF9;
-            box-shadow: inset 0 0 0 1px rgba(92,58,37,.06), 0 1px 2px rgba(92,58,37,.06);
+            background: #FFFDF9;
+            box-shadow: inset 0 0 0 1px rgba(92, 58, 37, .04), 0 1px 2px rgba(92, 58, 37, .04);
             transition: box-shadow .35s ease, transform .35s ease;
-            cursor:pointer;
+            cursor: pointer;
         }
         .product-card:hover {
-            box-shadow: inset 0 0 0 1px rgba(92,58,37,.08), 0 22px 40px -18px rgba(92,58,37,.35);
+            box-shadow: inset 0 0 0 1px rgba(92, 58, 37, .06), 0 22px 40px -18px rgba(92, 58, 37, .2);
             transform: translateY(-6px);
         }
         .product-card .prod-img {
@@ -251,7 +432,7 @@
         }
         .rise-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 22px 40px -18px rgba(92, 58, 37, .3);
+            box-shadow: 0 22px 40px -18px rgba(92, 58, 37, .2);
         }
         .icon-spin {
             transition: transform .6s cubic-bezier(.34, 1.56, .64, 1);
@@ -261,48 +442,37 @@
         }
 
         /* ---------- CTA buttons ---------- */
-        .cta-btn {
+        .shimmer-btn {
             position: relative;
             overflow: hidden;
         }
-        .cta-btn::before {
+        .shimmer-btn::before {
             content: '';
             position: absolute;
             top: 0;
             left: -60%;
             width: 40%;
             height: 100%;
-            background: linear-gradient(115deg, transparent, rgba(255, 255, 255, .55), transparent);
+            background: linear-gradient(115deg, transparent, rgba(255, 255, 255, .5), transparent);
             transform: skewX(-20deg);
             transition: left .8s ease;
         }
-        .cta-btn:hover::before {
+        .shimmer-btn:hover::before {
             left: 130%;
         }
 
-        /* ---------- checklist ---------- */
-        .check-item {
-            opacity: 0;
-            transform: translateX(-8px);
-            animation: checkIn .5s ease forwards;
-        }
-        @keyframes checkIn {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        .check-mark {
+        /* ---------- feature icons ---------- */
+        .feature-icon {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: var(--herbal);
-            color: #fff;
-            font-size: 11px;
+            width: 20px;
+            height: 20px;
             flex-shrink: 0;
+        }
+        .feature-icon svg {
+            width: 100%;
+            height: 100%;
         }
 
         /* ---------- step numbers ---------- */
@@ -313,21 +483,21 @@
             transform: scale(1.12) rotate(-4deg);
         }
 
-        /* ---------- floating ladoo particles (HOME/ABOUT style) ---------- */
+        /* ---------- floating ladoo particles ---------- */
         .ladoo-particle {
             position: absolute;
             border-radius: 50%;
-            background: radial-gradient(circle at 35% 30%, #F2C14E, #C8791F 70%);
-            opacity: .18;
+            background: radial-gradient(circle at 35% 30%, #FFC72C, #D7263D 70%);
+            opacity: .12;
             pointer-events: none;
             z-index: 1;
         }
         .ladoo-particle.dim {
-            opacity: .10;
+            opacity: .06;
         }
         .ladoo-particle.glow {
-            opacity: .28;
-            box-shadow: 0 0 24px 6px rgba(242, 193, 78, .25);
+            opacity: .18;
+            box-shadow: 0 0 24px 6px rgba(255, 199, 44, .12);
         }
 
         .float-drift {
@@ -344,36 +514,147 @@
         }
 
         @keyframes driftY {
-            0%,
-            100% {
-                transform: translateY(0) translateX(0);
-            }
-            50% {
-                transform: translateY(-18px) translateX(8px);
-            }
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-18px) translateX(8px); }
         }
         @keyframes floatY {
-            0%,
-            100% {
-                transform: translateY(0) rotate(0deg);
-            }
-            50% {
-                transform: translateY(-16px) rotate(6deg);
-            }
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-16px) rotate(6deg); }
+        }
+
+        /* ---------- hero ---------- */
+        .hero-title-in {
+            animation: titleIn 1s cubic-bezier(.16, .84, .44, 1) both;
+        }
+        @keyframes titleIn {
+            from { opacity: 0; transform: translateY(26px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hero-scroll-cue {
+            animation: cueBounce 2s ease-in-out infinite;
+        }
+        @keyframes cueBounce {
+            0%, 100% { transform: translateY(0); opacity: .3; }
+            50% { transform: translateY(8px); opacity: .6; }
+        }
+        .hero-glow {
+            position: absolute;
+            inset: -20%;
+            pointer-events: none;
+            background: radial-gradient(circle at 30% 35%, rgba(255, 199, 44, .2), transparent 55%),
+                radial-gradient(circle at 75% 70%, rgba(215, 38, 61, .08), transparent 60%);
+            animation: glowDrift 12s ease-in-out infinite;
+        }
+        @keyframes glowDrift {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(3%, -2%) scale(1.08); }
+        }
+
+        /* ---------- kolam trace ---------- */
+        .kolam-trace path,
+        .kolam-trace circle,
+        .kolam-trace ellipse {
+            stroke-dasharray: 620;
+            stroke-dashoffset: 620;
+            transition: stroke-dashoffset 2.4s cubic-bezier(.16, .84, .44, 1);
+        }
+        .kolam-trace.in path,
+        .kolam-trace.in circle,
+        .kolam-trace.in ellipse {
+            stroke-dashoffset: 0;
+        }
+        .kolam-trace .dot {
+            opacity: 0;
+            transform: scale(0);
+            transform-box: fill-box;
+            transform-origin: center;
+            transition: opacity .5s ease, transform .5s cubic-bezier(.34, 1.56, .64, 1);
+        }
+        .kolam-trace.in .dot {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .kolam-trace.in .dot:nth-of-type(1) { transition-delay: .2s; }
+        .kolam-trace.in .dot:nth-of-type(2) { transition-delay: .5s; }
+        .kolam-trace.in .dot:nth-of-type(3) { transition-delay: .8s; }
+        .kolam-trace.in .dot:nth-of-type(4) { transition-delay: 1.1s; }
+
+        .grow-underline {
+            position: relative;
+            display: inline-block;
+        }
+        .grow-underline::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -10px;
+            height: 3px;
+            width: 0;
+            background: linear-gradient(90deg, var(--turmeric), var(--kumkum));
+            transform: translateX(-50%);
+            transition: width .7s cubic-bezier(.16, .84, .44, 1);
+            border-radius: 2px;
+        }
+        .reveal.in .grow-underline::after {
+            width: 64px;
+        }
+
+        /* ---------- ghee pour ---------- */
+        .ghee-pour-wrap {
+            height: 64px;
+            position: relative;
+            margin-bottom: -6px;
+            width: 60px;
+        }
+        .ghee-ribbon path {
+            fill: none;
+            stroke: url(#gheeGrad);
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-dasharray: 180;
+            stroke-dashoffset: 180;
+            animation: pourDraw 1s cubic-bezier(.55, 0, .35, 1) .1s forwards;
+            filter: drop-shadow(0 0 6px rgba(255, 199, 44, .2));
+        }
+        @keyframes pourDraw {
+            to { stroke-dashoffset: 0; }
+        }
+        .ghee-pool {
+            position: absolute;
+            left: 20px;
+            bottom: 6px;
+            width: 34px;
+            height: 10px;
+            border-radius: 50%;
+            background: radial-gradient(ellipse at center, var(--marigold), var(--turmeric) 70%, transparent 100%);
+            opacity: 0;
+            transform: scale(.2);
+            box-shadow: 0 0 18px 4px rgba(255, 199, 44, .2);
+            animation: poolPop .7s cubic-bezier(.34, 1.56, .64, 1) 1s forwards;
+        }
+        @keyframes poolPop {
+            to { opacity: 1; transform: scale(1); }
+        }
+        .gild-glow {
+            animation: gildPulse 2.6s ease-in-out 1.6s 2;
+        }
+        @keyframes gildPulse {
+            0%, 100% { text-shadow: 0 0 0 rgba(255, 199, 44, 0); }
+            50% { text-shadow: 0 0 22px rgba(255, 199, 44, .1); }
+        }
+
+        .stat-num {
+            font-variant-numeric: tabular-nums;
         }
 
         @media (prefers-reduced-motion: reduce) {
-            * {
-                animation: none !important;
-                transition: none !important;
-            }
-            .reveal {
-                opacity: 1 !important;
-                transform: none !important;
-            }
-            .ladoo-particle {
-                opacity: .12 !important;
-            }
+            * { animation: none !important; transition: none !important; }
+            .reveal { opacity: 1 !important; transform: none !important; }
+            .ladoo-particle { opacity: .06 !important; }
+            .kolam-trace path, .kolam-trace circle, .kolam-trace ellipse { stroke-dashoffset: 0 !important; }
+            .kolam-trace .dot { opacity: 1 !important; transform: scale(1) !important; }
+            .ghee-ribbon path { stroke-dashoffset: 0 !important; }
+            .ghee-pool { opacity: 1 !important; transform: scale(1) !important; }
         }
     </style>
 </head>
@@ -381,17 +662,92 @@
 
     <div id="navbar-placeholder"></div>
 
-    <!-- ===== floating particles : top area ===== -->
-    <div class="relative">
-        <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
-            <div class="ladoo-particle glow w-8 h-8 float-drift" style="top:6%; left:4%; --dur:8s; --delay:.2s;"></div>
-            <div class="ladoo-particle dim w-5 h-5 float-drift-slow" style="top:12%; left:20%; --dur:10s; --delay:1.4s;"></div>
-            <div class="ladoo-particle w-6 h-6 float-y" style="top:4%; right:8%; --dur:9s; --delay:2.1s;"></div>
-            <div class="ladoo-particle dim w-4 h-4 float-drift" style="top:18%; right:24%; --dur:7s; --delay:.6s;"></div>
-            <div class="ladoo-particle glow w-7 h-7 float-y-slow" style="top:10%; left:48%; --dur:11s; --delay:1.8s;"></div>
+    <!-- ============ HERO (Lighter, matches index) ============ -->
+    <section class="relative w-full h-[380px] md:h-[420px] overflow-hidden bg-gradient-to-br from-amber-200 via-marigold to-turmeric">
+        <img src="https://nicyfoods.com/images/products_hero.jpg" alt="Product Details" class="absolute inset-0 w-full h-full object-cover opacity-25 scale-110" />
+        <div class="absolute inset-0 bg-gradient-to-t from-white/15 via-cream/5 to-transparent"></div>
+        <div class="hero-glow"></div>
+
+        <!-- floating particles -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none z-1">
+            <div class="ladoo-particle glow w-8 h-8 float-drift" style="top:12%; left:8%;"></div>
+            <div class="ladoo-particle dim w-5 h-5 float-drift-slow" style="top:20%; left:22%;"></div>
+            <div class="ladoo-particle w-6 h-6 float-y" style="top:6%; right:12%;"></div>
+            <div class="ladoo-particle dim w-4 h-4 float-drift" style="top:22%; right:20%;"></div>
+            <div class="ladoo-particle glow w-7 h-7 float-y-slow" style="top:8%; left:45%;"></div>
+            <div class="ladoo-particle w-6 h-6 float-drift-slow" style="bottom:15%; left:10%;"></div>
+            <div class="ladoo-particle dim w-5 h-5 float-y" style="bottom:12%; right:15%;"></div>
+            <div class="ladoo-particle glow w-4 h-4 float-drift" style="bottom:8%; left:25%;"></div>
         </div>
 
-        <main id="detail-root" class="relative z-10 max-w-7xl mx-auto px-6 py-12">
+        <!-- signature kolam -->
+        <svg class="kolam-trace absolute -right-20 -top-16 w-[320px] h-[320px] opacity-15 hidden sm:block" viewBox="0 0 200 200" fill="none">
+            <g stroke="#FFC72C" stroke-width="1.1">
+                <circle cx="100" cy="100" r="90"/>
+                <circle cx="100" cy="100" r="70"/>
+                <path d="M100 30 Q120 60 100 100 Q80 140 100 170"/>
+                <path d="M30 100 Q60 80 100 100 Q140 120 170 100"/>
+            </g>
+            <circle class="dot" cx="100" cy="10" r="3" fill="#FFC72C"/>
+            <circle class="dot" cx="100" cy="190" r="3" fill="#FFC72C"/>
+            <circle class="dot" cx="10" cy="100" r="3" fill="#FFC72C"/>
+            <circle class="dot" cx="190" cy="100" r="3" fill="#FFC72C"/>
+        </svg>
+        <svg class="kolam-trace absolute -left-16 -bottom-16 w-[240px] h-[240px] opacity-12 hidden sm:block" viewBox="0 0 200 200" fill="none">
+            <g stroke="#FFC72C" stroke-width="1.1">
+                <circle cx="100" cy="100" r="80"/>
+                <path d="M100 40 Q130 100 100 160 Q70 100 100 40Z"/>
+            </g>
+            <circle class="dot" cx="100" cy="40" r="2.5" fill="#FFC72C"/>
+            <circle class="dot" cx="100" cy="160" r="2.5" fill="#FFC72C"/>
+        </svg>
+
+        <div class="relative z-10 h-full flex flex-col justify-center px-6 md:px-16 max-w-3xl mx-auto text-center">
+            <div class="ghee-pour-wrap mx-auto">
+                <svg class="ghee-ribbon" width="60" height="64" viewBox="0 0 60 64" fill="none">
+                    <defs>
+                        <linearGradient id="gheeGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#FFC72C" />
+                            <stop offset="100%" stop-color="#F5A623" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M28 2 C 22 14, 34 20, 26 32 C 20 42, 30 46, 24 54" />
+                </svg>
+                <div class="ghee-pool"></div>
+            </div>
+            <p class="hero-title-in text-jaggery/60 tracking-[0.25em] uppercase text-xs md:text-sm font-semibold mb-4" style="animation-delay:.1s">
+                <a href="products.html" class="hover:underline text-jaggery/40">Products</a> / <span id="heroProductName" class="text-jaggery/70">Details</span>
+            </p>
+            <h1 class="hero-title-in gild-glow font-display text-3xl sm:text-4xl md:text-5xl text-jaggery leading-[1.1]" style="animation-delay:.25s" id="heroProductTitle">Product Details</h1>
+            <p class="hero-title-in text-base sm:text-lg md:text-xl text-ink/50 font-light max-w-xl mx-auto" style="animation-delay:.4s" id="heroProductDesc">Handcrafted with pure ingredients and traditional methods</p>
+        </div>
+
+        <div class="hero-scroll-cue absolute bottom-6 left-1/2 -translate-x-1/2 text-jaggery/20">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 5v14"/><path d="M6 13l6 6 6-6"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- kolam divider -->
+    <div class="flex justify-center py-4">
+        <svg class="kolam-divider w-40 h-10" viewBox="0 0 200 40" fill="none">
+            <path d="M2 20 Q 50 2, 100 20 T 198 20" stroke="#F5A623" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="2" cy="20" r="3" fill="#D7263D"/><circle cx="100" cy="20" r="3" fill="#D7263D"/><circle cx="198" cy="20" r="3" fill="#D7263D"/>
+        </svg>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="relative">
+        <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+            <div class="ladoo-particle glow w-8 h-8 float-drift-slow" style="top:6%; left:4%;"></div>
+            <div class="ladoo-particle dim w-5 h-5 float-y" style="top:12%; left:20%;"></div>
+            <div class="ladoo-particle w-6 h-6 float-drift" style="top:4%; right:8%;"></div>
+            <div class="ladoo-particle dim w-4 h-4 float-y-slow" style="top:18%; right:24%;"></div>
+            <div class="ladoo-particle glow w-7 h-7 float-drift" style="top:10%; left:48%;"></div>
+        </div>
+
+        <main id="detail-root" class="relative z-10 max-w-7xl mx-auto px-6 py-8">
             <!-- Filled in by JS -->
         </main>
     </div>
@@ -399,14 +755,13 @@
     <!-- kolam divider -->
     <div class="flex justify-center pb-6">
         <svg class="kolam-divider w-40 h-10" viewBox="0 0 200 40" fill="none">
-            <path d="M2 20 Q 50 2, 100 20 T 198 20" stroke="#E8A33D" stroke-width="2" stroke-linecap="round"/>
-            <circle cx="2" cy="20" r="3" fill="#A63A2E"/><circle cx="100" cy="20" r="3" fill="#A63A2E"/><circle cx="198" cy="20" r="3" fill="#A63A2E"/>
+            <path d="M2 20 Q 50 2, 100 20 T 198 20" stroke="#F5A623" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="2" cy="20" r="3" fill="#D7263D"/><circle cx="100" cy="20" r="3" fill="#D7263D"/><circle cx="198" cy="20" r="3" fill="#D7263D"/>
         </svg>
     </div>
 
     <!-- Similar Products -->
     <section class="relative max-w-7xl mx-auto px-6 pb-16 overflow-hidden">
-        <!-- floating particles -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div class="ladoo-particle dim w-6 h-6 float-drift-slow" style="top:8%; left:6%;"></div>
             <div class="ladoo-particle glow w-5 h-5 float-y" style="bottom:10%; right:8%;"></div>
@@ -416,14 +771,13 @@
 
         <div class="reveal text-center mb-10">
             <span class="text-kumkum text-xs tracking-[0.3em] uppercase font-semibold">Keep Exploring</span>
-            <h2 class="font-display text-2xl sm:text-3xl text-jaggery mt-3">You Might Also Like</h2>
+            <h2 class="font-display text-2xl sm:text-3xl text-jaggery mt-3 grow-underline">You Might Also Like</h2>
         </div>
         <div id="similar-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
     </section>
 
     <!-- Our Quality Promise -->
-    <section class="relative py-16 overflow-hidden bg-jaggery/[0.04]">
-        <!-- floating particles -->
+    <section class="relative py-16 overflow-hidden bg-gradient-to-b from-sand/30 via-cream to-sand/20">
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div class="ladoo-particle glow w-14 h-14 float-drift-slow" style="top:6%; left:3%;"></div>
             <div class="ladoo-particle w-9 h-9 float-y" style="top:12%; right:4%;"></div>
@@ -450,7 +804,7 @@
                         </svg>
                     </div>
                     <h3 class="font-bold text-kumkum text-lg mb-2">100% Pure Ghee</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">Authentic clarified butter for authentic taste and superior nutrition in every product.</p>
+                    <p class="text-sm text-slate-400 leading-relaxed">Authentic clarified butter for authentic taste and superior nutrition in every product.</p>
                 </div>
                 <div class="rise-card bg-white rounded-2xl p-7 text-center shadow-sm">
                     <div class="icon-spin w-12 h-12 mx-auto mb-4 rounded-xl bg-amber-400 text-white flex items-center justify-center">
@@ -459,16 +813,16 @@
                         </svg>
                     </div>
                     <h3 class="font-bold text-kumkum text-lg mb-2">Natural Jaggery</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">Unrefined jaggery providing natural sweetness with essential minerals and nutrients.</p>
+                    <p class="text-sm text-slate-400 leading-relaxed">Unrefined jaggery providing natural sweetness with essential minerals and nutrients.</p>
                 </div>
-                <div class="rise-card bg-white rounded-2xl p-7 text-center shadow-sm border-2 border-kumkum/60">
+                <div class="rise-card bg-white rounded-2xl p-7 text-center shadow-sm border-2 border-kumkum/40">
                     <div class="icon-spin w-12 h-12 mx-auto mb-4 rounded-xl bg-red-500 text-white flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6"/><path d="M9 9l6 6"/>
                         </svg>
                     </div>
                     <h3 class="font-bold text-kumkum text-lg mb-2">No Harmful Additives</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">Zero maida, preservatives, artificial essence, or synthetic colors whatsoever.</p>
+                    <p class="text-sm text-slate-400 leading-relaxed">Zero maida, preservatives, artificial essence, or synthetic colors whatsoever.</p>
                 </div>
                 <div class="rise-card bg-white rounded-2xl p-7 text-center shadow-sm">
                     <div class="icon-spin w-12 h-12 mx-auto mb-4 rounded-xl bg-rose-500 text-white flex items-center justify-center">
@@ -477,7 +831,7 @@
                         </svg>
                     </div>
                     <h3 class="font-bold text-kumkum text-lg mb-2">Handmade with Love</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">Every batch prepared with care, attention, and commitment to your family's wellness.</p>
+                    <p class="text-sm text-slate-400 leading-relaxed">Every batch prepared with care, attention, and commitment to your family's wellness.</p>
                 </div>
             </div>
         </div>
@@ -485,7 +839,6 @@
 
     <!-- Why Our Customers Love Us -->
     <section class="relative py-16 overflow-hidden">
-        <!-- floating particles -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div class="ladoo-particle glow w-8 h-8 float-drift" style="top:6%; right:4%;"></div>
             <div class="ladoo-particle dim w-5 h-5 float-y-slow" style="top:14%; left:6%;"></div>
@@ -500,49 +853,49 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-turmeric" viewBox="0 0 24 24" fill="currentColor" stroke="none">
                     <path d="M12 2.5l2.9 6.05 6.6.87-4.85 4.6 1.24 6.53L12 17.9l-5.89 2.65L7.35 14 2.5 9.42l6.6-.87L12 2.5z"/>
                 </svg>
-                <h2 class="font-display text-2xl sm:text-3xl text-jaggery text-center">Why Our Customers Love Us</h2>
+                <h2 class="font-display text-2xl sm:text-3xl text-jaggery text-center grow-underline">Why Our Customers Love Us</h2>
             </div>
 
             <div class="stagger reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
-                <div class="rise-card bg-white rounded-2xl border border-slate-100 shadow-sm p-8 text-center">
+                <div class="rise-card bg-white rounded-2xl border border-stone/30 shadow-sm p-8 text-center">
                     <div class="icon-spin w-14 h-14 mx-auto mb-5 rounded-xl bg-gradient-to-br from-amber-300 to-yellow-500 text-white flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" stroke="none">
                             <path d="M12 2.5l2.9 6.05 6.6.87-4.85 4.6 1.24 6.53L12 17.9l-5.89 2.65L7.35 14 2.5 9.42l6.6-.87L12 2.5z"/>
                         </svg>
                     </div>
                     <h3 class="font-bold text-kumkum text-lg mb-3">Premium Quality</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">"The taste and quality are exceptional. We can taste the pure ghee and natural ingredients. Recommend to everyone!" - Satisfied Customer</p>
+                    <p class="text-sm text-slate-400 leading-relaxed">"The taste and quality are exceptional. We can taste the pure ghee and natural ingredients. Recommend to everyone!" - Satisfied Customer</p>
                 </div>
 
-                <div class="rise-card bg-white rounded-2xl border border-slate-100 shadow-sm p-8 text-center">
+                <div class="rise-card bg-white rounded-2xl border border-stone/30 shadow-sm p-8 text-center">
                     <div class="icon-spin w-14 h-14 mx-auto mb-5 rounded-xl bg-gradient-to-br from-rose-400 to-red-500 text-white flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" stroke="none">
                             <path d="M12 21s-6.7-4.35-9.33-8.2C1 10.4 1.4 6.9 4.1 5.1c2.2-1.5 5-.9 6.6 1 .4.5.9 1.1 1.3 1.7.4-.6.9-1.2 1.3-1.7 1.6-1.9 4.4-2.5 6.6-1 2.7 1.8 3.1 5.3 1.43 7.7C18.7 16.65 12 21 12 21z"/>
                         </svg>
                     </div>
                     <h3 class="font-bold text-kumkum text-lg mb-3">Family Friendly</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">"From my 1-year-old to grandparents, everyone loves these ladoos. Safe, healthy, and delicious!" - Happy Parent</p>
+                    <p class="text-sm text-slate-400 leading-relaxed">"From my 1-year-old to grandparents, everyone loves these ladoos. Safe, healthy, and delicious!" - Happy Parent</p>
                 </div>
 
-                <div class="rise-card bg-white rounded-2xl border border-slate-100 shadow-sm p-8 text-center">
+                <div class="rise-card bg-white rounded-2xl border border-stone/30 shadow-sm p-8 text-center">
                     <div class="icon-spin w-14 h-14 mx-auto mb-5 rounded-xl bg-gradient-to-br from-lime-300 to-green-500 text-white flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M11 20A7 7 0 0 1 4 13c0-5 4-8 11-9 1 6-1 12-4 16z"/><path d="M4 13c4 0 8 2 10 6"/>
                         </svg>
                     </div>
                     <h3 class="font-bold text-kumkum text-lg mb-3">Health Conscious</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">"Finally, a brand I can trust. No preservatives, no artificial colors - just pure, authentic handmade goodness." - Health Enthusiast</p>
+                    <p class="text-sm text-slate-400 leading-relaxed">"Finally, a brand I can trust. No preservatives, no artificial colors - just pure, authentic handmade goodness." - Health Enthusiast</p>
                 </div>
 
-                <div class="rise-card bg-white rounded-2xl border border-slate-100 shadow-sm p-8 text-center">
+                <div class="rise-card bg-white rounded-2xl border border-stone/30 shadow-sm p-8 text-center">
                     <div class="icon-spin w-14 h-14 mx-auto mb-5 rounded-xl bg-gradient-to-br from-amber-300 to-orange-500 text-white flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" stroke="none">
                             <path d="M2 21h3V10H2v11zm19-10.5c0-.83-.67-1.5-1.5-1.5H14l1-4.5c.1-.45 0-.92-.3-1.28-.28-.35-.7-.72-1.2-.72-.35 0-.68.14-.92.4L7.5 9.5V21h11c.66 0 1.24-.4 1.48-1.02l2.29-5.5c.15-.36.23-.75.23-1.15v-2.33z"/>
                         </svg>
                     </div>
                     <h3 class="font-bold text-kumkum text-lg mb-3">Great Service</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">"Quick response to inquiries, fresh delivery, and reasonable pricing. NicyFoods is our go-to brand now!" - Regular Customer</p>
+                    <p class="text-sm text-slate-400 leading-relaxed">"Quick response to inquiries, fresh delivery, and reasonable pricing. NicyFoods is our go-to brand now!" - Regular Customer</p>
                 </div>
 
             </div>
@@ -550,8 +903,7 @@
     </section>
 
     <!-- How to Order -->
-    <section class="relative py-16 bg-jaggery/[0.04] overflow-hidden">
-        <!-- floating particles -->
+    <section class="relative py-16 bg-gradient-to-b from-sand/30 via-cream to-sand/20 overflow-hidden">
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div class="ladoo-particle glow w-10 h-10 float-drift-slow" style="top:6%; left:4%;"></div>
             <div class="ladoo-particle dim w-6 h-6 float-y" style="top:12%; right:6%;"></div>
@@ -563,33 +915,33 @@
 
         <div class="relative max-w-6xl mx-auto px-6 text-center">
             <div class="reveal mb-3">
-                <h2 class="flex items-center justify-center gap-3 font-display text-2xl sm:text-3xl text-jaggery">
+                <h2 class="flex items-center justify-center gap-3 font-display text-2xl sm:text-3xl text-jaggery grow-underline">
                     <span class="inline-block w-2.5 h-6 bg-turmeric rounded-sm"></span>
                     How to Order
                 </h2>
             </div>
-            <p class="reveal text-slate-500 mb-12">Ordering from NicyFoods is simple and convenient. Follow these easy steps:</p>
+            <p class="reveal text-slate-400 mb-12">Ordering from NicyFoods is simple and convenient. Follow these easy steps:</p>
 
             <div class="stagger reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="rise-card bg-white rounded-2xl border border-slate-100 shadow-sm p-8">
+                <div class="rise-card bg-white rounded-2xl border border-stone/30 shadow-sm p-8">
                     <div class="step-num w-12 h-12 mx-auto mb-5 rounded-xl bg-gradient-to-br from-sky-400 to-blue-500 text-white flex items-center justify-center font-bold text-lg">1</div>
                     <h3 class="font-bold text-kumkum mb-2">Add to Cart</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">Pick your favorites and add them to your cart from any product page.</p>
+                    <p class="text-sm text-slate-400 leading-relaxed">Pick your favorites and add them to your cart from any product page.</p>
                 </div>
-                <div class="rise-card bg-white rounded-2xl border border-slate-100 shadow-sm p-8">
+                <div class="rise-card bg-white rounded-2xl border border-stone/30 shadow-sm p-8">
                     <div class="step-num w-12 h-12 mx-auto mb-5 rounded-xl bg-gradient-to-br from-sky-400 to-blue-500 text-white flex items-center justify-center font-bold text-lg">2</div>
                     <h3 class="font-bold text-kumkum mb-2">Checkout on WhatsApp</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">From your cart, tap "Checkout on WhatsApp" — it sends us your order pre-filled, ready to confirm.</p>
+                    <p class="text-sm text-slate-400 leading-relaxed">From your cart, tap "Checkout on WhatsApp" — it sends us your order pre-filled, ready to confirm.</p>
                 </div>
-                <div class="rise-card bg-white rounded-2xl border border-slate-100 shadow-sm p-8">
+                <div class="rise-card bg-white rounded-2xl border border-stone/30 shadow-sm p-8">
                     <div class="step-num w-12 h-12 mx-auto mb-5 rounded-xl bg-gradient-to-br from-sky-400 to-blue-500 text-white flex items-center justify-center font-bold text-lg">3</div>
                     <h3 class="font-bold text-kumkum mb-2">Confirm Details</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">We'll confirm quantity, delivery address, courier charges, and total with you directly.</p>
+                    <p class="text-sm text-slate-400 leading-relaxed">We'll confirm quantity, delivery address, courier charges, and total with you directly.</p>
                 </div>
-                <div class="rise-card bg-white rounded-2xl border border-slate-100 shadow-sm p-8">
+                <div class="rise-card bg-white rounded-2xl border border-stone/30 shadow-sm p-8">
                     <div class="step-num w-12 h-12 mx-auto mb-5 rounded-xl bg-gradient-to-br from-sky-400 to-blue-500 text-white flex items-center justify-center font-bold text-lg">4</div>
                     <h3 class="font-bold text-kumkum mb-2">Fresh Delivery</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">We prepare your fresh order and deliver it securely to your doorstep.</p>
+                    <p class="text-sm text-slate-400 leading-relaxed">We prepare your fresh order and deliver it securely to your doorstep.</p>
                 </div>
             </div>
         </div>
@@ -599,15 +951,13 @@
 
     <div id="footer-placeholder"></div>
 
-    <script src="js/navbar.js">
-    </script>
-    <script src="js/footer.js">
-    </script>
+    <script src="js/navbar.js"></script>
+    <script src="js/footer.js"></script>
 
     <!-- ========== BACKEND CONNECTION – multi-image gallery ========== -->
     <script>
         // -------------------- CONFIGURATION --------------------
-        const API_BASE = 'https://nicyfoods.srujaninfotech.com';   // <-- your backend URL
+        const API_BASE = 'https://nicyfoods.srujaninfotech.com';
         const CATEGORY_LABEL = { millet: "MILLET", traditional: "TRADITIONAL", herbal: "HERBAL", snacks: "SNACKS" };
         const WHATSAPP_NUMBER = "+918263001410";
         const CART_KEY = "nicy_cart_items";
@@ -615,38 +965,58 @@
         const FALLBACK_IMG = 'https://nicyfoods.com/images/placeholder.jpg';
 
         // -------------------- GLOBAL STATE --------------------
-        let PRODUCTS = [];   // will be filled from API
+        let PRODUCTS = [];
+
+        // -------------------- FEATURE ICONS (colorful, cycled) --------------------
+        const FEATURE_ICONS = [
+            { color: '#F5A623', svg: `<path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>` },
+            { color: '#8B5CF6', svg: `<path d="M8 21h12a2 2 0 0 0 2-2v-2H10v2a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v3h4"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/><path d="M15 8h-5"/><path d="M15 12h-5"/>` },
+            { color: '#D7263D', svg: `<path d="M2 12h20l-1.6 7.2a2 2 0 0 1-2 1.8H5.6a2 2 0 0 1-2-1.8z"/><path d="M6 12V8a6 6 0 0 1 12 0v4"/><path d="M12 2v2"/>` },
+            { color: '#22C55E', svg: `<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>` },
+            { color: '#3B82F6', svg: `<path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 9"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/>` },
+        ];
+
+        function featureIconHtml(index) {
+            const icon = FEATURE_ICONS[index % FEATURE_ICONS.length];
+            return `
+                <span class="feature-icon mt-0.5" style="color:${icon.color}">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        ${icon.svg}
+                    </svg>
+                </span>`;
+        }
 
         // -------------------- IMAGE URL HELPER --------------------
-        // Product images are stored as filenames under uploads/products/ on the
-        // backend (multer). If a value is already a full URL (older data,
-        // external CDN), use it as-is instead.
         function buildProductImageUrl(filename) {
             if (!filename) return FALLBACK_IMG;
             if (filename.startsWith('http')) return filename;
             return `${API_BASE}/uploads/products/${filename}`;
         }
 
-        // -------------------- CART & WISHLIST (unchanged) --------------------
+        // -------------------- CART & WISHLIST --------------------
         function getCart() {
             try { const r = JSON.parse(localStorage.getItem(CART_KEY) || "[]"); return Array.isArray(r) ? r : []; }
             catch { return []; }
         }
+
         function saveCart(items) {
             localStorage.setItem(CART_KEY, JSON.stringify(items));
             const totalQty = items.reduce((s, i) => s + (i.qty || 1), 0);
             localStorage.setItem("nicy_cart_count", String(totalQty));
             window.dispatchEvent(new Event("nicy:counts-updated"));
         }
+
         function getWishlist() {
             try { const r = JSON.parse(localStorage.getItem(WISH_KEY) || "[]"); return Array.isArray(r) ? r : []; }
             catch { return []; }
         }
+
         function saveWishlist(items) {
             localStorage.setItem(WISH_KEY, JSON.stringify(items));
             localStorage.setItem("nicy_wishlist_count", String(items.length));
             window.dispatchEvent(new Event("nicy:counts-updated"));
         }
+
         function isWishlisted(id) {
             return getWishlist().some(i => i.id === String(id));
         }
@@ -668,7 +1038,8 @@
             const key = cartKeyFor(p.id, weightLabel);
             const existing = cart.find(i => cartKeyFor(i.id, i.weightLabel) === key);
             if (existing) existing.qty = (existing.qty || 1) + qty;
-            else cart.push({ id: String(p.id), name: p.name, img: p.img, price: unitPrice, weightLabel: weightLabel || null, qty });
+            else cart.push({ id: String(p.id), name: p.name, img: p.img, price: unitPrice, weightLabel: weightLabel || null,
+                qty });
             saveCart(cart);
             const weightNote = weightLabel ? ` (${weightLabel})` : "";
             showToast(`Added to cart${weightNote} — <a href="cart.html">View Cart</a>`);
@@ -676,7 +1047,8 @@
                 const original = btnEl.innerHTML;
                 btnEl.classList.add("added");
                 btnEl.innerHTML = "Added ✓";
-                setTimeout(() => { btnEl.classList.remove("added"); btnEl.innerHTML = original; }, 1200);
+                setTimeout(() => { btnEl.classList.remove("added");
+                    btnEl.innerHTML = original; }, 1200);
             }
         }
 
@@ -688,7 +1060,8 @@
                 wishlist.splice(idx, 1);
                 btnEl.classList.remove("active");
             } else {
-                wishlist.push({ id: key, name: p.name, img: p.img, price: p.price, cat: CATEGORY_LABEL[p.cat], url: `product-detail.html?id=${key}` });
+                wishlist.push({ id: key, name: p.name, img: p.img, price: p.price, cat: CATEGORY_LABEL[p.cat],
+                    url: `product-detail.html?id=${key}` });
                 btnEl.classList.add("active");
             }
             saveWishlist(wishlist);
@@ -701,21 +1074,18 @@
                 if (!res.ok) throw new Error('Network response was not ok');
                 const data = await res.json();
 
-                // Map backend fields to frontend structure (same as products page)
                 PRODUCTS = data.map(p => {
-                    // Gallery: use `images` array if present, otherwise fall back
-                    // to the single `image` field so older records still work.
                     const rawImages = (p.images && p.images.length) ? p.images : (p.image ? [p.image] : []);
                     const images = rawImages.map(buildProductImageUrl);
 
                     return {
-                        id: p.slug,                     // use slug as id
+                        id: p.slug,
                         name: p.name,
                         desc: p.description,
                         price: p.price,
                         cat: p.category,
-                        img: images[0] || FALLBACK_IMG, // cover image, kept for cart/wishlist entries
-                        images,                          // full gallery (up to 3)
+                        img: images[0] || FALLBACK_IMG,
+                        images: images.length > 0 ? images : [FALLBACK_IMG],
                         weights: p.weightOptions.map(w => ({ label: w.label, price: w.price })),
                         features: p.features || [],
                         ingredients: p.ingredients || [],
@@ -724,12 +1094,11 @@
                     };
                 });
 
-                // Now that we have products, render the detail page
                 renderDetail();
                 renderSimilar();
 
-                // Reveal animations (static sections)
-                const revealEls = document.querySelectorAll('.reveal, .stagger, .kolam-divider');
+                // Reveal animations
+                const revealEls = document.querySelectorAll('.reveal, .stagger, .kolam-divider, .grow-underline');
                 const io = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
@@ -740,17 +1109,22 @@
                 }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
                 revealEls.forEach(el => io.observe(el));
 
+                // Hero kolam trace
+                document.querySelectorAll('section:first-of-type .kolam-trace').forEach(el => {
+                    setTimeout(() => el.classList.add('in'), 300);
+                });
+
             } catch (error) {
                 console.error('Failed to load products:', error);
                 const root = document.getElementById("detail-root");
                 root.innerHTML = `
-                    <div class="text-center py-16 text-slate-500">
-                        <svg class="w-12 h-12 text-turmeric mx-auto mb-4" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2c1 3-2 4-2 7a3 3 0 006 0c0-1-1-2-1-2 2 1 4 3.5 4 6.5A7 7 0 015 13.5C5 9 8 7 8 4c1 1 1.5 2 1.5 3.5C10.5 5 11 3.5 12 2z"/>
-                        </svg>
-                        <p class="font-display text-xl text-jaggery mb-1">Could not load product</p>
-                        <p class="text-sm">Make sure the backend server is running at ${API_BASE}</p>
-                    </div>`;
+                        <div class="text-center py-16 text-slate-400">
+                            <svg class="w-12 h-12 text-turmeric mx-auto mb-4" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2c1 3-2 4-2 7a3 3 0 006 0c0-1-1-2-1-2 2 1 4 3.5 4 6.5A7 7 0 015 13.5C5 9 8 7 8 4c1 1 1.5 2 1.5 3.5C10.5 5 11 3.5 12 2z"/>
+                            </svg>
+                            <p class="font-display text-xl text-jaggery mb-1">Could not load product</p>
+                            <p class="text-sm">Make sure the backend server is running at ${API_BASE}</p>
+                        </div>`;
             }
         }
 
@@ -761,182 +1135,193 @@
             const product = PRODUCTS.find(p => p.id === slug) || PRODUCTS[0];
             if (!product) {
                 document.getElementById("detail-root").innerHTML = `
-                    <div class="text-center py-16 text-slate-500">
-                        <p class="font-display text-xl text-jaggery">Product not found</p>
-                        <a href="products.html" class="text-kumkum underline">Browse all products</a>
-                    </div>`;
+                        <div class="text-center py-16 text-slate-400">
+                            <p class="font-display text-xl text-jaggery">Product not found</p>
+                            <a href="products.html" class="text-kumkum underline">Browse all products</a>
+                        </div>`;
                 return;
             }
+
+            // Update hero
+            document.getElementById("heroProductName").textContent = product.name;
+            document.getElementById("heroProductTitle").textContent = product.name;
+            document.getElementById("heroProductDesc").textContent = product.desc || 'Handcrafted with pure ingredients and traditional methods';
+            document.title = product.name + " | NicyFoods";
 
             const root = document.getElementById("detail-root");
             const p = product;
 
-            // Index weights so we can look them up by index
             const weightCards = p.weights.map((w, i) => {
                 const disabled = w.price === null || w.price === undefined;
                 return `
-                    <button type="button"
-                            class="weight-option rounded-xl py-4 text-center${i === 0 && !disabled ? ' selected' : ''}${disabled ? ' disabled' : ''}"
-                            data-weight-index="${i}"
-                            ${disabled ? 'disabled' : ''}>
-                        <div class="weight-check"></div>
-                        <div class="text-slate-600 text-sm mb-1">${w.label}</div>
-                        <div class="text-kumkum font-extrabold text-xl">${w.price !== null && w.price !== undefined ? "₹" + w.price : "-"}</div>
-                    </button>
-                `;
+                        <button type="button"
+                                class="weight-option ${i === 0 && !disabled ? 'selected' : ''} ${disabled ? 'disabled' : ''}"
+                                data-weight-index="${i}"
+                                ${disabled ? 'disabled' : ''}>
+                            <div class="weight-check"></div>
+                            <div class="text-slate-500 text-sm font-medium">${w.label}</div>
+                            <div class="text-kumkum font-bold text-lg">${w.price !== null && w.price !== undefined ? "₹" + w.price : "-"}</div>
+                        </button>
+                    `;
             }).join("");
 
             const featureItems = p.features.map((f, i) => `
-                <li class="check-item flex items-start gap-2 text-slate-600 mb-3" style="animation-delay:${i * 0.08}s">
-                    <span class="check-mark mt-0.5">✓</span> ${f}
-                </li>
-            `).join("");
+                    <li class="check-item flex items-start gap-3 text-slate-600 mb-4" style="animation-delay:${i * 0.08}s">
+                        ${featureIconHtml(i)} <span>${f}</span>
+                    </li>
+                `).join("");
 
             const ingredientItems = p.ingredients.map((i2, i) => `
-                <li class="check-item flex items-start gap-2 text-slate-600 mb-3" style="animation-delay:${i * 0.08}s">
-                    <span class="check-mark mt-0.5">✓</span> ${i2}
-                </li>
-            `).join("");
+                    <li class="check-item flex items-start gap-3 text-slate-600 mb-4" style="animation-delay:${i * 0.08}s">
+                        ${featureIconHtml(i)} <span>${i2}</span>
+                    </li>
+                `).join("");
 
             const benefitItems = p.benefits.map((b, i) => `
-                <li class="check-item flex items-start gap-2 text-slate-600 mb-3" style="animation-delay:${i * 0.08}s">
-                    <span class="check-mark mt-0.5">✓</span> ${b}
-                </li>
-            `).join("");
+                    <li class="check-item flex items-start gap-3 text-slate-600 mb-4" style="animation-delay:${i * 0.08}s">
+                        ${featureIconHtml(i)} <span>${b}</span>
+                    </li>
+                `).join("");
 
             const wished = isWishlisted(p.id);
             const defaultIndex = p.weights.findIndex(w => w.price !== null && w.price !== undefined);
             const defaultPrice = defaultIndex >= 0 ? p.weights[defaultIndex].price : p.price;
             const defaultLabel = defaultIndex >= 0 ? p.weights[defaultIndex].label : '';
 
-            // Build thumbnails for every image in the gallery (up to 3).
-            // If there's only 1 image, the thumbnail row still shows it —
-            // matches the reference screenshot's layout either way.
-            const galleryImages = p.images && p.images.length ? p.images : [p.img];
+            const galleryImages = p.images && p.images.length > 0 ? p.images : [p.img, FALLBACK_IMG];
+            while (galleryImages.length < 3) {
+                galleryImages.push(FALLBACK_IMG);
+            }
+
             const thumbHtml = galleryImages.map((imgUrl, i) => `
-                <button type="button" class="thumb ${i === 0 ? 'active' : ''} w-20 h-20 rounded-lg border-2 overflow-hidden bg-white flex-shrink-0" data-thumb-index="${i}">
-                    <img src="${imgUrl}" class="w-full h-full object-cover" alt="${p.name} view ${i + 1}" onerror="this.src='${FALLBACK_IMG}'" />
-                </button>
-            `).join("");
+                    <button type="button" class="thumb ${i === 0 ? 'active' : ''}" data-thumb-index="${i}">
+                        <img src="${imgUrl}" alt="${p.name} view ${i + 1}" onerror="this.src='${FALLBACK_IMG}'" />
+                    </button>
+                `).join("");
 
             root.innerHTML = `
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-16">
 
-                    <!-- Left: Image Gallery -->
-                    <div class="detail-in">
-                        <div class="gallery-frame bg-white rounded-2xl overflow-hidden h-[420px] flex items-center justify-center shadow-sm">
-                            <button id="detailWishBtn" class="wish-btn ${wished ? 'active' : ''}" aria-label="Save to wishlist">
-                                <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M12 21s-6.7-4.35-9.33-8.2C1 10.4 1.4 6.9 4.1 5.1c2.2-1.5 5-.9 6.6 1 .4.5.9 1.1 1.3 1.7.4-.6.9-1.2 1.3-1.7 1.6-1.9 4.4-2.5 6.6-1 2.7 1.8 3.1 5.3 1.43 7.7C18.7 16.65 12 21 12 21z"/>
-                                </svg>
-                            </button>
-                            <img id="main-image" src="${galleryImages[0]}" alt="${p.name}" class="w-full h-full object-contain"
-                                 onerror="this.src='${FALLBACK_IMG}'" />
+                        <!-- Left: Image Gallery -->
+                        <div class="detail-in">
+                            <div class="gallery-frame bg-white rounded-2xl overflow-hidden h-[440px] flex items-center justify-center relative">
+                                <button id="detailWishBtn" class="wish-btn ${wished ? 'active' : ''}" aria-label="Save to wishlist">
+                                    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 21s-6.7-4.35-9.33-8.2C1 10.4 1.4 6.9 4.1 5.1c2.2-1.5 5-.9 6.6 1 .4.5.9 1.1 1.3 1.7.4-.6.9-1.2 1.3-1.7 1.6-1.9 4.4-2.5 6.6-1 2.7 1.8 3.1 5.3 1.43 7.7C18.7 16.65 12 21 12 21z"/>
+                                    </svg>
+                                </button>
+                                <img id="main-image" src="${galleryImages[0]}" alt="${p.name}" class="w-full h-full object-contain p-6"
+                                     onerror="this.src='${FALLBACK_IMG}'" />
+                            </div>
+                            <div class="flex gap-3 mt-4 overflow-x-auto pb-2">
+                                ${thumbHtml}
+                            </div>
                         </div>
-                        <div class="flex gap-3 mt-4">
-                            ${thumbHtml}
-                        </div>
-                    </div>
 
-                    <!-- Right: Info -->
-                    <div class="detail-in" style="animation-delay:.12s">
-                        <span class="inline-block mb-4 text-xs font-bold tracking-wide text-kumkum bg-orange-50 px-4 py-1.5 rounded-full">
-                            ${CATEGORY_LABEL[p.cat]}
-                        </span>
-                        <h1 class="font-display text-3xl sm:text-4xl text-jaggery mb-4">${p.name}</h1>
-                        <p class="text-slate-500 leading-relaxed mb-6">${p.desc}</p>
-                        <div id="selectedPriceDisplay" class="text-3xl font-extrabold text-kumkum mb-8">
-                            ₹${defaultPrice}
-                            <span id="selectedWeightNote" class="text-base font-medium text-slate-400">
-                                ${defaultLabel ? '/ ' + defaultLabel : ''}
+                        <!-- Right: Info -->
+                        <div class="detail-in" style="animation-delay:.12s">
+                            <span class="inline-block mb-4 text-xs font-bold tracking-wide text-kumkum bg-orange-50/60 px-4 py-1.5 rounded-full">
+                                ${CATEGORY_LABEL[p.cat] || p.cat.toUpperCase()}
                             </span>
-                        </div>
+                            <h1 class="font-display text-3xl sm:text-4xl text-jaggery mb-3">${p.name}</h1>
+                            <p class="text-slate-400 leading-relaxed mb-5">${p.desc}</p>
+                            <div id="selectedPriceDisplay" class="text-3xl font-extrabold text-kumkum mb-6">
+                                ₹${defaultPrice}
+                                <span id="selectedWeightNote" class="text-base font-medium text-slate-400">
+                                    ${defaultLabel ? '/ ' + defaultLabel : ''}
+                                </span>
+                            </div>
 
-                        <div class="bg-orange-50 rounded-2xl p-6">
+                            <div class="bg-orange-50/40 rounded-2xl p-5">
+                                <h3 class="flex items-center gap-2 font-bold text-kumkum text-lg mb-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                                        <path d="M16 7V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v2"/>
+                                        <circle cx="16" cy="13" r="1.5"/>
+                                    </svg>
+                                    Choose Weight
+                                </h3>
+                                <div id="weightGrid" class="grid grid-cols-3 gap-3">
+                                    ${weightCards}
+                                </div>
+                                <p class="flex items-start gap-2 text-xs text-slate-400 mt-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 flex-shrink-0 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M9 18h6"/><path d="M10 22h4"/>
+                                        <path d="M12 2a7 7 0 0 0-4 12.7c.6.4 1 1.2 1 2.05V17h6v-2.25c0-.85.4-1.65 1-2.05A7 7 0 0 0 12 2z"/>
+                                    </svg>
+                                    Tap a weight to select it — the price and your cart total will update to match.
+                                </p>
+                            </div>
+
+                            <!-- Add to Cart -->
+                            <div class="mt-6 flex flex-col sm:flex-row gap-4 items-stretch">
+                                <div class="qty-stepper">
+                                    <button id="qtyMinus" class="qty-btn" aria-label="Decrease quantity" type="button">−</button>
+                                    <span id="qtyVal" class="qty-val">1</span>
+                                    <button id="qtyPlus" class="qty-btn" aria-label="Increase quantity" type="button">+</button>
+                                </div>
+                                <button id="addToCartBtn" class="add-cart-btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                                    </svg>
+                                    Add to Cart
+                                </button>
+                            </div>
+
+                            <div class="mt-4 flex flex-col sm:flex-row gap-4">
+                                <a href="tel:+918263001410"
+                                   class="flex-1 inline-flex items-center justify-center gap-2 text-center border-2 border-kumkum text-kumkum font-semibold py-3 rounded-xl transition-all hover:bg-orange-50/60 hover:-translate-y-0.5 text-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                    </svg>
+                                    Call: +91 8263001410
+                                </a>
+                                <a href="mailto:nicyfoods5@gmail.com?subject=Order%20Enquiry%20-%20${encodeURIComponent(p.name)}&body=Hi%20NicyFoods%2C%0A%0AI%20would%20like%20to%20order%3A%20${encodeURIComponent(p.name)}%0AQuantity%3A%20%0ADelivery%20Address%3A%20"
+                                   class="flex-1 inline-flex items-center justify-center gap-2 text-center text-slate-400 font-medium py-3 rounded-xl hover:text-kumkum transition-colors text-sm">
+                                    or email us instead
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Key Features / Ingredients / Health Benefits -->
+                    <div class="detail-in grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-stone-200 pt-12" style="animation-delay:.22s">
+                        <div>
                             <h3 class="flex items-center gap-2 font-bold text-kumkum text-lg mb-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M20 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
-                                    <path d="M16 7V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v2"/>
-                                    <circle cx="16" cy="13" r="1.5"/>
+                                <svg class="w-6 h-6 text-turmeric flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6L12 2z"/>
+                                    <path d="M19 14l.8 2.4L22 17l-2.2.6L19 20l-.8-2.4L16 17l2.2-.6L19 14z" opacity="0.6"/>
                                 </svg>
-                                Choose Weight
+                                Key Features
                             </h3>
-                            <div id="weightGrid" class="grid grid-cols-3 gap-3">
-                                ${weightCards}
-                            </div>
-                            <p class="flex items-start gap-2 text-xs text-slate-500 mt-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M9 18h6"/><path d="M10 22h4"/>
-                                    <path d="M12 2a7 7 0 0 0-4 12.7c.6.4 1 1.2 1 2.05V17h6v-2.25c0-.85.4-1.65 1-2.05A7 7 0 0 0 12 2z"/>
-                                </svg>
-                                Tap a weight to select it — the price and your cart total will update to match.
-                            </p>
+                            <ul>${featureItems}</ul>
                         </div>
-
-                        <!-- Add to Cart -->
-                        <div class="mt-6 flex flex-col sm:flex-row gap-4 items-stretch">
-                            <div class="qty-stepper">
-                                <button id="qtyMinus" class="qty-btn" aria-label="Decrease quantity" type="button">−</button>
-                                <span id="qtyVal" class="qty-val">1</span>
-                                <button id="qtyPlus" class="qty-btn" aria-label="Increase quantity" type="button">+</button>
-                            </div>
-                            <button id="addToCartBtn" class="add-cart-btn flex-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        <div>
+                            <h3 class="flex items-center gap-2 font-bold text-kumkum text-lg mb-4">
+                                <svg class="w-6 h-6 text-herbal flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 22s-6-5-6-9 3-6 6-9 6 5 6 9-6 9-6 9z"/>
+                                    <path d="M12 4v18"/>
+                                    <path d="M8 10h8"/>
+                                    <path d="M6 14c2 0 4-1 6-3"/>
+                                    <path d="M18 14c-2 0-4-1-6-3"/>
                                 </svg>
-                                Add to Cart
-                            </button>
+                                Ingredients
+                            </h3>
+                            <ul>${ingredientItems}</ul>
                         </div>
-
-                        <div class="mt-4 flex flex-col sm:flex-row gap-4">
-                            <a href="tel:+918263001410"
-                               class="flex-1 inline-flex items-center justify-center gap-2 text-center border-2 border-kumkum text-kumkum font-semibold py-3 rounded-xl transition-all hover:bg-orange-50 hover:-translate-y-0.5">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                        <div>
+                            <h3 class="flex items-center gap-2 font-bold text-kumkum text-lg mb-4">
+                                <svg class="w-6 h-6 text-kumkum flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
+                                    <path d="M8 12l2 2 4-4"/>
                                 </svg>
-                                Call: +91 8263001410
-                            </a>
-                            <a href="mailto:nicyfoods5@gmail.com?subject=Order%20Enquiry%20-%20${encodeURIComponent(p.name)}&body=Hi%20NicyFoods%2C%0A%0AI%20would%20like%20to%20order%3A%20${encodeURIComponent(p.name)}%0AQuantity%3A%20%0ADelivery%20Address%3A%20"
-                               class="flex-1 inline-flex items-center justify-center gap-2 text-center text-slate-500 font-medium py-3 rounded-xl hover:text-kumkum transition-colors text-sm">
-                                or email us instead
-                            </a>
+                                Health Benefits
+                            </h3>
+                            <ul>${benefitItems}</ul>
                         </div>
                     </div>
-                </div>
-
-                <!-- Key Features / Ingredients / Health Benefits -->
-                <div class="detail-in grid grid-cols-1 md:grid-cols-3 gap-10 border-t border-slate-200 pt-12" style="animation-delay:.22s">
-                    <div>
-                        <h3 class="flex items-center gap-2 font-bold text-kumkum text-lg mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-turmeric" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                                <path d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6L12 2z"/>
-                                <path d="M19 14l.8 2.4L22 17l-2.2.6L19 20l-.8-2.4L16 17l2.2-.6L19 14z" opacity="0.6"/>
-                            </svg>
-                            Key Features
-                        </h3>
-                        <ul>${featureItems}</ul>
-                    </div>
-                    <div>
-                        <h3 class="flex items-center gap-2 font-bold text-kumkum text-lg mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-herbal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M11 20A7 7 0 0 1 4 13c0-5 4-8 11-9 1 6-1 12-4 16z"/><path d="M4 13c4 0 8 2 10 6"/>
-                            </svg>
-                            Ingredients
-                        </h3>
-                        <ul>${ingredientItems}</ul>
-                    </div>
-                    <div>
-                        <h3 class="flex items-center gap-2 font-bold text-kumkum text-lg mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-herbal" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                                <path d="M12 21s-6.7-4.35-9.33-8.2C1 10.4 1.4 6.9 4.1 5.1c2.2-1.5 5-.9 6.6 1 .4.5.9 1.1 1.3 1.7.4-.6.9-1.2 1.3-1.7 1.6-1.9 4.4-2.5 6.6-1 2.7 1.8 3.1 5.3 1.43 7.7C18.7 16.65 12 21 12 21z"/>
-                            </svg>
-                            Health Benefits
-                        </h3>
-                        <ul>${benefitItems}</ul>
-                    </div>
-                </div>
-            `;
+                `;
 
             // ---- gallery thumbnail switching ----
             const mainImageEl = document.getElementById('main-image');
@@ -975,13 +1360,14 @@
                 btn.addEventListener("click", () => {
                     if (btn.disabled) return;
                     selectedIndex = parseInt(btn.dataset.weightIndex, 10);
-                    document.getElementById("weightGrid").querySelectorAll(".weight-option").forEach(b => b.classList.remove("selected"));
+                    document.getElementById("weightGrid").querySelectorAll(".weight-option").forEach(b => b
+                        .classList.remove("selected"));
                     btn.classList.add("selected");
                     updatePriceDisplay();
                 });
             });
 
-            // ---- wire up qty stepper + add to cart + wishlist for this product ----
+            // ---- wire up qty stepper + add to cart + wishlist ----
             let qty = 1;
             const qtyValEl = document.getElementById("qtyVal");
             document.getElementById("qtyMinus").addEventListener("click", () => {
@@ -1001,8 +1387,6 @@
             document.getElementById("detailWishBtn").addEventListener("click", (e) => {
                 toggleWishlistFor(p, e.currentTarget);
             });
-
-            document.title = p.name + " | NicyFoods";
         }
 
         // -------------------- RENDER SIMILAR PRODUCTS --------------------
@@ -1033,36 +1417,36 @@
                 card.className = "product-card card-in rounded-2xl overflow-hidden flex flex-col";
                 card.style.animationDelay = `${i * 0.08}s`;
                 card.innerHTML = `
-                    <div class="relative h-44 bg-gradient-to-br from-orange-100 to-amber-50 overflow-hidden">
-                        <button class="wish-btn-sm ${wished ? 'active' : ''}" data-wish="${p.id}" aria-label="Save to wishlist">
-                            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 21s-6.7-4.35-9.33-8.2C1 10.4 1.4 6.9 4.1 5.1c2.2-1.5 5-.9 6.6 1 .4.5.9 1.1 1.3 1.7.4-.6.9-1.2 1.3-1.7 1.6-1.9 4.4-2.5 6.6-1 2.7 1.8 3.1 5.3 1.43 7.7C18.7 16.65 12 21 12 21z"/>
-                            </svg>
-                        </button>
-                        <img src="${p.img}" alt="${p.name}" class="prod-img w-full h-full object-cover" data-nav="${p.id}" onerror="this.src='${FALLBACK_IMG}'" />
-                    </div>
-                    <div class="p-5 flex flex-col flex-1">
-                        <span class="self-start mb-2 text-[11px] font-bold tracking-wide text-kumkum bg-orange-50 px-3 py-1 rounded-full">${CATEGORY_LABEL[p.cat]}</span>
-                        <h3 class="font-display text-lg text-jaggery mb-1 cursor-pointer" data-nav="${p.id}">${p.name}</h3>
-                        <p class="text-sm text-slate-500 flex-1 mb-3 leading-snug">${p.desc}</p>
-                        <div class="text-2xl font-extrabold text-kumkum mb-2">₹${p.price}</div>
-                        <p class="text-xs text-slate-500 mb-4"><span class="font-semibold text-jaggery">Courier Charges:</span> ${weightsLine}</p>
-                        <div class="card-actions mt-auto">
-                            <button class="add-cart-btn-sm" data-add="${p.id}">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
-                                    <path d="M2.5 3h2l2.6 12.4a2 2 0 0 0 2 1.6h8.4a2 2 0 0 0 2-1.6L21 8H6"/>
+                        <div class="relative h-44 bg-gradient-to-br from-orange-50/60 to-amber-50/40 overflow-hidden">
+                            <button class="wish-btn-sm ${wished ? 'active' : ''}" data-wish="${p.id}" aria-label="Save to wishlist">
+                                <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 21s-6.7-4.35-9.33-8.2C1 10.4 1.4 6.9 4.1 5.1c2.2-1.5 5-.9 6.6 1 .4.5.9 1.1 1.3 1.7.4-.6.9-1.2 1.3-1.7 1.6-1.9 4.4-2.5 6.6-1 2.7 1.8 3.1 5.3 1.43 7.7C18.7 16.65 12 21 12 21z"/>
                                 </svg>
-                                <span class="add-cart-sm-label">Add to Cart</span>
                             </button>
-                            <a href="product-detail.html?id=${p.id}" class="view-arrow-btn" aria-label="View ${p.name} details">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M5 12h14"/><path d="M13 6l6 6-6 6"/>
-                                </svg>
-                            </a>
+                            <img src="${p.img}" alt="${p.name}" class="prod-img w-full h-full object-cover" data-nav="${p.id}" onerror="this.src='${FALLBACK_IMG}'" />
                         </div>
-                    </div>
-                `;
+                        <div class="p-5 flex flex-col flex-1">
+                            <span class="self-start mb-2 text-[11px] font-bold tracking-wide text-kumkum bg-orange-50/60 px-3 py-1 rounded-full">${CATEGORY_LABEL[p.cat]}</span>
+                            <h3 class="font-display text-lg text-jaggery mb-1 cursor-pointer" data-nav="${p.id}">${p.name}</h3>
+                            <p class="text-sm text-slate-400 flex-1 mb-3 leading-snug">${p.desc}</p>
+                            <div class="text-2xl font-extrabold text-kumkum mb-2">₹${p.price}</div>
+                            <p class="text-xs text-slate-400 mb-4"><span class="font-semibold text-jaggery">Courier Charges:</span> ${weightsLine}</p>
+                            <div class="card-actions mt-auto">
+                                <button class="add-cart-btn-sm" data-add="${p.id}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
+                                        <path d="M2.5 3h2l2.6 12.4a2 2 0 0 0 2 1.6h8.4a2 2 0 0 0 2-1.6L21 8H6"/>
+                                    </svg>
+                                    <span class="add-cart-sm-label">Add to Cart</span>
+                                </button>
+                                <a href="product-detail.html?id=${p.id}" class="view-arrow-btn" aria-label="View ${p.name} details">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M5 12h14"/><path d="M13 6l6 6-6 6"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    `;
                 grid.appendChild(card);
             });
 

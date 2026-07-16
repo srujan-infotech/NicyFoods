@@ -15,7 +15,7 @@
             theme: {
                 extend: {
                     colors: {
-                        cream: '#FBF1E2',
+                        cream: '#FFFFFF',
                         jaggery: '#5C3A25',
                         ink: '#3A2417',
                         turmeric: '#F5A623',
@@ -46,7 +46,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --cream: #FBF1E2;
+            --cream: #FFFFFF;
             --jaggery: #5C3A25;
             --ink: #3A2417;
             --turmeric: #F5A623;
@@ -245,6 +245,7 @@
         .hero-title-in {
             opacity: 0;
             animation: titleIn 1s cubic-bezier(.16, .84, .44, 1) both;
+            text-shadow: 0 2px 14px rgba(26, 12, 6, 0.35);
         }
         @keyframes titleIn {
             from {
@@ -1116,6 +1117,480 @@
             transform: none;
             box-shadow: none;
         }
+
+        /* ===== WELCOME POPUP ===== */
+        #welcomeOverlay {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: rgba(58, 36, 23, 0.55);
+            backdrop-filter: blur(3px);
+            display: none;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 100px 16px 24px;
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            opacity: 0;
+            transition: opacity .35s ease;
+        }
+        #welcomeOverlay::-webkit-scrollbar {
+            display: none;
+        }
+        #welcomeOverlay.show {
+            display: flex;
+        }
+        #welcomeOverlay.in {
+            opacity: 1;
+        }
+        #welcomeModal {
+            position: relative;
+            width: 100%;
+            max-width: 420px;
+            max-height: calc(100vh - 124px);
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            background: #FFFDFA;
+            border-radius: 1.4rem;
+            box-shadow: 0 30px 70px -20px rgba(26, 17, 12, 0.55);
+            transform: translateY(24px) scale(.96);
+            opacity: 0;
+            transition: transform .45s cubic-bezier(.34,1.56,.64,1), opacity .4s ease;
+        }
+        #welcomeModal::-webkit-scrollbar {
+            display: none;
+        }
+        #welcomeOverlay.in #welcomeModal {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+        #welcomeModal .wm-top {
+            position: relative;
+            padding: 1.6rem 1.75rem 1.1rem;
+            text-align: center;
+            background: linear-gradient(160deg, #FFF3DC, #FFE7CE 55%, #FFDCD6);
+            overflow: hidden;
+            border-top-left-radius: 1.4rem;
+            border-top-right-radius: 1.4rem;
+        }
+        #welcomeModal .wm-top::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(215,38,61,.18), transparent 70%);
+        }
+        #welcomeModal .wm-top::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: -30px;
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(245,166,35,.22), transparent 70%);
+        }
+        #welcomeModal .wm-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: #ffffff;
+            color: var(--kumkum);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 50;
+            box-shadow: 0 4px 14px rgba(26, 17, 12, 0.35);
+            transition: background .25s ease, transform .25s ease, color .25s ease;
+        }
+        #welcomeModal .wm-close svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            pointer-events: none;
+        }
+        #welcomeModal .wm-close:hover {
+            background: var(--kumkum);
+            color: #fff;
+            transform: rotate(90deg);
+        }
+        #welcomeModal .wm-badge {
+            position: relative;
+            display: inline-block;
+            background: var(--kumkum);
+            color: #fff;
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            padding: .35rem .9rem;
+            border-radius: 999px;
+            margin-bottom: .9rem;
+        }
+        #welcomeModal .wm-offer {
+            position: relative;
+            font-family: 'Rozha One', serif;
+            font-size: 2.2rem;
+            line-height: 1;
+            color: var(--kumkum);
+            margin-bottom: .2rem;
+        }
+        #welcomeModal .wm-offer span {
+            font-size: 1.1rem;
+            color: var(--jaggery);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            display: block;
+            margin-top: .35rem;
+        }
+        #welcomeModal .wm-sub {
+            position: relative;
+            color: #6b5140;
+            font-size: .9rem;
+            margin-top: .5rem;
+        }
+        #welcomeModal .wm-bottom {
+            padding: 1.5rem 1.75rem 1.9rem;
+            text-align: center;
+            border-bottom-left-radius: 1.4rem;
+            border-bottom-right-radius: 1.4rem;
+        }
+        #welcomeModal .wm-code {
+            display: inline-flex;
+            align-items: center;
+            gap: .6rem;
+            border: 1.5px dashed var(--kumkum);
+            border-radius: .8rem;
+            padding: .6rem 1.1rem;
+            font-weight: 700;
+            letter-spacing: .08em;
+            color: var(--kumkum);
+            margin-bottom: 1.1rem;
+            background: rgba(215,38,61,.04);
+        }
+        #welcomeModal .wm-code button {
+            border: none;
+            background: var(--kumkum);
+            color: #fff;
+            font-size: .68rem;
+            font-weight: 600;
+            padding: .3rem .6rem;
+            border-radius: .4rem;
+            cursor: pointer;
+            transition: background .2s ease;
+        }
+        #welcomeModal .wm-code button:hover {
+            background: #b81f34;
+        }
+        #welcomeModal .wm-cta {
+            display: block;
+            width: 100%;
+            background: linear-gradient(90deg, var(--turmeric), var(--kumkum));
+            color: #fff;
+            font-weight: 700;
+            padding: .85rem 1rem;
+            border-radius: .8rem;
+            border: none;
+            cursor: pointer;
+            font-size: .95rem;
+            transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease;
+        }
+        #welcomeModal .wm-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px -8px rgba(215,38,61,.45);
+        }
+        #welcomeModal .wm-cta:disabled {
+            opacity: .65;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        #welcomeModal .wm-skip {
+            display: block;
+            margin: .9rem auto 0;
+            background: none;
+            border: none;
+            color: #9a8471;
+            font-size: .8rem;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        @media (max-width: 480px) {
+            #welcomeOverlay {
+                padding: 76px 12px 20px;
+            }
+            #welcomeModal {
+                max-height: calc(100vh - 96px);
+            }
+        }
+        #welcomeModal .wm-form {
+            text-align: left;
+            margin-bottom: 1.1rem;
+        }
+        #welcomeModal .wm-field {
+            margin-bottom: .55rem;
+        }
+        #welcomeModal .wm-field label {
+            display: block;
+            font-size: .72rem;
+            font-weight: 600;
+            letter-spacing: .04em;
+            color: var(--jaggery);
+            margin-bottom: .3rem;
+            text-transform: uppercase;
+        }
+        #welcomeModal .wm-field input {
+            width: 100%;
+            border: 1.5px solid #ecdfd0;
+            background: #fff;
+            border-radius: .65rem;
+            padding: .65rem .85rem;
+            font-size: .9rem;
+            font-family: 'Poppins', sans-serif;
+            color: var(--ink);
+            outline: none;
+            transition: border-color .2s ease, box-shadow .2s ease;
+        }
+        #welcomeModal .wm-field input::placeholder {
+            color: #b9a892;
+        }
+        #welcomeModal .wm-field input:focus {
+            border-color: var(--kumkum);
+            box-shadow: 0 0 0 3px rgba(215,38,61,.1);
+        }
+        #welcomeModal .wm-field input.wm-invalid {
+            border-color: #d7263d;
+            box-shadow: 0 0 0 3px rgba(215,38,61,.08);
+        }
+        #welcomeModal .wm-field-error {
+            display: none;
+            font-size: .72rem;
+            color: #d7263d;
+            margin-top: .3rem;
+        }
+        #welcomeModal .wm-field-error.show {
+            display: block;
+        }
+        #welcomeModal .wm-form-msg {
+            font-size: .78rem;
+            text-align: center;
+            margin-top: .7rem;
+            min-height: 1em;
+        }
+        #welcomeModal .wm-form-msg.error {
+            color: #d7263d;
+        }
+        #welcomeModal .wm-success {
+            display: none;
+            text-align: center;
+            padding: .5rem 0 .3rem;
+        }
+        #welcomeModal .wm-success.show {
+            display: block;
+        }
+        #welcomeModal .wm-success-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6fbf73, #2e9e4f);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto .9rem;
+            box-shadow: 0 10px 22px -8px rgba(46,158,79,.5);
+        }
+        #welcomeModal .wm-success h4 {
+            font-family: 'Rozha One', serif;
+            font-size: 1.3rem;
+            color: var(--jaggery);
+            margin-bottom: .4rem;
+        }
+        #welcomeModal .wm-success p {
+            font-size: .85rem;
+            color: #6b5140;
+        }
+
+        /* ===== COUNTRIES WE SERVE ===== */
+        #countries-served {
+            position: relative;
+            overflow: hidden;
+        }
+        .route-map {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: .5;
+            pointer-events: none;
+        }
+        .route-path {
+            fill: none;
+            stroke: var(--turmeric);
+            stroke-width: 1.4;
+            stroke-dasharray: 6 7;
+            stroke-linecap: round;
+            opacity: .55;
+        }
+        .route-path.in {
+            animation: routeFlow 22s linear infinite;
+        }
+        @keyframes routeFlow {
+            to {
+                stroke-dashoffset: -520;
+            }
+        }
+        .route-hub {
+            fill: var(--kumkum);
+        }
+        .route-pulse {
+            fill: none;
+            stroke: var(--kumkum);
+            stroke-width: 1.5;
+            opacity: 0;
+        }
+        .route-hub-wrap.in .route-pulse {
+            animation: hubPulse 2.6s ease-out infinite;
+        }
+        @keyframes hubPulse {
+            0% {
+                r: 6;
+                opacity: .6;
+            }
+            100% {
+                r: 22;
+                opacity: 0;
+            }
+        }
+        .country-card {
+            position: relative;
+            overflow: hidden;
+            background: #fff;
+            border-radius: 1.25rem;
+            padding: 2rem 1.25rem 1.6rem;
+            text-align: center;
+            border: 1px solid rgba(92, 58, 37, .08);
+            box-shadow: 0 10px 26px -18px rgba(92, 58, 37, .3);
+            transition: transform .45s cubic-bezier(.34,1.56,.64,1), box-shadow .45s ease, border-color .45s ease;
+        }
+        .country-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--turmeric), var(--marigold), var(--kumkum));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform .5s cubic-bezier(.16,.84,.44,1);
+        }
+        .country-card:hover::before {
+            transform: scaleX(1);
+        }
+        .country-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 26px 46px -18px rgba(215, 38, 61, .32);
+            border-color: rgba(215, 38, 61, .25);
+        }
+        .country-card.origin-card {
+            background: linear-gradient(160deg, #FFF3DC, #FFE7CE);
+            border-color: rgba(245, 166, 35, .4);
+        }
+        .country-card.origin-card::before {
+            transform: scaleX(1);
+        }
+        .country-flag-ring {
+            position: relative;
+            width: 88px;
+            height: 88px;
+            margin: 0 auto 1rem;
+            border-radius: 9999px;
+            padding: 4px;
+            background: conic-gradient(from 0deg, var(--turmeric), var(--marigold), var(--kumkum), var(--turmeric));
+            transition: transform .5s cubic-bezier(.34,1.56,.64,1), box-shadow .4s ease;
+            box-shadow: 0 10px 22px -10px rgba(92, 58, 37, .45);
+        }
+        .country-card:hover .country-flag-ring {
+            transform: rotate(10deg) scale(1.06);
+            box-shadow: 0 16px 28px -8px rgba(215, 38, 61, .4);
+        }
+        .country-flag-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 9999px;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: inset 0 0 0 3px #fff;
+        }
+        .country-flag-inner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .country-flag-ring .flag-emoji-fallback {
+            width: 100%;
+            height: 100%;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.1rem;
+            background: #fff;
+        }
+        .origin-crown {
+            position: absolute;
+            top: -6px;
+            right: -4px;
+            width: 26px;
+            height: 26px;
+            border-radius: 9999px;
+            background: var(--kumkum);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px -3px rgba(215,38,61,.6);
+        }
+        .origin-crown svg {
+            width: 13px;
+            height: 13px;
+        }
+        .country-name {
+            font-family: 'Rozha One', serif;
+            font-size: 1.2rem;
+            color: var(--jaggery);
+        }
+        .country-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: .3rem;
+            font-size: .68rem;
+            letter-spacing: .07em;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--kumkum);
+            margin-top: .45rem;
+        }
+        .country-card.origin-card .country-tag {
+            color: #b8770f;
+        }
+        .country-tag svg {
+            width: 12px;
+            height: 12px;
+            flex-shrink: 0;
+        }
     </style>
 </head>
 <body class="bg-cream">
@@ -1123,9 +1598,9 @@
     <div id="navbar-placeholder"></div>
 
     <!-- ============ HERO ============ -->
-    <section id="hero" class="relative overflow-hidden bg-gradient-to-br from-[#2A0A0A] via-kumkum to-[#1A0E08]">
-        <img id="heroImg" src="" alt="Handmade Ladoos" class="hero-parallax absolute inset-0 w-full h-full object-cover opacity-50 scale-110" style="display:none;">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-kumkum/25 to-turmeric/10"></div>
+    <section id="hero" class="relative overflow-hidden bg-gradient-to-br from-amber-200 via-marigold to-turmeric">
+        <img id="heroImg" src="" alt="Handmade Ladoos" class="hero-parallax absolute inset-0 w-full h-full object-cover opacity-90 scale-110" style="display:none;">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/15 via-kumkum/5 to-transparent"></div>
         <div class="hero-glow"></div>
         <div class="light-ray hidden md:block"></div>
 
@@ -1304,6 +1779,106 @@
                 <h3 class="font-display text-xl text-jaggery mb-3">All Ages</h3>
                 <p class="text-sm text-slate-500 leading-relaxed">Suitable for everyone from 8-month-old babies to elderly people. Health and wellness for the entire family.</p>
             </div>
+        </div>
+    </section>
+
+    <div class="flex justify-center py-4">
+        <svg class="kolam-divider w-40 h-10" viewBox="0 0 200 40" fill="none">
+            <path d="M2 20 Q 50 2, 100 20 T 198 20" stroke="#F5A623" stroke-width="2" stroke-linecap="round"/>
+            <circle class="node" cx="2" cy="20" r="3" fill="#D7263D"/><circle class="node" cx="100" cy="20" r="3" fill="#D7263D"/><circle class="node" cx="198" cy="20" r="3" fill="#D7263D"/>
+        </svg>
+    </div>
+
+    <!-- ============ COUNTRIES WE SERVE ============ -->
+    <section id="countries-served" class="relative max-w-7xl mx-auto px-6 py-16 md:py-20">
+        <svg class="route-map hidden md:block" viewBox="0 0 1000 260" preserveAspectRatio="xMidYMid meet">
+            <path class="route-path route-path-1" d="M500,130 C 420,90 300,70 150,55" />
+            <path class="route-path route-path-2" d="M500,130 C 440,180 360,215 230,205" />
+            <path class="route-path route-path-3" d="M500,130 C 600,80 720,55 850,45" />
+            <path class="route-path route-path-4" d="M500,130 C 610,175 730,205 870,190" />
+        </svg>
+
+        <div class="reveal text-center mb-12 relative z-10">
+            <span class="eyebrow inline-block bg-kumkum/10 text-kumkum text-xs tracking-[0.3em] uppercase font-semibold px-4 py-1.5 rounded-full">
+                From Our Kitchen To Your Doorstep
+                <svg width="90" height="8" viewBox="0 0 90 8"><path d="M2 5 Q 25 -1, 45 4 T 88 3" stroke="#D7263D" stroke-width="2" fill="none" stroke-linecap="round" /></svg>
+            </span>
+            <h2 class="wipe font-display text-3xl md:text-4xl text-jaggery mt-1">Countries We Serve</h2>
+            <p class="text-slate-500 mt-4 max-w-2xl mx-auto">
+                Every batch begins in our Indian kitchen and travels carefully packed to five countries, so families abroad can enjoy the same homemade taste.
+            </p>
+        </div>
+
+        <div class="stagger reveal relative z-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5 md:gap-6">
+            <div class="country-card origin-card route-hub-wrap">
+                <div class="origin-crown" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 8l4 3 5-6 5 6 4-3-2 11H5L3 8zm2.6 13h12.8v2H5.6v-2z"/></svg>
+                </div>
+                <div class="country-flag-ring">
+                    <div class="country-flag-inner">
+                        <img src="https://flagcdn.com/w160/in.png" srcset="https://flagcdn.com/w320/in.png 2x" alt="Flag of India" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;flag-emoji-fallback&quot;>🇮🇳</div>'">
+                    </div>
+                </div>
+                <h3 class="country-name">India</h3>
+                <p class="country-tag">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"/></svg>
+                    Our Home Kitchen
+                </p>
+            </div>
+            <div class="country-card">
+                <div class="country-flag-ring">
+                    <div class="country-flag-inner">
+                        <img src="https://flagcdn.com/w160/us.png" srcset="https://flagcdn.com/w320/us.png 2x" alt="Flag of the United States" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;flag-emoji-fallback&quot;>🇺🇸</div>'">
+                    </div>
+                </div>
+                <h3 class="country-name">USA</h3>
+                <p class="country-tag">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 19h17M6 19l1.5-9h9L18 19M9 10V6a3 3 0 0 1 6 0v4"/></svg>
+                    We Deliver Here
+                </p>
+            </div>
+            <div class="country-card">
+                <div class="country-flag-ring">
+                    <div class="country-flag-inner">
+                        <img src="https://flagcdn.com/w160/gb.png" srcset="https://flagcdn.com/w320/gb.png 2x" alt="Flag of the United Kingdom" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;flag-emoji-fallback&quot;>🇬🇧</div>'">
+                    </div>
+                </div>
+                <h3 class="country-name">UK</h3>
+                <p class="country-tag">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 19h17M6 19l1.5-9h9L18 19M9 10V6a3 3 0 0 1 6 0v4"/></svg>
+                    We Deliver Here
+                </p>
+            </div>
+            <div class="country-card">
+                <div class="country-flag-ring">
+                    <div class="country-flag-inner">
+                        <img src="https://flagcdn.com/w160/ca.png" srcset="https://flagcdn.com/w320/ca.png 2x" alt="Flag of Canada" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;flag-emoji-fallback&quot;>🇨🇦</div>'">
+                    </div>
+                </div>
+                <h3 class="country-name">Canada</h3>
+                <p class="country-tag">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 19h17M6 19l1.5-9h9L18 19M9 10V6a3 3 0 0 1 6 0v4"/></svg>
+                    We Deliver Here
+                </p>
+            </div>
+            <div class="country-card">
+                <div class="country-flag-ring">
+                    <div class="country-flag-inner">
+                        <img src="https://flagcdn.com/w160/au.png" srcset="https://flagcdn.com/w320/au.png 2x" alt="Flag of Australia" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;flag-emoji-fallback&quot;>🇦🇺</div>'">
+                    </div>
+                </div>
+                <h3 class="country-name">Australia</h3>
+                <p class="country-tag">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 19h17M6 19l1.5-9h9L18 19M9 10V6a3 3 0 0 1 6 0v4"/></svg>
+                    We Deliver Here
+                </p>
+            </div>
+        </div>
+
+        <div class="reveal text-center mt-12 relative z-10">
+            <a href="contact.html" class="cta-btn inline-flex items-center gap-2 bg-gradient-to-r from-turmeric to-kumkum text-white font-semibold px-7 py-3.5 rounded-xl hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300">
+                Check Delivery To Your Country <span>&rarr;</span>
+            </a>
         </div>
     </section>
 
@@ -1534,9 +2109,221 @@
 
     <div id="footer-placeholder"></div>
 
+    <!-- ============================================================ -->
+    <!-- ===== WELCOME POPUP (shown once per session on page load) === -->
+    <!-- ============================================================ -->
+    <div id="welcomeOverlay">
+        <div id="welcomeModal">
+            <button class="wm-close" id="wmCloseBtn" aria-label="Close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
+            </button>
+            <div class="wm-top">
+                <span class="wm-badge">Welcome Offer</span>
+                <div class="wm-offer">10% OFF <span>on your first order</span></div>
+                <p class="wm-sub">Handmade ladoos, pure ghee &amp; zero preservatives &mdash; delivered fresh to your door.</p>
+            </div>
+            <div class="wm-bottom">
+                <div class="wm-code">
+                    NICY10
+                    <button id="wmCopyBtn" type="button">Copy</button>
+                </div>
+
+                <form id="wmForm" class="wm-form" novalidate>
+                    <div class="wm-field">
+                        <label for="wmName">Full Name</label>
+                        <input type="text" id="wmName" name="name" placeholder="Your name" autocomplete="name" required>
+                        <p class="wm-field-error" id="wmNameError">Please enter your name.</p>
+                    </div>
+                    <div class="wm-field">
+                        <label for="wmEmail">Email</label>
+                        <input type="email" id="wmEmail" name="email" placeholder="you@example.com" autocomplete="email" required>
+                        <p class="wm-field-error" id="wmEmailError">Please enter a valid email address.</p>
+                    </div>
+                    <div class="wm-field">
+                        <label for="wmPhone">Mobile Number</label>
+                        <input type="tel" id="wmPhone" name="phone" placeholder="10-digit mobile number" autocomplete="tel" inputmode="numeric" maxlength="10" required>
+                        <p class="wm-field-error" id="wmPhoneError">Please enter a valid 10-digit mobile number.</p>
+                    </div>
+
+                    <button type="submit" class="wm-cta" id="wmSubmitBtn">Claim My 10% Off</button>
+                    <p class="wm-form-msg" id="wmFormMsg"></p>
+                </form>
+
+                <div class="wm-success" id="wmSuccess">
+                    <div class="wm-success-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                    </div>
+                    <h4>You're all set!</h4>
+                    <p>Your code <strong>NICY10</strong> is ready to use at checkout.</p>
+                    <a href="products.html" class="wm-cta" style="margin-top:1rem;">Shop Now &rarr;</a>
+                </div>
+
+                <button class="wm-skip" id="wmSkipBtn" type="button">No thanks, I'll browse first</button>
+            </div>
+        </div>
+    </div>
+
     <script src="js/navbar.js"></script>
     <script src="js/footer.js"></script>
     <script src="js/testimonials.js"></script>
+
+    <!-- ============================================================ -->
+    <!-- ===== WELCOME POPUP SCRIPT ===== -->
+    <!-- ============================================================ -->
+    <script>
+        (function() {
+            const LEADS_API_URL = "https://nicyfoods.srujaninfotech.com/api/leads";
+
+            const overlay = document.getElementById('welcomeOverlay');
+            const closeBtn = document.getElementById('wmCloseBtn');
+            const skipBtn = document.getElementById('wmSkipBtn');
+            const copyBtn = document.getElementById('wmCopyBtn');
+            const form = document.getElementById('wmForm');
+            const successEl = document.getElementById('wmSuccess');
+            const submitBtn = document.getElementById('wmSubmitBtn');
+            const formMsg = document.getElementById('wmFormMsg');
+
+            const nameInput = document.getElementById('wmName');
+            const emailInput = document.getElementById('wmEmail');
+            const phoneInput = document.getElementById('wmPhone');
+            const nameError = document.getElementById('wmNameError');
+            const emailError = document.getElementById('wmEmailError');
+            const phoneError = document.getElementById('wmPhoneError');
+
+            const LEAD_KEY = 'nicy_lead_submitted';
+
+            function openPopup() {
+                overlay.classList.add('show');
+                requestAnimationFrame(() => overlay.classList.add('in'));
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closePopup() {
+                overlay.classList.remove('in');
+                document.body.style.overflow = '';
+                setTimeout(() => overlay.classList.remove('show'), 350);
+            }
+
+            let leadAlreadySubmitted = false;
+            try {
+                leadAlreadySubmitted = localStorage.getItem(LEAD_KEY) === '1';
+            } catch (e) {}
+
+            if (leadAlreadySubmitted && form) {
+                form.style.display = 'none';
+                successEl.classList.add('show');
+            }
+
+            // Popup opens on every page load / refresh
+            setTimeout(openPopup, 900);
+
+            closeBtn.addEventListener('click', closePopup);
+            skipBtn.addEventListener('click', closePopup);
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) closePopup();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && overlay.classList.contains('show')) closePopup();
+            });
+
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText('NICY10').then(() => {
+                    const original = copyBtn.textContent;
+                    copyBtn.textContent = 'Copied!';
+                    setTimeout(() => { copyBtn.textContent = original; }, 1500);
+                }).catch(() => {});
+            });
+
+            phoneInput.addEventListener('input', () => {
+                phoneInput.value = phoneInput.value.replace(/\D/g, '').slice(0, 10);
+            });
+
+            function setFieldError(input, errorEl, show) {
+                input.classList.toggle('wm-invalid', show);
+                errorEl.classList.toggle('show', show);
+            }
+
+            function validateForm() {
+                let valid = true;
+
+                const name = nameInput.value.trim();
+                if (name.length < 2) {
+                    setFieldError(nameInput, nameError, true);
+                    valid = false;
+                } else {
+                    setFieldError(nameInput, nameError, false);
+                }
+
+                const email = emailInput.value.trim();
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailPattern.test(email)) {
+                    setFieldError(emailInput, emailError, true);
+                    valid = false;
+                } else {
+                    setFieldError(emailInput, emailError, false);
+                }
+
+                const phone = phoneInput.value.trim();
+                if (!/^[6-9]\d{9}$/.test(phone)) {
+                    setFieldError(phoneInput, phoneError, true);
+                    valid = false;
+                } else {
+                    setFieldError(phoneInput, phoneError, false);
+                }
+
+                return valid;
+            }
+
+            [nameInput, emailInput, phoneInput].forEach((input) => {
+                input.addEventListener('blur', validateForm);
+            });
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                formMsg.textContent = '';
+                formMsg.classList.remove('error');
+
+                if (!validateForm()) {
+                    formMsg.textContent = 'Please fix the highlighted fields.';
+                    formMsg.classList.add('error');
+                    return;
+                }
+
+                const payload = {
+                    name: nameInput.value.trim(),
+                    email: emailInput.value.trim(),
+                    phone: phoneInput.value.trim(),
+                    source: 'homepage_welcome_popup',
+                    coupon: 'NICY10',
+                };
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Submitting...';
+
+                try {
+                    const res = await fetch(LEADS_API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload),
+                    });
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                } catch (err) {
+                    console.warn('⚠️ Lead API unavailable, storing locally instead:', err.message);
+                    try {
+                        const existing = JSON.parse(localStorage.getItem('nicy_leads') || '[]');
+                        existing.push({ ...payload, savedAt: new Date().toISOString() });
+                        localStorage.setItem('nicy_leads', JSON.stringify(existing));
+                    } catch (e2) {}
+                } finally {
+                    try { localStorage.setItem(LEAD_KEY, '1'); } catch (e3) {}
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Claim My 10% Off';
+                    form.style.display = 'none';
+                    successEl.classList.add('show');
+                }
+            });
+        })();
+    </script>
 
     <!-- ============================================================ -->
     <!-- ===== HERO SCRIPT (Backend Connected) ===== -->
@@ -2026,6 +2813,24 @@
                 });
             });
         }
+
+        // Animate the route paths once the Countries section scrolls into view
+        (function initRouteAnimation() {
+            const countriesSection = document.getElementById('countries-served');
+            if (!countriesSection) return;
+            const routePaths = countriesSection.querySelectorAll('.route-path');
+            const hubWrap = countriesSection.querySelector('.route-hub-wrap');
+            const routeIo = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        routePaths.forEach(p => p.classList.add('in'));
+                        if (hubWrap) hubWrap.classList.add('in');
+                        routeIo.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.2 });
+            routeIo.observe(countriesSection);
+        })();
 
         console.log('✅ NicyFoods Homepage fully loaded with dynamic content and FIXED images.');
     </script>

@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </ul>
         </div>
 
-        <!-- Get in Touch -->
+        <!-- Get in Touch + Social -->
         <div>
           <h3 class="text-marigold font-bold text-lg mb-4" style="font-family:'Rozha One', serif;">Get in Touch</h3>
           <ul class="space-y-3 text-sm">
@@ -74,6 +74,34 @@ document.addEventListener("DOMContentLoaded", () => {
               <span><span class="text-cream font-semibold">Address:</span> Plot No 20, Saikrupa Society, Ingale Nagar, Warje Jakat Naka, Warje, Pune – 411052</span>
             </li>
           </ul>
+
+          <!-- Social Icons -->
+          <div class="mt-6 pt-5 border-t border-cream/10">
+            <h4 class="text-cream/60 text-xs tracking-[0.2em] uppercase font-semibold mb-3">Follow Us</h4>
+            <div class="flex items-center gap-4">
+              <a href="https://www.instagram.com/nicyfoods" target="_blank" rel="noopener noreferrer"
+                 class="footer-social-link group w-10 h-10 rounded-full bg-cream/10 flex items-center justify-center transition-all duration-300 hover:bg-gradient-to-br hover:from-[#833AB4] hover:via-[#E1306C] hover:to-[#FCAF45] hover:scale-110 hover:shadow-lg hover:shadow-[#E1306C]/30">
+                <svg class="w-5 h-5 text-cream/70 group-hover:text-white transition-colors" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <rect x="3" y="3" width="18" height="18" rx="5"/>
+                  <circle cx="12" cy="12" r="4.5"/>
+                  <circle cx="17.2" cy="6.8" r="1.2" fill="#fff" stroke="none"/>
+                </svg>
+              </a>
+              <a href="https://www.facebook.com/share/1DkK7iqTGC/" target="_blank" rel="noopener noreferrer"
+                 class="footer-social-link group w-10 h-10 rounded-full bg-cream/10 flex items-center justify-center transition-all duration-300 hover:bg-[#1877F2] hover:scale-110 hover:shadow-lg hover:shadow-[#1877F2]/30">
+                <svg class="w-5 h-5 text-cream/70 group-hover:text-white transition-colors" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M13.5 9H15V6.5h-1.7c-2 0-3.3 1.3-3.3 3.4V12H8v2.5h2v6.5h2.6v-6.5h2l.4-2.5h-2.4v-1.8c0-.7.3-1.2 1-1.2z"/>
+                </svg>
+              </a>
+              <a href="https://wa.me/918263001410" target="_blank" rel="noopener noreferrer"
+                 class="footer-social-link group w-10 h-10 rounded-full bg-cream/10 flex items-center justify-center transition-all duration-300 hover:bg-[#25D366] hover:scale-110 hover:shadow-lg hover:shadow-[#25D366]/30">
+                <svg class="w-5 h-5 text-cream/70 group-hover:text-white transition-colors" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1s-.7.9-.9 1-.3.2-.6.1c-.3-.1-1.2-.5-2.3-1.5-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.3-.4.1-.2 0-.4 0-.5C10.3 9 9.8 7.7 9.6 7.2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.3-.1-.1-.3-.2-.6-.3z"/>
+                  <path d="M12 2C6.5 2 2 6.5 2 12c0 1.9.5 3.6 1.5 5.2L2 22l4.9-1.3c1.5.8 3.2 1.3 5.1 1.3 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.3c-1.7 0-3.4-.5-4.8-1.3l-.3-.2-3.5.9.9-3.4-.2-.4C3.4 14.5 3 13.3 3 12c0-5 4-9 9-9s9 4 9 9-4 9-9 9z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -101,6 +129,9 @@ document.addEventListener("DOMContentLoaded", () => {
         #footer-placeholder .footer-contact-item:hover{ transform: translateX(3px); }
         #footer-placeholder .footer-icon{ transition: transform .4s cubic-bezier(.34,1.56,.64,1); }
         #footer-placeholder .footer-contact-item:hover .footer-icon{ transform: scale(1.15) rotate(-6deg); }
+
+        #footer-placeholder .footer-social-link{ transition: all .3s cubic-bezier(.34,1.56,.64,1); }
+        #footer-placeholder .footer-social-link:hover{ transform: scale(1.12) translateY(-2px); }
 
         #footer-placeholder .footer-heart{ animation: footerHeartBeat 1.8s ease-in-out infinite; transform-origin:center; }
         @keyframes footerHeartBeat{
