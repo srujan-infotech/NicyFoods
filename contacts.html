@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NicyFoods · Admin · Messages</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <link rel="stylesheet" href="css/admin-styles.css" />
+</head>
+<body data-page="contacts">
+
+    <div id="sidebar-container"></div>
+
+    <div id="main">
+        <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.8rem; flex-wrap:wrap;" id="topbar-container"></div>
+
+        <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
+            <h2 class="font-display text-xl text-jaggery"><i class="fas fa-envelope text-kumkum"></i> Contact Messages</h2>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Name</th><th>Email</th><th>Message</th><th>Date</th><th style="min-width:80px;">Actions</th></tr></thead>
+                <tbody id="contactsTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"><i class="fas fa-check-circle"></i> <span id="toastMsg">Success</span></div>
+
+    <script src="js/auth-client.js"></script>
+    <script src="js/admin-common.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/contacts.js"></script>
+</body>
+</html>

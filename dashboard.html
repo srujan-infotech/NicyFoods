@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NicyFoods · Admin · Dashboard</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Shared admin styles -->
+    <link rel="stylesheet" href="css/admin-styles.css" />
+</head>
+<body data-page="dashboard">
+
+    <div id="sidebar-container"></div>
+
+    <div id="main">
+        <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.8rem; flex-wrap:wrap;" id="topbar-container"></div>
+
+        <div class="stats-grid grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="stat-card">
+                <div class="icon-wrap orange"><i class="fas fa-box"></i></div>
+                <div>
+                    <div class="stat-value" id="statProducts">0</div>
+                    <div class="stat-label">Total Products</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="icon-wrap green"><i class="fas fa-star"></i></div>
+                <div>
+                    <div class="stat-value" id="statTestimonials">0</div>
+                    <div class="stat-label">Testimonials</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="icon-wrap red"><i class="fas fa-shopping-cart"></i></div>
+                <div>
+                    <div class="stat-value" id="statOrders">0</div>
+                    <div class="stat-label">Total Orders</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="icon-wrap blue"><i class="fas fa-envelope"></i></div>
+                <div>
+                    <div class="stat-value" id="statContacts">0</div>
+                    <div class="stat-label">Messages</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="charts-grid mb-6">
+            <div class="chart-card">
+                <div class="chart-title"><i class="fas fa-chart-pie"></i> Products by Category</div>
+                <div class="chart-wrapper"><canvas id="categoryChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title"><i class="fas fa-chart-bar"></i> Monthly Orders</div>
+                <div class="chart-wrapper"><canvas id="ordersChart"></canvas></div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="chart-card" style="display:flex; flex-direction:column; gap:0.6rem; padding:1.2rem 1.5rem;">
+                <div style="font-weight:600; color:#5C3A25; font-size:0.9rem; display:flex; align-items:center; gap:0.5rem;">
+                    <i class="fas fa-bolt text-kumkum"></i> Quick Actions
+                </div>
+                <a href="products.html?new=1" class="btn-primary" style="justify-content:center; width:100%; text-decoration:none;">
+                    <i class="fas fa-plus"></i> Add Product
+                </a>
+                <a href="testimonials.html?new=1" class="btn-primary" style="justify-content:center; width:100%; text-decoration:none; background:linear-gradient(135deg, #5F7A4F, #3d5a2e);">
+                    <i class="fas fa-plus"></i> Add Testimonial
+                </a>
+                <a href="orders.html" class="btn-secondary" style="justify-content:center; width:100%; text-decoration:none;">
+                    <i class="fas fa-eye"></i> View Orders
+                </a>
+                <div style="font-size:0.65rem; color:#8a7362; text-align:center; border-top:1px solid rgba(92,58,37,0.06); padding-top:0.6rem; margin-top:0.2rem;">
+                    <i class="far fa-clock"></i> Updated: <span id="lastUpdated">just now</span>
+                </div>
+            </div>
+            <div class="chart-card md:col-span-2" style="display:flex; flex-direction:column; justify-content:center; padding:1.2rem 1.5rem;">
+                <div style="font-weight:600; color:#5C3A25; font-size:0.9rem; display:flex; align-items:center; gap:0.5rem; margin-bottom:0.3rem;">
+                    <i class="fas fa-info-circle text-kumkum"></i> System Status
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; font-size:0.8rem;">
+                    <div style="display:flex; align-items:center; gap:0.5rem; color:#5F7A4F;"><i class="fas fa-check-circle"></i> Database: Connected</div>
+                    <div style="display:flex; align-items:center; gap:0.5rem; color:#5F7A4F;"><i class="fas fa-check-circle"></i> Storage: Active</div>
+                    <div style="display:flex; align-items:center; gap:0.5rem; color:#E8A33D;"><i class="fas fa-clock"></i> Last backup: Today</div>
+                    <div style="display:flex; align-items:center; gap:0.5rem; color:#3b82f6;"><i class="fas fa-users"></i> Admin: Online</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"><i class="fas fa-check-circle"></i> <span id="toastMsg">Success</span></div>
+
+    <script src="js/auth-client.js"></script>
+    <script src="js/admin-common.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

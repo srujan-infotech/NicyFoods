@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NicyFoods | Home</title>
 
-    <!-- ===== FONTAWESOME (FIXES MISSING ICONS) ===== -->
+    <!-- ===== FONTAWESOME ===== -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
     <script src="https://cdn.tailwindcss.com">
@@ -45,6 +45,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
     <style>
+        /* ===== ALL EXISTING STYLES (unchanged) ===== */
         :root {
             --cream: #FFFFFF;
             --jaggery: #5C3A25;
@@ -891,7 +892,7 @@
             }
         }
 
-        /* ===== CHAT BUTTON FIXES ===== */
+        /* ===== CHAT BUTTON ===== */
         #chatToggleBtn {
             position: fixed;
             bottom: 24px;
@@ -972,7 +973,7 @@
             transform: translateX(0);
         }
 
-        /* Chat panel refinements */
+        /* Chat panel */
         #chatPanel {
             position: fixed;
             bottom: 96px;
@@ -1591,6 +1592,31 @@
             height: 12px;
             flex-shrink: 0;
         }
+
+        /* ===== QUALITY PROMISE ICON STYLES ===== */
+        .quality-icon {
+            width: 72px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.9rem;
+            flex-shrink: 0;
+        }
+        .quality-icon svg {
+            width: 48px;
+            height: 48px;
+        }
+        .quality-icon img {
+            width: 56px;
+            height: 56px;
+            object-fit: contain;
+        }
+        .quality-icon .default-icon {
+            width: 48px;
+            height: 48px;
+            color: var(--kumkum);
+        }
     </style>
 </head>
 <body class="bg-cream">
@@ -1950,7 +1976,7 @@
 
     <div class="torn-edge"></div>
 
-    <!-- ============ MISSION & VISION ============ -->
+    <!-- ============ MISSION & VISION (DYNAMIC FROM API) ============ -->
     <section class="relative py-20 md:py-24 overflow-hidden bg-gradient-to-br from-rose-50 via-orange-50 to-amber-50">
         <div class="ladoo-particle w-16 h-16 float-y-slow" style="top:8%; left:6%;"></div>
         <div class="ladoo-particle w-10 h-10 float-y" style="top:70%; left:12%;"></div>
@@ -1959,10 +1985,10 @@
 
         <div class="relative max-w-6xl mx-auto px-6">
             <div class="reveal text-center mb-12">
-                <span class="inline-block bg-kumkum/10 text-kumkum text-xs tracking-[0.3em] uppercase font-semibold px-4 py-1.5 rounded-full">What Drives Us</span>
+                <span class="inline-block bg-kumkum/10 text-kumkum text-xs tracking-[0.3em] uppercase font-semibold px-4 py-1.5 rounded-full" id="mvTagline">What Drives Us</span>
                 <h2 class="font-display text-3xl sm:text-4xl text-jaggery mt-3 grow-underline">Our Mission &amp; Vision</h2>
             </div>
-            <div class="stagger reveal grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="stagger reveal grid grid-cols-1 md:grid-cols-2 gap-6" id="mvContainer">
                 <div class="rise-card bg-white rounded-2xl border-l-4 border-kumkum shadow-sm p-8">
                     <h3 class="flex items-center gap-2 font-display font-bold text-kumkum text-xl mb-4">
                         <svg class="icon-spin w-6 h-6 text-kumkum" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1971,12 +1997,7 @@
                         </svg>
                         Vision
                     </h3>
-                    <p class="text-[#5b4736] leading-relaxed">
-                        To become a trusted and beloved healthy food product brand across India, making nutritious,
-                        delicious, and authentic handmade ladoos accessible to families from one-year-old babies
-                        through all age groups. We envision a country where healthy eating is convenient, affordable,
-                        and delightful.
-                    </p>
+                    <p class="text-[#5b4736] leading-relaxed" id="visionText">Loading...</p>
                 </div>
                 <div class="rise-card bg-white rounded-2xl border-l-4 border-turmeric shadow-sm p-8">
                     <h3 class="flex items-center gap-2 font-display font-bold text-jaggery text-xl mb-4">
@@ -1987,12 +2008,7 @@
                         </svg>
                         Mission
                     </h3>
-                    <p class="text-[#5b4736] leading-relaxed">
-                        To supply premium healthy food products crafted with pure ghee, natural jaggery, and no
-                        maida, preservatives, artificial essence, or synthetic colors. Our mission is delivering
-                        authentic homemade taste paired with superior handmade quality that exceeds customer
-                        expectations.
-                    </p>
+                    <p class="text-[#5b4736] leading-relaxed" id="missionText">Loading...</p>
                 </div>
             </div>
         </div>
@@ -2000,49 +2016,17 @@
 
     <div class="torn-edge"></div>
 
-    <!-- ============ QUALITY PROMISE ============ -->
+    <!-- ============ QUALITY PROMISE (DYNAMIC FROM API) - UPDATED ============ -->
     <section class="py-20 md:py-24 bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50">
         <div class="max-w-6xl mx-auto px-6">
             <div class="reveal text-center mb-12">
                 <span class="inline-block bg-kumkum/10 text-kumkum text-xs tracking-[0.3em] uppercase font-semibold px-4 py-1.5 rounded-full">Our Promise</span>
                 <h2 class="font-display text-3xl sm:text-4xl text-jaggery mt-3 grow-underline">Our Quality Promise</h2>
             </div>
-            <div class="stagger reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="rise-card bg-white rounded-2xl p-8 text-center shadow-sm">
-                    <div class="seal icon-spin w-14 h-14 mx-auto mb-6 bg-gradient-to-br from-emerald-500 to-herbal text-white shadow-lg shadow-emerald-500/30 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M20 6L9 17l-5-5"/>
-                        </svg>
-                    </div>
-                    <h3 class="font-bold text-kumkum text-lg mb-3">100% Pure Ghee</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">We source authentic, clarified butter from trusted suppliers. Every batch is verified for purity and nutritional integrity.</p>
-                </div>
-                <div class="rise-card bg-white rounded-2xl p-8 text-center shadow-sm">
-                    <div class="seal icon-spin w-14 h-14 mx-auto mb-6 bg-gradient-to-br from-turmeric to-amber-600 text-white shadow-lg shadow-turmeric/30 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M8 3h8l1 4H7l1-4z"/><path d="M6 7h12l-1.2 12.2A2 2 0 0 1 14.8 21H9.2a2 2 0 0 1-2-1.8L6 7z"/><path d="M9 11h6"/>
-                        </svg>
-                    </div>
-                    <h3 class="font-bold text-kumkum text-lg mb-3">Natural Jaggery</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">Unrefined jaggery provides natural sweetness with essential minerals and nutrients, free from refined sugar processing.</p>
-                </div>
-                <div class="rise-card bg-white rounded-2xl p-8 text-center shadow-sm">
-                    <div class="seal icon-spin w-14 h-14 mx-auto mb-6 bg-gradient-to-br from-marigold to-lime-500 text-white shadow-lg shadow-marigold/30 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 22v-8"/><path d="M12 14c-3 0-5-2-5-5 3 0 5 2 5 5z"/><path d="M12 14c3 0 5-2 5-5-3 0-5 2-5 5z"/>
-                        </svg>
-                    </div>
-                    <h3 class="font-bold text-kumkum text-lg mb-3">Handpicked Ingredients</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">Nuts, seeds, and herbs are carefully selected and sourced from trusted suppliers ensuring freshness and quality.</p>
-                </div>
-                <div class="rise-card bg-white rounded-2xl p-8 text-center shadow-sm">
-                    <div class="seal icon-spin w-14 h-14 mx-auto mb-6 bg-gradient-to-br from-kumkum to-red-700 text-white shadow-lg shadow-kumkum/30 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6"/><path d="M9 9l6 6"/>
-                        </svg>
-                    </div>
-                    <h3 class="font-bold text-kumkum text-lg mb-3">Zero Additives</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">Absolutely no maida, preservatives, artificial essence, synthetic colors, or any harmful substances whatsoever.</p>
+            <div id="qualityPromiseGrid" class="stagger reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="col-span-full text-center py-10 text-slate-400">
+                    <i class="fas fa-spinner fa-spin text-2xl"></i>
+                    <p class="mt-2">Loading quality promises...</p>
                 </div>
             </div>
         </div>
@@ -2077,12 +2061,12 @@
             </a>
             <div class="contact-strip-item">
                 <div class="flex items-center justify-center gap-3">
-                    <a href="#" aria-label="Facebook" class="contact-strip-icon bg-[#1877F2] hover:-translate-y-1">
+                    <a href="https://www.facebook.com/share/1DkK7iqTGC/" aria-label="Facebook" class="contact-strip-icon bg-[#1877F2] hover:-translate-y-1">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="#fff">
                             <path d="M13.5 9H15V6.5h-1.7c-2 0-3.3 1.3-3.3 3.4V12H8v2.5h2v6.5h2.6v-6.5h2l.4-2.5h-2.4v-1.8c0-.7.3-1.2 1-1.2z"/>
                         </svg>
                     </a>
-                    <a href="#" aria-label="Instagram" class="contact-strip-icon bg-gradient-to-br from-amber-400 via-kumkum to-purple-600 hover:-translate-y-1">
+                    <a href="https://www.instagram.com/nicyfoods?utm_source=qr&igsh=MW84a3EwaW50cmY3Yw==" aria-label="Instagram" class="contact-strip-icon bg-gradient-to-br from-amber-400 via-kumkum to-purple-600 hover:-translate-y-1">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="3" y="3" width="18" height="18" rx="5"/>
                             <circle cx="12" cy="12" r="4"/>
@@ -2110,7 +2094,7 @@
     <div id="footer-placeholder"></div>
 
     <!-- ============================================================ -->
-    <!-- ===== WELCOME POPUP (shown once per session on page load) === -->
+    <!-- ===== WELCOME POPUP ===== -->
     <!-- ============================================================ -->
     <div id="welcomeOverlay">
         <div id="welcomeModal">
@@ -2118,16 +2102,10 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
             </button>
             <div class="wm-top">
-                <span class="wm-badge">Welcome Offer</span>
-                <div class="wm-offer">10% OFF <span>on your first order</span></div>
+                <span class="wm-badge">Welcome To NicyFoods</span>
                 <p class="wm-sub">Handmade ladoos, pure ghee &amp; zero preservatives &mdash; delivered fresh to your door.</p>
             </div>
             <div class="wm-bottom">
-                <div class="wm-code">
-                    NICY10
-                    <button id="wmCopyBtn" type="button">Copy</button>
-                </div>
-
                 <form id="wmForm" class="wm-form" novalidate>
                     <div class="wm-field">
                         <label for="wmName">Full Name</label>
@@ -2144,21 +2122,15 @@
                         <input type="tel" id="wmPhone" name="phone" placeholder="10-digit mobile number" autocomplete="tel" inputmode="numeric" maxlength="10" required>
                         <p class="wm-field-error" id="wmPhoneError">Please enter a valid 10-digit mobile number.</p>
                     </div>
-
-                    <button type="submit" class="wm-cta" id="wmSubmitBtn">Claim My 10% Off</button>
+                    <button type="submit" class="wm-cta" id="wmSubmitBtn">Submit</button>
                     <p class="wm-form-msg" id="wmFormMsg"></p>
                 </form>
-
                 <div class="wm-success" id="wmSuccess">
                     <div class="wm-success-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
                     </div>
-                    <h4>You're all set!</h4>
-                    <p>Your code <strong>NICY10</strong> is ready to use at checkout.</p>
                     <a href="products.html" class="wm-cta" style="margin-top:1rem;">Shop Now &rarr;</a>
                 </div>
-
-                <button class="wm-skip" id="wmSkipBtn" type="button">No thanks, I'll browse first</button>
             </div>
         </div>
     </div>
@@ -2214,7 +2186,6 @@
                 successEl.classList.add('show');
             }
 
-            // Popup opens on every page load / refresh
             setTimeout(openPopup, 900);
 
             closeBtn.addEventListener('click', closePopup);
@@ -2326,7 +2297,7 @@
     </script>
 
     <!-- ============================================================ -->
-    <!-- ===== HERO SCRIPT (Backend Connected) ===== -->
+    <!-- ===== HERO SCRIPT ===== -->
     <!-- ============================================================ -->
     <script>
         (function loadHero() {
@@ -2432,7 +2403,7 @@
     </script>
 
     <!-- ============================================================ -->
-    <!-- ===== PRODUCT LOADER SCRIPT (FIXED: IMAGES NOW SHOW) ===== -->
+    <!-- ===== PRODUCT LOADER ===== -->
     <!-- ============================================================ -->
     <script>
         (function loadProducts() {
@@ -2465,7 +2436,6 @@
             function createProductCard(product) {
                 const category = product.category || 'PRODUCT';
                 const imageUrl = getImageUrl(product.image) || 'https://nicyfoods.com/images/placeholder.jpg';
-                const isInStock = product.inStock !== false;
                 const price = product.price || '0';
                 const name = product.name || 'Product';
                 const description = product.description || '';
@@ -2697,7 +2667,7 @@
     </script>
 
     <!-- ============================================================ -->
-    <!-- ===== COMPANY LOGOS SCRIPT (Trusted By) ===== -->
+    <!-- ===== COMPANY LOGOS SCRIPT ===== -->
     <!-- ============================================================ -->
     <script>
         (function loadCompanies() {
@@ -2769,6 +2739,118 @@
         })();
     </script>
 
+    <!-- ============================================================ -->
+    <!-- ===== MISSION & VISION LOADER ===== -->
+    <!-- ============================================================ -->
+    <script>
+        (function loadMissionVision() {
+            const API_URL = "https://nicyfoods.srujaninfotech.com/api/mission-vision";
+            const visionEl = document.getElementById('visionText');
+            const missionEl = document.getElementById('missionText');
+            const taglineEl = document.getElementById('mvTagline');
+
+            async function fetchMissionVision() {
+                try {
+                    const response = await fetch(API_URL);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const json = await response.json();
+                    if (json.success && json.data) {
+                        const data = json.data;
+                        visionEl.textContent = data.vision || 'Vision not set';
+                        missionEl.textContent = data.mission || 'Mission not set';
+                        if (data.tagline) taglineEl.textContent = data.tagline;
+                        console.log('✅ Mission & Vision loaded from server:', data);
+                        return;
+                    }
+                    throw new Error('Invalid response');
+                } catch (error) {
+                    console.warn('⚠️ Could not load mission & vision, using fallback:', error.message);
+                    visionEl.textContent = 'To become a trusted and beloved healthy food product brand across India, making nutritious, delicious, and authentic handmade ladoos accessible to families from one-year-old babies through all age groups.';
+                    missionEl.textContent = 'To supply premium healthy food products crafted with pure ghee, natural jaggery, and no maida, preservatives, artificial essence, or synthetic colors.';
+                    taglineEl.textContent = 'What Drives Us';
+                }
+            }
+
+            fetchMissionVision();
+        })();
+    </script>
+
+    <!-- ============================================================ -->
+    <!-- ===== QUALITY PROMISE LOADER (UPDATED - NO BACKGROUND, LARGER ICONS) ===== -->
+    <!-- ============================================================ -->
+    <script>
+        (function loadQualityPromises() {
+            const API_URL = "https://nicyfoods.srujaninfotech.com/api/quality-promise?active=true";
+            const grid = document.getElementById('qualityPromiseGrid');
+
+            const FALLBACK_PROMISES = [
+                { title: '100% Pure Ghee', description: 'We source authentic, clarified butter from trusted suppliers. Every batch is verified for purity and nutritional integrity.', icon: '', iconBgColor: '' },
+                { title: 'Natural Jaggery', description: 'Unrefined jaggery provides natural sweetness with essential minerals and nutrients, free from refined sugar processing.', icon: '', iconBgColor: '' },
+                { title: 'Handpicked Ingredients', description: 'Nuts, seeds, and herbs are carefully selected and sourced from trusted suppliers ensuring freshness and quality.', icon: '', iconBgColor: '' },
+                { title: 'Zero Additives', description: 'Absolutely no maida, preservatives, artificial essence, synthetic colors, or any harmful substances whatsoever.', icon: '', iconBgColor: '' }
+            ];
+
+            // Get icon HTML with LARGER size and NO background
+            function getIconHtml(item) {
+                const icon = item.icon || '';
+                // Default checkmark icon (larger)
+                const defaultIcon = `<svg class="default-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>`;
+
+                if (typeof icon === 'string' && icon.trim().startsWith('<svg')) {
+                    // SVG string - wrap in quality-icon container with no background
+                    return `<div class="quality-icon">${icon}</div>`;
+                }
+
+                if (icon && (icon.startsWith('http') || icon.startsWith('/uploads'))) {
+                    // Image URL - display as image with larger size
+                    return `<div class="quality-icon"><img src="${icon}" alt="${item.title}" /></div>`;
+                }
+
+                // Default fallback - larger checkmark with no background
+                return `<div class="quality-icon">${defaultIcon}</div>`;
+            }
+
+            function renderPromises(promises) {
+                if (!promises || promises.length === 0) {
+                    grid.innerHTML = `
+                                <div class="col-span-full text-center py-10 text-slate-500">
+                                    <i class="fas fa-shield-alt text-3xl"></i>
+                                    <p class="mt-2">No quality promises available at the moment.</p>
+                                </div>
+                            `;
+                    return;
+                }
+
+                grid.innerHTML = promises.map(p => `
+                            <div class="rise-card bg-white rounded-2xl p-8 text-center shadow-sm border border-slate-100">
+                                ${getIconHtml(p)}
+                                <h3 class="font-bold text-kumkum text-lg mb-3">${p.title}</h3>
+                                <p class="text-sm text-slate-500 leading-relaxed">${p.description}</p>
+                            </div>
+                        `).join('');
+            }
+
+            async function fetchQualityPromises() {
+                try {
+                    const response = await fetch(API_URL);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const json = await response.json();
+                    if (json.success && json.data && json.data.length > 0) {
+                        console.log('✅ Quality Promises loaded from server:', json.data);
+                        renderPromises(json.data);
+                        return;
+                    }
+                    throw new Error('No data from API');
+                } catch (error) {
+                    console.warn('⚠️ Could not fetch quality promises from API, using fallback:', error.message);
+                    renderPromises(FALLBACK_PROMISES);
+                }
+            }
+
+            fetchQualityPromises();
+        })();
+    </script>
+
     <!-- ============ MAIN PAGE SCRIPTS ============ -->
     <script>
         const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -2814,7 +2896,6 @@
             });
         }
 
-        // Animate the route paths once the Countries section scrolls into view
         (function initRouteAnimation() {
             const countriesSection = document.getElementById('countries-served');
             if (!countriesSection) return;
@@ -2832,11 +2913,11 @@
             routeIo.observe(countriesSection);
         })();
 
-        console.log('✅ NicyFoods Homepage fully loaded with dynamic content and FIXED images.');
+        console.log('✅ NicyFoods Homepage fully loaded with dynamic content.');
     </script>
 
     <!-- ============================================================ -->
-    <!-- ===== NICYFOODS AI ASSISTANT (Groq-powered chat widget) ===== -->
+    <!-- ===== AI ASSISTANT CHAT WIDGET ===== -->
     <!-- ============================================================ -->
     <button id="chatToggleBtn" aria-label="Chat with NicyFoods assistant">
         <span class="chat-pulse"></span>
@@ -2963,7 +3044,6 @@
                 }
             });
 
-            // Close on Escape
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape' && isOpen) setOpen(false);
             });

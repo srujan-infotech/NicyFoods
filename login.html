@@ -268,7 +268,7 @@
         successEl.style.display = 'block';
 
         // ✅ Redirect based on role
-        const redirectTo = AUTH.isAdmin() ? 'admin.html' : 'index.html';
+        const redirectTo = AUTH.isAdmin() ? 'dashboard.html' : 'index.html';
         setTimeout(() => {
           window.location.href = redirectTo;
         }, 600);

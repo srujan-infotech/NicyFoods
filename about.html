@@ -485,7 +485,7 @@
         </svg>
     </div>
 
-    <!-- ============ MISSION & VISION ============ -->
+    <!-- ============ MISSION & VISION (DYNAMIC) ============ -->
     <section class="relative py-20 md:py-24 overflow-hidden bg-gradient-to-b from-sand/60 via-cream to-sand/30">
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div class="ladoo-particle dim w-16 h-16 float-drift-slow" style="top:8%; left:4%;"></div>
@@ -500,7 +500,7 @@
 
         <div class="relative max-w-6xl mx-auto px-6">
             <div class="reveal text-center mb-12">
-                <span class="text-kumkum text-xs tracking-[0.3em] uppercase font-semibold">What Drives Us</span>
+                <span class="text-kumkum text-xs tracking-[0.3em] uppercase font-semibold" id="mvTagline">What Drives Us</span>
                 <h2 class="font-display text-3xl sm:text-4xl text-jaggery mt-3 grow-underline">Our Mission &amp; Vision</h2>
             </div>
             <div class="stagger reveal grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -512,7 +512,7 @@
                         </svg>
                         Vision
                     </h3>
-                    <p class="text-[#5b4736] leading-relaxed">To become a trusted and beloved healthy food product brand across India, making nutritious, delicious, and authentic handmade ladoos accessible to families from one-year-old babies through all age groups. We envision a country where healthy eating is convenient, affordable, and delightful.</p>
+                    <p class="text-[#5b4736] leading-relaxed" id="visionText">Loading...</p>
                 </div>
                 <div class="thali-card rounded-2xl border-l-4 border-turmeric p-8">
                     <h3 class="flex items-center gap-2 font-display font-bold text-jaggery text-xl mb-4">
@@ -523,7 +523,7 @@
                         </svg>
                         Mission
                     </h3>
-                    <p class="text-[#5b4736] leading-relaxed">To supply premium healthy food products crafted with pure ghee, natural jaggery, and no maida, preservatives, artificial essence, or synthetic colors. Our mission is delivering authentic homemade taste paired with superior handmade quality that exceeds customer expectations.</p>
+                    <p class="text-[#5b4736] leading-relaxed" id="missionText">Loading...</p>
                 </div>
             </div>
         </div>
@@ -736,12 +736,14 @@
 
     <script>
         // ============================================================
-        //  CONFIG – using the same API endpoints as before
+        //  CONFIG – using the same API endpoints
         // ============================================================
-        const STORY_API_URL = "https://nicyfoods.srujaninfotech.com/api/story";
-        const CORE_VALUES_API_URL = "https://nicyfoods.srujaninfotech.com/api/core-values";
-        const QUALITY_API_URL = "https://nicyfoods.srujaninfotech.com/api/quality-promise";
-        const WHY_CHOOSE_US_API_URL = "https://dbms.srujaninfotech.com/api/why-choose-us";
+        const API_BASE = "https://nicyfoods.srujaninfotech.com/api";
+        const STORY_API_URL = `${API_BASE}/story`;
+        const MISSION_VISION_API_URL = `${API_BASE}/mission-vision`;
+        const CORE_VALUES_API_URL = `${API_BASE}/core-values`;
+        const QUALITY_API_URL = `${API_BASE}/quality-promise`;
+        const WHY_CHOOSE_US_API_URL = `${API_BASE}/why-choose-us`;
 
         // ---------- FALLBACKS ----------
         const FALLBACK_STORY = {
@@ -755,6 +757,12 @@
                 "Every ladoo we craft represents our dedication to your family's wellness. From sourcing the finest ghee to selecting premium jaggery and hand-selecting herbs and spices, we maintain rigorous standards at every step of production.",
                 "Today, NicyFoods offers 25+ varieties of handmade ladoos, each carefully formulated to serve different nutritional needs and preferences. From traditional favorites to innovative herbal blends, and even baby-friendly options, there's a NicyFoods product for every member of your family.",
             ],
+        };
+
+        const FALLBACK_MISSION_VISION = {
+            tagline: 'What Drives Us',
+            vision: 'To become a trusted and beloved healthy food product brand across India, making nutritious, delicious, and authentic handmade ladoos accessible to families from one-year-old babies through all age groups. We envision a country where healthy eating is convenient, affordable, and delightful.',
+            mission: 'To supply premium healthy food products crafted with pure ghee, natural jaggery, and no maida, preservatives, artificial essence, or synthetic colors. Our mission is delivering authentic homemade taste paired with superior handmade quality that exceeds customer expectations.',
         };
 
         const FALLBACK_CORE_VALUES = [
@@ -801,6 +809,7 @@
 
         // ---------- UTILITY ----------
         function escapeHtml(str) {
+            if (!str) return '';
             const div = document.createElement('div');
             div.textContent = str;
             return div.innerHTML;
@@ -841,6 +850,31 @@
             } catch (err) {
                 console.warn('about.js: could not load story content from API, using fallback.', err);
                 renderStory(FALLBACK_STORY);
+            }
+        }
+
+        // ---------- MISSION & VISION ----------
+        function renderMissionVision(data) {
+            const taglineEl = document.getElementById('mvTagline');
+            const visionEl = document.getElementById('visionText');
+            const missionEl = document.getElementById('missionText');
+
+            if (taglineEl) taglineEl.textContent = data.tagline || 'What Drives Us';
+            if (visionEl) visionEl.textContent = data.vision || FALLBACK_MISSION_VISION.vision;
+            if (missionEl) missionEl.textContent = data.mission || FALLBACK_MISSION_VISION.mission;
+        }
+
+        async function loadMissionVision() {
+            try {
+                const res = await fetch(`${MISSION_VISION_API_URL}?_=${Date.now()}`);
+                if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
+                const json = await res.json();
+                const data = json.data || json;
+                if (!data || (!data.vision && !data.mission)) throw new Error('Invalid mission vision payload');
+                renderMissionVision(data);
+            } catch (err) {
+                console.warn('about.js: could not load mission & vision from API, using fallback.', err);
+                renderMissionVision(FALLBACK_MISSION_VISION);
             }
         }
 
@@ -1005,6 +1039,7 @@
 
         // ---------- LOAD ALL ----------
         loadStorySection();
+        loadMissionVision();
         loadCoreValuesSection();
         loadQualityPromises();
         loadWhyChooseUs();

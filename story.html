@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NicyFoods · Admin · Our Story</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <link rel="stylesheet" href="css/admin-styles.css" />
+</head>
+<body data-page="story">
+
+    <div id="sidebar-container"></div>
+
+    <div id="main">
+        <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.8rem; flex-wrap:wrap;" id="topbar-container"></div>
+
+        <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
+            <h2 class="font-display text-xl text-jaggery">
+                <i class="fas fa-book-open text-kumkum"></i> Our Story Management
+                <span class="fallback-badge" id="storySourceBadge" style="display:none;">
+                    <i class="fas fa-database"></i> Local
+                </span>
+            </h2>
+            <button class="btn-primary" onclick="saveStoryContent()">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+        </div>
+        <div class="bg-white rounded-xl p-4 mb-4 border border-jaggery/5 shadow-sm">
+            <p class="text-sm text-slate-500 flex items-center gap-2">
+                <i class="fas fa-info-circle text-kumkum"></i>
+                Manage the "Our Story" content shown on the About page.
+            </p>
+            <p id="storySourceInfo" class="text-xs text-slate-400 mt-2 flex items-center gap-2">
+                <i class="fas fa-server"></i> Source: <span id="storySourceText">Loading...</span>
+            </p>
+            <div id="storyApiStatus" class="hero-api-status hidden mt-2">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>API endpoint not available. Using local fallback.</span>
+            </div>
+        </div>
+        <div class="bg-white rounded-xl p-4 mb-4 border border-jaggery/5 shadow-sm">
+            <h3 class="font-display text-lg text-jaggery mb-3"><i class="fas fa-eye text-kumkum"></i> Live Preview</h3>
+            <div class="hero-preview-box" id="storyPreviewBox" style="background:#FDF8F2; color:#3A2417;">
+                <div class="preview-eyebrow" id="storyPreviewBadge" style="color:#A63A2E;">Our Story</div>
+                <div class="preview-title" id="storyPreviewHeading" style="color:#5C3A25;">The Journey So Far</div>
+                <div style="display:flex; align-items:center; gap:1rem; margin-top:0.8rem; flex-wrap:wrap;">
+                    <div style="background:white; border-radius:999px; width:70px; height:70px; display:flex; flex-direction:column; align-items:center; justify-content:center; border:3px solid rgba(242,193,78,0.4); flex-shrink:0;">
+                        <span id="storyPreviewYear" style="font-family:'Rozha One', serif; font-size:1.1rem; color:#A63A2E;">2017</span>
+                        <span id="storyPreviewYearLabel" style="font-size:0.45rem; text-transform:uppercase; letter-spacing:0.1em; color:#5C3A25;">Est. In Pune</span>
+                    </div>
+                    <div id="storyPreviewParagraphs" style="font-size:0.75rem; color:#5b4736; line-height:1.5; flex:1; min-width:200px;"></div>
+                </div>
+            </div>
+        </div>
+        <form id="storyForm" class="bg-white rounded-xl p-6 border border-jaggery/5 shadow-sm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-tag"></i> Badge Text</label>
+                    <div class="input-icon-wrap">
+                        <i class="fas fa-certificate"></i>
+                        <input id="storyBadge" placeholder="e.g. Our Story" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-heading"></i> Heading</label>
+                    <div class="input-icon-wrap">
+                        <i class="fas fa-font"></i>
+                        <input id="storyHeading" placeholder="e.g. The Journey So Far" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-calendar"></i> Year Badge</label>
+                    <div class="input-icon-wrap">
+                        <i class="fas fa-calendar-alt"></i>
+                        <input id="storyYear" placeholder="e.g. 2017" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-map-marker-alt"></i> Year Badge Label</label>
+                    <div class="input-icon-wrap">
+                        <i class="fas fa-location-dot"></i>
+                        <input id="storyYearLabel" placeholder="e.g. Est. In Pune" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-align-left"></i> Story Paragraphs</label>
+                <div class="input-icon-wrap">
+                    <i class="fas fa-paragraph" style="top:18px;"></i>
+                    <textarea id="storyParagraphs" rows="10" placeholder="Paragraph one...&#10;Paragraph two...&#10;Paragraph three...&#10;Paragraph four..."></textarea>
+                </div>
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:0.8rem; padding-top:1rem; border-top:1px solid rgba(92,58,37,0.06); margin-top:0.5rem;">
+                <button type="button" class="btn-primary" onclick="saveStoryContent()">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div id="toast" class="toast"><i class="fas fa-check-circle"></i> <span id="toastMsg">Success</span></div>
+
+    <script src="js/auth-client.js"></script>
+    <script src="js/admin-common.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/story.js"></script>
+</body>
+</html>
