@@ -46,11 +46,28 @@ function toggleWcuHighlighted() {
     label.textContent = isActive ? 'Yes (highlighted)' : 'No (normal card)';
 }
 
+// ---------- ICON URL RESOLUTION ----------
+// Icons can be stored as: a full http(s) URL, an inline <svg>, or a
+// relative path like "/uploads/why-choose-us/xyz.png" returned by the
+// upload endpoint. getImageUrl() (admin-common.js) normalizes the
+// relative-path case into an absolute URL against API_BASE_URL.
+function resolveWcuIcon(icon) {
+    if (!icon) return '';
+    const trimmed = icon.trim();
+    if (trimmed.startsWith('<svg')) return trimmed; // inline SVG, nothing to resolve
+    return getImageUrl(trimmed) || trimmed;
+}
+
 function renderWcuIconCell(item) {
     const gradient = `bg-gradient-to-br ${item.gradientFrom || 'from-rose-400'} ${item.gradientTo || 'to-pink-500'}`;
-    return item.icon ?
-        `<div class="qp-icon-preview ${gradient}"><img src="${item.icon}" alt="${item.title}" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\\'fas fa-question-circle\\'></i>';" /></div>` :
-        `<div class="qp-icon-preview ${gradient}"><i class="fas fa-question-circle"></i></div>`;
+    const resolved = resolveWcuIcon(item.icon);
+    if (!resolved) {
+        return `<div class="qp-icon-preview ${gradient}"><i class="fas fa-question-circle"></i></div>`;
+    }
+    if (resolved.startsWith('<svg')) {
+        return `<div class="qp-icon-preview ${gradient}">${resolved}</div>`;
+    }
+    return `<div class="qp-icon-preview ${gradient}"><img src="${resolved}" alt="${item.title}" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\\'fas fa-question-circle\\'></i>';" /></div>`;
 }
 
 async function loadWhyChooseUs() {
@@ -123,7 +140,17 @@ wcuIconFileInput2.addEventListener('change', async () => {
         const res = await uploadFetch(`${API_BASE_URL}/api/upload`, formData);
         const data = await res.json();
         if (!res.ok || !data.success) throw new Error(data.message || 'Upload failed');
-        wcuIconHidden2.value = data.url;
+
+        // data.url may be a relative path like "/uploads/why-choose-us/xyz.png".
+        // Store the ABSOLUTE url so it renders correctly everywhere, including
+        // on about.html which lives on a different domain than the API.
+        const absoluteUrl = getImageUrl(data.url) || data.url;
+        wcuIconHidden2.value = absoluteUrl;
+
+        // Swap the preview from the local blob to the real uploaded URL so
+        // what you see in the form matches what will actually be saved.
+        wcuIconPreview2.src = absoluteUrl;
+
         wcuIconUploadStatus2.textContent = 'Icon uploaded ✓';
         wcuIconUploadStatus2.className = 'image-upload-status success';
     } catch (e) {
@@ -146,9 +173,11 @@ function openWhyChooseUsModal(data = null) {
     document.getElementById('wcuGradientFrom').value = data?.gradientFrom || 'from-rose-400';
     document.getElementById('wcuGradientTo').value = data?.gradientTo || 'to-pink-500';
     document.getElementById('wcuOrder').value = data?.order ?? 0;
+
+    const resolvedIcon = resolveWcuIcon(data?.icon);
     wcuIconHidden2.value = data?.icon || '';
-    if (data?.icon) {
-        wcuIconPreview2.src = data.icon;
+    if (resolvedIcon && !resolvedIcon.startsWith('<svg')) {
+        wcuIconPreview2.src = resolvedIcon;
         wcuIconPreview2.classList.add('show');
     } else {
         wcuIconPreview2.src = '';

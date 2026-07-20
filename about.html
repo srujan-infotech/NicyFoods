@@ -739,6 +739,7 @@
         //  CONFIG – using the same API endpoints
         // ============================================================
         const API_BASE = "https://nicyfoods.srujaninfotech.com/api";
+        const UPLOAD_ORIGIN = "https://nicyfoods.srujaninfotech.com"; // origin that actually serves /uploads/...
         const STORY_API_URL = `${API_BASE}/story`;
         const MISSION_VISION_API_URL = `${API_BASE}/mission-vision`;
         const CORE_VALUES_API_URL = `${API_BASE}/core-values`;
@@ -780,30 +781,33 @@
             { title: "Zero Additives", description: "Absolutely no maida, preservatives, artificial essence, synthetic colors, or any harmful substances whatsoever.", icon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6"/><path d="M9 9l6 6"/></svg>', order: 4 },
         ];
 
+        // NOTE: gradientFrom/gradientTo now use Tailwind utility class names
+        // (e.g. "from-rose-400") to match exactly what the admin panel saves,
+        // instead of raw hex values which silently failed inside linear-gradient().
         const FALLBACK_WHY_CHOOSE_US = [
             {
                 title: "Trusted Since 2017",
                 description: "Over 6+ years of experience and thousands of satisfied customers who trust us for their family's health.",
                 icon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/><path d="M18 6l3-3"/></svg>',
-                gradientFrom: '#fb7185', gradientTo: '#ec4899', highlighted: false, order: 1,
+                gradientFrom: 'from-rose-400', gradientTo: 'to-pink-500', highlighted: false, order: 1,
             },
             {
                 title: "Handmade Excellence",
                 description: "Every batch is prepared in-house with careful attention to detail, ensuring consistent quality and taste.",
                 icon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V10l6-4 6 4v11"/><path d="M15 21v-7l6-3v10"/><path d="M7 14h.01"/><path d="M7 17h.01"/><path d="M11 14h.01"/><path d="M11 17h.01"/></svg>',
-                gradientFrom: '#94a3b8', gradientTo: '#64748b', highlighted: false, order: 2,
+                gradientFrom: 'from-slate-400', gradientTo: 'to-slate-500', highlighted: false, order: 2,
             },
             {
                 title: "Fresh Delivery",
                 description: "Products are prepared and delivered fresh to ensure maximum nutritional value and authentic taste.",
                 icon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8L12 3 3 8"/><path d="M3 8v8l9 5 9-5V8"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/></svg>',
-                gradientFrom: '#f59e0b', gradientTo: '#ea580c', highlighted: true, order: 3,
+                gradientFrom: 'from-amber-500', gradientTo: 'to-orange-600', highlighted: true, order: 3,
             },
             {
                 title: "100% Satisfaction",
                 description: "We stand behind every product. Your satisfaction and your family's health are our top priorities.",
                 icon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M9 14l-2 7 5-3 5 3-2-7"/></svg>',
-                gradientFrom: '#ec4899', gradientTo: '#e11d48', highlighted: false, order: 4,
+                gradientFrom: 'from-pink-500', gradientTo: 'to-rose-600', highlighted: false, order: 4,
             },
         ];
 
@@ -813,6 +817,25 @@
             const div = document.createElement('div');
             div.textContent = str;
             return div.innerHTML;
+        }
+
+        // Resolves an icon value that may be: an inline <svg>, a full http(s)
+        // URL, or a relative path like "/uploads/why-choose-us/xyz.png"
+        // returned by the admin upload endpoint. Relative paths need the API
+        // origin prefixed since this page lives on a different domain.
+        function resolveIconUrl(icon) {
+            if (!icon) return icon;
+            const trimmed = icon.trim();
+            if (trimmed.startsWith('<svg')) return trimmed;
+            // Force https — browsers silently block http:// images on an
+            // https:// page ("mixed content"), which is why icons were
+            // rendering as broken image placeholders.
+            if (trimmed.startsWith('http://')) return trimmed.replace(/^http:\/\//, 'https://');
+            if (trimmed.startsWith('https://')) return trimmed;
+            if (trimmed.startsWith('/uploads/') || trimmed.startsWith('uploads/')) {
+                return `${UPLOAD_ORIGIN}/${trimmed.replace(/^\//, '')}`;
+            }
+            return trimmed;
         }
 
         // ---------- STORY ----------
@@ -880,10 +903,10 @@
 
         // ---------- CORE VALUES ----------
         function renderCoreValueIcon(icon) {
-            if (!icon) return '';
-            const trimmed = icon.trim();
-            if (trimmed.startsWith('<svg')) return trimmed;
-            const safeUrl = trimmed.replace(/"/g, '&quot;');
+            const resolved = resolveIconUrl(icon);
+            if (!resolved) return '';
+            if (resolved.startsWith('<svg')) return resolved;
+            const safeUrl = resolved.replace(/"/g, '&quot;');
             return `<img src="${safeUrl}" alt="" style="width:52px;height:52px;object-fit:contain;display:block;" />`;
         }
 
@@ -936,16 +959,7 @@
             const sorted = [...items].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
             grid.innerHTML = sorted.map(p => {
-                let iconHtml = '';
-                if (p.icon) {
-                    const trimmed = p.icon.trim();
-                    if (trimmed.startsWith('<svg')) {
-                        iconHtml = trimmed;
-                    } else {
-                        const safeUrl = trimmed.replace(/"/g, '&quot;');
-                        iconHtml = `<img src="${safeUrl}" alt="${escapeHtml(p.title || '')}" style="width:100%;height:100%;object-fit:contain;display:block;" />`;
-                    }
-                }
+                let iconHtml = renderCoreValueIcon(p.icon).replace('width:52px;height:52px;', 'width:100%;height:100%;');
                 if (!iconHtml) {
                     iconHtml = `<svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6"/><path d="M9 9l6 6"/></svg>`;
                 }
@@ -983,12 +997,12 @@
 
         // ---------- WHY CHOOSE US ----------
         function renderWhyChooseUsIcon(icon) {
-            if (!icon) {
+            const resolved = resolveIconUrl(icon);
+            if (!resolved) {
                 return '<svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg>';
             }
-            const trimmed = icon.trim();
-            if (trimmed.startsWith('<svg')) return trimmed;
-            const safeUrl = trimmed.replace(/"/g, '&quot;');
+            if (resolved.startsWith('<svg')) return resolved;
+            const safeUrl = resolved.replace(/"/g, '&quot;');
             return `<img src="${safeUrl}" alt="" style="width:28px;height:28px;object-fit:contain;display:block;" />`;
         }
 
@@ -1002,12 +1016,24 @@
             const sorted = [...items].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
             grid.innerHTML = sorted.map(item => {
-                const gradFrom = item.gradientFrom || '#F5A623';
-                const gradTo = item.gradientTo || '#D7263D';
+                const rawFrom = item.gradientFrom || '';
+                // gradientFrom/gradientTo can be Tailwind class names (current
+                // admin format, e.g. "from-rose-400") or legacy hex values.
+                const isTailwindClass = rawFrom.startsWith('from-') || rawFrom.startsWith('to-');
+                const gradFrom = item.gradientFrom || (isTailwindClass ? 'from-turmeric' : '#F5A623');
+                const gradTo = item.gradientTo || (isTailwindClass ? 'to-kumkum' : '#D7263D');
                 const highlightClass = item.highlighted ? 'border-2 border-kumkum/40' : '';
+
+                const iconBoxClass = isTailwindClass
+                    ? `icon-spin w-14 h-14 mx-auto mb-5 rounded-xl text-white flex items-center justify-center bg-gradient-to-br ${gradFrom} ${gradTo}`
+                    : `icon-spin w-14 h-14 mx-auto mb-5 rounded-xl text-white flex items-center justify-center`;
+                const iconBoxStyle = isTailwindClass
+                    ? ''
+                    : `style="background: linear-gradient(135deg, ${gradFrom}, ${gradTo});"`;
+
                 return `
                     <div class="thali-card rounded-2xl p-8 text-center ${highlightClass}">
-                        <div class="icon-spin w-14 h-14 mx-auto mb-5 rounded-xl text-white flex items-center justify-center" style="background: linear-gradient(135deg, ${gradFrom}, ${gradTo});">
+                        <div class="${iconBoxClass}" ${iconBoxStyle}>
                             ${renderWhyChooseUsIcon(item.icon)}
                         </div>
                         <h3 class="font-bold text-kumkum text-lg mb-3">${escapeHtml(item.title || '')}</h3>

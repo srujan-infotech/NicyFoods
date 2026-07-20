@@ -418,6 +418,22 @@ tr:hover td {
     background: #fee2e2;
     color: #991b1b;
 }
+.badge-status.new {
+    background: #dbeafe;
+    color: #1e40af;
+}
+.badge-status.contacted {
+    background: #fef9c3;
+    color: #854d0e;
+}
+.badge-status.converted {
+    background: #d1fae5;
+    color: #065f46;
+}
+.badge-status.ignored {
+    background: #f1f5f9;
+    color: #64748b;
+}
 
 /* ===== MODAL ===== */
 .modal-overlay {

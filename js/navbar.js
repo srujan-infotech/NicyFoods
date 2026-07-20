@@ -510,7 +510,7 @@ function loadNavbar() {
           ${user.name}
           <span class="block text-xs font-normal text-slate-400">${user.email}</span>
         </div>
-        ${isAdmin ? `<a href="admin.html">⚙️ Admin Dashboard</a>` : ""}
+        ${isAdmin ? `<a href="dashboard.html">⚙️ Admin Dashboard</a>` : ""}
         <div class="dropdown-divider"></div>
         <button id="logout-btn">🚪 Logout</button>
       `;
@@ -524,14 +524,14 @@ function loadNavbar() {
 
     let mobileHtml = "";
     if (isAdmin) {
-      mobileHtml += `<li><a href="admin.html" class="block py-3 border-b border-jaggery/10 hover:text-kumkum hover:pl-2 transition-all">⚙️ Admin</a></li>`;
+      mobileHtml += `<li><a href="dashboard.html" class="block py-3 border-b border-jaggery/10 hover:text-kumkum hover:pl-2 transition-all"> Admin</a></li>`;
     }
     if (isLoggedIn) {
-      mobileHtml += `<li><button id="mobile-logout-btn" class="block w-full text-left py-3 hover:text-kumkum hover:pl-2 transition-all">🚪 Logout</button></li>`;
+      mobileHtml += `<li><button id="mobile-logout-btn" class="block w-full text-left py-3 hover:text-kumkum hover:pl-2 transition-all"> Logout</button></li>`;
     } else {
       mobileHtml += `
-        <li><a href="login.html" class="block py-3 border-b border-jaggery/10 hover:text-kumkum hover:pl-2 transition-all">🔑 Login</a></li>
-        <li><a href="register.html" class="block py-3 hover:text-kumkum hover:pl-2 transition-all">📝 Register</a></li>
+        <li><a href="login.html" class="block py-3 border-b border-jaggery/10 hover:text-kumkum hover:pl-2 transition-all"> Login</a></li>
+        <li><a href="register.html" class="block py-3 hover:text-kumkum hover:pl-2 transition-all"> Register</a></li>
       `;
     }
     if (mobileRbacLinks) mobileRbacLinks.innerHTML = mobileHtml;

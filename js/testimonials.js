@@ -15,7 +15,8 @@ async function loadTestimonials() {
     try {
         const res = await apiFetch('/api/testimonials');
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await safeJson(res);
+        const json = await safeJson(res);
+        const data = json.data || [];               // <-- unwrap {success, data: [...]}
         const tbody = document.getElementById('testimonialsTableBody');
         if (!data.length) {
             tbody.innerHTML =
@@ -26,7 +27,7 @@ async function loadTestimonials() {
                     <tr>
                         <td class="font-medium">${t.name}</td>
                         <td>${'⭐'.repeat(t.rating)}</td>
-                        <td class="max-w-xs truncate">${t.text}</td>
+                        <td class="max-w-xs truncate">${t.reviewText}</td>
                         <td>
                         <div class="actions-cell">
                             <button class="btn-edit" onclick="editTestimonial('${t._id}')"><i class="fas fa-edit"></i></button>
@@ -47,7 +48,7 @@ function openTestimonialModal(data = null) {
         `<i class="fas fa-star"></i> ${isEdit ? 'Edit Testimonial' : 'Add Testimonial'}`;
     document.getElementById('testimonialId').value = data?._id || '';
     document.getElementById('tName').value = data?.name || '';
-    document.getElementById('tText').value = data?.text || '';
+    document.getElementById('tText').value = data?.reviewText || '';
     document.getElementById('tRating').value = data?.rating || 5;
     document.getElementById('tColor').value = data?.avatarColor || '';
     openModal('testimonialModal');
@@ -57,8 +58,8 @@ async function editTestimonial(id) {
     try {
         const res = await apiFetch('/api/testimonials/' + id);
         if (!res.ok) throw new Error('Not found');
-        const data = await safeJson(res);
-        openTestimonialModal(data);
+        const json = await safeJson(res);
+        openTestimonialModal(json.data);              // <-- unwrap here too
     } catch (e) {
         showToast('Error loading testimonial: ' + e.message, true);
         console.error(e);
@@ -70,7 +71,7 @@ document.getElementById('testimonialForm').addEventListener('submit', async (e) 
     const id = document.getElementById('testimonialId').value;
     const payload = {
         name: document.getElementById('tName').value.trim(),
-        text: document.getElementById('tText').value.trim(),
+        reviewText: document.getElementById('tText').value.trim(),   // <-- match backend field name
         rating: parseInt(document.getElementById('tRating').value, 10) || 5,
         avatarColor: document.getElementById('tColor').value.trim(),
     };
@@ -81,7 +82,10 @@ document.getElementById('testimonialForm').addEventListener('submit', async (e) 
         } else {
             res = await apiFetch('/api/testimonials', { method: 'POST', body: JSON.stringify(payload) });
         }
-        if (!res.ok) throw new Error('Save failed');
+        if (!res.ok) {
+            const errJson = await safeJson(res).catch(() => ({}));
+            throw new Error(errJson.message || 'Save failed');
+        }
         showToast(id ? 'Testimonial updated' : 'Testimonial added');
         closeModal('testimonialModal');
         loadTestimonials();

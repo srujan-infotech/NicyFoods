@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Products | NicyFoods</title>
+    <title>Product | NicyFoods</title>
 
     <!-- ===== FONTAWESOME ===== -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
@@ -1123,13 +1123,82 @@
             transform: none;
             box-shadow: none;
         }
+
+        /* ===== QUALITY PROMISE CARDS ===== */
+        .quality-card {
+            position: relative;
+            overflow: hidden;
+            background: #fff;
+            border-radius: 1.25rem;
+            padding: 2rem 1.5rem 1.8rem;
+            text-align: center;
+            border: 1px solid rgba(92, 58, 37, 0.06);
+            box-shadow: 0 2px 12px rgba(92, 58, 37, 0.04);
+            transition: transform .45s cubic-bezier(.34,1.56,.64,1), box-shadow .45s ease, border-color .45s ease;
+        }
+        .quality-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -16px rgba(215, 38, 61, 0.2);
+            border-color: rgba(215, 38, 61, 0.15);
+        }
+        .quality-icon {
+            width: 68px;
+            height: 68px;
+            margin: 0 auto 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9999px;
+            transition: transform .35s cubic-bezier(.34,1.56,.64,1);
+        }
+        .quality-card:hover .quality-icon {
+            transform: scale(1.08) rotate(-3deg);
+        }
+        .quality-icon svg {
+            width: 32px;
+            height: 32px;
+        }
+        .quality-title {
+            font-family: 'Rozha One', serif;
+            font-size: 1.1rem;
+            color: var(--jaggery);
+            margin-bottom: 0.5rem;
+        }
+        .quality-desc {
+            font-size: 0.85rem;
+            color: #6b5140;
+            line-height: 1.6;
+        }
+        .quality-card .badge-check {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--kumkum);
+        }
+        .quality-card .badge-check svg {
+            width: 14px;
+            height: 14px;
+        }
+        .quality-card:nth-child(1) .quality-icon { background: linear-gradient(135deg, #FFF3DC, #FFE7CE); }
+        .quality-card:nth-child(2) .quality-icon { background: linear-gradient(135deg, #F0FAF0, #DFF0DF); }
+        .quality-card:nth-child(3) .quality-icon { background: linear-gradient(135deg, #FDF0E8, #FCE4D6); }
+        .quality-card:nth-child(4) .quality-icon { background: linear-gradient(135deg, #F3E8FF, #E8D6F0); }
+        .quality-card:nth-child(1) .quality-icon svg { color: #D7263D; }
+        .quality-card:nth-child(2) .quality-icon svg { color: #5F7A4F; }
+        .quality-card:nth-child(3) .quality-icon svg { color: #F5A623; }
+        .quality-card:nth-child(4) .quality-icon svg { color: #7B4F9A; }
     </style>
 </head>
 <body class="bg-cream">
 
     <div id="navbar-placeholder"></div>
 
-    <!-- ============ HERO (Lighter, matches index) ============ -->
+    <!-- ============ HERO ============ -->
     <section id="hero" class="relative overflow-hidden bg-gradient-to-br from-amber-200 via-marigold to-turmeric">
         <img id="heroImg" src="https://nicyfoods.com/images/products_hero.jpg" alt="Handmade Ladoo Collection" class="absolute inset-0 w-full h-full object-cover opacity-40 scale-110" style="display:block;">
         <div class="absolute inset-0 bg-gradient-to-t from-white/15 via-cream/5 to-transparent"></div>
@@ -1314,7 +1383,7 @@
         </svg>
     </div>
 
-    <!-- ============ QUALITY ASSURANCE ============ -->
+    <!-- ============ QUALITY PROMISE (HARDCODED - NO BACKEND) ============ -->
     <section class="relative bg-white/60 py-16 overflow-hidden">
         <div class="ladoo-particle w-10 h-10 float-drift-slow" style="top:8%; left:4%;"></div>
         <div class="ladoo-particle w-7 h-7 float-y-slow" style="bottom:10%; right:6%;"></div>
@@ -1326,42 +1395,76 @@
                     <svg width="90" height="8" viewBox="0 0 90 8"><path d="M2 5 Q 25 -1, 45 4 T 88 3" stroke="#D7263D" stroke-width="2" fill="none" stroke-linecap="round" /></svg>
                 </span>
                 <h2 class="wipe font-display text-3xl md:text-4xl text-jaggery mt-1">Quality Assurance</h2>
-                <p class="text-slate-400 mt-4 max-w-2xl mx-auto leading-relaxed">
+                <p class="text-slate-500 mt-4 max-w-2xl mx-auto leading-relaxed">
                     What goes into every batch — and just as importantly, what never does.
                 </p>
             </div>
 
             <div class="stagger reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="rise-card bg-white rounded-2xl p-7 text-center ring-1 ring-jaggery/5 hover:-translate-y-2 hover:shadow-[0_20px_36px_-16px_rgba(92,58,37,.2)] transition-all duration-400">
-                    <div class="seal w-14 h-14 mx-auto mb-4 bg-gradient-to-br from-herbal to-emerald-700 text-white shadow-lg shadow-herbal/20 flex items-center justify-center rounded-full">
-                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                <!-- Card 1: 100% Pure Ghee -->
+                <div class="quality-card">
+                    <div class="quality-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5"/>
+                            <path d="M2 12l10 5 10-5"/>
+                        </svg>
                     </div>
-                    <h3 class="font-display text-lg text-turmeric mb-2">100% Pure Ghee</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed">Authenticated pure clarified butter for authentic taste and superior nutrition in every product.</p>
+                    <h3 class="quality-title">100% Pure Ghee</h3>
+                    <p class="quality-desc">We source authentic, clarified butter from trusted suppliers. Every batch is verified for purity and nutritional integrity.</p>
+                    <span class="badge-check">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                        Verified Purity
+                    </span>
                 </div>
 
-                <div class="rise-card bg-white rounded-2xl p-7 text-center ring-1 ring-jaggery/5 hover:-translate-y-2 hover:shadow-[0_20px_36px_-16px_rgba(92,58,37,.2)] transition-all duration-400" style="transition-delay:.06s">
-                    <div class="seal w-14 h-14 mx-auto mb-4 bg-gradient-to-br from-turmeric to-amber-600 text-white shadow-lg shadow-turmeric/20 flex items-center justify-center rounded-full">
-                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l1 4H7l1-4z"/><path d="M6 7h12l-1.2 12.2A2 2 0 0 1 14.8 21H9.2a2 2 0 0 1-2-1.8L6 7z"/><path d="M9 11h6"/></svg>
+                <!-- Card 2: Natural Jaggery -->
+                <div class="quality-card">
+                    <div class="quality-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 3v3M12 18v3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M3 12h3M18 12h3M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
                     </div>
-                    <h3 class="font-display text-lg text-turmeric mb-2">Natural Jaggery</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed">Unrefined jaggery providing natural sweetness with essential minerals and nutrients.</p>
+                    <h3 class="quality-title">Natural Jaggery</h3>
+                    <p class="quality-desc">Unrefined jaggery provides natural sweetness with essential minerals and nutrients, free from refined sugar processing.</p>
+                    <span class="badge-check">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                        Unrefined Sweetness
+                    </span>
                 </div>
 
-                <div class="rise-card bg-white rounded-2xl p-7 text-center ring-1 ring-jaggery/5 hover:-translate-y-2 hover:shadow-[0_20px_36px_-16px_rgba(92,58,37,.2)] transition-all duration-400" style="transition-delay:.12s">
-                    <div class="seal w-14 h-14 mx-auto mb-4 bg-gradient-to-br from-kumkum to-red-700 text-white shadow-lg shadow-kumkum/20 flex items-center justify-center rounded-full">
-                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="M6 6l12 12"/></svg>
+                <!-- Card 3: Handpicked Ingredients -->
+                <div class="quality-card">
+                    <div class="quality-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 21c0-5 3-9 8-11-1 6-4 10-8 11Z"/>
+                            <path d="M12 21c0-6-3-11-8-13 0 7 3 12 8 13Z"/>
+                            <path d="M12 21V9"/>
+                        </svg>
                     </div>
-                    <h3 class="font-display text-lg text-turmeric mb-2">No Maida</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed">Completely free from refined flour and wheat maida for cleaner nutrition.</p>
+                    <h3 class="quality-title">Handpicked Ingredients</h3>
+                    <p class="quality-desc">Nuts, seeds, and herbs are carefully selected and sourced from trusted suppliers ensuring freshness and quality.</p>
+                    <span class="badge-check">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                        Premium Quality
+                    </span>
                 </div>
 
-                <div class="rise-card bg-white rounded-2xl p-7 text-center ring-1 ring-jaggery/5 hover:-translate-y-2 hover:shadow-[0_20px_36px_-16px_rgba(92,58,37,.2)] transition-all duration-400" style="transition-delay:.18s">
-                    <div class="seal w-14 h-14 mx-auto mb-4 bg-gradient-to-br from-marigold to-turmeric text-jaggery shadow-lg shadow-marigold/25 flex items-center justify-center rounded-full">
-                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M5.5 5.5l13 13"/></svg>
+                <!-- Card 4: Zero Additives -->
+                <div class="quality-card">
+                    <div class="quality-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="9"/>
+                            <path d="M12 7v5l3 3"/>
+                        </svg>
                     </div>
-                    <h3 class="font-display text-lg text-turmeric mb-2">No Preservatives</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed">Zero artificial preservatives, colors, essence, or any synthetic additives whatsoever.</p>
+                    <h3 class="quality-title">Zero Additives</h3>
+                    <p class="quality-desc">Absolutely no maida, preservatives, artificial essence, synthetic colors, or any harmful substances whatsoever.</p>
+                    <span class="badge-check">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                        100% Natural
+                    </span>
                 </div>
             </div>
         </div>
