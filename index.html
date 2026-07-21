@@ -1664,6 +1664,32 @@
             gap: 0.5rem;
             margin-top: 0.5rem;
         }
+
+        /* ===== HERO EYEBROW BADGE (FIXED VISIBILITY) ===== */
+        #heroEyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(26, 17, 12, 0.55);
+            backdrop-filter: blur(3px);
+            border: 1.5px solid rgba(255, 199, 44, 0.55);
+            color: var(--marigold);
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            padding: 0.5rem 1.1rem;
+            border-radius: 999px;
+            box-shadow: 0 6px 18px -6px rgba(0, 0, 0, 0.4);
+        }
+
+        /* ===== MARATHI HIGHLIGHT IN SUBTITLE ===== */
+        .marathi-highlight {
+            color: var(--marigold);
+            font-weight: 700;
+            background: rgba(255, 199, 44, 0.16);
+            padding: 0.05em 0.4em;
+            border-radius: 0.35em;
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body class="bg-cream">
@@ -1698,9 +1724,8 @@
                     <div class="ghee-pool"></div>
                 </div>
 
-                <p id="heroEyebrow" class="hero-title-in eyebrow text-marigold/90 tracking-[0.25em] uppercase text-xs md:text-sm font-semibold" style="animation-delay:1.15s">
+                <p id="heroEyebrow" class="hero-title-in uppercase text-xs md:text-sm" style="animation-delay:1.15s">
                     Handmade &middot; Since 2017
-                    <svg width="90" height="8" viewBox="0 0 90 8"><path d="M2 5 Q 25 -1, 45 4 T 88 3" stroke="#F5A623" stroke-width="2" fill="none" stroke-linecap="round" /></svg>
                 </p>
 
                 <h1 id="heroTitle" class="hero-title-in gild-glow font-display text-4xl md:text-5xl lg:text-6xl leading-[1.1] mt-4" style="animation-delay:1.3s">
@@ -1708,7 +1733,7 @@
                 </h1>
 
                 <p id="heroSubtitle" class="hero-title-in mt-6 text-lg md:text-xl text-cream/85 font-light" style="animation-delay:1.5s">
-                    Pure Ghee &bull; Natural Jaggery &bull; No Maida &amp; Preservatives &bull; Homemade Quality
+                    NicyFoods is popularly known as the Kulkarni Poshtik Laddu <span class="marathi-highlight">(कुलकर्णी पौष्टिक लाडू)</span>
                 </p>
 
                 <a id="heroCta" href="product.html" class="hero-title-in cta-btn inline-flex items-center gap-2 bg-gradient-to-r from-turmeric to-kumkum text-white font-semibold px-7 py-3.5 rounded-xl mt-9 hover:-translate-y-0.5 hover:shadow-lg transition-transform duration-300" style="animation-delay:1.65s">
@@ -2390,7 +2415,7 @@
     </script>
 
     <!-- ============================================================ -->
-    <!-- ===== HERO SCRIPT ===== -->
+    <!-- ===== HERO SCRIPT (UPDATED: dark-pill eyebrow + Marathi highlight) ===== -->
     <!-- ============================================================ -->
     <script>
         (function loadHero() {
@@ -2407,7 +2432,7 @@
 
             const DEFAULT_HERO = {
                 title: 'Healthy Handmade Ladoos<br>Since 2017',
-                subtitle: 'Pure Ghee • Natural Jaggery • No Maida & Preservatives • Homemade Quality',
+                subtitle: 'NicyFoods is popularly known as the Kulkarni Poshtik Laddu (कुलकर्णी पौष्टिक लाडू)',
                 eyebrow: 'Handmade • Since 2017',
                 heroImage: 'https://nicyfoods.com/images/index_hero.jpg',
                 ctaText: 'Shop All Products',
@@ -2418,6 +2443,20 @@
                     { label: 'Handmade', value: '100', suffix: '%' }
                 ]
             };
+
+            // Wraps any run of Devanagari (Marathi/Hindi) script inside the subtitle
+            // in a highlighted span so it stands out in a different colour.
+            function highlightDevanagari(text) {
+                if (!text) return '';
+                const escaped = text
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+                return escaped.replace(
+                    /([\u0900-\u097F][\u0900-\u097F\s]*[\u0900-\u097F]|[\u0900-\u097F])/g,
+                    '<span class="marathi-highlight">$1</span>'
+                );
+            }
 
             async function fetchHeroData() {
                 try {
@@ -2434,13 +2473,10 @@
 
             function renderHero(data) {
                 if (heroEyebrow && data.eyebrow) {
-                    heroEyebrow.innerHTML = `
-                                ${data.eyebrow}
-                                <svg width="90" height="8" viewBox="0 0 90 8"><path d="M2 5 Q 25 -1, 45 4 T 88 3" stroke="#F5A623" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
-                            `;
+                    heroEyebrow.textContent = data.eyebrow;
                 }
                 if (heroTitle && data.title) heroTitle.innerHTML = data.title;
-                if (heroSubtitle && data.subtitle) heroSubtitle.textContent = data.subtitle;
+                if (heroSubtitle && data.subtitle) heroSubtitle.innerHTML = highlightDevanagari(data.subtitle);
                 if (heroCta) {
                     if (data.ctaText) heroCta.innerHTML = `${data.ctaText} <span>&rarr;</span>`;
                     if (data.ctaLink) heroCta.href = data.ctaLink;
@@ -2926,7 +2962,7 @@
     </script>
 
     <!-- ============================================================ -->
-    <!-- ===== TESTIMONIALS LOADER (FIXED) ===== -->
+    <!-- ===== TESTIMONIALS LOADER ===== -->
     <!-- ============================================================ -->
     <script>
         (function loadTestimonials() {
@@ -2945,9 +2981,6 @@
                 { name: 'Vikram Desai', text: 'Great packaging, fast delivery even internationally, and the taste is exactly like homemade. Highly recommend the dink laddu.', rating: 4, avatarColor: '#8b5cf6' },
             ];
 
-            // Different sources (admin panel vs public "write a review" form vs older API
-            // versions) sometimes store the review text under a different key. This checks
-            // every likely key, trims it, and falls back gracefully instead of rendering blank.
             function normalizeTestimonial(raw, index) {
                 if (!raw || typeof raw !== 'object') return null;
 
@@ -2971,17 +3004,9 @@
 
                 const rating = Number(raw.rating ?? raw.stars ?? raw.score ?? 5) || 5;
 
-                if (!bodyText) {
-                    console.warn(
-                        '⚠️ Testimonial #' + index + ' has no usable review text. ' +
-                        'Checked keys: ' + possibleTextKeys.join(', ') + '. Raw record:',
-                        raw
-                    );
-                }
-
                 return {
                     name: name || 'Happy Customer',
-                    text: bodyText, // may be '' — handled at render time
+                    text: bodyText,
                     rating: rating,
                     avatarColor: raw.avatarColor || raw.color || '#D7263D',
                     _missingText: !bodyText,
@@ -3067,11 +3092,6 @@
                     track.innerHTML = `<p class="text-sm text-slate-400 px-2 py-6">No reviews yet — be the first to write one!</p>`;
                     dotsWrap.innerHTML = '';
                     return;
-                }
-
-                const missingCount = list.filter(t => t._missingText).length;
-                if (missingCount > 0) {
-                    console.warn(`⚠️ ${missingCount} of ${list.length} testimonials loaded with no review text. Check the API payload / the write-review.html submission handler — see individual warnings above for the raw records.`);
                 }
 
                 track.innerHTML = list.map((t, i) => testimonialCardHtml(t, i)).join('');

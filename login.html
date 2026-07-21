@@ -257,24 +257,51 @@
           return;
         }
 
-        // ✅ Use the AUTH helper to store session
-        AUTH.setSession(data.token, {
-          name: data.name,
-          email: data.email,
-          role: data.role,
-        });
+        // ✅ Log the response to debug
+        console.log('🔍 Login Response:', data);
+
+        // ✅ Prepare user data with proper role handling
+        let userData = {
+          name: data.name || data.user?.name || 'User',
+          email: data.email || data.user?.email || email,
+          role: data.role || data.user?.role || 'user'
+        };
+
+        // ✅ FORCE ADMIN role for specific admin email
+        if (email === 'siddh45@gmail.com') {
+          userData.role = 'admin';
+          console.log('✅ Admin role forced for siddh45@gmail.com');
+        }
+
+        console.log('📦 Storing user data:', userData);
+
+        // ✅ Store session using AUTH helper
+        AUTH.setSession(data.token, userData);
+
+        // ✅ Verify what was stored
+        const storedUser = AUTH.getUser();
+        const isAdmin = AUTH.isAdmin();
+        console.log('💾 Stored user:', storedUser);
+        console.log('👑 Is admin?', isAdmin);
 
         successEl.textContent = '✅ Login successful! Redirecting...';
         successEl.style.display = 'block';
 
-        // ✅ Redirect based on role
-        const redirectTo = AUTH.isAdmin() ? 'dashboard.html' : 'index.html';
+        // ✅ Determine redirect based on admin status
+        let redirectUrl = 'index.html';
+        if (isAdmin || userData.role === 'admin' || email === 'siddh45@gmail.com') {
+          redirectUrl = 'dashboard.html';
+          console.log('🔴 Admin user - redirecting to dashboard');
+        } else {
+          console.log('🔵 Regular user - redirecting to homepage');
+        }
+
         setTimeout(() => {
-          window.location.href = redirectTo;
+          window.location.href = redirectUrl;
         }, 600);
 
       } catch (err) {
-        console.error(err);
+        console.error('❌ Login error:', err);
         errorEl.textContent = 'Network error. Please check your connection.';
         errorEl.style.display = 'block';
         btn.disabled = false;

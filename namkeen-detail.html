@@ -3,19 +3,26 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Product Details | NicyFoods</title>
+    <title>Namkeen Details | NicyFoods</title>
 
+    <!-- ===== FONTAWESOME ===== -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        cream: '#FFFFFF', jaggery: '#5C3A25', ink: '#3A2417',
-                        turmeric: '#F5A623', marigold: '#FFC72C', kumkum: '#D7263D',
-                        herbal: '#5F7A4F', sand: '#F8F4F0',
+                        cream: '#FFFFFF',
+                        jaggery: '#5C3A25',
+                        ink: '#3A2417',
+                        turmeric: '#F5A623',
+                        marigold: '#FFC72C',
+                        kumkum: '#D7263D',
+                        herbal: '#5F7A4F',
+                        sand: '#F8F4F0',
                     },
                     fontFamily: {
                         display: ['"Rozha One"', 'serif'],
@@ -32,81 +39,285 @@
 
     <style>
         :root {
-            --cream: #FFFFFF; --jaggery: #5C3A25; --ink: #3A2417;
-            --turmeric: #F5A623; --marigold: #FFC72C; --kumkum: #D7263D;
-            --herbal: #5F7A4F; --sand: #F8F4F0;
+            --cream: #FFFFFF;
+            --jaggery: #5C3A25;
+            --ink: #3A2417;
+            --turmeric: #F5A623;
+            --marigold: #FFC72C;
+            --kumkum: #D7263D;
+            --herbal: #5F7A4F;
+            --sand: #F8F4F0;
         }
         * { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
-        body { font-family: 'Poppins', sans-serif; background: var(--cream); color: var(--ink); overflow-x: hidden; }
-        h1, h2, h3, .font-display { font-family: 'Rozha One', serif; letter-spacing: .01em; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--cream);
+            color: var(--ink);
+            overflow-x: hidden;
+        }
+        h1, h2, h3, .font-display {
+            font-family: 'Rozha One', serif;
+            letter-spacing: .01em;
+        }
 
-        .reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s cubic-bezier(.16, .84, .44, 1), transform .8s cubic-bezier(.16, .84, .44, 1); }
+        /* ---------- scroll reveal ---------- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity .8s cubic-bezier(.16, .84, .44, 1), transform .8s cubic-bezier(.16, .84, .44, 1);
+        }
         .reveal.in { opacity: 1; transform: translateY(0); }
         .stagger.in>* { animation: fadeUp .7s cubic-bezier(.16, .84, .44, 1) both; }
         .stagger.in>*:nth-child(1) { animation-delay: .05s; }
         .stagger.in>*:nth-child(2) { animation-delay: .15s; }
         .stagger.in>*:nth-child(3) { animation-delay: .25s; }
         .stagger.in>*:nth-child(4) { animation-delay: .35s; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(22px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         .card-in { animation: fadeUp .6s cubic-bezier(.16, .84, .44, 1) both; }
         .detail-in { animation: fadeUp .7s cubic-bezier(.16, .84, .44, 1) both; }
 
-        .kolam-divider path, .kolam-divider circle { stroke-dasharray: 340; stroke-dashoffset: 340; transition: stroke-dashoffset 1.6s cubic-bezier(.16, .84, .44, 1); }
+        /* ---------- kolam divider ---------- */
+        .kolam-divider path, .kolam-divider circle {
+            stroke-dasharray: 340;
+            stroke-dashoffset: 340;
+            transition: stroke-dashoffset 1.6s cubic-bezier(.16, .84, .44, 1);
+        }
         .kolam-divider.in path, .kolam-divider.in circle { stroke-dashoffset: 0; }
 
+        /* ---------- image gallery ---------- */
         #main-image { transition: opacity .3s ease, transform .5s cubic-bezier(.16, .84, .44, 1); }
-        .gallery-frame { position: relative; background: #FFFFFF; border-radius: 1.25rem; overflow: hidden; box-shadow: 0 2px 12px rgba(92, 58, 37, .04); }
+        .gallery-frame {
+            position: relative;
+            background: #FFFFFF;
+            border-radius: 1.25rem;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(92, 58, 37, .04);
+        }
         .gallery-frame:hover #main-image { transform: scale(1.02); }
-        .thumb { transition: all .3s ease; border: 2px solid transparent; border-radius: 0.75rem; overflow: hidden; cursor: pointer; width: 72px; height: 72px; flex-shrink: 0; }
+        .thumb {
+            transition: all .3s ease;
+            border: 2px solid transparent;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            cursor: pointer;
+            width: 72px;
+            height: 72px;
+            flex-shrink: 0;
+        }
         .thumb.active { border-color: var(--kumkum); box-shadow: 0 0 0 2px rgba(215, 38, 61, .08); }
         .thumb:hover { transform: translateY(-2px); border-color: var(--turmeric); }
         .thumb img { width: 100%; height: 100%; object-fit: cover; }
 
-        .wish-btn { position: absolute; top: 14px; right: 14px; width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, .92); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(92, 58, 37, .08); transition: transform .25s cubic-bezier(.34, 1.56, .64, 1), background-color .25s ease; z-index: 2; border: none; cursor: pointer; }
+        /* ---------- wishlist heart ---------- */
+        .wish-btn {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .92);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(92, 58, 37, .08);
+            transition: transform .25s cubic-bezier(.34, 1.56, .64, 1), background-color .25s ease;
+            z-index: 2;
+            border: none;
+            cursor: pointer;
+        }
         .wish-btn:hover { transform: scale(1.1); }
         .wish-btn svg { width: 19px; height: 19px; stroke: var(--kumkum); fill: none; transition: fill .2s ease, stroke .2s ease; }
         .wish-btn.active svg { fill: var(--kumkum); }
         .wish-btn.active { animation: heartPop .4s cubic-bezier(.34, 1.56, .64, 1); }
-        @keyframes heartPop { 0% { transform: scale(1); } 40% { transform: scale(1.35); } 100% { transform: scale(1); } }
+        @keyframes heartPop {
+            0% { transform: scale(1); }
+            40% { transform: scale(1.35); }
+            100% { transform: scale(1); }
+        }
 
-        .wish-btn-sm { position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; border-radius: 50%; background: rgba(255, 255, 255, .9); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(92, 58, 37, .08); transition: transform .25s cubic-bezier(.34, 1.56, .64, 1); z-index: 2; border: none; cursor: pointer; }
+        .wish-btn-sm {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(92, 58, 37, .08);
+            transition: transform .25s cubic-bezier(.34, 1.56, .64, 1);
+            z-index: 2;
+            border: none;
+            cursor: pointer;
+        }
         .wish-btn-sm:hover { transform: scale(1.1); }
         .wish-btn-sm svg { width: 16px; height: 16px; stroke: var(--kumkum); fill: none; transition: fill .2s ease; }
         .wish-btn-sm.active svg { fill: var(--kumkum); }
         .wish-btn-sm.active { animation: heartPop .4s cubic-bezier(.34, 1.56, .64, 1); }
 
-        .weight-option { cursor: pointer; user-select: none; border: 1.5px solid rgba(92, 58, 37, .1); background: #fff; transition: border-color .2s ease, background-color .2s ease, transform .15s ease; border-radius: 0.75rem; padding: 0.75rem 0.5rem; text-align: center; }
+        /* ---------- weight selector ---------- */
+        .weight-option {
+            cursor: pointer;
+            user-select: none;
+            border: 1.5px solid rgba(92, 58, 37, .1);
+            background: #fff;
+            transition: border-color .2s ease, background-color .2s ease, transform .15s ease;
+            border-radius: 0.75rem;
+            padding: 0.75rem 0.5rem;
+            text-align: center;
+        }
         .weight-option:hover { border-color: rgba(215, 38, 61, .3); }
         .weight-option.selected { border-color: var(--kumkum); background: rgba(215, 38, 61, .04); }
         .weight-option.disabled { opacity: .4; cursor: not-allowed; pointer-events: none; }
-        .weight-option .weight-check { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid rgba(92, 58, 37, .2); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.4rem; transition: border-color .2s ease, background-color .2s ease; }
+        .weight-option .weight-check {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(92, 58, 37, .2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.4rem;
+            transition: border-color .2s ease, background-color .2s ease;
+        }
         .weight-option.selected .weight-check { border-color: var(--kumkum); background: var(--kumkum); }
-        .weight-option .weight-check::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #fff; transform: scale(0); transition: transform .2s cubic-bezier(.34, 1.56, .64, 1); }
+        .weight-option .weight-check::after {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #fff;
+            transform: scale(0);
+            transition: transform .2s cubic-bezier(.34, 1.56, .64, 1);
+        }
         .weight-option.selected .weight-check::after { transform: scale(1); }
 
-        .qty-stepper { display: flex; align-items: center; border: 1.5px solid rgba(92, 58, 37, .08); border-radius: .7rem; overflow: hidden; background: #fff; }
-        .qty-btn { width: 40px; height: 48px; display: flex; align-items: center; justify-content: center; color: var(--jaggery); font-weight: 700; font-size: 1.1rem; transition: background-color .2s ease; border: none; background: transparent; cursor: pointer; }
+        /* ---------- qty stepper ---------- */
+        .qty-stepper {
+            display: flex;
+            align-items: center;
+            border: 1.5px solid rgba(92, 58, 37, .08);
+            border-radius: .7rem;
+            overflow: hidden;
+            background: #fff;
+        }
+        .qty-btn {
+            width: 40px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--jaggery);
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: background-color .2s ease;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+        }
         .qty-btn:hover { background: rgba(215, 38, 61, .04); }
         .qty-val { width: 44px; text-align: center; font-weight: 600; font-size: 1rem; }
 
-        .add-cart-btn { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(90deg, var(--turmeric), var(--kumkum)); color: #fff; font-weight: 600; padding: .9rem 1.4rem; border-radius: .75rem; transition: opacity .2s ease, transform .15s ease; border: none; cursor: pointer; flex: 1; }
+        /* ---------- add to cart button ---------- */
+        .add-cart-btn {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(90deg, var(--turmeric), var(--kumkum));
+            color: #fff;
+            font-weight: 600;
+            padding: .9rem 1.4rem;
+            border-radius: .75rem;
+            transition: opacity .2s ease, transform .15s ease;
+            border: none;
+            cursor: pointer;
+            flex: 1;
+        }
         .add-cart-btn:active { transform: scale(.98); }
         .add-cart-btn.added { background: linear-gradient(90deg, #4b9560, #2f6f45); }
 
+        /* ---------- small add-to-cart + view actions ---------- */
         .card-actions { display: flex; gap: 8px; }
-        .add-cart-btn-sm { position: relative; overflow: hidden; flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; background: linear-gradient(90deg, var(--turmeric), var(--kumkum)); color: #fff; font-weight: 600; font-size: .85rem; padding: .6rem 1rem; border-radius: .6rem; transition: opacity .2s ease, transform .15s ease; border: none; cursor: pointer; }
+        .add-cart-btn-sm {
+            position: relative;
+            overflow: hidden;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: linear-gradient(90deg, var(--turmeric), var(--kumkum));
+            color: #fff;
+            font-weight: 600;
+            font-size: .85rem;
+            padding: .6rem 1rem;
+            border-radius: .6rem;
+            transition: opacity .2s ease, transform .15s ease;
+            border: none;
+            cursor: pointer;
+        }
         .add-cart-btn-sm:active { transform: scale(.97); }
         .add-cart-btn-sm.added { background: linear-gradient(90deg, #4b9560, #2f6f45); }
-        .view-arrow-btn { width: 40px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--kumkum); color: var(--kumkum); border-radius: .6rem; transition: background-color .2s ease, color .2s ease, transform .2s ease; text-decoration: none; }
+        .view-arrow-btn {
+            width: 40px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px solid var(--kumkum);
+            color: var(--kumkum);
+            border-radius: .6rem;
+            transition: background-color .2s ease, color .2s ease, transform .2s ease;
+            text-decoration: none;
+        }
         .view-arrow-btn:hover { background: var(--kumkum); color: #fff; transform: translateX(2px); }
 
-        .toast { position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%) translateY(20px); background: var(--jaggery); color: var(--cream); padding: .7rem 1.3rem; border-radius: 999px; font-size: .9rem; font-weight: 600; z-index: 60; opacity: 0; pointer-events: none; transition: opacity .3s ease, transform .3s ease; box-shadow: 0 10px 24px rgba(58, 36, 23, .2); display: flex; align-items: center; gap: 10px; }
+        /* ---------- toast ---------- */
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 26px;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--jaggery);
+            color: var(--cream);
+            padding: .7rem 1.3rem;
+            border-radius: 999px;
+            font-size: .9rem;
+            font-weight: 600;
+            z-index: 60;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .3s ease, transform .3s ease;
+            box-shadow: 0 10px 24px rgba(58, 36, 23, .2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
         .toast a { color: var(--marigold); font-weight: 700; text-decoration: underline; }
 
-        .product-card { background: #FFFDF9; box-shadow: inset 0 0 0 1px rgba(92, 58, 37, .04), 0 1px 2px rgba(92, 58, 37, .04); transition: box-shadow .35s ease, transform .35s ease; cursor: pointer; }
-        .product-card:hover { box-shadow: inset 0 0 0 1px rgba(92, 58, 37, .06), 0 22px 40px -18px rgba(92, 58, 37, .2); transform: translateY(-6px); }
+        /* ---------- cards ---------- */
+        .product-card {
+            background: #FFFDF9;
+            box-shadow: inset 0 0 0 1px rgba(92, 58, 37, .04), 0 1px 2px rgba(92, 58, 37, .04);
+            transition: box-shadow .35s ease, transform .35s ease;
+            cursor: pointer;
+        }
+        .product-card:hover {
+            box-shadow: inset 0 0 0 1px rgba(92, 58, 37, .06), 0 22px 40px -18px rgba(92, 58, 37, .2);
+            transform: translateY(-6px);
+        }
         .product-card .prod-img { transition: transform .5s cubic-bezier(.16, .84, .44, 1); }
         .product-card:hover .prod-img { transform: scale(1.08); }
 
@@ -115,17 +326,45 @@
         .icon-spin { transition: transform .6s cubic-bezier(.34, 1.56, .64, 1); }
         .rise-card:hover .icon-spin { transform: rotate(12deg) scale(1.08); }
 
+        /* ---------- CTA buttons ---------- */
         .shimmer-btn { position: relative; overflow: hidden; }
-        .shimmer-btn::before { content: ''; position: absolute; top: 0; left: -60%; width: 40%; height: 100%; background: linear-gradient(115deg, transparent, rgba(255, 255, 255, .5), transparent); transform: skewX(-20deg); transition: left .8s ease; }
+        .shimmer-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -60%;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(115deg, transparent, rgba(255, 255, 255, .5), transparent);
+            transform: skewX(-20deg);
+            transition: left .8s ease;
+        }
         .shimmer-btn:hover::before { left: 130%; }
 
-        .feature-icon { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; flex-shrink: 0; }
+        /* ---------- feature icons ---------- */
+        .feature-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
         .feature-icon svg { width: 100%; height: 100%; }
 
+        /* ---------- step numbers ---------- */
         .step-num { transition: transform .4s cubic-bezier(.34, 1.56, .64, 1); }
         .rise-card:hover .step-num { transform: scale(1.12) rotate(-4deg); }
 
-        .ladoo-particle { position: absolute; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #FFC72C, #D7263D 70%); opacity: .12; pointer-events: none; z-index: 1; }
+        /* ---------- floating particles ---------- */
+        .ladoo-particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%, #FFC72C, #D7263D 70%);
+            opacity: .12;
+            pointer-events: none;
+            z-index: 1;
+        }
         .ladoo-particle.dim { opacity: .06; }
         .ladoo-particle.glow { opacity: .18; box-shadow: 0 0 24px 6px rgba(255, 199, 44, .12); }
 
@@ -134,19 +373,53 @@
         .float-y { animation: floatY 5s ease-in-out infinite; }
         .float-y-slow { animation: floatY 9s ease-in-out infinite; }
 
-        @keyframes driftY { 0%, 100% { transform: translateY(0) translateX(0); } 50% { transform: translateY(-18px) translateX(8px); } }
-        @keyframes floatY { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-16px) rotate(6deg); } }
+        @keyframes driftY {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-18px) translateX(8px); }
+        }
+        @keyframes floatY {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-16px) rotate(6deg); }
+        }
 
+        /* ---------- hero ---------- */
         .hero-title-in { animation: titleIn 1s cubic-bezier(.16, .84, .44, 1) both; }
-        @keyframes titleIn { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes titleIn {
+            from { opacity: 0; transform: translateY(26px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         .hero-scroll-cue { animation: cueBounce 2s ease-in-out infinite; }
-        @keyframes cueBounce { 0%, 100% { transform: translateY(0); opacity: .3; } 50% { transform: translateY(8px); opacity: .6; } }
-        .hero-glow { position: absolute; inset: -20%; pointer-events: none; background: radial-gradient(circle at 30% 35%, rgba(255, 199, 44, .2), transparent 55%), radial-gradient(circle at 75% 70%, rgba(215, 38, 61, .08), transparent 60%); animation: glowDrift 12s ease-in-out infinite; }
-        @keyframes glowDrift { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(3%, -2%) scale(1.08); } }
+        @keyframes cueBounce {
+            0%, 100% { transform: translateY(0); opacity: .3; }
+            50% { transform: translateY(8px); opacity: .6; }
+        }
+        .hero-glow {
+            position: absolute;
+            inset: -20%;
+            pointer-events: none;
+            background: radial-gradient(circle at 30% 35%, rgba(255, 199, 44, .2), transparent 55%),
+                radial-gradient(circle at 75% 70%, rgba(215, 38, 61, .08), transparent 60%);
+            animation: glowDrift 12s ease-in-out infinite;
+        }
+        @keyframes glowDrift {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(3%, -2%) scale(1.08); }
+        }
 
-        .kolam-trace path, .kolam-trace circle, .kolam-trace ellipse { stroke-dasharray: 620; stroke-dashoffset: 620; transition: stroke-dashoffset 2.4s cubic-bezier(.16, .84, .44, 1); }
+        /* ---------- kolam trace ---------- */
+        .kolam-trace path, .kolam-trace circle, .kolam-trace ellipse {
+            stroke-dasharray: 620;
+            stroke-dashoffset: 620;
+            transition: stroke-dashoffset 2.4s cubic-bezier(.16, .84, .44, 1);
+        }
         .kolam-trace.in path, .kolam-trace.in circle, .kolam-trace.in ellipse { stroke-dashoffset: 0; }
-        .kolam-trace .dot { opacity: 0; transform: scale(0); transform-box: fill-box; transform-origin: center; transition: opacity .5s ease, transform .5s cubic-bezier(.34, 1.56, .64, 1); }
+        .kolam-trace .dot {
+            opacity: 0;
+            transform: scale(0);
+            transform-box: fill-box;
+            transform-origin: center;
+            transition: opacity .5s ease, transform .5s cubic-bezier(.34, 1.56, .64, 1);
+        }
         .kolam-trace.in .dot { opacity: 1; transform: scale(1); }
         .kolam-trace.in .dot:nth-of-type(1) { transition-delay: .2s; }
         .kolam-trace.in .dot:nth-of-type(2) { transition-delay: .5s; }
@@ -154,16 +427,52 @@
         .kolam-trace.in .dot:nth-of-type(4) { transition-delay: 1.1s; }
 
         .grow-underline { position: relative; display: inline-block; }
-        .grow-underline::after { content: ''; position: absolute; left: 50%; bottom: -10px; height: 3px; width: 0; background: linear-gradient(90deg, var(--turmeric), var(--kumkum)); transform: translateX(-50%); transition: width .7s cubic-bezier(.16, .84, .44, 1); border-radius: 2px; }
+        .grow-underline::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -10px;
+            height: 3px;
+            width: 0;
+            background: linear-gradient(90deg, var(--turmeric), var(--kumkum));
+            transform: translateX(-50%);
+            transition: width .7s cubic-bezier(.16, .84, .44, 1);
+            border-radius: 2px;
+        }
         .reveal.in .grow-underline::after { width: 64px; }
 
+        /* ---------- ghee pour ---------- */
         .ghee-pour-wrap { height: 64px; position: relative; margin-bottom: -6px; width: 60px; }
-        .ghee-ribbon path { fill: none; stroke: url(#gheeGrad); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 180; stroke-dashoffset: 180; animation: pourDraw 1s cubic-bezier(.55, 0, .35, 1) .1s forwards; filter: drop-shadow(0 0 6px rgba(255, 199, 44, .2)); }
+        .ghee-ribbon path {
+            fill: none;
+            stroke: url(#gheeGrad);
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-dasharray: 180;
+            stroke-dashoffset: 180;
+            animation: pourDraw 1s cubic-bezier(.55, 0, .35, 1) .1s forwards;
+            filter: drop-shadow(0 0 6px rgba(255, 199, 44, .2));
+        }
         @keyframes pourDraw { to { stroke-dashoffset: 0; } }
-        .ghee-pool { position: absolute; left: 20px; bottom: 6px; width: 34px; height: 10px; border-radius: 50%; background: radial-gradient(ellipse at center, var(--marigold), var(--turmeric) 70%, transparent 100%); opacity: 0; transform: scale(.2); box-shadow: 0 0 18px 4px rgba(255, 199, 44, .2); animation: poolPop .7s cubic-bezier(.34, 1.56, .64, 1) 1s forwards; }
+        .ghee-pool {
+            position: absolute;
+            left: 20px;
+            bottom: 6px;
+            width: 34px;
+            height: 10px;
+            border-radius: 50%;
+            background: radial-gradient(ellipse at center, var(--marigold), var(--turmeric) 70%, transparent 100%);
+            opacity: 0;
+            transform: scale(.2);
+            box-shadow: 0 0 18px 4px rgba(255, 199, 44, .2);
+            animation: poolPop .7s cubic-bezier(.34, 1.56, .64, 1) 1s forwards;
+        }
         @keyframes poolPop { to { opacity: 1; transform: scale(1); } }
         .gild-glow { animation: gildPulse 2.6s ease-in-out 1.6s 2; }
-        @keyframes gildPulse { 0%, 100% { text-shadow: 0 0 0 rgba(255, 199, 44, 0); } 50% { text-shadow: 0 0 22px rgba(255, 199, 44, .1); } }
+        @keyframes gildPulse {
+            0%, 100% { text-shadow: 0 0 0 rgba(255, 199, 44, 0); }
+            50% { text-shadow: 0 0 22px rgba(255, 199, 44, .1); }
+        }
 
         .stat-num { font-variant-numeric: tabular-nums; }
 
@@ -182,11 +491,13 @@
 
     <div id="navbar-placeholder"></div>
 
+    <!-- ============ HERO ============ -->
     <section class="relative w-full h-[380px] md:h-[420px] overflow-hidden bg-gradient-to-br from-amber-200 via-marigold to-turmeric">
-        <img src="https://nicyfoods.com/images/products_hero.jpg" alt="Product Details" class="absolute inset-0 w-full h-full object-cover opacity-25 scale-110" />
+        <img src="https://nicyfoods.com/images/namkeen_hero.jpg" alt="Namkeen Details" class="absolute inset-0 w-full h-full object-cover opacity-25 scale-110" onerror="this.style.display='none'" />
         <div class="absolute inset-0 bg-gradient-to-t from-white/15 via-cream/5 to-transparent"></div>
         <div class="hero-glow"></div>
 
+        <!-- floating particles -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none z-1">
             <div class="ladoo-particle glow w-8 h-8 float-drift" style="top:12%; left:8%;"></div>
             <div class="ladoo-particle dim w-5 h-5 float-drift-slow" style="top:20%; left:22%;"></div>
@@ -198,6 +509,7 @@
             <div class="ladoo-particle glow w-4 h-4 float-drift" style="bottom:8%; left:25%;"></div>
         </div>
 
+        <!-- signature kolam -->
         <svg class="kolam-trace absolute -right-20 -top-16 w-[320px] h-[320px] opacity-15 hidden sm:block" viewBox="0 0 200 200" fill="none">
             <g stroke="#FFC72C" stroke-width="1.1">
                 <circle cx="100" cy="100" r="90"/>
@@ -233,10 +545,10 @@
                 <div class="ghee-pool"></div>
             </div>
             <p class="hero-title-in text-jaggery/60 tracking-[0.25em] uppercase text-xs md:text-sm font-semibold mb-4" style="animation-delay:.1s">
-                <a href="products.html" class="hover:underline text-jaggery/40">Products</a> / <span id="heroProductName" class="text-jaggery/70">Details</span>
+                <a href="namkeen.html" class="hover:underline text-jaggery/40">Namkeen</a> / <span id="heroProductName" class="text-jaggery/70">Details</span>
             </p>
-            <h1 class="hero-title-in gild-glow font-display text-3xl sm:text-4xl md:text-5xl text-jaggery leading-[1.1]" style="animation-delay:.25s" id="heroProductTitle">Product Details</h1>
-            <p class="hero-title-in text-base sm:text-lg md:text-xl text-ink/50 font-light max-w-xl mx-auto" style="animation-delay:.4s" id="heroProductDesc">Handcrafted with pure ingredients and traditional methods</p>
+            <h1 class="hero-title-in gild-glow font-display text-3xl sm:text-4xl md:text-5xl text-jaggery leading-[1.1]" style="animation-delay:.25s" id="heroProductTitle">Namkeen Details</h1>
+            <p class="hero-title-in text-base sm:text-lg md:text-xl text-ink/50 font-light max-w-xl mx-auto" style="animation-delay:.4s" id="heroProductDesc">Roasted the traditional way, in small homemade batches</p>
         </div>
 
         <div class="hero-scroll-cue absolute bottom-6 left-1/2 -translate-x-1/2 text-jaggery/20">
@@ -246,6 +558,7 @@
         </div>
     </section>
 
+    <!-- kolam divider -->
     <div class="flex justify-center py-4">
         <svg class="kolam-divider w-40 h-10" viewBox="0 0 200 40" fill="none">
             <path d="M2 20 Q 50 2, 100 20 T 198 20" stroke="#F5A623" stroke-width="2" stroke-linecap="round"/>
@@ -253,6 +566,7 @@
         </svg>
     </div>
 
+    <!-- ===== MAIN CONTENT ===== -->
     <div class="relative">
         <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
             <div class="ladoo-particle glow w-8 h-8 float-drift-slow" style="top:6%; left:4%;"></div>
@@ -267,6 +581,7 @@
         </main>
     </div>
 
+    <!-- kolam divider -->
     <div class="flex justify-center pb-6">
         <svg class="kolam-divider w-40 h-10" viewBox="0 0 200 40" fill="none">
             <path d="M2 20 Q 50 2, 100 20 T 198 20" stroke="#F5A623" stroke-width="2" stroke-linecap="round"/>
@@ -274,6 +589,7 @@
         </svg>
     </div>
 
+    <!-- Similar Products -->
     <section class="relative max-w-7xl mx-auto px-6 pb-16 overflow-hidden">
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div class="ladoo-particle dim w-6 h-6 float-drift-slow" style="top:8%; left:6%;"></div>
@@ -284,11 +600,12 @@
 
         <div class="reveal text-center mb-10">
             <span class="text-kumkum text-xs tracking-[0.3em] uppercase font-semibold">Keep Exploring</span>
-            <h2 class="font-display text-2xl sm:text-3xl text-jaggery mt-3 grow-underline">You Might Also Like</h2>
+            <h2 class="font-display text-2xl sm:text-3xl text-jaggery mt-3 grow-underline">More Namkeen You Might Like</h2>
         </div>
         <div id="similar-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
     </section>
 
+    <!-- Our Quality Promise -->
     <section class="relative py-16 overflow-hidden bg-gradient-to-b from-sand/30 via-cream to-sand/20">
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div class="ladoo-particle glow w-14 h-14 float-drift-slow" style="top:6%; left:3%;"></div>
@@ -315,17 +632,18 @@
                             <path d="M20 6L9 17l-5-5"/>
                         </svg>
                     </div>
-                    <h3 class="font-bold text-kumkum text-lg mb-2">100% Pure Ghee</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed">Authentic clarified butter for authentic taste and superior nutrition in every product.</p>
+                    <h3 class="font-bold text-kumkum text-lg mb-2">Small Batch Roasted</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Roasted fresh in small batches so every packet tastes just-made, never stale.</p>
                 </div>
                 <div class="rise-card bg-white rounded-2xl p-7 text-center shadow-sm">
                     <div class="icon-spin w-12 h-12 mx-auto mb-4 rounded-xl bg-amber-400 text-white flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M8 3h8l1 4H7l1-4z"/><path d="M6 7h12l-1.2 12.2A2 2 0 0 1 14.8 21H9.2a2 2 0 0 1-2-1.8L6 7z"/><path d="M9 11h6"/>
+                            <path d="M12 3v3M12 18v3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M3 12h3M18 12h3M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/>
+                            <circle cx="12" cy="12" r="3"/>
                         </svg>
                     </div>
-                    <h3 class="font-bold text-kumkum text-lg mb-2">Natural Jaggery</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed">Unrefined jaggery providing natural sweetness with essential minerals and nutrients.</p>
+                    <h3 class="font-bold text-kumkum text-lg mb-2">Homemade Masala</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Our signature spice blend is ground in-house from whole roasted spices, not bought pre-mixed.</p>
                 </div>
                 <div class="rise-card bg-white rounded-2xl p-7 text-center shadow-sm border-2 border-kumkum/40">
                     <div class="icon-spin w-12 h-12 mx-auto mb-4 rounded-xl bg-red-500 text-white flex items-center justify-center">
@@ -334,7 +652,7 @@
                         </svg>
                     </div>
                     <h3 class="font-bold text-kumkum text-lg mb-2">No Harmful Additives</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed">Zero maida, preservatives, artificial essence, or synthetic colors whatsoever.</p>
+                    <p class="text-sm text-slate-400 leading-relaxed">Zero preservatives, artificial colors, or synthetic flavor enhancers whatsoever.</p>
                 </div>
                 <div class="rise-card bg-white rounded-2xl p-7 text-center shadow-sm">
                     <div class="icon-spin w-12 h-12 mx-auto mb-4 rounded-xl bg-rose-500 text-white flex items-center justify-center">
@@ -343,74 +661,13 @@
                         </svg>
                     </div>
                     <h3 class="font-bold text-kumkum text-lg mb-2">Handmade with Love</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed">Every batch prepared with care, attention, and commitment to your family's wellness.</p>
+                    <p class="text-sm text-slate-400 leading-relaxed">Every batch mixed and packed with care, the same way it's always been done at home.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="relative py-16 overflow-hidden">
-        <div class="absolute inset-0 overflow-hidden pointer-events-none">
-            <div class="ladoo-particle glow w-8 h-8 float-drift" style="top:6%; right:4%;"></div>
-            <div class="ladoo-particle dim w-5 h-5 float-y-slow" style="top:14%; left:6%;"></div>
-            <div class="ladoo-particle w-6 h-6 float-drift-slow" style="bottom:8%; right:10%;"></div>
-            <div class="ladoo-particle dim w-4 h-4 float-y" style="bottom:12%; left:8%;"></div>
-            <div class="ladoo-particle glow w-7 h-7 float-drift" style="top:35%; left:16%;"></div>
-            <div class="ladoo-particle w-5 h-5 float-y-slow" style="top:40%; right:18%;"></div>
-        </div>
-
-        <div class="relative max-w-6xl mx-auto px-6">
-            <div class="reveal flex items-center justify-center gap-3 mb-10">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-turmeric" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                    <path d="M12 2.5l2.9 6.05 6.6.87-4.85 4.6 1.24 6.53L12 17.9l-5.89 2.65L7.35 14 2.5 9.42l6.6-.87L12 2.5z"/>
-                </svg>
-                <h2 class="font-display text-2xl sm:text-3xl text-jaggery text-center grow-underline">Why Our Customers Love Us</h2>
-            </div>
-
-            <div class="stagger reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="rise-card bg-white rounded-2xl border border-stone/30 shadow-sm p-8 text-center">
-                    <div class="icon-spin w-14 h-14 mx-auto mb-5 rounded-xl bg-gradient-to-br from-amber-300 to-yellow-500 text-white flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                            <path d="M12 2.5l2.9 6.05 6.6.87-4.85 4.6 1.24 6.53L12 17.9l-5.89 2.65L7.35 14 2.5 9.42l6.6-.87L12 2.5z"/>
-                        </svg>
-                    </div>
-                    <h3 class="font-bold text-kumkum text-lg mb-3">Premium Quality</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed">"The taste and quality are exceptional. We can taste the pure ghee and natural ingredients. Recommend to everyone!" - Satisfied Customer</p>
-                </div>
-
-                <div class="rise-card bg-white rounded-2xl border border-stone/30 shadow-sm p-8 text-center">
-                    <div class="icon-spin w-14 h-14 mx-auto mb-5 rounded-xl bg-gradient-to-br from-rose-400 to-red-500 text-white flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                            <path d="M12 21s-6.7-4.35-9.33-8.2C1 10.4 1.4 6.9 4.1 5.1c2.2-1.5 5-.9 6.6 1 .4.5.9 1.1 1.3 1.7.4-.6.9-1.2 1.3-1.7 1.6-1.9 4.4-2.5 6.6-1 2.7 1.8 3.1 5.3 1.43 7.7C18.7 16.65 12 21 12 21z"/>
-                        </svg>
-                    </div>
-                    <h3 class="font-bold text-kumkum text-lg mb-3">Family Friendly</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed">"From my 1-year-old to grandparents, everyone loves these ladoos. Safe, healthy, and delicious!" - Happy Parent</p>
-                </div>
-
-                <div class="rise-card bg-white rounded-2xl border border-stone/30 shadow-sm p-8 text-center">
-                    <div class="icon-spin w-14 h-14 mx-auto mb-5 rounded-xl bg-gradient-to-br from-lime-300 to-green-500 text-white flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M11 20A7 7 0 0 1 4 13c0-5 4-8 11-9 1 6-1 12-4 16z"/><path d="M4 13c4 0 8 2 10 6"/>
-                        </svg>
-                    </div>
-                    <h3 class="font-bold text-kumkum text-lg mb-3">Health Conscious</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed">"Finally, a brand I can trust. No preservatives, no artificial colors - just pure, authentic handmade goodness." - Health Enthusiast</p>
-                </div>
-
-                <div class="rise-card bg-white rounded-2xl border border-stone/30 shadow-sm p-8 text-center">
-                    <div class="icon-spin w-14 h-14 mx-auto mb-5 rounded-xl bg-gradient-to-br from-amber-300 to-orange-500 text-white flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                            <path d="M2 21h3V10H2v11zm19-10.5c0-.83-.67-1.5-1.5-1.5H14l1-4.5c.1-.45 0-.92-.3-1.28-.28-.35-.7-.72-1.2-.72-.35 0-.68.14-.92.4L7.5 9.5V21h11c.66 0 1.24-.4 1.48-1.02l2.29-5.5c.15-.36.23-.75.23-1.15v-2.33z"/>
-                        </svg>
-                    </div>
-                    <h3 class="font-bold text-kumkum text-lg mb-3">Great Service</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed">"Quick response to inquiries, fresh delivery, and reasonable pricing. NicyFoods is our go-to brand now!" - Regular Customer</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
+    <!-- How to Order -->
     <section class="relative py-16 bg-gradient-to-b from-sand/30 via-cream to-sand/20 overflow-hidden">
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div class="ladoo-particle glow w-10 h-10 float-drift-slow" style="top:6%; left:4%;"></div>
@@ -434,7 +691,7 @@
                 <div class="rise-card bg-white rounded-2xl border border-stone/30 shadow-sm p-8">
                     <div class="step-num w-12 h-12 mx-auto mb-5 rounded-xl bg-gradient-to-br from-sky-400 to-blue-500 text-white flex items-center justify-center font-bold text-lg">1</div>
                     <h3 class="font-bold text-kumkum mb-2">Add to Cart</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed">Pick your favorites and add them to your cart from any product page.</p>
+                    <p class="text-sm text-slate-400 leading-relaxed">Pick your favorites and add them to your cart from any namkeen page.</p>
                 </div>
                 <div class="rise-card bg-white rounded-2xl border border-stone/30 shadow-sm p-8">
                     <div class="step-num w-12 h-12 mx-auto mb-5 rounded-xl bg-gradient-to-br from-sky-400 to-blue-500 text-white flex items-center justify-center font-bold text-lg">2</div>
@@ -462,17 +719,154 @@
     <script src="js/navbar.js"></script>
     <script src="js/footer.js"></script>
 
+    <!-- ========== NAMKEEN DETAIL SCRIPT (STATIC DATA) ========== -->
     <script>
         // -------------------- CONFIGURATION --------------------
-        const API_BASE = 'https://nicyfoods.srujaninfotech.com';
-        const CATEGORY_LABEL = { millet: "MILLET", traditional: "TRADITIONAL", herbal: "HERBAL", snacks: "SNACKS" };
+        const CATEGORY_LABEL = { chiwda: "CHIWDA", chakli: "CHAKLI", masala: "MASALA" };
         const WHATSAPP_NUMBER = "+918263001410";
         const CART_KEY = "nicy_cart_items";
         const WISH_KEY = "nicy_wishlist_items";
         const FALLBACK_IMG = 'https://nicyfoods.com/images/placeholder.jpg';
 
-        let PRODUCTS = [];
+        // -------------------- STATIC NAMKEEN PRODUCTS --------------------
+        // Keep this array in sync with the PRODUCTS array in namkeen.html — same ids,
+        // same weights/prices — so cart lines and links match up between the two pages.
+        // No backend call here since these items aren't (yet) in the products API.
+        const PRODUCTS = [
+            {
+                id: 'patal-pohe-chiwda',
+                name: 'Patal Pohe Chiwda',
+                desc: 'Thin flattened rice roasted till crisp and tossed with peanuts, curry leaves, and a light homemade tempering. Light, crunchy, and never greasy.',
+                price: 130,
+                cat: 'chiwda',
+                img: FALLBACK_IMG,
+                images: [FALLBACK_IMG],
+                weights: [
+                    { label: '250g', price: 130 },
+                    { label: '500g', price: 240 },
+                    { label: '1kg', price: 450 },
+                ],
+                features: [
+                    'Ultra-thin flattened rice (patal poha)',
+                    'Roasted, not deep-fried',
+                    'Tempered with curry leaves & peanuts',
+                    'Mild, well-balanced spicing',
+                ],
+                ingredients: [
+                    'Thin poha (flattened rice)',
+                    'Roasted peanuts',
+                    'Curry leaves',
+                    'Turmeric & mustard seeds',
+                    'Rock salt',
+                ],
+                benefits: [
+                    'Light on the stomach',
+                    'Low oil content',
+                    'Good quick-energy snack',
+                    'No added preservatives',
+                ],
+            },
+            {
+                id: 'murmura-chiwda',
+                name: 'Murmura Chiwda',
+                desc: 'Puffed rice tossed with roasted peanuts, curry leaves, and mild spices for an airy, guilt-free crunch that\'s perfect with evening chai.',
+                price: 110,
+                cat: 'chiwda',
+                img: FALLBACK_IMG,
+                images: [FALLBACK_IMG],
+                weights: [
+                    { label: '250g', price: 110 },
+                    { label: '500g', price: 200 },
+                    { label: '1kg', price: 380 },
+                ],
+                features: [
+                    'Airy puffed rice base',
+                    'Naturally low calorie',
+                    'Crunchy peanut & curry leaf mix',
+                    'Mildly spiced, not heavy',
+                ],
+                ingredients: [
+                    'Murmura (puffed rice)',
+                    'Roasted peanuts',
+                    'Curry leaves',
+                    'Turmeric & green chili',
+                    'Rock salt',
+                ],
+                benefits: [
+                    'Naturally gluten-free',
+                    'Easy to digest',
+                    'Great light evening snack',
+                    'Pairs well with tea or coffee',
+                ],
+            },
+            {
+                id: 'bhajni-chakli',
+                name: 'Bhajni Chakli (चकली)',
+                desc: 'Traditional spiral chakli made from a home-roasted bhajni flour blend of rice, chana, and urad dal, hand-pressed and slow-fried for that authentic crunch.',
+                price: 160,
+                cat: 'chakli',
+                img: FALLBACK_IMG,
+                images: [FALLBACK_IMG],
+                weights: [
+                    { label: '250g', price: 160 },
+                    { label: '500g', price: 300 },
+                    { label: '1kg', price: 570 },
+                ],
+                features: [
+                    'Traditional hand-pressed spiral shape',
+                    'Home-roasted bhajni flour blend',
+                    'Slow-fried for even crunch',
+                    'No shortcuts, no store-bought flour mixes',
+                ],
+                ingredients: [
+                    'Bhajni flour (rice, chana dal, urad dal)',
+                    'Sesame & carom seeds (ajwain)',
+                    'Red chili powder',
+                    'Ghee/butter',
+                    'Rock salt',
+                ],
+                benefits: [
+                    'Authentic Maharashtrian taste',
+                    'Made fresh in small batches',
+                    'No maida used',
+                    'Stays crisp without preservatives',
+                ],
+            },
+            {
+                id: 'black-homemade-masala',
+                name: 'Black Homemade Masala',
+                desc: 'Our signature dark, aromatic spice blend ground in-house from whole roasted spices. Sprinkle over chiwda, sev, or any namkeen for that extra homemade kick.',
+                price: 90,
+                cat: 'masala',
+                img: FALLBACK_IMG,
+                images: [FALLBACK_IMG],
+                weights: [
+                    { label: '100g', price: 90 },
+                    { label: '250g', price: 200 },
+                ],
+                features: [
+                    'Dark roasted whole-spice blend',
+                    'Ground fresh in-house',
+                    'Concentrated aroma & flavor',
+                    'Versatile sprinkle-on masala',
+                ],
+                ingredients: [
+                    'Roasted coriander seeds',
+                    'Dried red chilies',
+                    'Black pepper & cumin',
+                    'Cloves & cinnamon',
+                    'Rock salt',
+                ],
+                benefits: [
+                    'Instantly upgrades any namkeen',
+                    'No artificial flavoring agents',
+                    'Made from whole spices, ground fresh',
+                    'Long-lasting aroma',
+                ],
+            },
+        ];
 
+        // -------------------- FEATURE ICONS (colorful, cycled) --------------------
         const FEATURE_ICONS = [
             { color: '#F5A623', svg: `<path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>` },
             { color: '#8B5CF6', svg: `<path d="M8 21h12a2 2 0 0 0 2-2v-2H10v2a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v3h4"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/><path d="M15 8h-5"/><path d="M15 12h-5"/>` },
@@ -489,24 +883,6 @@
                         ${icon.svg}
                     </svg>
                 </span>`;
-        }
-
-        // -------------------- IMAGE URL HELPER --------------------
-        function buildProductImageUrl(filename) {
-            if (!filename) return FALLBACK_IMG;
-            if (filename.startsWith('http')) return filename;
-            return `${API_BASE}/uploads/products/${filename}`;
-        }
-
-        // -------------------- TEXT FORMATTING HELPER --------------------
-        // Capitalizes only the first letter of a string, leaving the rest of
-        // the text untouched. Used for Ingredients / Key Features / Health
-        // Benefits list items so display is consistent regardless of how the
-        // admin typed the text into the CMS.
-        function capitalizeFirst(str) {
-            if (!str) return str;
-            const trimmed = String(str).trim();
-            return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
         }
 
         // -------------------- CART & WISHLIST --------------------
@@ -554,7 +930,8 @@
             const key = cartKeyFor(p.id, weightLabel);
             const existing = cart.find(i => cartKeyFor(i.id, i.weightLabel) === key);
             if (existing) existing.qty = (existing.qty || 1) + qty;
-            else cart.push({ id: String(p.id), name: p.name, img: p.img, price: unitPrice, weightLabel: weightLabel || null, qty });
+            else cart.push({ id: String(p.id), name: p.name, img: p.img, price: unitPrice, weightLabel: weightLabel || null,
+                qty });
             saveCart(cart);
             const weightNote = weightLabel ? ` (${weightLabel})` : "";
             showToast(`Added to cart${weightNote} — <a href="cart.html">View Cart</a>`);
@@ -562,7 +939,8 @@
                 const original = btnEl.innerHTML;
                 btnEl.classList.add("added");
                 btnEl.innerHTML = "Added ✓";
-                setTimeout(() => { btnEl.classList.remove("added"); btnEl.innerHTML = original; }, 1200);
+                setTimeout(() => { btnEl.classList.remove("added");
+                    btnEl.innerHTML = original; }, 1200);
             }
         }
 
@@ -574,69 +952,11 @@
                 wishlist.splice(idx, 1);
                 btnEl.classList.remove("active");
             } else {
-                wishlist.push({ id: key, name: p.name, img: p.img, price: p.price, cat: CATEGORY_LABEL[p.cat], url: `product-detail.html?id=${key}` });
+                wishlist.push({ id: key, name: p.name, img: p.img, price: p.price, cat: CATEGORY_LABEL[p.cat],
+                    url: `namkeen-detail.html?id=${key}` });
                 btnEl.classList.add("active");
             }
             saveWishlist(wishlist);
-        }
-
-        // -------------------- FETCH PRODUCTS FROM BACKEND --------------------
-        async function loadProducts() {
-            try {
-                const res = await fetch(`${API_BASE}/api/products`);
-                if (!res.ok) throw new Error('Network response was not ok');
-                const data = await res.json();
-
-                PRODUCTS = data.map(p => {
-                    const rawImages = (p.images && p.images.length) ? p.images : (p.image ? [p.image] : []);
-                    const images = rawImages.map(buildProductImageUrl);
-
-                    return {
-                        id: p.slug,
-                        name: p.name,
-                        desc: p.description,
-                        price: p.price,
-                        cat: p.category,
-                        img: images[0] || FALLBACK_IMG,
-                        images: images.length > 0 ? images : [FALLBACK_IMG],
-                        weights: p.weightOptions.map(w => ({ label: w.label, price: w.price })),
-                        features: p.features || [],
-                        ingredients: p.ingredients || [],
-                        benefits: p.benefits || [],
-                        inStock: p.inStock !== undefined ? p.inStock : true,
-                    };
-                });
-
-                renderDetail();
-                renderSimilar();
-
-                const revealEls = document.querySelectorAll('.reveal, .stagger, .kolam-divider, .grow-underline');
-                const io = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('in');
-                            io.unobserve(entry.target);
-                        }
-                    });
-                }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
-                revealEls.forEach(el => io.observe(el));
-
-                document.querySelectorAll('section:first-of-type .kolam-trace').forEach(el => {
-                    setTimeout(() => el.classList.add('in'), 300);
-                });
-
-            } catch (error) {
-                console.error('Failed to load products:', error);
-                const root = document.getElementById("detail-root");
-                root.innerHTML = `
-                        <div class="text-center py-16 text-slate-400">
-                            <svg class="w-12 h-12 text-turmeric mx-auto mb-4" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2c1 3-2 4-2 7a3 3 0 006 0c0-1-1-2-1-2 2 1 4 3.5 4 6.5A7 7 0 015 13.5C5 9 8 7 8 4c1 1 1.5 2 1.5 3.5C10.5 5 11 3.5 12 2z"/>
-                            </svg>
-                            <p class="font-display text-xl text-jaggery mb-1">Could not load product</p>
-                            <p class="text-sm">Make sure the backend server is running at ${API_BASE}</p>
-                        </div>`;
-            }
         }
 
         // -------------------- RENDER DETAIL --------------------
@@ -647,15 +967,16 @@
             if (!product) {
                 document.getElementById("detail-root").innerHTML = `
                         <div class="text-center py-16 text-slate-400">
-                            <p class="font-display text-xl text-jaggery">Product not found</p>
-                            <a href="products.html" class="text-kumkum underline">Browse all products</a>
+                            <p class="font-display text-xl text-jaggery">Namkeen not found</p>
+                            <a href="namkeen.html" class="text-kumkum underline">Browse all namkeen</a>
                         </div>`;
                 return;
             }
 
+            // Update hero
             document.getElementById("heroProductName").textContent = product.name;
             document.getElementById("heroProductTitle").textContent = product.name;
-            document.getElementById("heroProductDesc").textContent = product.desc || 'Handcrafted with pure ingredients and traditional methods';
+            document.getElementById("heroProductDesc").textContent = product.desc || 'Roasted the traditional way, in small homemade batches';
             document.title = product.name + " | NicyFoods";
 
             const root = document.getElementById("detail-root");
@@ -677,19 +998,19 @@
 
             const featureItems = p.features.map((f, i) => `
                     <li class="check-item flex items-start gap-3 text-slate-600 mb-4" style="animation-delay:${i * 0.08}s">
-                        ${featureIconHtml(i)} <span>${capitalizeFirst(f)}</span>
+                        ${featureIconHtml(i)} <span>${f}</span>
                     </li>
                 `).join("");
 
             const ingredientItems = p.ingredients.map((i2, i) => `
                     <li class="check-item flex items-start gap-3 text-slate-600 mb-4" style="animation-delay:${i * 0.08}s">
-                        ${featureIconHtml(i)} <span>${capitalizeFirst(i2)}</span>
+                        ${featureIconHtml(i)} <span>${i2}</span>
                     </li>
                 `).join("");
 
             const benefitItems = p.benefits.map((b, i) => `
                     <li class="check-item flex items-start gap-3 text-slate-600 mb-4" style="animation-delay:${i * 0.08}s">
-                        ${featureIconHtml(i)} <span>${capitalizeFirst(b)}</span>
+                        ${featureIconHtml(i)} <span>${b}</span>
                     </li>
                 `).join("");
 
@@ -712,6 +1033,7 @@
             root.innerHTML = `
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-16">
 
+                        <!-- Left: Image Gallery -->
                         <div class="detail-in">
                             <div class="gallery-frame bg-white rounded-2xl overflow-hidden h-[440px] flex items-center justify-center relative">
                                 <button id="detailWishBtn" class="wish-btn ${wished ? 'active' : ''}" aria-label="Save to wishlist">
@@ -727,6 +1049,7 @@
                             </div>
                         </div>
 
+                        <!-- Right: Info -->
                         <div class="detail-in" style="animation-delay:.12s">
                             <span class="inline-block mb-4 text-xs font-bold tracking-wide text-kumkum bg-orange-50/60 px-4 py-1.5 rounded-full">
                                 ${CATEGORY_LABEL[p.cat] || p.cat.toUpperCase()}
@@ -761,6 +1084,7 @@
                                 </p>
                             </div>
 
+                            <!-- Add to Cart -->
                             <div class="mt-6 flex flex-col sm:flex-row gap-4 items-stretch">
                                 <div class="qty-stepper">
                                     <button id="qtyMinus" class="qty-btn" aria-label="Decrease quantity" type="button">−</button>
@@ -792,6 +1116,7 @@
                         </div>
                     </div>
 
+                    <!-- Key Features / Ingredients / Health Benefits -->
                     <div class="detail-in grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-stone-200 pt-12" style="animation-delay:.22s">
                         <div>
                             <h3 class="flex items-center gap-2 font-bold text-kumkum text-lg mb-4">
@@ -829,6 +1154,7 @@
                     </div>
                 `;
 
+            // ---- gallery thumbnail switching ----
             const mainImageEl = document.getElementById('main-image');
             root.querySelectorAll('.thumb').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -845,6 +1171,7 @@
                 });
             });
 
+            // ---- weight selection state ----
             let selectedIndex = defaultIndex >= 0 ? defaultIndex : 0;
 
             function currentWeight() {
@@ -864,12 +1191,14 @@
                 btn.addEventListener("click", () => {
                     if (btn.disabled) return;
                     selectedIndex = parseInt(btn.dataset.weightIndex, 10);
-                    document.getElementById("weightGrid").querySelectorAll(".weight-option").forEach(b => b.classList.remove("selected"));
+                    document.getElementById("weightGrid").querySelectorAll(".weight-option").forEach(b => b
+                        .classList.remove("selected"));
                     btn.classList.add("selected");
                     updatePriceDisplay();
                 });
             });
 
+            // ---- wire up qty stepper + add to cart + wishlist ----
             let qty = 1;
             const qtyValEl = document.getElementById("qtyVal");
             document.getElementById("qtyMinus").addEventListener("click", () => {
@@ -895,18 +1224,17 @@
         function renderSimilar() {
             const params = new URLSearchParams(window.location.search);
             const slug = params.get("id");
-            const current = PRODUCTS.find(p => p.id === slug);
+            const current = PRODUCTS.find(p => p.id === slug) || PRODUCTS[0];
             if (!current) return;
 
             const grid = document.getElementById("similar-grid");
             let similar = PRODUCTS.filter(p => p.cat === current.cat && p.id !== current.id);
 
-            if (similar.length < 4) {
+            if (similar.length < 3) {
                 const extras = PRODUCTS.filter(p => p.id !== current.id && !similar.includes(p));
-                similar = similar.concat(extras).slice(0, 4);
-            } else {
-                similar = similar.slice(0, 4);
+                similar = similar.concat(extras);
             }
+            similar = similar.slice(0, 4);
 
             grid.innerHTML = "";
             similar.forEach((p, i) => {
@@ -941,7 +1269,7 @@
                                     </svg>
                                     <span class="add-cart-sm-label">Add to Cart</span>
                                 </button>
-                                <a href="product-detail.html?id=${p.id}" class="view-arrow-btn" aria-label="View ${p.name} details">
+                                <a href="namkeen-detail.html?id=${p.id}" class="view-arrow-btn" aria-label="View ${p.name} details">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M5 12h14"/><path d="M13 6l6 6-6 6"/>
                                     </svg>
@@ -952,6 +1280,7 @@
                 grid.appendChild(card);
             });
 
+            // delegated events for similar-product cards
             grid.addEventListener("click", (e) => {
                 const wishBtn = e.target.closest("[data-wish]");
                 const addBtn = e.target.closest("[data-add]");
@@ -971,14 +1300,32 @@
                     return;
                 }
                 if (navEl) {
-                    window.location.href = `product-detail.html?id=${navEl.dataset.nav}`;
+                    window.location.href = `namkeen-detail.html?id=${navEl.dataset.nav}`;
                     return;
                 }
             });
         }
 
         // -------------------- START --------------------
-        loadProducts();
+        renderDetail();
+        renderSimilar();
+
+        // Reveal animations
+        const revealEls = document.querySelectorAll('.reveal, .stagger, .kolam-divider, .grow-underline');
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in');
+                    io.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+        revealEls.forEach(el => io.observe(el));
+
+        // Hero kolam trace
+        document.querySelectorAll('section:first-of-type .kolam-trace').forEach(el => {
+            setTimeout(() => el.classList.add('in'), 300);
+        });
     </script>
 
 </body>
