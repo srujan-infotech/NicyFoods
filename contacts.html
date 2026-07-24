@@ -15,21 +15,166 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
     <link rel="stylesheet" href="css/admin-styles.css" />
+
+    <style>
+        :root {
+            --jaggery: #5C3A25;
+            --ink: #3A2417;
+            --turmeric: #F5A623;
+            --marigold: #FFC72C;
+            --kumkum: #D7263D;
+            --herbal: #5F7A4F;
+            --sand: #F8F4F0;
+            --blue: #2563eb;
+        }
+
+        body[data-page="contacts"] {
+            font-family: 'Poppins', sans-serif;
+            background: var(--sand);
+        }
+
+        /* ========== PAGE HEADER ========== */
+        .contacts-page-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.6rem;
+            padding: 1.4rem 1.7rem;
+            border-radius: 1.4rem;
+            background: linear-gradient(135deg, var(--ink) 0%, var(--jaggery) 55%, var(--blue) 140%);
+            box-shadow: 0 18px 40px -18px rgba(92,58,37,.45);
+            position: relative;
+            overflow: hidden;
+        }
+        .contacts-page-head::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image: radial-gradient(circle, rgba(255,255,255,.08) 1px, transparent 1px);
+            background-size: 22px 22px;
+            pointer-events: none;
+        }
+        .contacts-page-head h1 {
+            font-family: 'Rozha One', serif;
+            color: #fff;
+            font-size: 1.7rem;
+            margin: 0;
+            position: relative; z-index: 1;
+            display: flex; align-items: center; gap: .6rem;
+        }
+        .contacts-page-head h1 i {
+            width: 42px; height: 42px;
+            border-radius: 9999px;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, var(--turmeric), var(--blue));
+            font-size: 1.1rem;
+            box-shadow: 0 8px 18px -6px rgba(37,99,235,.5);
+        }
+        .contacts-page-head p {
+            color: rgba(255,255,255,.7);
+            font-size: .85rem;
+            margin: .25rem 0 0 3.3rem;
+            position: relative; z-index: 1;
+        }
+
+        /* ========== TABLE ========== */
+        .table-wrap {
+            background: #fff;
+            border-radius: 1.2rem;
+            overflow: hidden;
+            border: 1px solid rgba(92,58,37,.06);
+            box-shadow: 0 12px 32px -18px rgba(92,58,37,.28);
+        }
+        .table-wrap table { width: 100%; border-collapse: collapse; }
+        .table-wrap thead tr { background: linear-gradient(135deg, var(--sand), #f1e6da); }
+        .table-wrap th {
+            text-align: left; font-size: .72rem; text-transform: uppercase; letter-spacing: .06em;
+            font-weight: 700; color: var(--jaggery); padding: 1rem 1.1rem; border-bottom: 2px solid rgba(92,58,37,.08);
+        }
+        .table-wrap td { padding: .9rem 1.1rem; font-size: .85rem; color: var(--ink); border-bottom: 1px solid rgba(92,58,37,.06); vertical-align: middle; }
+        .table-wrap tbody tr { transition: background .2s ease; }
+        .table-wrap tbody tr:hover { background: rgba(37,99,235,.05); }
+        .table-wrap tbody tr:last-child td { border-bottom: none; }
+
+        .contact-name-cell { display: flex; align-items: center; gap: .7rem; font-weight: 600; color: var(--jaggery); }
+        .contact-avatar {
+            width: 36px; height: 36px; border-radius: 9999px;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, var(--turmeric), var(--blue));
+            color: #fff; font-weight: 700; font-size: .85rem; flex-shrink: 0;
+            box-shadow: 0 4px 10px -3px rgba(37,99,235,.4);
+        }
+        .contact-email { color: #6b5140; font-size: .8rem; }
+        .contact-message-cell {
+            max-width: 340px;
+            color: #6b5140;
+            font-size: .82rem;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .contact-date { font-size: .78rem; color: #9a8a7a; white-space: nowrap; }
+
+        .actions-cell { display: flex; gap: .5rem; }
+        .btn-edit, .btn-danger {
+            width: 34px; height: 34px;
+            border-radius: .7rem;
+            border: none;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            font-size: .82rem;
+            transition: all .25s ease;
+        }
+        .btn-edit { background: rgba(37,99,235,.1); color: var(--blue); }
+        .btn-edit:hover { background: var(--blue); color: #fff; transform: translateY(-2px); }
+        .btn-danger { background: rgba(215,38,61,.1); color: var(--kumkum); }
+        .btn-danger:hover { background: var(--kumkum); color: #fff; transform: translateY(-2px); }
+
+        .empty-state {
+            display: flex; flex-direction: column; align-items: center; gap: .6rem;
+            padding: 3rem 1rem; color: #9a8a7a; font-size: .95rem;
+        }
+        .empty-state i { font-size: 1.6rem; color: var(--blue); }
+
+        /* ========== TOAST ========== */
+        .toast {
+            position: fixed; bottom: 24px; right: 24px;
+            background: var(--jaggery); color: #fff;
+            padding: .9rem 1.4rem; border-radius: .9rem;
+            display: flex; align-items: center; gap: .6rem;
+            font-size: .85rem; font-weight: 600;
+            box-shadow: 0 16px 36px -12px rgba(0,0,0,.4);
+            transform: translateY(120%); opacity: 0;
+            transition: all .35s cubic-bezier(.34,1.56,.64,1);
+            z-index: 10000;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+    </style>
 </head>
 <body data-page="contacts">
 
     <div id="sidebar-container"></div>
 
     <div id="main">
-        <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.8rem; flex-wrap:wrap;" id="topbar-container"></div>
+        <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.2rem; flex-wrap:wrap;" id="topbar-container"></div>
 
-        <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
-            <h2 class="font-display text-xl text-jaggery"><i class="fas fa-envelope text-kumkum"></i> Contact Messages</h2>
+        <!-- Page header -->
+        <div class="contacts-page-head">
+            <div>
+                <h1><i class="fas fa-envelope"></i> Messages</h1>
+                <p>Every message customers have sent through the contact form</p>
+            </div>
         </div>
+
         <div class="table-wrap">
             <table>
                 <thead><tr><th>Name</th><th>Email</th><th>Message</th><th>Date</th><th style="min-width:80px;">Actions</th></tr></thead>
-                <tbody id="contactsTableBody"></tbody>
+                <tbody id="contactsTableBody">
+                    <tr><td colspan="5"><div class="empty-state"><i class="fas fa-spinner fa-spin"></i> Loading messages...</div></td></tr>
+                </tbody>
             </table>
         </div>
     </div>

@@ -18,6 +18,7 @@ const DEFAULT_HERO = {
 
 let heroData = { ...DEFAULT_HERO };
 let isUsingHeroFallback = false;
+let selectedHeroFile = null;
 
 (function init() {
     const user = initAdminShell('hero');
@@ -25,11 +26,31 @@ let isUsingHeroFallback = false;
     loadHeroData();
 
     document.addEventListener('input', function(e) {
-        if (e.target.closest('#heroForm')) {
+        if (e.target.closest('#heroForm') && e.target.id !== 'heroImageFile') {
             updateHeroPreview(getHeroFormData());
         }
     });
+
+    document.addEventListener('change', function(e) {
+        if (e.target && e.target.id === 'heroImageFile') {
+            handleHeroImageFileChange(e.target);
+        }
+    });
 })();
+
+function handleHeroImageFileChange(input) {
+    const file = input.files[0];
+    if (!file) return;
+    selectedHeroFile = file;
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        const previewDiv = document.getElementById('heroImagePreview');
+        previewDiv.style.backgroundImage = `url('${ev.target.result}')`;
+        previewDiv.innerHTML = '';
+    };
+    reader.readAsDataURL(file);
+}
 
 function renderHeroStats(stats) {
     const container = document.getElementById('heroStatsList');
@@ -68,11 +89,23 @@ function getHeroFormData() {
         eyebrow: document.getElementById('heroEyebrow').value.trim(),
         title: document.getElementById('heroTitle').value.trim(),
         subtitle: document.getElementById('heroSubtitle').value.trim(),
-        heroImage: document.getElementById('heroImage').value.trim(),
+        heroImage: document.getElementById('heroImageExisting').value.trim(),
         ctaText: document.getElementById('heroCtaText').value.trim(),
         ctaLink: document.getElementById('heroCtaLink').value.trim(),
         stats: getHeroStatsFromForm(),
     };
+}
+
+function updateImagePreview(urlOrPath) {
+    const previewDiv = document.getElementById('heroImagePreview');
+    if (urlOrPath) {
+        const src = urlOrPath.startsWith('http') ? urlOrPath : `${API_BASE_URL}${urlOrPath}`;
+        previewDiv.style.backgroundImage = `url('${src}')`;
+        previewDiv.innerHTML = '';
+    } else {
+        previewDiv.style.backgroundImage = 'none';
+        previewDiv.innerHTML = '<i class="fas fa-image mr-2"></i> No image loaded';
+    }
 }
 
 function updateHeroPreview(data) {
@@ -82,13 +115,10 @@ function updateHeroPreview(data) {
     document.getElementById('previewCta').textContent = (data.ctaText || 'Shop') + ' →';
     const statsHtml = (data.stats || []).map(s => `${s.value || '0'}${s.suffix || ''} ${s.label || ''}`).join(' · ');
     document.getElementById('previewStats').innerHTML = statsHtml || '';
-    const previewDiv = document.getElementById('heroImagePreview');
-    if (data.heroImage) {
-        previewDiv.style.backgroundImage = `url('${data.heroImage}')`;
-        previewDiv.textContent = '';
-    } else {
-        previewDiv.style.backgroundImage = 'none';
-        previewDiv.innerHTML = '<i class="fas fa-image mr-2"></i> No image loaded';
+
+    // नवीन निवडलेली file असेल तर ती आधीच preview मध्ये दिसतेय — जुन्या URL ने ती overwrite करू नका
+    if (!selectedHeroFile) {
+        updateImagePreview(data.heroImage);
     }
 }
 
@@ -96,9 +126,11 @@ function populateHeroForm(data) {
     document.getElementById('heroEyebrow').value = data.eyebrow || '';
     document.getElementById('heroTitle').value = data.title || '';
     document.getElementById('heroSubtitle').value = data.subtitle || '';
-    document.getElementById('heroImage').value = data.heroImage || '';
+    document.getElementById('heroImageExisting').value = data.heroImage || '';
     document.getElementById('heroCtaText').value = data.ctaText || '';
     document.getElementById('heroCtaLink').value = data.ctaLink || '';
+    document.getElementById('heroImageFile').value = '';
+    selectedHeroFile = null;
     renderHeroStats(data.stats || []);
     updateHeroPreview(data);
 }
@@ -143,7 +175,7 @@ async function loadHeroData() {
 }
 
 async function saveHeroContent() {
-    const saveBtn = document.querySelector('#tab-hero .btn-primary, #main .btn-primary');
+    const saveBtn = document.querySelector('#main .btn-primary');
     if (saveBtn) {
         saveBtn.disabled = true;
         saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
@@ -159,19 +191,34 @@ async function saveHeroContent() {
 
     try {
         if (isUsingHeroFallback) {
+            if (selectedHeroFile) {
+                showToast('⚠️ Image upload needs the server API — not available in local fallback mode.', true);
+            }
             heroData = payload;
             updateHeroPreview(payload);
             showToast('✅ Hero updated (local fallback)');
             return;
         }
-        const res = await apiFetch('/api/hero', { method: 'PUT', body: JSON.stringify(payload) });
+
+        const formData = new FormData();
+        formData.append('eyebrow', payload.eyebrow);
+        formData.append('title', payload.title);
+        formData.append('subtitle', payload.subtitle);
+        formData.append('ctaText', payload.ctaText);
+        formData.append('ctaLink', payload.ctaLink);
+        formData.append('stats', JSON.stringify(payload.stats));
+        if (selectedHeroFile) {
+            formData.append('heroImage', selectedHeroFile);
+        }
+
+        const res = await uploadFetch(`${API_BASE_URL}/api/hero`, formData, 'PUT');
         if (!res.ok) {
             const errorData = await res.json().catch(() => ({}));
             throw new Error(errorData.message || `HTTP ${res.status}`);
         }
         const data = await safeJson(res);
         heroData = data;
-        updateHeroPreview(data);
+        populateHeroForm(data);
         showToast('✅ Hero section updated successfully!');
     } catch (e) {
         showToast('❌ Error saving hero: ' + e.message, true);

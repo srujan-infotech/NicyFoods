@@ -22,58 +22,449 @@
 
     <!-- Shared admin styles -->
     <link rel="stylesheet" href="css/admin-styles.css" />
+
+    <style>
+        :root {
+            --jaggery: #5C3A25;
+            --ink: #3A2417;
+            --turmeric: #F5A623;
+            --marigold: #FFC72C;
+            --kumkum: #D7263D;
+            --herbal: #5F7A4F;
+            --sand: #F8F4F0;
+            --blue: #2563eb;
+            --purple: #8b5cf6;
+            --teal: #0d9488;
+        }
+
+        body[data-page="dashboard"] {
+            font-family: 'Poppins', sans-serif;
+            background: var(--sand);
+        }
+
+        @keyframes rowIn { from { opacity:0; transform: translateX(8px); } to { opacity:1; transform: translateX(0); } }
+        @keyframes fadeUp { from { opacity:0; transform: translateY(14px); } to { opacity:1; transform: translateY(0); } }
+        .fade-up { animation: fadeUp .5s cubic-bezier(.16,.84,.44,1) both; }
+
+        /* ========== PAGE HEADER STRIP ========== */
+        .dash-page-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.6rem;
+            padding: 1.4rem 1.7rem;
+            border-radius: 1.4rem;
+            background: linear-gradient(135deg, var(--ink) 0%, var(--jaggery) 55%, var(--kumkum) 100%);
+            box-shadow: 0 18px 40px -18px rgba(92,58,37,.45);
+            position: relative;
+            overflow: hidden;
+        }
+        .dash-page-head::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image: radial-gradient(circle, rgba(255,255,255,.08) 1px, transparent 1px);
+            background-size: 22px 22px;
+            pointer-events: none;
+        }
+        .dash-page-head h1 {
+            font-family: 'Rozha One', serif;
+            color: #fff;
+            font-size: 1.7rem;
+            margin: 0;
+            position: relative; z-index: 1;
+            display: flex; align-items: center; gap: .6rem;
+        }
+        .dash-page-head h1 i {
+            width: 42px; height: 42px;
+            border-radius: 9999px;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, var(--turmeric), var(--kumkum));
+            font-size: 1.1rem;
+            box-shadow: 0 8px 18px -6px rgba(215,38,61,.5);
+        }
+        .dash-page-head p {
+            color: rgba(255,255,255,.7);
+            font-size: .85rem;
+            margin: .25rem 0 0 3.3rem;
+            position: relative; z-index: 1;
+        }
+        .live-clock {
+            position: relative; z-index: 1;
+            background: rgba(255,255,255,.1);
+            border: 1px solid rgba(255,255,255,.18);
+            border-radius: .8rem;
+            padding: .6rem 1.1rem;
+            color: #fff;
+            font-family: 'Rozha One', serif;
+            font-size: 1.15rem;
+            display: flex; align-items: center; gap: .5rem;
+            backdrop-filter: blur(4px);
+        }
+        .live-clock i { color: var(--marigold); font-size: .85rem; }
+
+        /* ========== STAT CARDS ========== */
+        .stats-grid { margin-bottom: 1.8rem; }
+        .stat-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: #fff;
+            border-radius: 1.2rem;
+            padding: 1.3rem 1.4rem;
+            border: 1px solid rgba(92,58,37,.06);
+            box-shadow: 0 10px 28px -16px rgba(92,58,37,.25);
+            transition: transform .3s ease, box-shadow .3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -16px rgba(92,58,37,.35);
+        }
+        .stat-card .icon-wrap {
+            width: 50px; height: 50px;
+            border-radius: 1rem;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+            flex-shrink: 0;
+            transition: transform .35s cubic-bezier(.34,1.56,.64,1);
+        }
+        .stat-card:hover .icon-wrap { transform: rotate(-6deg) scale(1.08); }
+        .icon-wrap.red    { background: linear-gradient(135deg, var(--kumkum), #b81f34); box-shadow: 0 8px 18px -6px rgba(215,38,61,.5); }
+        .icon-wrap.orange { background: linear-gradient(135deg, var(--turmeric), #d98716); box-shadow: 0 8px 18px -6px rgba(245,166,35,.5); }
+        .icon-wrap.green  { background: linear-gradient(135deg, var(--herbal), #46613a); box-shadow: 0 8px 18px -6px rgba(95,122,79,.5); }
+        .icon-wrap.blue   { background: linear-gradient(135deg, var(--blue), #1d4ed8); box-shadow: 0 8px 18px -6px rgba(37,99,235,.5); }
+        .icon-wrap.purple { background: linear-gradient(135deg, var(--purple), #6d28d9); box-shadow: 0 8px 18px -6px rgba(139,92,246,.5); }
+        .icon-wrap.teal   { background: linear-gradient(135deg, var(--teal), #0f766e); box-shadow: 0 8px 18px -6px rgba(13,148,136,.5); }
+        .stat-value {
+            font-family: 'Rozha One', serif;
+            font-size: 1.55rem;
+            color: var(--jaggery);
+            line-height: 1.1;
+        }
+        .stat-label {
+            font-size: .73rem;
+            color: #9a8a7a;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            margin-top: .15rem;
+        }
+        .stat-sub {
+            font-size: .68rem;
+            color: var(--herbal);
+            font-weight: 600;
+            margin-top: .25rem;
+        }
+
+        /* ========== CHART CARDS ========== */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+        }
+        @media (max-width: 900px) { .charts-grid { grid-template-columns: 1fr; } }
+        .chart-card {
+            background: #fff;
+            border-radius: 1.3rem;
+            padding: 1.4rem 1.5rem;
+            border: 1px solid rgba(92,58,37,.06);
+            box-shadow: 0 12px 32px -18px rgba(92,58,37,.28);
+        }
+        .chart-title {
+            font-family: 'Rozha One', serif;
+            font-size: 1.05rem;
+            color: var(--jaggery);
+            display: flex; align-items: center; gap: .5rem;
+            margin-bottom: 1rem;
+        }
+        .chart-title i { color: var(--kumkum); }
+        .chart-wrapper { height: 260px; position: relative; }
+
+        /* ========== QUICK ACTIONS / STATUS ========== */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--turmeric), var(--kumkum));
+            color: #fff;
+            font-weight: 600;
+            padding: .75rem 1.2rem;
+            border: none;
+            border-radius: .85rem;
+            cursor: pointer;
+            display: inline-flex; align-items: center; gap: .5rem;
+            box-shadow: 0 10px 22px -10px rgba(215,38,61,.5);
+            transition: all .25s ease;
+            font-size: .85rem;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 28px -10px rgba(215,38,61,.6); }
+
+        .btn-secondary {
+            background: var(--sand);
+            color: var(--jaggery);
+            font-weight: 600;
+            padding: .75rem 1.2rem;
+            border: 1.5px solid rgba(92,58,37,.12);
+            border-radius: .85rem;
+            cursor: pointer;
+            display: inline-flex; align-items: center; gap: .5rem;
+            transition: all .25s ease;
+            font-size: .85rem;
+        }
+        .btn-secondary:hover { background: #fff; border-color: var(--kumkum); color: var(--kumkum); transform: translateY(-2px); }
+
+        .text-kumkum { color: var(--kumkum); }
+
+        /* ========== RECENT ORDERS + TOP PRODUCTS ROW ========== */
+        .mid-grid {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr;
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+        @media (max-width: 1000px) { .mid-grid { grid-template-columns: 1fr; } }
+
+        .panel-card {
+            background: #fff;
+            border-radius: 1.3rem;
+            padding: 1.4rem 1.5rem;
+            border: 1px solid rgba(92,58,37,.06);
+            box-shadow: 0 12px 32px -18px rgba(92,58,37,.28);
+        }
+        .panel-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        .panel-head .chart-title { margin-bottom: 0; }
+        .panel-head a {
+            font-size: .78rem;
+            font-weight: 600;
+            color: var(--kumkum);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: .3rem;
+        }
+        .panel-head a:hover { text-decoration: underline; }
+
+        .recent-orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .85rem;
+        }
+        .recent-orders-table th {
+            text-align: left;
+            font-size: .66rem;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            color: #9a8a7a;
+            font-weight: 700;
+            padding: .5rem .5rem;
+            border-bottom: 1.5px solid rgba(92,58,37,.08);
+        }
+        .recent-orders-table td {
+            padding: .65rem .5rem;
+            border-bottom: 1px solid rgba(92,58,37,.06);
+            color: var(--jaggery);
+            vertical-align: middle;
+        }
+        .recent-orders-table tr:last-child td { border-bottom: none; }
+        .recent-orders-table tr:hover td { background: rgba(245,166,35,.05); }
+
+        .row-avatar {
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            color: #fff;
+            font-size: .68rem;
+            font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px -4px rgba(0,0,0,.3);
+        }
+        .row-link {
+            color: #c9b9aa;
+            transition: color .2s ease, transform .2s ease;
+        }
+        .row-link:hover { color: var(--kumkum); transform: translateX(3px); }
+
+        .badge-status {
+            display: inline-block;
+            font-size: .66rem;
+            font-weight: 700;
+            padding: .25rem .65rem;
+            border-radius: 999px;
+            text-transform: capitalize;
+        }
+        .badge-status.pending    { background: rgba(245,166,35,.14); color: #b3760f; }
+        .badge-status.processing { background: rgba(37,99,235,.12);  color: #1d4ed8; }
+        .badge-status.shipped    { background: rgba(139,92,246,.12); color: #6d28d9; }
+        .badge-status.delivered  { background: rgba(95,122,79,.14);  color: #3d5a2e; }
+        .badge-status.cancelled  { background: rgba(215,38,61,.12);  color: #b81f34; }
+
+        /* ========== TOP PRODUCTS LEADERBOARD ========== */
+        .top-product-row {
+            display: flex;
+            align-items: center;
+            gap: .8rem;
+            padding: .6rem 0;
+        }
+        .top-product-rank {
+            width: 26px; height: 26px;
+            border-radius: 50%;
+            color: #fff;
+            font-size: .72rem;
+            font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .top-product-track {
+            height: 7px;
+            background: rgba(92,58,37,.07);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+        .top-product-fill {
+            height: 100%;
+            border-radius: 999px;
+            transition: width 1s cubic-bezier(.16,.84,.44,1);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: #b5a99a;
+            font-size: .85rem;
+        }
+        .empty-state i { display: block; font-size: 1.6rem; margin-bottom: .5rem; }
+
+        /* ========== TOAST ========== */
+        .toast {
+            position: fixed;
+            bottom: 24px; right: 24px;
+            background: var(--jaggery);
+            color: #fff;
+            padding: .9rem 1.4rem;
+            border-radius: .9rem;
+            display: flex; align-items: center; gap: .6rem;
+            font-size: .85rem;
+            font-weight: 600;
+            box-shadow: 0 16px 36px -12px rgba(0,0,0,.4);
+            transform: translateY(120%);
+            opacity: 0;
+            transition: all .35s cubic-bezier(.34,1.56,.64,1);
+            z-index: 10000;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+    </style>
 </head>
 <body data-page="dashboard">
 
     <div id="sidebar-container"></div>
 
     <div id="main">
-        <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.8rem; flex-wrap:wrap;" id="topbar-container"></div>
+        <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.2rem; flex-wrap:wrap;" id="topbar-container"></div>
 
-        <div class="stats-grid grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div class="stat-card">
+        <!-- Page header -->
+        <div class="dash-page-head fade-up">
+            <div>
+                <h1><i class="fas fa-gauge-high"></i> Dashboard</h1>
+                <p>A quick look at everything happening across NicyFoods</p>
+            </div>
+            <div class="live-clock"><i class="fas fa-circle"></i> <span id="liveClock">--:--:--</span></div>
+        </div>
+
+        <!-- Quick stats – Revenue & Avg. Order removed -->
+        <div class="stats-grid grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
+            <div class="stat-card fade-up" style="animation-delay:.02s;">
                 <div class="icon-wrap orange"><i class="fas fa-box"></i></div>
                 <div>
                     <div class="stat-value" id="statProducts">0</div>
-                    <div class="stat-label">Total Products</div>
+                    <div class="stat-label">Products</div>
+                    <div class="stat-sub" id="statProductsSub">&nbsp;</div>
                 </div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card fade-up" style="animation-delay:.06s;">
+                <div class="icon-wrap red"><i class="fas fa-shopping-cart"></i></div>
+                <div>
+                    <div class="stat-value" id="statOrders">0</div>
+                    <div class="stat-label">Orders</div>
+                    <div class="stat-sub" id="statOrdersSub">&nbsp;</div>
+                </div>
+            </div>
+            <div class="stat-card fade-up" style="animation-delay:.14s;">
                 <div class="icon-wrap green"><i class="fas fa-star"></i></div>
                 <div>
                     <div class="stat-value" id="statTestimonials">0</div>
                     <div class="stat-label">Testimonials</div>
                 </div>
             </div>
-            <div class="stat-card">
-                <div class="icon-wrap red"><i class="fas fa-shopping-cart"></i></div>
-                <div>
-                    <div class="stat-value" id="statOrders">0</div>
-                    <div class="stat-label">Total Orders</div>
-                </div>
-            </div>
-            <div class="stat-card">
+            <div class="stat-card fade-up" style="animation-delay:.18s;">
                 <div class="icon-wrap blue"><i class="fas fa-envelope"></i></div>
                 <div>
                     <div class="stat-value" id="statContacts">0</div>
                     <div class="stat-label">Messages</div>
                 </div>
             </div>
+            <div class="stat-card fade-up" style="animation-delay:.22s;">
+                <div class="icon-wrap purple"><i class="fas fa-users"></i></div>
+                <div>
+                    <div class="stat-value" id="statUsers">0</div>
+                    <div class="stat-label">Users</div>
+                </div>
+            </div>
         </div>
 
         <div class="charts-grid mb-6">
-            <div class="chart-card">
+            <div class="chart-card fade-up">
                 <div class="chart-title"><i class="fas fa-chart-pie"></i> Products by Category</div>
                 <div class="chart-wrapper"><canvas id="categoryChart"></canvas></div>
             </div>
-            <div class="chart-card">
-                <div class="chart-title"><i class="fas fa-chart-bar"></i> Monthly Orders</div>
+            <div class="chart-card fade-up" style="animation-delay:.05s;">
+                <div class="chart-title"><i class="fas fa-chart-line"></i> Monthly Orders</div>
                 <div class="chart-wrapper"><canvas id="ordersChart"></canvas></div>
             </div>
         </div>
 
+        <!-- Recent Orders + Top Products -->
+        <div class="mid-grid">
+            <div class="panel-card fade-up">
+                <div class="panel-head">
+                    <div class="chart-title" style="margin-bottom:0;"><i class="fas fa-receipt"></i> Recent Orders</div>
+                    <a href="orders.html">View all <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table class="recent-orders-table">
+                        <thead>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentOrdersBody">
+                            <tr><td colspan="5"><div class="empty-state"><i class="fas fa-spinner fa-spin"></i> Loading recent orders...</div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel-card fade-up" style="animation-delay:.06s;">
+                <div class="panel-head">
+                    <div class="chart-title" style="margin-bottom:0;"><i class="fas fa-trophy"></i> Top Products</div>
+                </div>
+                <div id="topProductsList">
+                    <div class="empty-state"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+                </div>
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="chart-card" style="display:flex; flex-direction:column; gap:0.6rem; padding:1.2rem 1.5rem;">
+            <div class="chart-card fade-up" style="display:flex; flex-direction:column; gap:0.6rem;">
                 <div style="font-weight:600; color:#5C3A25; font-size:0.9rem; display:flex; align-items:center; gap:0.5rem;">
                     <i class="fas fa-bolt text-kumkum"></i> Quick Actions
                 </div>
@@ -90,11 +481,11 @@
                     <i class="far fa-clock"></i> Updated: <span id="lastUpdated">just now</span>
                 </div>
             </div>
-            <div class="chart-card md:col-span-2" style="display:flex; flex-direction:column; justify-content:center; padding:1.2rem 1.5rem;">
-                <div style="font-weight:600; color:#5C3A25; font-size:0.9rem; display:flex; align-items:center; gap:0.5rem; margin-bottom:0.3rem;">
+            <div class="chart-card fade-up md:col-span-2" style="display:flex; flex-direction:column; justify-content:center; animation-delay:.05s;">
+                <div style="font-weight:600; color:#5C3A25; font-size:0.9rem; display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem;">
                     <i class="fas fa-info-circle text-kumkum"></i> System Status
                 </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; font-size:0.8rem;">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.7rem; font-size:0.82rem;">
                     <div style="display:flex; align-items:center; gap:0.5rem; color:#5F7A4F;"><i class="fas fa-check-circle"></i> Database: Connected</div>
                     <div style="display:flex; align-items:center; gap:0.5rem; color:#5F7A4F;"><i class="fas fa-check-circle"></i> Storage: Active</div>
                     <div style="display:flex; align-items:center; gap:0.5rem; color:#E8A33D;"><i class="fas fa-clock"></i> Last backup: Today</div>

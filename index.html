@@ -2587,6 +2587,7 @@
     <script>
         (function loadHero() {
             const API_BASE_URL = "https://nicyfoods.srujaninfotech.com/api";
+            const IMAGE_ROOT = "https://nicyfoods.srujaninfotech.com";
             const HERO_API_URL = `${API_BASE_URL}/hero`;
 
             const heroImg = document.getElementById('heroImg');
@@ -2610,6 +2611,14 @@
                     { label: 'Handmade', value: '100', suffix: '%' }
                 ]
             };
+
+            // heroImage relative path असेल (/uploads/hero/xxx.jpg) तर backend
+            // domain सोबत जोडतो; आधीच पूर्ण URL (http/https) असेल तर तसंच वापरतो
+            function resolveImageUrl(path) {
+                if (!path) return null;
+                if (path.startsWith('http://') || path.startsWith('https://')) return path;
+                return `${IMAGE_ROOT}${path.startsWith('/') ? '' : '/'}${path}`;
+            }
 
             function highlightDevanagari(text) {
                 if (!text) return '';
@@ -2647,9 +2656,14 @@
                     if (data.ctaLink) heroCta.href = data.ctaLink;
                 }
                 if (heroImg && data.heroImage) {
-                    heroImg.src = data.heroImage;
+                    const resolvedSrc = resolveImageUrl(data.heroImage);
+                    heroImg.src = resolvedSrc;
                     heroImg.style.display = 'block';
                     heroImg.alt = data.title || 'Handmade Ladoos';
+                    heroImg.onerror = function() {
+                        console.warn('⚠️ Hero image failed to load, falling back to default');
+                        this.src = DEFAULT_HERO.heroImage;
+                    };
                 }
 
                 if (heroStats && data.stats && Array.isArray(data.stats)) {

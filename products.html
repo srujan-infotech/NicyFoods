@@ -15,22 +15,374 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
     <link rel="stylesheet" href="css/admin-styles.css" />
+
+    <style>
+        :root {
+            --jaggery: #5C3A25;
+            --ink: #3A2417;
+            --turmeric: #F5A623;
+            --marigold: #FFC72C;
+            --kumkum: #D7263D;
+            --herbal: #5F7A4F;
+            --sand: #F8F4F0;
+        }
+
+        body[data-page="products"] {
+            font-family: 'Poppins', sans-serif;
+            background: var(--sand);
+        }
+
+        /* ========== PAGE HEADER ========== */
+        .products-page-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.6rem;
+            padding: 1.4rem 1.7rem;
+            border-radius: 1.4rem;
+            background: linear-gradient(135deg, var(--ink) 0%, var(--jaggery) 55%, var(--kumkum) 100%);
+            box-shadow: 0 18px 40px -18px rgba(92,58,37,.45);
+            position: relative;
+            overflow: hidden;
+        }
+        .products-page-head::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image: radial-gradient(circle, rgba(255,255,255,.08) 1px, transparent 1px);
+            background-size: 22px 22px;
+            pointer-events: none;
+        }
+        .products-page-head h1 {
+            font-family: 'Rozha One', serif;
+            color: #fff;
+            font-size: 1.7rem;
+            margin: 0;
+            position: relative; z-index: 1;
+            display: flex; align-items: center; gap: .6rem;
+        }
+        .products-page-head h1 i {
+            width: 42px; height: 42px;
+            border-radius: 9999px;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, var(--turmeric), var(--kumkum));
+            font-size: 1.1rem;
+            box-shadow: 0 8px 18px -6px rgba(215,38,61,.5);
+        }
+        .products-page-head p {
+            color: rgba(255,255,255,.7);
+            font-size: .85rem;
+            margin: .25rem 0 0 3.3rem;
+            position: relative; z-index: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--turmeric), var(--kumkum));
+            color: #fff;
+            font-weight: 600;
+            padding: .75rem 1.3rem;
+            border: none;
+            border-radius: .85rem;
+            cursor: pointer;
+            display: inline-flex; align-items: center; gap: .5rem;
+            box-shadow: 0 10px 22px -10px rgba(215,38,61,.5);
+            transition: all .25s ease;
+            font-size: .85rem;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 28px -10px rgba(215,38,61,.6); }
+        .btn-primary:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+        .btn-secondary {
+            background: var(--sand);
+            color: var(--jaggery);
+            font-weight: 600;
+            border: 1.5px solid rgba(92,58,37,.14);
+            border-radius: .7rem;
+            cursor: pointer;
+            display: inline-flex; align-items: center; gap: .4rem;
+            transition: all .25s ease;
+        }
+        .btn-secondary:hover { background: #fff; border-color: var(--kumkum); color: var(--kumkum); }
+
+        /* ========== TABLE ========== */
+        .table-wrap {
+            background: #fff;
+            border-radius: 1.2rem;
+            overflow: hidden;
+            border: 1px solid rgba(92,58,37,.06);
+            box-shadow: 0 12px 32px -18px rgba(92,58,37,.28);
+        }
+        .table-wrap table { width: 100%; border-collapse: collapse; }
+        .table-wrap thead tr { background: linear-gradient(135deg, var(--sand), #f1e6da); }
+        .table-wrap th {
+            text-align: left; font-size: .72rem; text-transform: uppercase; letter-spacing: .06em;
+            font-weight: 700; color: var(--jaggery); padding: 1rem 1.1rem; border-bottom: 2px solid rgba(92,58,37,.08);
+        }
+        .table-wrap td { padding: .9rem 1.1rem; font-size: .85rem; color: var(--ink); border-bottom: 1px solid rgba(92,58,37,.06); vertical-align: middle; }
+        .table-wrap tbody tr { transition: background .2s ease; }
+        .table-wrap tbody tr:hover { background: rgba(245,166,35,.06); }
+        .table-wrap tbody tr:last-child td { border-bottom: none; }
+
+        .product-thumb {
+            width: 46px; height: 46px;
+            border-radius: .7rem;
+            object-fit: cover;
+            border: 2px solid rgba(92,58,37,.08);
+            box-shadow: 0 4px 10px -4px rgba(92,58,37,.3);
+        }
+        .stock-pill {
+            display: inline-flex; align-items: center; gap: .35rem;
+            font-size: .7rem; font-weight: 700; padding: .35rem .8rem;
+            border-radius: 999px; text-transform: uppercase; letter-spacing: .03em;
+        }
+        .stock-pill.in    { background: rgba(95,122,79,.12); color: var(--herbal); }
+        .stock-pill.out   { background: rgba(215,38,61,.1); color: var(--kumkum); }
+        .category-pill {
+            display: inline-flex; align-items: center;
+            font-size: .72rem; font-weight: 600; padding: .3rem .7rem;
+            border-radius: .6rem;
+            background: rgba(245,166,35,.12); color: #B87A0E;
+        }
+
+        .actions-cell { display: flex; gap: .5rem; }
+        .btn-edit, .btn-danger {
+            width: 34px; height: 34px;
+            border-radius: .7rem;
+            border: none;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            font-size: .82rem;
+            transition: all .25s ease;
+        }
+        .btn-edit { background: rgba(95,122,79,.12); color: var(--herbal); }
+        .btn-edit:hover { background: var(--herbal); color: #fff; transform: translateY(-2px); }
+        .btn-danger { background: rgba(215,38,61,.1); color: var(--kumkum); }
+        .btn-danger:hover { background: var(--kumkum); color: #fff; transform: translateY(-2px); }
+
+        .empty-state {
+            display: flex; flex-direction: column; align-items: center; gap: .6rem;
+            padding: 3rem 1rem; color: #9a8a7a; font-size: .95rem;
+        }
+        .empty-state i { font-size: 1.6rem; color: var(--turmeric); }
+
+        /* ========== MODAL ========== */
+        .modal-overlay {
+            position: fixed; inset: 0; z-index: 9999;
+            background: rgba(58,36,23,.55);
+            backdrop-filter: blur(3px);
+            display: none;
+            align-items: center; justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity .3s ease;
+        }
+        .modal-overlay.open { display: flex; opacity: 1; }
+        .modal-box {
+            width: 100%;
+            max-width: 720px;
+            background: #fff;
+            border-radius: 1.4rem;
+            padding: 1.8rem 2rem;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 30px 70px -20px rgba(26,17,12,.5);
+            transform: translateY(16px) scale(.98);
+            transition: transform .35s cubic-bezier(.34,1.56,.64,1);
+        }
+        .modal-overlay.open .modal-box { transform: translateY(0) scale(1); }
+        .modal-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding-bottom: 1.1rem;
+            margin-bottom: 1.3rem;
+            border-bottom: 2px solid rgba(92,58,37,.08);
+        }
+        .modal-header h2 {
+            font-family: 'Rozha One', serif;
+            font-size: 1.35rem;
+            color: var(--jaggery);
+            display: flex; align-items: center; gap: .6rem;
+            margin: 0;
+        }
+        .modal-header h2 i { color: var(--kumkum); }
+        .modal-close {
+            width: 36px; height: 36px;
+            border-radius: 9999px;
+            border: none;
+            background: var(--sand);
+            color: var(--jaggery);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: all .25s ease;
+        }
+        .modal-close:hover { background: var(--kumkum); color: #fff; transform: rotate(90deg); }
+
+        /* ========== IMAGE UPLOAD CARD ========== */
+        .form-card {
+            border-radius: 1.1rem;
+            padding: 1.2rem 1.3rem;
+        }
+        .form-card-title {
+            font-family: 'Rozha One', serif;
+            font-size: 1rem;
+            color: var(--jaggery);
+            display: flex; align-items: center; gap: .5rem;
+            margin-bottom: .8rem;
+        }
+        .form-card-title i { color: var(--kumkum); }
+        .image-upload-box {
+            position: relative;
+            border: 2.5px dashed rgba(215,38,61,.25);
+            border-radius: 1rem;
+            padding: 1.6rem 1rem;
+            text-align: center;
+            background: rgba(255,255,255,.6);
+            cursor: pointer;
+            transition: all .25s ease;
+        }
+        .image-upload-box:hover { border-color: var(--kumkum); background: rgba(215,38,61,.03); }
+        .image-upload-box input[type="file"] {
+            position: absolute; inset: 0; opacity: 0; cursor: pointer;
+        }
+        .image-upload-hint { font-size: .82rem; color: var(--jaggery); }
+        .image-upload-hint i { font-size: 1.6rem; color: var(--turmeric); display: block; margin-bottom: .4rem; }
+        .image-preview-grid {
+            display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .9rem;
+        }
+        .image-preview-grid img, .image-preview-grid .preview-item {
+            width: 72px; height: 72px;
+            border-radius: .7rem;
+            object-fit: cover;
+            border: 2px solid rgba(92,58,37,.1);
+            box-shadow: 0 6px 14px -6px rgba(92,58,37,.3);
+        }
+        .image-upload-status { font-size: .75rem; color: var(--herbal); margin-top: .5rem; min-height: 1em; }
+        .form-hint {
+            font-size: .72rem; color: #9a8a7a; margin-top: .7rem;
+            display: flex; align-items: center; gap: .35rem;
+        }
+        .form-hint i { color: var(--turmeric); }
+
+        /* ========== FORM FIELDS ========== */
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+        @media (max-width: 640px) { .form-row { grid-template-columns: 1fr; } }
+        .form-group { margin-bottom: 1rem; }
+        .form-label {
+            display: flex; align-items: center; gap: .4rem;
+            font-size: .78rem; font-weight: 600; color: var(--jaggery);
+            margin-bottom: .4rem;
+        }
+        .form-section-title {
+            font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+            color: var(--kumkum); display: flex; align-items: center; gap: .4rem; margin-bottom: .6rem;
+        }
+        .input-icon-wrap { position: relative; }
+        .input-icon-wrap > i {
+            position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
+            font-size: .9rem; color: #B5A99A; pointer-events: none;
+        }
+        .input-icon-wrap input,
+        .input-icon-wrap select,
+        .input-icon-wrap textarea {
+            width: 100%;
+            border: 1.5px solid rgba(92,58,37,.14);
+            border-radius: .8rem;
+            padding: .7rem .9rem .7rem 2.6rem;
+            font-size: .85rem;
+            font-family: inherit;
+            background: var(--sand);
+            color: var(--ink);
+            transition: all .25s ease;
+        }
+        .input-icon-wrap textarea { padding-top: .7rem; }
+        .input-icon-wrap input:focus,
+        .input-icon-wrap select:focus,
+        .input-icon-wrap textarea:focus {
+            outline: none;
+            border-color: var(--kumkum);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(215,38,61,.1);
+        }
+
+        /* ========== TOGGLE SWITCH ========== */
+        .toggle-wrap { display: flex; align-items: center; gap: .7rem; }
+        .toggle-label { font-size: .85rem; font-weight: 600; color: var(--jaggery); }
+        .toggle-switch {
+            width: 46px; height: 26px;
+            border-radius: 999px;
+            background: #d8cfc4;
+            position: relative;
+            cursor: pointer;
+            transition: background .25s ease;
+            flex-shrink: 0;
+        }
+        .toggle-switch.active { background: var(--herbal); }
+        .toggle-knob {
+            width: 20px; height: 20px;
+            border-radius: 9999px;
+            background: #fff;
+            position: absolute;
+            top: 3px; left: 3px;
+            box-shadow: 0 2px 6px rgba(0,0,0,.25);
+            transition: left .25s ease;
+        }
+        .toggle-switch.active .toggle-knob { left: 23px; }
+
+        /* Weight option rows — generic styling in case JS injects plain divs/inputs */
+        #weightOptionsList .weight-row,
+        #weightOptionsList > div {
+            display: flex; align-items: center; gap: .6rem;
+            background: var(--sand);
+            border: 1.5px solid rgba(92,58,37,.1);
+            border-radius: .8rem;
+            padding: .5rem .7rem;
+            margin-bottom: .5rem;
+        }
+        #weightOptionsList input {
+            border: 1.5px solid rgba(92,58,37,.14);
+            border-radius: .6rem;
+            padding: .45rem .7rem;
+            font-size: .82rem;
+            background: #fff;
+        }
+
+        /* ========== TOAST ========== */
+        .toast {
+            position: fixed; bottom: 24px; right: 24px;
+            background: var(--jaggery); color: #fff;
+            padding: .9rem 1.4rem; border-radius: .9rem;
+            display: flex; align-items: center; gap: .6rem;
+            font-size: .85rem; font-weight: 600;
+            box-shadow: 0 16px 36px -12px rgba(0,0,0,.4);
+            transform: translateY(120%); opacity: 0;
+            transition: all .35s cubic-bezier(.34,1.56,.64,1);
+            z-index: 10000;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+    </style>
 </head>
 <body data-page="products">
 
     <div id="sidebar-container"></div>
 
     <div id="main">
-        <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.8rem; flex-wrap:wrap;" id="topbar-container"></div>
+        <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.2rem; flex-wrap:wrap;" id="topbar-container"></div>
 
-        <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
-            <h2 class="font-display text-xl text-jaggery"><i class="fas fa-box text-kumkum"></i> Manage Products</h2>
+        <!-- Page header -->
+        <div class="products-page-head">
+            <div>
+                <h1><i class="fas fa-box"></i> Products</h1>
+                <p>Add, edit and manage everything in your product catalog</p>
+            </div>
             <button class="btn-primary" onclick="openProductModal()"><i class="fas fa-plus"></i> Add Product</button>
         </div>
+
         <div class="table-wrap">
             <table>
                 <thead><tr><th style="width:60px;">Image</th><th>Name</th><th>Price</th><th>Category</th><th>Stock</th><th style="min-width:130px;">Actions</th></tr></thead>
-                <tbody id="productsTableBody"></tbody>
+                <tbody id="productsTableBody">
+                    <tr><td colspan="6"><div class="empty-state"><i class="fas fa-spinner fa-spin"></i> Loading products...</div></td></tr>
+                </tbody>
             </table>
         </div>
     </div>
@@ -76,22 +428,22 @@
                                 <!-- ===== UPDATED CATEGORIES ===== -->
                                 <!-- 1** Pregnancy Gift Pack -->
                                 <option value="pregnancy-gift">Pregnancy Gift Pack</option>
-                                
+
                                 <!-- 2** Sugar Free Range -->
                                 <option value="sugar-free">Sugar Free Range</option>
-                                
+
                                 <!-- 3** Diet Friendly -->
                                 <option value="diet-friendly">Diet Friendly</option>
-                                
+
                                 <!-- 4** उपवास Fasting Range -->
                                 <option value="fasting">उपवास Fasting Range</option>
-                                
+
                                 <!-- 5** Guest Gift Pack -->
                                 <option value="guest-gift">Guest Gift Pack</option>
-                                
+
                                 <!-- 6** Kids Special -->
                                 <option value="kids-special">Kids Special</option>
-                                
+
                                 <!-- ===== EXISTING CATEGORIES ===== -->
                                 <option value="millet">Millet</option>
                                 <option value="traditional">Traditional</option>
@@ -110,7 +462,7 @@
                 <div class="form-group">
                     <div class="form-section-title"><i class="fas fa-weight-hanging"></i> Weight Options</div>
                     <div id="weightOptionsList"></div>
-                    <button type="button" class="btn-secondary" onclick="addWeightRow()" style="margin-top:0.3rem; font-size:0.7rem; padding:0.25rem 0.8rem;">
+                    <button type="button" class="btn-secondary" onclick="addWeightRow()" style="margin-top:0.3rem; font-size:0.7rem; padding:0.4rem 0.9rem;">
                         <i class="fas fa-plus"></i> Add weight option
                     </button>
                 </div>

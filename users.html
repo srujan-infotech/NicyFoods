@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NicyFoods · Admin · Registered Users</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <link rel="stylesheet" href="css/admin-styles.css" />
+
+    <style>
+        :root {
+            --jaggery: #5C3A25;
+            --ink: #3A2417;
+            --turmeric: #F5A623;
+            --kumkum: #D7263D;
+            --herbal: #5F7A4F;
+            --sand: #F8F4F0;
+            --purple: #8b5cf6;
+        }
+
+        body[data-page="users"] {
+            font-family: 'Poppins', sans-serif;
+            background: var(--sand);
+        }
+
+        .users-page-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.6rem;
+            padding: 1.4rem 1.7rem;
+            border-radius: 1.4rem;
+            background: linear-gradient(135deg, var(--ink) 0%, var(--jaggery) 55%, var(--purple) 130%);
+            box-shadow: 0 18px 40px -18px rgba(92,58,37,.45);
+            position: relative;
+            overflow: hidden;
+        }
+        .users-page-head::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image: radial-gradient(circle, rgba(255,255,255,.08) 1px, transparent 1px);
+            background-size: 22px 22px;
+            pointer-events: none;
+        }
+        .users-page-head h1 {
+            font-family: 'Rozha One', serif;
+            color: #fff;
+            font-size: 1.7rem;
+            margin: 0;
+            position: relative; z-index: 1;
+            display: flex; align-items: center; gap: .6rem;
+        }
+        .users-page-head h1 i {
+            width: 42px; height: 42px;
+            border-radius: 9999px;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, var(--turmeric), var(--purple));
+            font-size: 1.1rem;
+            box-shadow: 0 8px 18px -6px rgba(139,92,246,.5);
+        }
+        .users-page-head p {
+            color: rgba(255,255,255,.7);
+            font-size: .85rem;
+            margin: .25rem 0 0 3.3rem;
+            position: relative; z-index: 1;
+        }
+        .users-page-head .refresh-btn {
+            background: rgba(255,255,255,.12);
+            border: 1.5px solid rgba(255,255,255,.25);
+            color: #fff;
+            padding: .6rem 1.1rem;
+            border-radius: .8rem;
+            font-size: .82rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex; align-items: center; gap: .5rem;
+            transition: all .25s ease;
+            position: relative; z-index: 1;
+        }
+        .users-page-head .refresh-btn:hover { background: rgba(255,255,255,.22); }
+
+        .stats-grid { margin-bottom: 1.8rem; }
+        .stat-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: #fff;
+            border-radius: 1.2rem;
+            padding: 1.3rem 1.4rem;
+            border: 1px solid rgba(92,58,37,.06);
+            box-shadow: 0 10px 28px -16px rgba(92,58,37,.25);
+            transition: transform .3s ease, box-shadow .3s ease;
+        }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 18px 36px -16px rgba(92,58,37,.32); }
+        .stat-card .icon-wrap {
+            width: 50px; height: 50px;
+            border-radius: 1rem;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .icon-wrap.purple { background: linear-gradient(135deg, var(--purple), #6d28d9); box-shadow: 0 8px 18px -6px rgba(139,92,246,.5); }
+        .icon-wrap.red    { background: linear-gradient(135deg, var(--kumkum), #b81f34); box-shadow: 0 8px 18px -6px rgba(215,38,61,.5); }
+        .icon-wrap.green  { background: linear-gradient(135deg, var(--herbal), #46613a); box-shadow: 0 8px 18px -6px rgba(95,122,79,.5); }
+        .stat-value { font-family: 'Rozha One', serif; font-size: 1.6rem; color: var(--jaggery); line-height: 1.1; }
+        .stat-label { font-size: .75rem; color: #9a8a7a; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; margin-top: .15rem; }
+
+        .table-wrap {
+            background: #fff;
+            border-radius: 1.2rem;
+            overflow: hidden;
+            border: 1px solid rgba(92,58,37,.06);
+            box-shadow: 0 12px 32px -18px rgba(92,58,37,.28);
+        }
+        .table-wrap table { width: 100%; border-collapse: collapse; }
+        .table-wrap thead tr { background: linear-gradient(135deg, var(--sand), #f1e6da); }
+        .table-wrap th {
+            text-align: left; font-size: .72rem; text-transform: uppercase; letter-spacing: .06em;
+            font-weight: 700; color: var(--jaggery); padding: 1rem 1.1rem; border-bottom: 2px solid rgba(92,58,37,.08);
+        }
+        .table-wrap td { padding: .9rem 1.1rem; font-size: .85rem; color: var(--ink); border-bottom: 1px solid rgba(92,58,37,.06); }
+        .table-wrap tbody tr { transition: background .2s ease; }
+        .table-wrap tbody tr:hover { background: rgba(139,92,246,.05); }
+        .table-wrap tbody tr:last-child td { border-bottom: none; }
+
+        .user-cell { display: flex; align-items: center; gap: .7rem; font-weight: 600; color: var(--jaggery); }
+        .user-avatar {
+            width: 34px; height: 34px; border-radius: 9999px;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, var(--turmeric), var(--purple));
+            color: #fff; font-weight: 700; font-size: .8rem; flex-shrink: 0;
+        }
+        .you-tag {
+            font-size: .62rem; font-weight: 700; text-transform: uppercase;
+            background: rgba(139,92,246,.14); color: var(--purple);
+            padding: .15rem .45rem; border-radius: 999px; margin-left: .3rem;
+        }
+
+        .role-badge {
+            display: inline-flex; align-items: center; gap: .35rem;
+            font-size: .7rem; font-weight: 700; padding: .35rem .8rem;
+            border-radius: 999px; text-transform: uppercase; letter-spacing: .03em;
+        }
+        .role-admin { background: rgba(215,38,61,.1); color: var(--kumkum); }
+        .role-user  { background: rgba(95,122,79,.12); color: var(--herbal); }
+
+        .actions-cell { display: flex; gap: .5rem; }
+        .btn-role, .btn-danger {
+            width: 34px; height: 34px;
+            border-radius: .7rem;
+            border: none;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            font-size: .82rem;
+            transition: all .25s ease;
+        }
+        .btn-role { background: rgba(139,92,246,.12); color: var(--purple); }
+        .btn-role:hover:not(:disabled) { background: var(--purple); color: #fff; transform: translateY(-2px); }
+        .btn-danger { background: rgba(215,38,61,.1); color: var(--kumkum); }
+        .btn-danger:hover:not(:disabled) { background: var(--kumkum); color: #fff; transform: translateY(-2px); }
+        .btn-role:disabled, .btn-danger:disabled { opacity: .3; cursor: not-allowed; }
+
+        .empty-state {
+            display: flex; flex-direction: column; align-items: center; gap: .6rem;
+            padding: 3rem 1rem; color: #9a8a7a; font-size: .95rem;
+        }
+        .empty-state i { font-size: 1.6rem; color: var(--purple); }
+
+        .toast {
+            position: fixed; bottom: 24px; right: 24px;
+            background: var(--jaggery); color: #fff;
+            padding: .9rem 1.4rem; border-radius: .9rem;
+            display: flex; align-items: center; gap: .6rem;
+            font-size: .85rem; font-weight: 600;
+            box-shadow: 0 16px 36px -12px rgba(0,0,0,.4);
+            transform: translateY(120%); opacity: 0;
+            transition: all .35s cubic-bezier(.34,1.56,.64,1);
+            z-index: 10000;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+    </style>
+</head>
+<body data-page="users">
+
+    <div id="sidebar-container"></div>
+
+    <div id="main">
+        <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.2rem; flex-wrap:wrap;" id="topbar-container"></div>
+
+        <div class="users-page-head">
+            <div>
+                <h1><i class="fas fa-users"></i> Registered Users</h1>
+                <p>Everyone who has signed up on NicyFoods</p>
+            </div>
+            <button type="button" class="refresh-btn" onclick="loadUsers()">
+                <i class="fas fa-arrows-rotate"></i> Refresh
+            </button>
+        </div>
+
+        <div class="stats-grid grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="stat-card">
+                <div class="icon-wrap purple"><i class="fas fa-users"></i></div>
+                <div>
+                    <div class="stat-value" id="statTotalUsers">0</div>
+                    <div class="stat-label">Total Registered</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="icon-wrap red"><i class="fas fa-shield-alt"></i></div>
+                <div>
+                    <div class="stat-value" id="statAdminUsers">0</div>
+                    <div class="stat-label">Admins</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="icon-wrap green"><i class="fas fa-user"></i></div>
+                <div>
+                    <div class="stat-value" id="statRegularUsers">0</div>
+                    <div class="stat-label">Regular Users</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Registered On</th>
+                        <th>Last Updated</th>
+                        <th style="min-width:90px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                    <tr><td colspan="6"><div class="empty-state"><i class="fas fa-spinner fa-spin"></i> Loading users...</div></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"><i class="fas fa-check-circle"></i> <span id="toastMsg">Success</span></div>
+
+    <script src="js/auth-client.js"></script>
+    <script src="js/admin-common.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/users.js"></script>
+</body>
+</html>

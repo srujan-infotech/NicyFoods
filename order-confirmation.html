@@ -39,75 +39,170 @@
             --turmeric: #F5A623; --marigold: #FFC72C; --kumkum: #D7263D; --herbal: #5F7A4F;
         }
         * { box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background: var(--cream); color: var(--ink); }
-        h1, h2, h3, .font-display { font-family: 'Rozha One', serif; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Poppins', sans-serif; background: var(--cream); color: var(--ink); overflow-x: hidden; }
+        h1, h2, h3, .font-display { font-family: 'Rozha One', serif; letter-spacing: .01em; }
+
+        /* ===== HERO CELEBRATION BAND ===== */
+        .confirm-hero {
+            position: relative; overflow: hidden; background: linear-gradient(160deg, #241408, var(--jaggery) 55%, var(--kumkum));
+            padding: 4rem 1.5rem 6rem;
+        }
+        .confirm-hero-pattern {
+            position: absolute; inset: 0; pointer-events: none; z-index: 0;
+            background-image: radial-gradient(circle, rgba(255,255,255,.1) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .confirm-glow {
+            position: absolute; inset: -20%; pointer-events: none; z-index: 0;
+            background: radial-gradient(circle at 25% 25%, rgba(255,199,44,.45), transparent 55%),
+                        radial-gradient(circle at 80% 60%, rgba(215,38,61,.4), transparent 55%);
+            animation: glowDrift 12s ease-in-out infinite;
+        }
+        @keyframes glowDrift { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(3%,-2%) scale(1.08); } }
+
+        .confetti-piece {
+            position: absolute; top: -10%; border-radius: 2px; opacity: 0; pointer-events: none;
+            animation: confettiFall 3.2s ease-in forwards;
+        }
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            8% { opacity: 1; }
+            100% { transform: translateY(420px) rotate(340deg); opacity: 0; }
+        }
 
         .success-ring {
-            width: 92px; height: 92px; border-radius: 50%;
+            width: 100px; height: 100px; border-radius: 50%; position: relative; z-index: 2;
             background: linear-gradient(135deg, var(--herbal), #3f8a55);
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 16px 34px -10px rgba(95, 122, 79, .5);
+            box-shadow: 0 18px 40px -10px rgba(0,0,0,.5);
             animation: ringPop .6s cubic-bezier(.34,1.56,.64,1) both;
         }
-        @keyframes ringPop { from { transform: scale(.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .success-ring svg { width: 44px; height: 44px; }
-
-        .track-card { background: #FFFDF9; border-radius: 1.25rem; box-shadow: 0 10px 30px -16px rgba(92,58,37,.25); }
-        .cod-chip {
-            display: inline-flex; align-items: center; gap: .4rem; background: rgba(95,122,79,.08);
-            color: var(--herbal); font-weight: 700; font-size: .75rem; padding: .4rem .9rem; border-radius: 999px;
+        .success-ring::before {
+            content: ''; position: absolute; inset: -14px; border-radius: 50%;
+            border: 2px solid rgba(95,122,79,.5); animation: ringPulse 2s ease-out infinite;
         }
-        .step-track { display: flex; align-items: center; justify-content: space-between; margin: 1.5rem 0; }
-        .step { display: flex; flex-direction: column; align-items: center; gap: .4rem; flex: 1; position: relative; }
-        .step .dot { width: 30px; height: 30px; border-radius: 50%; background: #f1e6d8; color: #9a8a7c; display: flex; align-items: center; justify-content: center; font-size: .8rem; font-weight: 700; z-index: 1; }
-        .step.done .dot { background: var(--herbal); color: #fff; }
-        .step .label { font-size: .68rem; color: #9a8a7c; text-align: center; }
-        .step.done .label { color: var(--jaggery); font-weight: 600; }
-        .step::after { content: ''; position: absolute; top: 15px; left: 50%; width: 100%; height: 2px; background: #f1e6d8; z-index: 0; }
+        @keyframes ringPulse { 0% { transform: scale(.85); opacity: .9; } 100% { transform: scale(1.35); opacity: 0; } }
+        @keyframes ringPop { from { transform: scale(.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .success-ring svg { width: 48px; height: 48px; position: relative; z-index: 2; }
+
+        .cod-chip {
+            display: inline-flex; align-items: center; gap: .4rem; background: rgba(255,255,255,.1);
+            border: 1px solid rgba(255,255,255,.25); backdrop-filter: blur(3px);
+            color: var(--marigold); font-weight: 700; font-size: .75rem; padding: .45rem 1rem; border-radius: 999px;
+        }
+        .order-chip {
+            display: inline-flex; align-items: center; gap: .6rem; font-family: 'Poppins', monospace;
+            font-weight: 600; font-size: .85rem; background: rgba(255,255,255,.95); color: var(--jaggery);
+            padding: .55rem .6rem .55rem 1.1rem; border-radius: 999px; box-shadow: 0 8px 22px -8px rgba(0,0,0,.35);
+        }
+        .copy-btn {
+            display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px;
+            border-radius: 50%; border: none; background: var(--kumkum); color: #fff; cursor: pointer;
+            transition: transform .2s ease, background-color .2s ease; flex-shrink: 0;
+        }
+        .copy-btn:hover { background: var(--turmeric); transform: scale(1.06); }
+        .copy-btn.copied { background: var(--herbal); }
+
+        /* ===== CONTENT CARDS (pulled up over the hero) ===== */
+        .confirm-content { position: relative; z-index: 3; margin-top: -3.4rem; }
+        .track-card { background: #FFFDF9; border-radius: 1.25rem; box-shadow: 0 16px 40px -18px rgba(92,58,37,.3); border: 1px solid rgba(92,58,37,.05); }
+
+        .step-track { display: flex; align-items: flex-start; justify-content: space-between; margin: 1.5rem 0 .5rem; }
+        .step { display: flex; flex-direction: column; align-items: center; gap: .5rem; flex: 1; position: relative; }
+        .step .dot {
+            width: 34px; height: 34px; border-radius: 50%; background: #f1e6d8; color: #9a8a7c;
+            display: flex; align-items: center; justify-content: center; font-size: .85rem; z-index: 1;
+            transition: background-color .4s ease, color .4s ease, transform .3s ease;
+        }
+        .step.done .dot { background: linear-gradient(135deg, var(--herbal), #3f8a55); color: #fff; }
+        .step.current .dot { background: linear-gradient(135deg, var(--turmeric), var(--kumkum)); color: #fff; transform: scale(1.12); box-shadow: 0 0 0 4px rgba(245,166,35,.18); }
+        .step .label { font-size: .68rem; color: #9a8a7c; text-align: center; font-weight: 500; }
+        .step.done .label, .step.current .label { color: var(--jaggery); font-weight: 700; }
+        .step::after { content: ''; position: absolute; top: 17px; left: 50%; width: 100%; height: 3px; background: #f1e6d8; z-index: 0; border-radius: 2px; }
         .step:last-child::after { display: none; }
         .step.done::after { background: var(--herbal); }
-        .item-row { display: flex; justify-content: space-between; padding: .55rem 0; border-bottom: 1px dashed rgba(92,58,37,.1); font-size: .88rem; }
+
+        .item-row { display: flex; align-items: center; gap: .7rem; padding: .6rem 0; border-bottom: 1px dashed rgba(92,58,37,.1); font-size: .88rem; }
         .item-row:last-child { border-bottom: none; }
+        .item-thumb { width: 42px; height: 42px; border-radius: .55rem; overflow: hidden; flex-shrink: 0; background: rgba(255,199,44,.1); }
+        .item-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+        .price-details-box { background: #fffaf1; border: 1.5px solid rgba(92,58,37,.08); border-radius: .8rem; padding: .9rem 1rem; margin-top: .8rem; }
+        .price-details-box .pd-row { display: flex; justify-content: space-between; font-size: .85rem; color: #6b5a4d; margin-bottom: .45rem; }
+        .price-details-box .pd-row.pd-free { color: var(--herbal); font-weight: 600; }
+        .price-details-box .pd-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 1rem; color: var(--jaggery); padding-top: .55rem; border-top: 1.5px dashed rgba(92,58,37,.15); }
+
+        .info-row { display: flex; align-items: flex-start; gap: .6rem; margin-bottom: .8rem; }
+        .info-row i { color: var(--turmeric); margin-top: .2rem; width: 16px; text-align: center; }
+        .payment-badge { display: inline-flex; align-items: center; gap: .4rem; font-size: .74rem; font-weight: 700; padding: .3rem .7rem; border-radius: 999px; }
+        .payment-badge.cod { background: rgba(95,122,79,.1); color: var(--herbal); }
+        .payment-badge.online { background: rgba(215,38,61,.08); color: var(--kumkum); }
+
+        .action-btn { display: inline-flex; align-items: center; gap: .5rem; font-weight: 600; padding: .8rem 1.6rem; border-radius: .8rem; font-size: .88rem; transition: transform .2s ease, box-shadow .25s ease, background-color .2s ease; }
+        .action-btn.primary { background: linear-gradient(135deg, var(--turmeric), var(--kumkum)); color: #fff; box-shadow: 0 10px 24px -10px rgba(215,38,61,.5); }
+        .action-btn.primary:hover { transform: translateY(-2px); box-shadow: 0 14px 30px -10px rgba(215,38,61,.6); }
+        .action-btn.outline { border: 2px solid var(--kumkum); color: var(--kumkum); }
+        .action-btn.outline:hover { background: var(--kumkum); color: #fff; }
+        .action-btn.ghost { color: #8a7362; }
+        .action-btn.ghost:hover { color: var(--kumkum); }
+
         .skeleton { background: linear-gradient(90deg, #f3ede2 25%, #ece2d2 37%, #f3ede2 63%); background-size: 400% 100%; animation: shimmer 1.4s ease infinite; border-radius: .5rem; }
         @keyframes shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { animation: none !important; transition: none !important; }
+            .success-ring::before { display: none; }
+        }
     </style>
 </head>
 <body class="bg-cream">
 
     <div id="navbar-placeholder"></div>
 
-    <section class="max-w-3xl mx-auto px-6 py-16 md:py-20">
+    <!-- ============ CELEBRATION HERO ============ -->
+    <section class="confirm-hero">
+        <div class="confirm-hero-pattern"></div>
+        <div class="confirm-glow"></div>
+        <div id="confettiWrap" class="absolute inset-0 pointer-events-none z-[1]"></div>
+
+        <div class="relative z-[2] max-w-3xl mx-auto flex flex-col items-center text-center">
+            <div class="success-ring mb-5">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </div>
+            <h1 class="font-display text-3xl md:text-5xl text-cream mb-2">Order Placed!</h1>
+            <p class="text-cream/80 max-w-md">Thank you — we've received your order and will start packing it fresh, by hand.</p>
+
+            <div class="flex flex-wrap items-center justify-center gap-3 mt-5">
+                <span class="order-chip" id="orderNumberChip">
+                    <span class="skeleton" style="width:110px; height:14px; display:inline-block;"></span>
+                </span>
+                <span id="paymentChip" class="cod-chip"><i class="fas fa-hand-holding-dollar"></i> Pay on Delivery</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="confirm-content max-w-3xl mx-auto px-6 pb-16">
 
         <!-- Loading -->
-        <div id="loadingState" class="text-center py-10">
+        <div id="loadingState" class="track-card text-center py-14">
             <i class="fas fa-spinner fa-spin text-3xl text-turmeric"></i>
             <p class="mt-3 text-slate-400">Fetching your order...</p>
         </div>
 
         <!-- Error (no order param / not found) -->
-        <div id="errorState" class="hidden text-center py-10">
+        <div id="errorState" class="hidden track-card text-center py-14 px-6">
             <i class="fas fa-circle-exclamation text-4xl text-kumkum"></i>
             <h2 class="font-display text-2xl text-jaggery mt-4 mb-2">We couldn't find that order</h2>
             <p class="text-slate-500 mb-6">Double check the link, or head back and place a new order.</p>
-            <a href="product.html" class="inline-block bg-gradient-to-r from-turmeric to-kumkum text-white font-semibold px-7 py-3 rounded-xl">Browse Products</a>
+            <a href="product.html" class="action-btn primary">Browse Products</a>
         </div>
 
         <!-- Success content -->
         <div id="successState" class="hidden">
-            <div class="flex flex-col items-center text-center mb-8">
-                <div class="success-ring mb-5">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-                </div>
-                <h1 class="font-display text-3xl md:text-4xl text-jaggery mb-2">Order Placed!</h1>
-                <p class="text-slate-500 max-w-md">Thank you — we've received your order and will start packing it fresh, by hand.</p>
-                <p class="mt-4 font-mono text-sm bg-orange-50 text-jaggery px-4 py-1.5 rounded-full" id="orderNumberChip"></p>
-                <span class="cod-chip mt-4">
-                    <i class="fas fa-hand-holding-dollar"></i> Pay on Delivery
-                </span>
-            </div>
 
             <div class="track-card p-6 mb-6">
-                <h2 class="font-display text-lg text-jaggery mb-1">Order Status</h2>
+                <h2 class="font-display text-lg text-jaggery mb-1"><i class="fas fa-route text-turmeric mr-1"></i> Order Status</h2>
                 <div id="stepTrack" class="step-track"></div>
             </div>
 
@@ -115,25 +210,28 @@
                 <div class="track-card p-6">
                     <h2 class="font-display text-lg text-jaggery mb-3"><i class="fas fa-box text-turmeric mr-1"></i> Items</h2>
                     <div id="itemsList"></div>
-                    <div class="pt-3 mt-2 border-t border-jaggery/10 flex justify-between font-semibold">
-                        <span>Total (courier confirmed separately)</span>
-                        <span id="orderTotal" class="text-kumkum"></span>
+                    <div class="price-details-box">
+                        <div class="pd-row"><span id="orderItemLabel">Price</span><span id="orderSubtotal">₹0</span></div>
+                        <div class="pd-row pd-free"><span>Delivery Charges</span><span>As confirmed by our team</span></div>
+                        <div class="pd-total"><span>Total Payable</span><span id="orderTotal">₹0</span></div>
                     </div>
                 </div>
                 <div class="track-card p-6">
                     <h2 class="font-display text-lg text-jaggery mb-3"><i class="fas fa-location-dot text-turmeric mr-1"></i> Delivering To</h2>
-                    <p class="text-sm font-semibold text-jaggery" id="custName"></p>
-                    <p class="text-sm text-slate-500" id="custPhone"></p>
-                    <p class="text-sm text-slate-500 mt-2 leading-relaxed" id="shipAddress"></p>
+                    <div class="info-row"><i class="fas fa-user"></i><div><p class="text-sm font-semibold text-jaggery" id="custName"></p></div></div>
+                    <div class="info-row"><i class="fas fa-phone"></i><div><p class="text-sm text-slate-500" id="custPhone"></p></div></div>
+                    <div class="info-row"><i class="fas fa-map-pin"></i><div><p class="text-sm text-slate-500 leading-relaxed" id="shipAddress"></p></div></div>
+                    <div class="info-row"><i class="fas fa-wallet"></i><div id="paymentMethodBadge"></div></div>
                 </div>
             </div>
 
             <div class="flex flex-wrap items-center justify-center gap-4">
-                <a href="product.html" class="inline-block border-2 border-kumkum text-kumkum font-semibold px-7 py-3 rounded-xl hover:bg-kumkum hover:text-white transition-colors">Continue Shopping</a>
-                <a href="mailto:nicyfoods5@gmail.com" class="inline-block text-slate-500 text-sm underline">Need help with this order?</a>
+                <a href="product.html" class="action-btn primary"><i class="fas fa-bag-shopping"></i> Continue Shopping</a>
+                <button type="button" onclick="window.print()" class="action-btn outline"><i class="fas fa-print"></i> Print / Save Receipt</button>
+                <a href="mailto:nicyfoods5@gmail.com" class="action-btn ghost"><i class="fas fa-circle-question"></i> Need help with this order?</a>
             </div>
         </div>
-    </section>
+    </div>
 
     <div id="footer-placeholder"></div>
 
@@ -141,6 +239,7 @@
     <script src="js/footer.js"></script>
 
     <script>
+        // Keep this in sync with the API_BASE used on cart.html
         const API_BASE = 'https://nicyfoods.srujaninfotech.com';
         const TRACK_API_URL = API_BASE + '/api/orders/track/';
 
@@ -149,27 +248,82 @@
             pending: 'Placed', confirmed: 'Confirmed', processing: 'Preparing',
             shipped: 'Shipped', delivered: 'Delivered', cancelled: 'Cancelled',
         };
+        const STATUS_ICONS = {
+            pending: 'fa-cart-shopping', confirmed: 'fa-check', processing: 'fa-kitchen-set',
+            shipped: 'fa-truck-fast', delivered: 'fa-house',
+        };
+        const PAYMENT_LABELS = {
+            cod: { text: 'Cash / UPI on Delivery', cls: 'cod', icon: 'fa-hand-holding-dollar' },
+            online_upi: { text: 'Paid Online · UPI', cls: 'online', icon: 'fa-mobile-screen' },
+            online_card: { text: 'Paid Online · Card', cls: 'online', icon: 'fa-credit-card' },
+            online_netbanking: { text: 'Paid Online · Netbanking', cls: 'online', icon: 'fa-building-columns' },
+        };
 
         function money(n) { return '₹' + Math.round(n || 0).toLocaleString('en-IN'); }
 
         function renderSteps(currentStatus) {
-            const wrap = document.getElementById('stepTrack');
+            var wrap = document.getElementById('stepTrack');
             if (currentStatus === 'cancelled') {
-                wrap.innerHTML = `<p class="text-kumkum font-semibold text-sm w-full text-center">This order was cancelled.</p>`;
+                wrap.innerHTML = '<p class="text-kumkum font-semibold text-sm w-full text-center">This order was cancelled.</p>';
                 return;
             }
-            const currentIndex = STATUS_STEPS.indexOf(currentStatus);
-            wrap.innerHTML = STATUS_STEPS.map((s, i) => `
-                <div class="step ${i <= currentIndex ? 'done' : ''}">
-                    <div class="dot">${i <= currentIndex ? '<i class="fas fa-check" style="font-size:.6rem;"></i>' : (i + 1)}</div>
-                    <div class="label">${STATUS_LABELS[s]}</div>
-                </div>
-            `).join('');
+            var currentIndex = STATUS_STEPS.indexOf(currentStatus);
+            wrap.innerHTML = STATUS_STEPS.map(function(s, i) {
+                var stateClass = i < currentIndex ? 'done' : (i === currentIndex ? 'current' : '');
+                var iconHtml = i < currentIndex
+                    ? '<i class="fas fa-check" style="font-size:.7rem;"></i>'
+                    : '<i class="fas ' + (STATUS_ICONS[s] || 'fa-circle') + '" style="font-size:.75rem;"></i>';
+                return '<div class="step ' + stateClass + '">' +
+                    '<div class="dot">' + iconHtml + '</div>' +
+                    '<div class="label">' + STATUS_LABELS[s] + '</div>' +
+                    '</div>';
+            }).join('');
+        }
+
+        function renderPaymentUI(paymentMethod) {
+            var info = PAYMENT_LABELS[paymentMethod] || PAYMENT_LABELS.cod;
+            var chip = document.getElementById('paymentChip');
+            chip.className = info.cls === 'online' ? 'cod-chip' : 'cod-chip'; // same pill shape, color set via icon/text
+            chip.innerHTML = '<i class="fas ' + info.icon + '"></i> ' + info.text;
+
+            var badge = document.getElementById('paymentMethodBadge');
+            badge.innerHTML = '<span class="payment-badge ' + info.cls + '"><i class="fas ' + info.icon + '"></i>' + info.text + '</span>';
+        }
+
+        function copyOrderNumber(orderNumber, btn) {
+            navigator.clipboard.writeText(orderNumber).then(function() {
+                btn.classList.add('copied');
+                btn.innerHTML = '<i class="fas fa-check" style="font-size:.7rem;"></i>';
+                setTimeout(function() {
+                    btn.classList.remove('copied');
+                    btn.innerHTML = '<i class="fas fa-copy" style="font-size:.7rem;"></i>';
+                }, 1500);
+            }).catch(function() { /* clipboard not available, ignore silently */ });
+        }
+        window.copyOrderNumber = copyOrderNumber;
+
+        function launchConfetti() {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            var wrap = document.getElementById('confettiWrap');
+            var colors = ['#F5A623', '#FFC72C', '#D7263D', '#5F7A4F', '#FFFFFF'];
+            for (var i = 0; i < 26; i++) {
+                var piece = document.createElement('span');
+                piece.className = 'confetti-piece';
+                var size = 5 + Math.random() * 6;
+                piece.style.width = size + 'px';
+                piece.style.height = (size * 0.4) + 'px';
+                piece.style.left = (Math.random() * 100) + '%';
+                piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+                piece.style.animationDelay = (Math.random() * 1.2) + 's';
+                piece.style.animationDuration = (2.4 + Math.random() * 1.4) + 's';
+                wrap.appendChild(piece);
+            }
+            setTimeout(function() { wrap.innerHTML = ''; }, 4500);
         }
 
         async function loadOrder() {
-            const params = new URLSearchParams(window.location.search);
-            const orderNumber = params.get('order');
+            var params = new URLSearchParams(window.location.search);
+            var orderNumber = params.get('order');
 
             if (!orderNumber) {
                 document.getElementById('loadingState').classList.add('hidden');
@@ -178,32 +332,49 @@
             }
 
             try {
-                const res = await fetch(TRACK_API_URL + encodeURIComponent(orderNumber));
+                var res = await fetch(TRACK_API_URL + encodeURIComponent(orderNumber));
                 if (!res.ok) throw new Error('Not found');
-                const json = await res.json();
+                var json = await res.json();
                 if (!json.success || !json.data) throw new Error('Not found');
 
-                const order = json.data;
+                var order = json.data;
 
-                document.getElementById('orderNumberChip').textContent = 'Order #' + order.orderNumber;
+                document.getElementById('orderNumberChip').innerHTML =
+                    'Order #' + order.orderNumber +
+                    '<button type="button" class="copy-btn" title="Copy order number" onclick="copyOrderNumber(\'' + order.orderNumber + '\', this)">' +
+                    '<i class="fas fa-copy" style="font-size:.7rem;"></i></button>';
+
                 renderSteps(order.status);
+                renderPaymentUI(order.paymentMethod || 'cod');
 
-                document.getElementById('itemsList').innerHTML = (order.items || []).map(item => `
-                    <div class="item-row">
-                        <span>${item.name} ${item.weightLabel ? '(' + item.weightLabel + ')' : ''} × ${item.qty}</span>
-                        <span class="font-semibold">${money(item.price * item.qty)}</span>
-                    </div>
-                `).join('');
+                var items = order.items || [];
+                document.getElementById('itemsList').innerHTML = items.map(function(item) {
+                    return '<div class="item-row">' +
+                        '<div class="item-thumb">' +
+                        (item.image ? '<img src="' + item.image + '" alt="' + (item.name || '') + '">' : '') +
+                        '</div>' +
+                        '<div class="flex-1">' + (item.name || '') +
+                        (item.weightLabel ? ' <span class="text-slate-400">(' + item.weightLabel + ')</span>' : '') +
+                        ' × ' + item.qty + '</div>' +
+                        '<span class="font-semibold">' + money(item.price * item.qty) + '</span>' +
+                        '</div>';
+                }).join('');
+
+                var totalQty = items.reduce(function(sum, i) { return sum + (i.qty || 1); }, 0);
+                document.getElementById('orderItemLabel').textContent = 'Price (' + totalQty + ' item' + (totalQty === 1 ? '' : 's') + ')';
+                document.getElementById('orderSubtotal').textContent = money(order.totalAmount);
                 document.getElementById('orderTotal').textContent = money(order.totalAmount);
 
-                document.getElementById('custName').textContent = order.customer?.name || '-';
-                document.getElementById('custPhone').textContent = order.customer?.phone || '-';
-                const a = order.shippingAddress || {};
+                document.getElementById('custName').textContent = (order.customer && order.customer.name) || '-';
+                document.getElementById('custPhone').textContent = (order.customer && order.customer.phone) || '-';
+                var a = order.shippingAddress || {};
                 document.getElementById('shipAddress').innerHTML =
-                    `${a.line1 || ''}${a.line2 ? ', ' + a.line2 : ''}<br>${a.city || ''}, ${a.state || ''} - ${a.pincode || ''}`;
+                    (a.line1 || '') + (a.line2 ? ', ' + a.line2 : '') + '<br>' +
+                    (a.city || '') + ', ' + (a.state || '') + ' - ' + (a.pincode || '');
 
                 document.getElementById('loadingState').classList.add('hidden');
                 document.getElementById('successState').classList.remove('hidden');
+                launchConfetti();
             } catch (e) {
                 console.warn('Could not load order:', e.message);
                 document.getElementById('loadingState').classList.add('hidden');

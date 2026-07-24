@@ -203,9 +203,24 @@
         .cart-row::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: linear-gradient(180deg, var(--turmeric), var(--kumkum)); opacity: 0; transition: opacity .3s ease; }
         .cart-row:hover::before { opacity: 1; }
         .cart-row.removing { opacity: 0; transform: translateX(24px) scale(.98); transition: opacity .3s ease, transform .3s ease; }
-        .cart-thumb { position: relative; width: 84px; height: 84px; border-radius: 14px; overflow: hidden; flex-shrink: 0; box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .6); }
-        .cart-thumb img { transition: transform .5s cubic-bezier(.16, .84, .44, 1); }
+        .cart-thumb {
+            position: relative; width: 84px; height: 84px; border-radius: 14px; overflow: hidden; flex-shrink: 0;
+            box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .6), 0 4px 14px -6px rgba(92, 58, 37, .25);
+            background: linear-gradient(135deg, #FFF3D6, #FCE4C6);
+        }
+        .cart-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s cubic-bezier(.16, .84, .44, 1), opacity .3s ease; opacity: 0; }
+        .cart-thumb img.loaded { opacity: 1; }
         .cart-row:hover .cart-thumb img { transform: scale(1.08); }
+        .cart-thumb-fallback {
+            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, var(--turmeric), var(--kumkum)); color: #fff;
+            font-family: 'Rozha One', serif; font-size: 2rem; font-weight: 400; letter-spacing: .02em;
+        }
+        .cart-thumb-skeleton {
+            position: absolute; inset: 0; background: linear-gradient(90deg, #FCE4C6 25%, #FFF3D6 37%, #FCE4C6 63%);
+            background-size: 400% 100%; animation: thumbShimmer 1.4s ease infinite;
+        }
+        @keyframes thumbShimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
         .qty-stepper { display: flex; align-items: center; border: 1.5px solid rgba(92, 58, 37, .1); border-radius: .7rem; overflow: hidden; background: #fff; }
         .qty-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: var(--jaggery); font-weight: 700; transition: background-color .2s ease, color .2s ease; border: none; background: transparent; cursor: pointer; }
         .qty-btn:hover { background: var(--kumkum); color: #fff; }
@@ -234,17 +249,30 @@
         @keyframes sway { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
 
         /* ===== CHECKOUT MODAL ===== */
+        /* !important on the core positioning props is intentional: this modal must
+           always float above the navbar and any other page CSS regardless of load
+           order, so it can't silently get pushed into normal document flow. */
         .modal-overlay {
-            position: fixed; inset: 0; background: rgba(26, 17, 12, 0.55); z-index: 1000; display: none;
-            align-items: center; justify-content: center; backdrop-filter: blur(4px); padding: 1rem;
+            position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+            width: 100vw !important; height: 100vh !important;
+            background: rgba(20, 12, 7, 0.72) !important; z-index: 2147483000 !important; display: none !important;
+            align-items: center; justify-content: center; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+            padding: 1rem; margin: 0 !important;
         }
-        .modal-overlay.open { display: flex; }
+        .modal-overlay.open { display: flex !important; }
         .modal-box {
-            background: #FFFDF9; border-radius: 1.4rem; max-width: 560px; width: 100%; max-height: 92vh;
-            overflow-y: auto; padding: 1.8rem 2rem; box-shadow: 0 32px 64px -20px rgba(26, 17, 12, 0.5);
-            animation: modalIn 0.3s ease;
+            position: relative; background: #FFFDF9; border-radius: 1.4rem; max-width: 640px; width: 100%; max-height: 92vh;
+            overflow-y: auto; padding: 1.8rem 2rem; box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.55);
+            animation: modalIn 0.3s ease; z-index: 1;
         }
         @keyframes modalIn { from { transform: scale(0.95) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+        /* Mobile: slide up as a bottom sheet, closer to a native-app checkout feel */
+        @media (max-width: 640px) {
+            .modal-overlay { align-items: flex-end; padding: 0; }
+            .modal-box { max-width: 100%; max-height: 90vh; border-radius: 1.4rem 1.4rem 0 0; animation: sheetIn 0.32s cubic-bezier(.16,.84,.44,1); padding: 1.5rem 1.25rem 1.75rem; }
+            .modal-box::before { content: ''; position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 40px; height: 4px; border-radius: 999px; background: rgba(92,58,37,.18); }
+            @keyframes sheetIn { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        }
         .modal-box .modal-header {
             display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.2rem;
             padding-bottom: 0.75rem; border-bottom: 2px solid rgba(215, 38, 61, 0.08);
@@ -265,6 +293,63 @@
         #checkoutStatus { font-size: 0.8rem; margin-top: 0.6rem; min-height: 1.2em; }
         #checkoutStatus.error { color: var(--kumkum); }
         #checkoutStatus.loading { color: var(--turmeric); }
+
+        /* ===== FLIPKART-STYLE CHECKOUT STEPPER ===== */
+        .checkout-stepper { display: flex; align-items: stretch; margin-bottom: 1.4rem; border-radius: .7rem; overflow: hidden; background: #f3ece1; }
+        .checkout-step { flex: 1; display: flex; align-items: center; gap: .5rem; padding: .7rem .6rem; font-size: .72rem; font-weight: 700; letter-spacing: .02em; color: #a8988a; position: relative; }
+        .checkout-step + .checkout-step::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 1px; height: 60%; background: rgba(92,58,37,.12); }
+        .checkout-step .step-num { width: 22px; height: 22px; border-radius: 50%; background: #e4d9c8; color: #8a7362; display: flex; align-items: center; justify-content: center; font-size: .7rem; flex-shrink: 0; transition: background-color .25s ease, color .25s ease; }
+        .checkout-step.active { color: var(--jaggery); background: linear-gradient(180deg, rgba(255,199,44,.16), rgba(255,199,44,.04)); }
+        .checkout-step.active .step-num { background: var(--kumkum); color: #fff; }
+        .checkout-step.done { color: var(--herbal); }
+        .checkout-step.done .step-num { background: var(--herbal); color: #fff; }
+        .checkout-step.done .step-num::before { content: '\2713'; }
+        .checkout-panel { display: none; }
+        .checkout-panel.active { display: block; animation: fadeUp .35s ease both; }
+
+        .addr-card { border: 1.5px solid rgba(92,58,37,.14); border-radius: .8rem; padding: .9rem 1rem; margin-bottom: .7rem; cursor: pointer; transition: border-color .2s ease, background-color .2s ease; position: relative; }
+        .addr-card:hover { border-color: rgba(215,38,61,.4); }
+        .addr-card.selected { border-color: var(--kumkum); background: rgba(215,38,61,.04); }
+        .addr-card .addr-radio { position: absolute; top: 1rem; right: 1rem; width: 18px; height: 18px; border-radius: 50%; border: 2px solid #c9b8a8; }
+        .addr-card.selected .addr-radio { border-color: var(--kumkum); }
+        .addr-card.selected .addr-radio::after { content: ''; display: block; width: 10px; height: 10px; border-radius: 50%; background: var(--kumkum); margin: 2px; }
+        .addr-name-row { font-weight: 700; color: var(--jaggery); font-size: .9rem; margin-bottom: .15rem; padding-right: 1.6rem; }
+        .addr-tag { display: inline-block; font-size: .6rem; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; color: var(--herbal); background: rgba(95,122,79,.1); padding: .1rem .45rem; border-radius: 999px; margin-left: .4rem; }
+        .addr-detail { font-size: .8rem; color: #6b5a4d; line-height: 1.5; }
+
+        .review-item-row { display: flex; align-items: center; gap: .75rem; padding: .6rem 0; border-bottom: 1px dashed rgba(92,58,37,.12); }
+        .review-item-row:last-child { border-bottom: none; }
+        .review-thumb { position: relative; width: 48px; height: 48px; border-radius: .5rem; overflow: hidden; flex-shrink: 0; background: linear-gradient(135deg, #FFF3D6, #FCE4C6); }
+        .review-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .review-thumb-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--turmeric), var(--kumkum)); color: #fff; font-size: .8rem; font-weight: 700; }
+
+        .price-details-box { background: #fff; border: 1.5px solid rgba(92,58,37,.1); border-radius: .8rem; padding: 1rem 1.1rem; margin-top: 1rem; }
+        .price-details-box .pd-title { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #a8988a; margin-bottom: .7rem; }
+        .price-details-box .pd-row { display: flex; justify-content: space-between; font-size: .85rem; color: #6b5a4d; margin-bottom: .5rem; }
+        .price-details-box .pd-row.pd-free { color: var(--herbal); font-weight: 600; }
+        .price-details-box .pd-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 1rem; color: var(--jaggery); padding-top: .6rem; border-top: 1.5px dashed rgba(92,58,37,.15); }
+        .pd-savings { font-size: .75rem; color: var(--herbal); font-weight: 600; margin-top: .55rem; background: rgba(95,122,79,.08); padding: .4rem .6rem; border-radius: .5rem; }
+
+        .pay-method-card { border: 1.5px solid rgba(92,58,37,.14); border-radius: .8rem; padding: .9rem 1rem; margin-bottom: .7rem; cursor: pointer; transition: border-color .2s ease, background-color .2s ease; }
+        .pay-method-card:hover { border-color: rgba(215,38,61,.4); }
+        .pay-method-card.selected { border-color: var(--kumkum); background: rgba(215,38,61,.04); }
+        .pay-method-head { display: flex; align-items: center; gap: .6rem; font-weight: 700; color: var(--jaggery); font-size: .88rem; }
+        .pay-method-head .pay-radio { width: 18px; height: 18px; border-radius: 50%; border: 2px solid #c9b8a8; flex-shrink: 0; }
+        .pay-method-card.selected .pay-radio { border-color: var(--kumkum); }
+        .pay-method-card.selected .pay-radio::after { content: ''; display: block; width: 10px; height: 10px; border-radius: 50%; background: var(--kumkum); margin: 2px; }
+        .pay-method-sub { font-size: .74rem; color: #9a8a7c; margin-left: 1.7rem; margin-top: .15rem; }
+        .pay-online-options { display: none; margin: .8rem 0 .2rem 1.7rem; gap: .5rem; flex-wrap: wrap; }
+        .pay-method-card.selected .pay-online-options.show { display: flex; }
+        .pay-tab { font-size: .74rem; font-weight: 600; padding: .4rem .8rem; border-radius: 999px; border: 1.5px solid rgba(92,58,37,.14); color: #6b5a4d; cursor: pointer; background: #fff; }
+        .pay-tab.active { border-color: var(--kumkum); color: var(--kumkum); background: rgba(215,38,61,.06); }
+        .pay-online-fields { margin: .7rem 0 0 1.7rem; }
+        .pay-online-fields input { border: 1.5px solid rgba(92,58,37,.12); border-radius: .6rem; padding: .55rem .8rem; width: 100%; font-size: .85rem; margin-bottom: .55rem; }
+        .pay-online-fields input:focus { outline: none; border-color: var(--kumkum); }
+        .mock-gateway-note { font-size: .68rem; color: #b08a3f; background: rgba(245,166,35,.1); padding: .5rem .7rem; border-radius: .5rem; margin: .5rem 0 0 1.7rem; }
+
+        .checkout-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 1.3rem; padding-top: 1rem; border-top: 1px solid rgba(92,58,37,.08); }
+        .btn-back { font-weight: 600; background: transparent; border: none; cursor: pointer; padding: .5rem .9rem; color: #8a7362; font-size: .85rem; }
+        .btn-back:hover { color: var(--kumkum); }
 
         #chatToggleBtn {
             position: fixed; bottom: 24px; right: 24px; z-index: 3000; width: 60px; height: 60px; border-radius: 50%;
@@ -453,31 +538,31 @@
 
             <!-- Order summary -->
             <aside class="summary-card rounded-2xl p-6 lg:sticky lg:top-24 border border-slate-100">
-                <h2 class="font-display text-xl text-jaggery mb-5">Order Summary</h2>
+                <h2 class="font-display text-xl text-jaggery mb-5">Price Details</h2>
                 <div class="flex items-center justify-between text-sm text-slate-500 mb-2">
-                    <span>Items</span>
-                    <span id="summaryItemCount">0</span>
-                </div>
-                <div class="flex items-center justify-between text-sm text-slate-500 mb-4 pb-4 border-b border-jaggery/8">
-                    <span>Subtotal</span>
+                    <span id="summaryItemLabel">Price (0 items)</span>
                     <span id="summarySubtotal" class="font-semibold text-jaggery">₹0</span>
                 </div>
+                <div class="flex items-center justify-between text-sm mb-4 pb-4 border-b border-jaggery/8">
+                    <span class="text-slate-500">Delivery Charges</span>
+                    <span class="font-semibold text-herbal">Calculated next step</span>
+                </div>
                 <div class="flex items-center justify-between mb-6">
-                    <span class="font-semibold text-jaggery">Total</span>
+                    <span class="font-semibold text-jaggery">Total Amount</span>
                     <span id="summaryTotal" class="font-display text-2xl text-kumkum">₹0</span>
                 </div>
 
                 <span class="cod-badge">
-                    <i class="fas fa-hand-holding-dollar"></i> Cash / UPI on Delivery
+                    <i class="fas fa-hand-holding-dollar"></i> COD &amp; Online Payment Available
                 </span>
 
-                <!-- Opens the checkout details modal — order is placed directly, no WhatsApp step -->
+                <!-- Opens the Flipkart-style multi-step checkout: Address -> Order Review -> Payment -->
                 <button type="button" id="checkoutBtn"
                    class="shimmer-btn flex items-center justify-center gap-2 w-full bg-gradient-to-r from-turmeric to-kumkum text-white font-semibold py-3.5 rounded-xl hover:opacity-95 transition-opacity">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
-                    Place Order
+                    Proceed to Checkout
                 </button>
-                <p class="text-xs text-slate-400 text-center mt-3">Courier charges are added based on weight and confirmed on your order confirmation page.</p>
+                <p class="text-xs text-slate-400 text-center mt-3">Courier charges are added based on weight and confirmed in the checkout order review step.</p>
 
                 <div class="trust-strip justify-center mt-5 pt-5 border-t border-jaggery/8">
                     <span class="trust-chip">
@@ -516,63 +601,157 @@
     <div id="footer-placeholder"></div>
 
     <!-- ============================================================ -->
-    <!-- ===== CHECKOUT DETAILS MODAL ===== -->
+    <!-- ===== FLIPKART-STYLE MULTI-STEP CHECKOUT MODAL ===== -->
+    <!-- Step 1: Delivery Address  Step 2: Order Review (price details)   -->
+    <!-- Step 3: Payment Options (COD / Online: UPI, Card, Netbanking)     -->
     <!-- ============================================================ -->
     <div id="checkoutModal" class="modal-overlay">
         <div class="modal-box">
             <div class="modal-header">
-                <h2><i class="fas fa-truck-fast" style="color:var(--kumkum); margin-right:8px;"></i>Delivery Details</h2>
+                <h2><i class="fas fa-truck-fast" style="color:var(--kumkum); margin-right:8px;"></i>Checkout</h2>
                 <button class="modal-close" onclick="closeCheckoutModal()"><i class="fas fa-times"></i></button>
             </div>
-            <p class="text-sm text-slate-500 mb-4">We need these details to deliver your order. You'll pay by cash or UPI when it arrives — no payment needed now.</p>
-            <form id="checkoutForm">
-                <div class="field-row">
-                    <div class="field-group">
-                        <label>Full Name</label>
-                        <input id="custName" required placeholder="Your name" />
+
+            <!-- Stepper -->
+            <div class="checkout-stepper">
+                <div class="checkout-step" data-step-indicator="1"><span class="step-num">1</span> Delivery Address</div>
+                <div class="checkout-step" data-step-indicator="2"><span class="step-num">2</span> Order Review</div>
+                <div class="checkout-step" data-step-indicator="3"><span class="step-num">3</span> Payment Options</div>
+            </div>
+
+            <!-- ===== STEP 1: ADDRESS ===== -->
+            <div class="checkout-panel" data-panel="1">
+                <div id="savedAddressWrap" style="display:none;">
+                    <p class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-2">Saved Address</p>
+                    <div id="savedAddressCard" class="addr-card" onclick="selectSavedAddress()">
+                        <div class="addr-radio"></div>
+                        <div class="addr-name-row" id="savedAddrName"></div>
+                        <div class="addr-detail" id="savedAddrDetail"></div>
+                    </div>
+                    <button type="button" id="addNewAddressBtn" class="text-sm font-semibold text-kumkum hover:underline mb-4" onclick="showNewAddressForm()">
+                        <i class="fas fa-plus mr-1"></i>Add a new address
+                    </button>
+                </div>
+
+                <form id="checkoutForm">
+                    <div class="field-row">
+                        <div class="field-group">
+                            <label>Full Name</label>
+                            <input id="custName" required placeholder="Your name" />
+                        </div>
+                        <div class="field-group">
+                            <label>Phone Number</label>
+                            <input id="custPhone" type="tel" required placeholder="10-digit mobile number" />
+                        </div>
                     </div>
                     <div class="field-group">
-                        <label>Phone Number</label>
-                        <input id="custPhone" type="tel" required placeholder="10-digit mobile number" />
-                    </div>
-                </div>
-                <div class="field-group">
-                    <label>Email <span style="font-weight:400; text-transform:none; color:#9a8a7c;">(optional)</span></label>
-                    <input id="custEmail" type="email" placeholder="you@example.com" />
-                </div>
-                <div class="field-group">
-                    <label>Address Line 1</label>
-                    <input id="addrLine1" required placeholder="House/Flat no., Street" />
-                </div>
-                <div class="field-group">
-                    <label>Address Line 2 <span style="font-weight:400; text-transform:none; color:#9a8a7c;">(optional)</span></label>
-                    <input id="addrLine2" placeholder="Landmark, area" />
-                </div>
-                <div class="field-row">
-                    <div class="field-group">
-                        <label>City</label>
-                        <input id="addrCity" required placeholder="City" />
+                        <label>Email <span style="font-weight:400; text-transform:none; color:#9a8a7c;">(optional)</span></label>
+                        <input id="custEmail" type="email" placeholder="you@example.com" />
                     </div>
                     <div class="field-group">
-                        <label>State</label>
-                        <input id="addrState" required placeholder="State" />
+                        <label>Address Line 1</label>
+                        <input id="addrLine1" required placeholder="House/Flat no., Street" />
                     </div>
+                    <div class="field-group">
+                        <label>Address Line 2 <span style="font-weight:400; text-transform:none; color:#9a8a7c;">(optional)</span></label>
+                        <input id="addrLine2" placeholder="Landmark, area" />
+                    </div>
+                    <div class="field-row">
+                        <div class="field-group">
+                            <label>City</label>
+                            <input id="addrCity" required placeholder="City" />
+                        </div>
+                        <div class="field-group">
+                            <label>State</label>
+                            <input id="addrState" required placeholder="State" />
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label>Pincode</label>
+                        <input id="addrPincode" required inputmode="numeric" placeholder="6-digit pincode" />
+                    </div>
+                </form>
+
+                <div class="checkout-nav">
+                    <span></span>
+                    <button type="button" class="shimmer-btn bg-gradient-to-r from-turmeric to-kumkum text-white font-semibold px-6 py-2.5 rounded-xl" onclick="goToOrderReview()">
+                        Deliver Here <span>&rarr;</span>
+                    </button>
                 </div>
-                <div class="field-group">
-                    <label>Pincode</label>
-                    <input id="addrPincode" required inputmode="numeric" placeholder="6-digit pincode" />
+            </div>
+
+            <!-- ===== STEP 2: ORDER REVIEW ===== -->
+            <div class="checkout-panel" data-panel="2">
+                <p class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-2">Delivering to</p>
+                <div class="addr-detail bg-white border border-jaggery/10 rounded-xl p-3 mb-4" id="reviewAddressBlock"></div>
+
+                <p class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-2">Items</p>
+                <div id="reviewItemsList" class="mb-2"></div>
+
+                <div class="price-details-box">
+                    <p class="pd-title">Price Details</p>
+                    <div class="pd-row"><span id="reviewItemLabel">Price (0 items)</span><span id="reviewSubtotal">₹0</span></div>
+                    <div class="pd-row pd-free"><span>Delivery Charges</span><span>Confirmed on order slip</span></div>
+                    <div class="pd-total"><span>Total Payable</span><span id="reviewTotal">₹0</span></div>
+                    <p class="pd-savings"><i class="fas fa-tag mr-1"></i>Final courier charge (if any) will be shown on your order confirmation page.</p>
+                </div>
+
+                <div class="checkout-nav">
+                    <button type="button" class="btn-back" onclick="goToStep(1)"><i class="fas fa-arrow-left mr-1"></i>Back</button>
+                    <button type="button" class="shimmer-btn bg-gradient-to-r from-turmeric to-kumkum text-white font-semibold px-6 py-2.5 rounded-xl" onclick="goToStep(3)">
+                        Continue <span>&rarr;</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ===== STEP 3: PAYMENT ===== -->
+            <div class="checkout-panel" data-panel="3">
+                <p class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-3">Select Payment Method</p>
+
+                <div class="pay-method-card selected" data-pay-method="cod" onclick="selectPayMethod('cod')">
+                    <div class="pay-method-head"><span class="pay-radio"></span><i class="fas fa-hand-holding-dollar" style="color:var(--herbal);"></i> Cash / UPI on Delivery</div>
+                    <p class="pay-method-sub">Pay in cash or by UPI when your order arrives at your door.</p>
+                </div>
+
+                <div class="pay-method-card" data-pay-method="online" onclick="selectPayMethod('online')">
+                    <div class="pay-method-head"><span class="pay-radio"></span><i class="fas fa-credit-card" style="color:var(--kumkum);"></i> Pay Online</div>
+                    <p class="pay-method-sub">UPI, Credit/Debit Card or Netbanking — pay now, securely.</p>
+
+                    <div class="pay-online-options" id="onlineSubTabs">
+                        <span class="pay-tab active" data-pay-sub="upi" onclick="event.stopPropagation(); selectPaySub('upi')">UPI</span>
+                        <span class="pay-tab" data-pay-sub="card" onclick="event.stopPropagation(); selectPaySub('card')">Card</span>
+                        <span class="pay-tab" data-pay-sub="netbanking" onclick="event.stopPropagation(); selectPaySub('netbanking')">Netbanking</span>
+                    </div>
+
+                    <div class="pay-online-fields" id="payFieldsUpi">
+                        <input type="text" placeholder="Enter UPI ID (e.g. name@upi)" id="upiId" onclick="event.stopPropagation();" />
+                    </div>
+                    <div class="pay-online-fields" id="payFieldsCard" style="display:none;">
+                        <input type="text" placeholder="Card Number" id="cardNumber" onclick="event.stopPropagation();" />
+                        <div class="field-row">
+                            <input type="text" placeholder="MM/YY" id="cardExpiry" onclick="event.stopPropagation();" />
+                            <input type="text" placeholder="CVV" id="cardCvv" onclick="event.stopPropagation();" />
+                        </div>
+                    </div>
+                    <div class="pay-online-fields" id="payFieldsNetbanking" style="display:none;">
+                        <input type="text" placeholder="Select Bank (e.g. HDFC, SBI, ICICI)" id="netbankBank" onclick="event.stopPropagation();" />
+                    </div>
+
+                    <p class="mock-gateway-note" id="onlineSubTabsNote">
+                        <i class="fas fa-circle-info mr-1"></i>Demo checkout — no real payment gateway is connected yet, so no amount will actually be charged.
+                    </p>
                 </div>
 
                 <p id="checkoutStatus"></p>
 
-                <div style="display:flex; justify-content:flex-end; gap:0.8rem; padding-top:0.8rem; border-top:1px solid rgba(92,58,37,0.06); margin-top:0.4rem;">
-                    <button type="button" onclick="closeCheckoutModal()" style="font-weight:500; background:transparent; border:none; cursor:pointer; padding:0.4rem 0.8rem; color:#8a7362;">Cancel</button>
-                    <button type="submit" id="checkoutSubmitBtn" class="shimmer-btn flex items-center gap-2 bg-gradient-to-r from-turmeric to-kumkum text-white font-semibold px-6 py-2.5 rounded-xl">
+                <div class="checkout-nav">
+                    <button type="button" class="btn-back" onclick="goToStep(2)"><i class="fas fa-arrow-left mr-1"></i>Back</button>
+                    <button type="button" id="checkoutSubmitBtn" class="shimmer-btn flex items-center gap-2 bg-gradient-to-r from-turmeric to-kumkum text-white font-semibold px-6 py-2.5 rounded-xl" onclick="submitOrder()">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
-                        Place Order
+                        <span id="checkoutSubmitLabel">Place Order</span>
                     </button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 
@@ -624,8 +803,20 @@
     <script>
         // ---------- CONFIG ----------
         const API_BASE = 'https://nicyfoods.srujaninfotech.com';
+        const IMAGE_BASE = API_BASE + '/uploads/products/';
         const ORDERS_API_URL = API_BASE + '/api/orders';
         const CART_KEY = 'nicy_cart_items';
+        const SAVED_ADDRESS_KEY = 'nicy_saved_address';
+
+        // Cart items store the raw image filename (e.g. "sugar-free-methi-laddu.jpg"),
+        // same as product.html. This turns it into the real, loadable URL.
+        function getImageUrl(filename) {
+            if (!filename) return '';
+            if (filename.startsWith('http://') || filename.startsWith('https://') || filename.startsWith('data:')) {
+                return filename;
+            }
+            return IMAGE_BASE + filename;
+        }
 
         // ---------- UTILITY ----------
         function money(n) {
@@ -644,6 +835,16 @@
             var totalQty = items.reduce(function(sum, i) { return sum + (i.qty || 1); }, 0);
             localStorage.setItem('nicy_cart_count', String(totalQty));
             window.dispatchEvent(new Event('nicy:counts-updated'));
+        }
+
+        function getSavedAddress() {
+            try {
+                return JSON.parse(localStorage.getItem(SAVED_ADDRESS_KEY) || 'null');
+            } catch (e) { return null; }
+        }
+
+        function setSavedAddress(addr) {
+            localStorage.setItem(SAVED_ADDRESS_KEY, JSON.stringify(addr));
         }
 
         // ---------- CHAT WIDGET ----------
@@ -816,6 +1017,10 @@
             var emptyEl = document.getElementById('cartEmpty');
             var rowsEl = document.getElementById('cartRows');
 
+            // DEBUG: check what's actually stored per item so it's easy to see
+            // whether the "img" field is missing/empty for any cart item.
+            console.log('🛒 Cart items:', items);
+
             if (items.length === 0) {
                 loadedEl.classList.add('hidden');
                 emptyEl.classList.remove('hidden');
@@ -831,15 +1036,19 @@
             rowsEl.innerHTML = items.map(function(item) {
                 var price = parseFloat(item.price) || 0;
                 var qty = item.qty || 1;
-                var imgSrc = item.img || '';
+                var imgSrc = getImageUrl(item.img || item.image || ''); // resolve raw filename -> full URL, same as product.html
                 var name = item.name || 'Product';
-                return '<div class="cart-row rounded-2xl p-4 flex items-center gap-4" data-row="' + item.id +
-                    '">' +
+                var initial = name.trim().charAt(0).toUpperCase() || 'N';
+                console.log('🔎 Cart thumb URL for "' + name + '":', imgSrc || '(none saved)');
+
+                return '<div class="cart-row rounded-2xl p-4 flex items-center gap-4" data-row="' + item.id + '">' +
                     '<div class="cart-thumb">' +
-                    (imgSrc ? '<img src="' + imgSrc + '" alt="' + name +
-                        '" class="w-full h-full object-cover" onerror="this.style.display=\'none\'">' :
-                        '<div class="w-full h-full flex items-center justify-center bg-orange-50/40 text-xs text-slate-400 text-center px-1">' +
-                        name + '</div>') +
+                    (imgSrc
+                        ? '<div class="cart-thumb-skeleton"></div>' +
+                          '<img src="' + imgSrc + '" alt="' + name + '" ' +
+                          'onload="this.classList.add(\'loaded\'); this.previousElementSibling.remove();" ' +
+                          'onerror="this.parentElement.innerHTML = \'<div class=&quot;cart-thumb-fallback&quot;><span>' + initial + '</span></div>\';">'
+                        : '<div class="cart-thumb-fallback"><span>' + initial + '</span></div>') +
                     '</div>' +
                     '<div class="flex-1 min-w-0">' +
                     '<h3 class="font-display text-base sm:text-lg text-jaggery truncate">' + name + '</h3>' +
@@ -868,7 +1077,7 @@
 
             var subtotal = items.reduce(function(sum, i) { return sum + (parseFloat(i.price) || 0) * (i.qty || 1); },
             0);
-            document.getElementById('summaryItemCount').textContent = totalQty;
+            document.getElementById('summaryItemLabel').textContent = 'Price (' + totalQty + ' item' + (totalQty === 1 ? '' : 's') + ')';
             document.getElementById('summarySubtotal').textContent = money(subtotal);
             document.getElementById('summaryTotal').textContent = money(subtotal);
         }
@@ -923,65 +1132,255 @@
         renderCart();
 
         // ============================================================
-        //  CHECKOUT MODAL — collects shipping details, creates the
-        //  order on the backend (cash on delivery), then redirects
-        //  straight to the order confirmation page. No WhatsApp step.
+        //  FLIPKART-STYLE MULTI-STEP CHECKOUT
+        //  Step 1: Delivery Address (with saved-address support)
+        //  Step 2: Order Review (items + price details)
+        //  Step 3: Payment Options (COD or mock Online payment)
+        //  Then: places the order on the backend and redirects to
+        //  the order confirmation page.
         // ============================================================
+        var checkoutPayMethod = 'cod';
+        var checkoutPaySub = 'upi';
+        var usingSavedAddress = false;
+
+        function updateStepIndicators(step) {
+            document.querySelectorAll('.checkout-step').forEach(function(el) {
+                var n = parseInt(el.dataset.stepIndicator, 10);
+                el.classList.remove('active', 'done');
+                if (n === step) el.classList.add('active');
+                else if (n < step) el.classList.add('done');
+            });
+        }
+
+        function goToStep(step) {
+            document.querySelectorAll('.checkout-panel').forEach(function(p) {
+                p.classList.toggle('active', parseInt(p.dataset.panel, 10) === step);
+            });
+            updateStepIndicators(step);
+            if (step === 2) renderOrderReview();
+        }
+
+        function fillAddressForm(addr) {
+            document.getElementById('custName').value = addr.name || '';
+            document.getElementById('custPhone').value = addr.phone || '';
+            document.getElementById('custEmail').value = addr.email || '';
+            document.getElementById('addrLine1').value = addr.line1 || '';
+            document.getElementById('addrLine2').value = addr.line2 || '';
+            document.getElementById('addrCity').value = addr.city || '';
+            document.getElementById('addrState').value = addr.state || '';
+            document.getElementById('addrPincode').value = addr.pincode || '';
+        }
+
+        function selectSavedAddress() {
+            usingSavedAddress = true;
+            document.getElementById('savedAddressCard').classList.add('selected');
+            var addr = getSavedAddress();
+            if (addr) fillAddressForm(addr);
+            document.getElementById('checkoutForm').style.display = 'none';
+        }
+
+        function showNewAddressForm() {
+            usingSavedAddress = false;
+            var savedCard = document.getElementById('savedAddressCard');
+            if (savedCard) savedCard.classList.remove('selected');
+            document.getElementById('checkoutForm').reset();
+            document.getElementById('checkoutForm').style.display = 'block';
+        }
+
+        function initAddressStep() {
+            var saved = getSavedAddress();
+            var wrap = document.getElementById('savedAddressWrap');
+            var form = document.getElementById('checkoutForm');
+            if (saved) {
+                wrap.style.display = 'block';
+                document.getElementById('savedAddrName').innerHTML =
+                    (saved.name || '') + '<span class="addr-tag">Home</span>';
+                document.getElementById('savedAddrDetail').textContent =
+                    [saved.line1, saved.line2, saved.city, saved.state, saved.pincode].filter(Boolean).join(', ') +
+                    ' · ' + (saved.phone || '');
+                selectSavedAddress();
+            } else {
+                wrap.style.display = 'none';
+                form.style.display = 'block';
+                usingSavedAddress = false;
+            }
+        }
+
+        function readAddressForm() {
+            return {
+                name: document.getElementById('custName').value.trim(),
+                phone: document.getElementById('custPhone').value.trim(),
+                email: document.getElementById('custEmail').value.trim(),
+                line1: document.getElementById('addrLine1').value.trim(),
+                line2: document.getElementById('addrLine2').value.trim(),
+                city: document.getElementById('addrCity').value.trim(),
+                state: document.getElementById('addrState').value.trim(),
+                pincode: document.getElementById('addrPincode').value.trim(),
+            };
+        }
+
+        function goToOrderReview() {
+            var addr = readAddressForm();
+            if (!addr.name || !addr.phone || !addr.line1 || !addr.city || !addr.state || !addr.pincode) {
+                var statusEl = document.getElementById('checkoutStatus');
+                alert('Please fill all the required address fields.');
+                return;
+            }
+            setSavedAddress(addr);
+            goToStep(2);
+        }
+
+        function renderOrderReview() {
+            var items = getCart();
+            var addr = readAddressForm();
+            document.getElementById('reviewAddressBlock').innerHTML =
+                '<strong>' + addr.name + '</strong> · ' + addr.phone + '<br>' +
+                [addr.line1, addr.line2, addr.city, addr.state, addr.pincode].filter(Boolean).join(', ');
+
+            var listEl = document.getElementById('reviewItemsList');
+            listEl.innerHTML = items.map(function(item) {
+                var price = parseFloat(item.price) || 0;
+                var qty = item.qty || 1;
+                var imgSrc = getImageUrl(item.img || item.image || '');
+                var initial = (item.name || 'N').trim().charAt(0).toUpperCase();
+                if (imgSrc) console.log('🔎 Review thumb URL for "' + item.name + '":', imgSrc);
+                return '<div class="review-item-row">' +
+                    '<div class="review-thumb">' +
+                    (imgSrc
+                        ? '<img src="' + imgSrc + '" alt="' + (item.name || '') + '" onerror="this.remove(); this.parentElement.insertAdjacentHTML(\'beforeend\', \'<div class=&quot;review-thumb-fallback&quot;>' + initial + '</div>\');">'
+                        : '<div class="review-thumb-fallback">' + initial + '</div>') +
+                    '</div>' +
+                    '<div class="flex-1 min-w-0">' +
+                    '<p class="text-sm font-semibold text-jaggery truncate">' + (item.name || 'Product') + '</p>' +
+                    '<p class="text-xs text-slate-400">Qty: ' + qty + '</p>' +
+                    '</div>' +
+                    '<div class="text-sm font-semibold text-jaggery">' + money(price * qty) + '</div>' +
+                    '</div>';
+            }).join('');
+
+            var totalQty = items.reduce(function(sum, i) { return sum + (i.qty || 1); }, 0);
+            var subtotal = items.reduce(function(sum, i) { return sum + (parseFloat(i.price) || 0) * (i.qty || 1); }, 0);
+            document.getElementById('reviewItemLabel').textContent = 'Price (' + totalQty + ' item' + (totalQty === 1 ? '' : 's') + ')';
+            document.getElementById('reviewSubtotal').textContent = money(subtotal);
+            document.getElementById('reviewTotal').textContent = money(subtotal);
+        }
+
+        function selectPayMethod(method) {
+            checkoutPayMethod = method;
+            document.querySelectorAll('.pay-method-card').forEach(function(card) {
+                card.classList.toggle('selected', card.dataset.payMethod === method);
+            });
+            var onlineOptions = document.getElementById('onlineSubTabs');
+            onlineOptions.classList.toggle('show', method === 'online');
+            document.getElementById('checkoutSubmitLabel').textContent =
+                method === 'online' ? 'Pay & Place Order' : 'Place Order';
+        }
+
+        function selectPaySub(sub) {
+            checkoutPaySub = sub;
+            document.querySelectorAll('.pay-tab').forEach(function(tab) {
+                tab.classList.toggle('active', tab.dataset.paySub === sub);
+            });
+            document.getElementById('payFieldsUpi').style.display = sub === 'upi' ? 'block' : 'none';
+            document.getElementById('payFieldsCard').style.display = sub === 'card' ? 'block' : 'none';
+            document.getElementById('payFieldsNetbanking').style.display = sub === 'netbanking' ? 'block' : 'none';
+        }
+
         function openCheckoutModal() {
             var items = getCart();
             if (items.length === 0) return;
             document.getElementById('checkoutModal').classList.add('open');
+            document.body.style.overflow = 'hidden'; // lock background scroll while modal is open
+            initAddressStep();
+            selectPayMethod('cod');
+            selectPaySub('upi');
+            goToStep(1);
         }
         function closeCheckoutModal() {
             document.getElementById('checkoutModal').classList.remove('open');
+            document.body.style.overflow = ''; // restore background scroll
         }
         window.closeCheckoutModal = closeCheckoutModal;
+        window.goToStep = goToStep;
+        window.goToOrderReview = goToOrderReview;
+        window.selectSavedAddress = selectSavedAddress;
+        window.showNewAddressForm = showNewAddressForm;
+        window.selectPayMethod = selectPayMethod;
+        window.selectPaySub = selectPaySub;
 
         document.getElementById('checkoutBtn').addEventListener('click', openCheckoutModal);
         document.getElementById('checkoutModal').addEventListener('click', function(e) {
             if (e.target === this) closeCheckoutModal();
         });
 
-        document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
+        async function submitOrder() {
             var items = getCart();
             if (items.length === 0) return;
 
+            var addr = readAddressForm();
             var statusEl = document.getElementById('checkoutStatus');
             var submitBtn = document.getElementById('checkoutSubmitBtn');
+
+            // Build the payment method string: 'cod' or 'online_upi' / 'online_card' / 'online_netbanking'
+            var paymentMethod = checkoutPayMethod === 'cod' ? 'cod' : ('online_' + checkoutPaySub);
+
+            // Basic validation for the online payment mock fields
+            if (checkoutPayMethod === 'online') {
+                if (checkoutPaySub === 'upi' && !document.getElementById('upiId').value.trim()) {
+                    statusEl.textContent = 'Please enter your UPI ID.';
+                    statusEl.className = 'error';
+                    return;
+                }
+                if (checkoutPaySub === 'card' &&
+                    (!document.getElementById('cardNumber').value.trim() ||
+                     !document.getElementById('cardExpiry').value.trim() ||
+                     !document.getElementById('cardCvv').value.trim())) {
+                    statusEl.textContent = 'Please fill all card details.';
+                    statusEl.className = 'error';
+                    return;
+                }
+                if (checkoutPaySub === 'netbanking' && !document.getElementById('netbankBank').value.trim()) {
+                    statusEl.textContent = 'Please select your bank.';
+                    statusEl.className = 'error';
+                    return;
+                }
+            }
 
             var payload = {
                 items: items.map(function(i) {
                     return {
                         slug: i.id,
                         name: i.name,
-                        image: i.img,
+                        image: getImageUrl(i.img || i.image),
                         weightLabel: i.weightLabel || null,
                         price: parseFloat(i.price) || 0,
                         qty: i.qty || 1,
                     };
                 }),
                 customer: {
-                    name: document.getElementById('custName').value.trim(),
-                    phone: document.getElementById('custPhone').value.trim(),
-                    email: document.getElementById('custEmail').value.trim() || undefined,
+                    name: addr.name,
+                    phone: addr.phone,
+                    email: addr.email || undefined,
                 },
                 shippingAddress: {
-                    line1: document.getElementById('addrLine1').value.trim(),
-                    line2: document.getElementById('addrLine2').value.trim() || undefined,
-                    city: document.getElementById('addrCity').value.trim(),
-                    state: document.getElementById('addrState').value.trim(),
-                    pincode: document.getElementById('addrPincode').value.trim(),
+                    line1: addr.line1,
+                    line2: addr.line2 || undefined,
+                    city: addr.city,
+                    state: addr.state,
+                    pincode: addr.pincode,
                 },
-                paymentMethod: 'cod',
+                paymentMethod: paymentMethod,
             };
 
-            statusEl.textContent = 'Placing your order...';
+            statusEl.textContent = checkoutPayMethod === 'online' ?
+                'Processing payment...' : 'Placing your order...';
             statusEl.className = 'loading';
             submitBtn.disabled = true;
 
             try {
+                // NOTE: Online payment here is a UI mock only (no gateway wired up yet).
+                // When a real gateway (e.g. Razorpay) is integrated, trigger it here
+                // before calling the orders API, and only place the order on success.
                 var res = await fetch(ORDERS_API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1011,7 +1410,8 @@
                 statusEl.className = 'error';
                 submitBtn.disabled = false;
             }
-        });
+        }
+        window.submitOrder = submitOrder;
 
         // Scroll reveal
         var revealEls = document.querySelectorAll('.reveal, .stagger, .kolam-divider, .grow-underline');
@@ -1032,7 +1432,7 @@
             });
         }, 300);
 
-        console.log('✅ NicyFoods Cart page fully loaded — orders now go straight to confirmation, no WhatsApp.');
+        console.log('✅ NicyFoods Cart page — Flipkart-style multi-step checkout (Address → Order Review → Payment) loaded.');
     </script>
 
 </body>
