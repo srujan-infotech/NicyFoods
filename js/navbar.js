@@ -1,6 +1,4 @@
 
-
-
 // // -------------------- CONFIG --------------------
 // const NAV_API_BASE_URL = "https://nicyfoods.srujaninfotech.com";
 // const NAV_LINKS_URL = `${NAV_API_BASE_URL}/api/navlinks`;
@@ -34,7 +32,7 @@
 //                  alt="NicyFoods Logo" 
 //                  class="w-7 h-7 sm:w-9 sm:h-9 md:w-11 md:h-11 rounded-md object-cover ring-2 ring-kumkum/25 transition-transform duration-300 group-hover:scale-105"
 //                  width="44" height="44"
-//                  onerror="this.style.display='none'">
+//                  onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2244%22 height=%2244%22 viewBox=%220 0 44 44%22%3E%3Crect width=%2244%22 height=%2244%22 fill=%22%23F5A623%22/%3E%3Ctext x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.35em%22 font-size=%2220%22 font-weight=%22bold%22 fill=%22white%22%3ENF%3C/text%3E%3C/svg%3E'">
 //             <span class="text-jaggery text-base sm:text-xl md:text-2xl" style="font-family:'Rozha One', serif;">NicyFoods</span>
 //           </a>
 //         </div>
@@ -265,6 +263,7 @@
 //         display: inline-flex;
 //         align-items: center;
 //         gap: 4px;
+//         cursor: pointer;
 //       }
 //       #site-navbar .nav-dropdown-toggle svg {
 //         width: 12px;
@@ -274,28 +273,51 @@
 //       #site-navbar .nav-item-has-dropdown:hover .nav-dropdown-toggle svg {
 //         transform: rotate(180deg);
 //       }
+      
+//       /* Dropdown styles - now with click support */
 //       #site-navbar .nav-category-menu {
 //         position: absolute;
 //         top: 100%;
 //         left: 50%;
-//         transform: translate(-50%, -6px);
+//         transform: translateX(-50%) translateY(-6px);
 //         min-width: 160px;
-//         background: #fff;
+//         background: #ffffff;
 //         border-radius: 0.75rem;
 //         box-shadow: 0 12px 28px -8px rgba(92, 58, 37, 0.3);
 //         padding: 0.4rem 0;
 //         margin-top: 0.6rem;
 //         opacity: 0;
+//         visibility: hidden;
 //         pointer-events: none;
-//         transition: opacity 0.2s ease, transform 0.2s ease;
-//         z-index: 100;
+//         transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+//         z-index: 9999;
+//         border: 1px solid rgba(92, 58, 37, 0.08);
 //       }
-//       #site-navbar .nav-item-has-dropdown:hover .nav-category-menu,
-//       #site-navbar .nav-item-has-dropdown:focus-within .nav-category-menu {
+      
+//       /* Show dropdown on hover */
+//       #site-navbar .nav-item-has-dropdown:hover .nav-category-menu {
 //         opacity: 1;
-//         transform: translate(-50%, 0);
+//         visibility: visible;
+//         transform: translateX(-50%) translateY(0);
 //         pointer-events: auto;
 //       }
+      
+//       /* Show dropdown when active class is added (for click) */
+//       #site-navbar .nav-item-has-dropdown.dropdown-active .nav-category-menu {
+//         opacity: 1;
+//         visibility: visible;
+//         transform: translateX(-50%) translateY(0);
+//         pointer-events: auto;
+//       }
+      
+//       /* Also show when focus is within (for keyboard users) */
+//       #site-navbar .nav-item-has-dropdown:focus-within .nav-category-menu {
+//         opacity: 1;
+//         visibility: visible;
+//         transform: translateX(-50%) translateY(0);
+//         pointer-events: auto;
+//       }
+      
 //       #site-navbar .nav-category-menu a {
 //         display: block;
 //         padding: 0.55rem 1.1rem;
@@ -429,25 +451,46 @@
 //   `;
 
 //   const placeholder = document.getElementById("navbar-placeholder");
-//   if (!placeholder) return console.warn("navbar.js: #navbar-placeholder missing");
+//   if (!placeholder) {
+//     console.warn("navbar.js: #navbar-placeholder missing");
+//     return;
+//   }
+  
 //   placeholder.innerHTML = navHTML;
 
-//   // ── Spacer ──
+//   // ── Spacer with improved height calculation ──
 //   const spacer = document.getElementById("navbar-spacer");
 //   const navbar = document.getElementById("site-navbar");
+  
 //   if (spacer && navbar) {
 //     const setSpacerHeight = () => {
 //       const height = navbar.offsetHeight;
-//       const capped = Math.min(height, 100);
-//       spacer.style.height = capped + "px";
+//       spacer.style.height = height + "px";
+//       console.log(`Spacer height set to: ${height}px`);
 //     };
-//     setSpacerHeight();
+    
+//     setTimeout(setSpacerHeight, 100);
+    
 //     let resizeTimer;
 //     window.addEventListener("resize", () => {
 //       clearTimeout(resizeTimer);
 //       resizeTimer = setTimeout(setSpacerHeight, 100);
 //     });
-//     window.addEventListener("load", setSpacerHeight);
+    
+//     window.addEventListener("load", () => {
+//       setTimeout(setSpacerHeight, 200);
+//     });
+    
+//     const observer = new MutationObserver(() => {
+//       setSpacerHeight();
+//     });
+    
+//     observer.observe(navbar, {
+//       attributes: true,
+//       childList: true,
+//       subtree: true,
+//       attributeFilter: ['style', 'class']
+//     });
 //   }
 
 //   // ── Refs ──
@@ -485,10 +528,8 @@
 //     const targetPage = urlObj.pathname.split("/").pop();
 //     const targetParams = new URLSearchParams(urlObj.search);
     
-//     // Check if we're on the same page
 //     if (currentUrl !== targetPage) return false;
     
-//     // Check if query params match
 //     for (let [key, value] of targetParams) {
 //       const currentParams = new URLSearchParams(window.location.search);
 //       if (currentParams.get(key) !== value) return false;
@@ -511,7 +552,7 @@
 //             }
 //           ).join("");
 //           return `
-//             <li class="nav-item-has-dropdown">
+//             <li class="nav-item-has-dropdown" data-dropdown="product">
 //               <a href="${safeUrl}" data-page="${safeUrl}"
 //                  class="nav-link nav-dropdown-toggle relative pb-1 hover:text-kumkum transition-colors">
 //                 ${safeLabel}
@@ -582,6 +623,62 @@
 //       }
 //     });
 
+//     // ─── Desktop Dropdown Click Handler ───
+//     // Find all product dropdown items and add click functionality
+//     document.querySelectorAll('.nav-item-has-dropdown').forEach((dropdownItem) => {
+//       const toggleLink = dropdownItem.querySelector('.nav-dropdown-toggle');
+//       const dropdownMenu = dropdownItem.querySelector('.nav-category-menu');
+      
+//       if (toggleLink && dropdownMenu) {
+//         // Click on the dropdown toggle (Product link or arrow)
+//         toggleLink.addEventListener('click', function(e) {
+//           e.preventDefault();
+//           e.stopPropagation();
+          
+//           // Toggle the active class on the dropdown item
+//           const isActive = dropdownItem.classList.toggle('dropdown-active');
+          
+//           // If we're opening this dropdown, close any others
+//           if (isActive) {
+//             document.querySelectorAll('.nav-item-has-dropdown.dropdown-active').forEach((other) => {
+//               if (other !== dropdownItem) {
+//                 other.classList.remove('dropdown-active');
+//               }
+//             });
+//           }
+//         });
+        
+//         // Click on category items should navigate, not close dropdown
+//         dropdownMenu.querySelectorAll('a').forEach((categoryLink) => {
+//           categoryLink.addEventListener('click', function(e) {
+//             // Don't prevent default - let the navigation happen
+//             // But close the dropdown after navigation
+//             setTimeout(() => {
+//               dropdownItem.classList.remove('dropdown-active');
+//             }, 100);
+//           });
+//         });
+//       }
+//     });
+
+//     // Close dropdowns when clicking outside
+//     document.addEventListener('click', function(e) {
+//       if (!e.target.closest('.nav-item-has-dropdown')) {
+//         document.querySelectorAll('.nav-item-has-dropdown.dropdown-active').forEach((item) => {
+//           item.classList.remove('dropdown-active');
+//         });
+//       }
+//     });
+
+//     // Close dropdowns on escape key
+//     document.addEventListener('keydown', function(e) {
+//       if (e.key === 'Escape') {
+//         document.querySelectorAll('.nav-item-has-dropdown.dropdown-active').forEach((item) => {
+//           item.classList.remove('dropdown-active');
+//         });
+//       }
+//     });
+
 //     // Close mobile menu when any plain link (or category link) is tapped
 //     mobileLinksEl.querySelectorAll("a").forEach((link) => {
 //       link.addEventListener("click", () => {
@@ -604,6 +701,15 @@
 //         toggleBtn.setAttribute("aria-expanded", String(isOpen));
 //       });
 //     });
+
+//     // Update spacer after rendering
+//     setTimeout(() => {
+//       const spacer = document.getElementById("navbar-spacer");
+//       const navbar = document.getElementById("site-navbar");
+//       if (spacer && navbar) {
+//         spacer.style.height = navbar.offsetHeight + "px";
+//       }
+//     }, 100);
 //   }
 
 //   // ── Load nav links with proper cache busting ──
@@ -635,7 +741,9 @@
 
 //   // ── Scroll shadow ──
 //   window.addEventListener("scroll", () => {
-//     navInner.classList.toggle("nav-scrolled", window.scrollY > 10);
+//     if (navInner) {
+//       navInner.classList.toggle("nav-scrolled", window.scrollY > 10);
+//     }
 //   }, { passive: true });
 
 //   // ── Mobile menu toggle ──
@@ -821,6 +929,13 @@
 
 
 
+
+
+
+
+
+
+
 // -------------------- CONFIG --------------------
 const NAV_API_BASE_URL = "https://nicyfoods.srujaninfotech.com";
 const NAV_LINKS_URL = `${NAV_API_BASE_URL}/api/navlinks`;
@@ -927,6 +1042,7 @@ function loadNavbar() {
       <!-- Mobile menu -->
       <ul id="mobile-menu" class="mobile-menu-collapsed md:hidden text-jaggery font-semibold text-base sm:text-lg flex flex-col gap-0.5 px-4 sm:px-6 overflow-hidden" style="font-family:'Poppins', sans-serif;">
         <div id="mobile-nav-links"></div>
+        <li><a href="myorders.html" class="block py-3 border-b border-jaggery/10 hover:text-kumkum hover:pl-2 transition-all">📦 My Orders</a></li>
         <div id="mobile-rbac-links"></div>
       </ul>
     </div>
@@ -1662,12 +1778,17 @@ function loadNavbar() {
           ${user.name}
           <span class="block text-xs font-normal text-slate-400">${user.email}</span>
         </div>
+        <a href="myorders.html">📦 My Orders</a>
         ${isAdmin ? `<a href="dashboard.html">⚙️ Admin Dashboard</a>` : ""}
         <div class="dropdown-divider"></div>
         <button id="logout-btn">🚪 Logout</button>
       `;
     } else {
-      html = `<a href="login.html">🔑 Login</a>`;
+      html = `
+        <a href="myorders.html">📦 My Orders</a>
+        <div class="dropdown-divider"></div>
+        <a href="login.html">🔑 Login</a>
+      `;
     }
     dropdownContent.innerHTML = html;
 

@@ -5,16 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NicyFoods · Admin · Orders</title>
 
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="js/tailwind-config.js"></script>
 
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
 
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
+    <!-- Shared admin styles -->
     <link rel="stylesheet" href="css/admin-styles.css" />
+
+    <style>
+        /* Small additions specific to the orders filter bar — everything
+           else (table-wrap, badge-status, modal-overlay, btn-*, etc.)
+           comes from your existing admin-styles.css */
+        .filters-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+        }
+        .filters-bar input[type="text"],
+        .filters-bar input[type="date"],
+        .filters-bar select {
+            border: 1.5px solid rgba(92, 58, 37, 0.12);
+            border-radius: 0.6rem;
+            padding: 0.5rem 0.8rem;
+            font-size: 0.82rem;
+            font-family: inherit;
+            background: #fff;
+            color: #3A2417;
+        }
+        .filters-bar input[type="text"] { width: 230px; }
+        .filters-bar .filter-clear {
+            background: transparent;
+            border: 1.5px solid rgba(92, 58, 37, 0.12);
+            border-radius: 0.6rem;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8a7362;
+            cursor: pointer;
+        }
+        .filters-bar .filter-clear:hover { color: #D7263D; border-color: #D7263D; }
+        .step-mini { display: flex; align-items: start; gap: 0.5rem; padding: 0.35rem 0; font-size: 0.75rem; color: #6b5140; }
+        .step-mini .dot { width: 8px; height: 8px; border-radius: 50%; background: #D7263D; margin-top: 0.35rem; flex-shrink: 0; }
+    </style>
 </head>
 <body data-page="orders">
 
@@ -23,42 +67,187 @@
     <div id="main">
         <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.8rem; flex-wrap:wrap;" id="topbar-container"></div>
 
-        <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
-            <h2 class="font-display text-xl text-jaggery"><i class="fas fa-shopping-cart text-kumkum"></i> Manage Orders</h2>
+        <!-- Quick stats -->
+        <div class="stats-grid grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="stat-card">
+                <div class="icon-wrap red"><i class="fas fa-shopping-cart"></i></div>
+                <div>
+                    <div class="stat-value" id="statTotalOrders">0</div>
+                    <div class="stat-label">Total Orders</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="icon-wrap orange"><i class="fas fa-clock"></i></div>
+                <div>
+                    <div class="stat-value" id="statPendingOrders">0</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="icon-wrap green"><i class="fas fa-truck"></i></div>
+                <div>
+                    <div class="stat-value" id="statShippedOrders">0</div>
+                    <div class="stat-label">Shipped</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="icon-wrap blue"><i class="fas fa-indian-rupee-sign"></i></div>
+                <div>
+                    <div class="stat-value" id="statRevenue">₹0</div>
+                    <div class="stat-label">Revenue (Paid)</div>
+                </div>
+            </div>
         </div>
+
+        <!-- Filters -->
+        <div class="filters-bar">
+            <input id="orderSearchInput" type="text" placeholder="Search order #, name or phone..." onkeyup="debouncedLoadOrders()" />
+
+            <select id="orderStatusFilter" onchange="loadOrders()">
+                <option value="">All Statuses</option>
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="processing">Processing</option>
+                <option value="shipped">Shipped</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+
+            <select id="orderPaymentFilter" onchange="loadOrders()">
+                <option value="">All Payments</option>
+                <option value="pending">Payment Pending</option>
+                <option value="paid">Paid</option>
+                <option value="failed">Failed</option>
+                <option value="refunded">Refunded</option>
+            </select>
+
+            <input id="orderFromDate" type="date" onchange="loadOrders()" />
+            <span class="text-xs text-slate-400">to</span>
+            <input id="orderToDate" type="date" onchange="loadOrders()" />
+
+            <button type="button" class="filter-clear" onclick="resetOrderFilters()" title="Clear filters">
+                <i class="fas fa-rotate-left"></i>
+            </button>
+        </div>
+
+        <!-- Orders table -->
         <div class="table-wrap">
             <table>
-                <thead><tr><th>Order ID</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th><th style="min-width:110px;">Actions</th></tr></thead>
-                <tbody id="ordersTableBody"></tbody>
+                <thead>
+                    <tr>
+                        <th>Order #</th>
+                        <th>Customer</th>
+                        <th>Phone</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Payment</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th style="min-width:110px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                    <tr><td colspan="9"><div class="empty-state"><i class="fas fa-spinner fa-spin"></i> Loading orders...</div></td></tr>
+                </tbody>
             </table>
         </div>
     </div>
 
-    <!-- ===== ORDER STATUS MODAL ===== -->
-    <div id="orderStatusModal" class="modal-overlay">
-        <div class="modal-box">
+    <!-- ===== ORDER DETAIL MODAL ===== -->
+    <div id="orderDetailModal" class="modal-overlay">
+        <div class="modal-box" style="max-width:800px;">
             <div class="modal-header">
-                <h2><i class="fas fa-sync-alt"></i> Update Order Status</h2>
-                <button class="modal-close" onclick="closeModal('orderStatusModal')"><i class="fas fa-times"></i></button>
+                <h2><i class="fas fa-receipt"></i> Order <span id="odOrderNumber"></span></h2>
+                <button class="modal-close" onclick="closeModal('orderDetailModal')"><i class="fas fa-times"></i></button>
             </div>
-            <input type="hidden" id="orderStatusId" />
-            <div class="form-group">
-                <label class="form-label"><i class="fas fa-tag"></i> Status</label>
-                <div class="input-icon-wrap">
-                    <i class="fas fa-flag"></i>
-                    <select id="orderStatusSelect">
-                        <option value="pending">Pending</option>
-                        <option value="processing">Processing</option>
-                        <option value="shipped">Shipped</option>
-                        <option value="delivered">Delivered</option>
-                        <option value="cancelled">Cancelled</option>
-                    </select>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5">
+                <!-- Customer & shipping -->
+                <div>
+                    <div class="form-section-title"><i class="fas fa-user"></i> Customer</div>
+                    <p class="text-sm text-slate-600 mb-1"><strong id="odCustName"></strong></p>
+                    <p class="text-sm text-slate-500 mb-1"><i class="fas fa-phone text-xs mr-1"></i><span id="odCustPhone"></span></p>
+                    <p class="text-sm text-slate-500 mb-4"><i class="fas fa-envelope text-xs mr-1"></i><span id="odCustEmail">—</span></p>
+
+                    <div class="form-section-title"><i class="fas fa-location-dot"></i> Shipping Address</div>
+                    <p class="text-sm text-slate-600 leading-relaxed" id="odAddress"></p>
+
+                    <div class="form-section-title mt-4"><i class="fas fa-hand-holding-dollar"></i> Payment</div>
+                    <p class="text-sm text-slate-600">
+                        Cash on Delivery &middot; <span id="odPaymentBadge" class="status-badge"></span>
+                    </p>
+                </div>
+
+                <!-- Status timeline -->
+                <div>
+                    <div class="form-section-title"><i class="fas fa-truck"></i> Status Timeline</div>
+                    <div id="odTimeline" class="space-y-1 max-h-40 overflow-y-auto pr-1"></div>
                 </div>
             </div>
-            <div style="display:flex; justify-content:flex-end; gap:0.8rem; padding-top:1rem; border-top:1px solid rgba(92,58,37,0.06); margin-top:0.5rem;">
-                <button type="button" class="text-slate-500 hover:text-slate-700" onclick="closeModal('orderStatusModal')" style="font-weight:500; background:transparent; border:none; cursor:pointer; padding:0.4rem 0.8rem;">Cancel</button>
-                <button id="updateOrderStatusBtn" class="btn-primary"><i class="fas fa-check"></i> Update Status</button>
+
+            <!-- Items -->
+            <div class="form-section-title"><i class="fas fa-box"></i> Items</div>
+            <div class="table-wrap mb-5">
+                <table>
+                    <thead><tr><th>Product</th><th>Weight</th><th>Unit Price</th><th>Qty</th><th>Line Total</th></tr></thead>
+                    <tbody id="odItemsBody"></tbody>
+                </table>
             </div>
+
+            <!-- Editable fields -->
+            <form id="orderUpdateForm">
+                <input type="hidden" id="odOrderId" />
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-tag"></i> Status</label>
+                        <select id="odStatus">
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="processing">Processing</option>
+                            <option value="shipped">Shipped</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-rupee-sign"></i> Courier Charge (₹)</label>
+                        <input id="odCourierCharge" type="number" min="0" step="1" placeholder="0" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-credit-card"></i> Payment Status</label>
+                        <select id="odPaymentStatus">
+                            <option value="pending">Pending (collect on delivery)</option>
+                            <option value="paid">Paid</option>
+                            <option value="failed">Failed</option>
+                            <option value="refunded">Refunded</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-calculator"></i> Subtotal / Total</label>
+                        <p class="text-sm pt-2"><span id="odSubtotal" class="text-slate-500"></span> → <strong id="odTotal" class="text-kumkum"></strong></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-sticky-note"></i> Internal Notes <span class="text-xs text-slate-400 font-normal">(not shown to customer)</span></label>
+                    <textarea id="odNotes" rows="2" placeholder="e.g. Customer requested morning delivery"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-comment"></i> Status Change Note <span class="text-xs text-slate-400 font-normal">(optional, logged to timeline)</span></label>
+                    <input id="odStatusNote" placeholder="e.g. Shipped via BlueDart, tracking #12345" />
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; padding-top:1rem; border-top:1px solid rgba(92,58,37,0.06); margin-top:0.5rem;">
+                    <button type="button" class="btn-danger" onclick="deleteOrder(document.getElementById('odOrderId').value)">
+                        <i class="fas fa-trash-alt"></i> Delete Order
+                    </button>
+                    <div style="display:flex; gap:0.8rem;">
+                        <button type="button" class="text-slate-500" onclick="closeModal('orderDetailModal')" style="font-weight:500; background:transparent; border:none; cursor:pointer; padding:0.4rem 0.8rem;">Cancel</button>
+                        <button type="submit" id="odSaveBtn" class="btn-primary"><i class="fas fa-save"></i> Save Changes</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 

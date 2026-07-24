@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Confirmed | NicyFoods</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#FFFFFF',
+                        jaggery: '#5C3A25',
+                        ink: '#3A2417',
+                        turmeric: '#F5A623',
+                        marigold: '#FFC72C',
+                        kumkum: '#D7263D',
+                        herbal: '#5F7A4F',
+                    },
+                    fontFamily: {
+                        display: ['"Rozha One"', 'serif'],
+                        body: ['Poppins', 'sans-serif'],
+                    },
+                },
+            },
+        };
+    </script>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+
+    <style>
+        :root {
+            --cream: #FFFFFF; --jaggery: #5C3A25; --ink: #3A2417;
+            --turmeric: #F5A623; --marigold: #FFC72C; --kumkum: #D7263D; --herbal: #5F7A4F;
+        }
+        * { box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: var(--cream); color: var(--ink); }
+        h1, h2, h3, .font-display { font-family: 'Rozha One', serif; }
+
+        .success-ring {
+            width: 92px; height: 92px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--herbal), #3f8a55);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 16px 34px -10px rgba(95, 122, 79, .5);
+            animation: ringPop .6s cubic-bezier(.34,1.56,.64,1) both;
+        }
+        @keyframes ringPop { from { transform: scale(.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .success-ring svg { width: 44px; height: 44px; }
+
+        .track-card { background: #FFFDF9; border-radius: 1.25rem; box-shadow: 0 10px 30px -16px rgba(92,58,37,.25); }
+        .cod-chip {
+            display: inline-flex; align-items: center; gap: .4rem; background: rgba(95,122,79,.08);
+            color: var(--herbal); font-weight: 700; font-size: .75rem; padding: .4rem .9rem; border-radius: 999px;
+        }
+        .step-track { display: flex; align-items: center; justify-content: space-between; margin: 1.5rem 0; }
+        .step { display: flex; flex-direction: column; align-items: center; gap: .4rem; flex: 1; position: relative; }
+        .step .dot { width: 30px; height: 30px; border-radius: 50%; background: #f1e6d8; color: #9a8a7c; display: flex; align-items: center; justify-content: center; font-size: .8rem; font-weight: 700; z-index: 1; }
+        .step.done .dot { background: var(--herbal); color: #fff; }
+        .step .label { font-size: .68rem; color: #9a8a7c; text-align: center; }
+        .step.done .label { color: var(--jaggery); font-weight: 600; }
+        .step::after { content: ''; position: absolute; top: 15px; left: 50%; width: 100%; height: 2px; background: #f1e6d8; z-index: 0; }
+        .step:last-child::after { display: none; }
+        .step.done::after { background: var(--herbal); }
+        .item-row { display: flex; justify-content: space-between; padding: .55rem 0; border-bottom: 1px dashed rgba(92,58,37,.1); font-size: .88rem; }
+        .item-row:last-child { border-bottom: none; }
+        .skeleton { background: linear-gradient(90deg, #f3ede2 25%, #ece2d2 37%, #f3ede2 63%); background-size: 400% 100%; animation: shimmer 1.4s ease infinite; border-radius: .5rem; }
+        @keyframes shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+    </style>
+</head>
+<body class="bg-cream">
+
+    <div id="navbar-placeholder"></div>
+
+    <section class="max-w-3xl mx-auto px-6 py-16 md:py-20">
+
+        <!-- Loading -->
+        <div id="loadingState" class="text-center py-10">
+            <i class="fas fa-spinner fa-spin text-3xl text-turmeric"></i>
+            <p class="mt-3 text-slate-400">Fetching your order...</p>
+        </div>
+
+        <!-- Error (no order param / not found) -->
+        <div id="errorState" class="hidden text-center py-10">
+            <i class="fas fa-circle-exclamation text-4xl text-kumkum"></i>
+            <h2 class="font-display text-2xl text-jaggery mt-4 mb-2">We couldn't find that order</h2>
+            <p class="text-slate-500 mb-6">Double check the link, or head back and place a new order.</p>
+            <a href="product.html" class="inline-block bg-gradient-to-r from-turmeric to-kumkum text-white font-semibold px-7 py-3 rounded-xl">Browse Products</a>
+        </div>
+
+        <!-- Success content -->
+        <div id="successState" class="hidden">
+            <div class="flex flex-col items-center text-center mb-8">
+                <div class="success-ring mb-5">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                </div>
+                <h1 class="font-display text-3xl md:text-4xl text-jaggery mb-2">Order Placed!</h1>
+                <p class="text-slate-500 max-w-md">Thank you — we've received your order and will start packing it fresh, by hand.</p>
+                <p class="mt-4 font-mono text-sm bg-orange-50 text-jaggery px-4 py-1.5 rounded-full" id="orderNumberChip"></p>
+                <span class="cod-chip mt-4">
+                    <i class="fas fa-hand-holding-dollar"></i> Pay on Delivery
+                </span>
+            </div>
+
+            <div class="track-card p-6 mb-6">
+                <h2 class="font-display text-lg text-jaggery mb-1">Order Status</h2>
+                <div id="stepTrack" class="step-track"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="track-card p-6">
+                    <h2 class="font-display text-lg text-jaggery mb-3"><i class="fas fa-box text-turmeric mr-1"></i> Items</h2>
+                    <div id="itemsList"></div>
+                    <div class="pt-3 mt-2 border-t border-jaggery/10 flex justify-between font-semibold">
+                        <span>Total (courier confirmed separately)</span>
+                        <span id="orderTotal" class="text-kumkum"></span>
+                    </div>
+                </div>
+                <div class="track-card p-6">
+                    <h2 class="font-display text-lg text-jaggery mb-3"><i class="fas fa-location-dot text-turmeric mr-1"></i> Delivering To</h2>
+                    <p class="text-sm font-semibold text-jaggery" id="custName"></p>
+                    <p class="text-sm text-slate-500" id="custPhone"></p>
+                    <p class="text-sm text-slate-500 mt-2 leading-relaxed" id="shipAddress"></p>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-4">
+                <a href="product.html" class="inline-block border-2 border-kumkum text-kumkum font-semibold px-7 py-3 rounded-xl hover:bg-kumkum hover:text-white transition-colors">Continue Shopping</a>
+                <a href="mailto:nicyfoods5@gmail.com" class="inline-block text-slate-500 text-sm underline">Need help with this order?</a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="js/navbar.js"></script>
+    <script src="js/footer.js"></script>
+
+    <script>
+        const API_BASE = 'http://localhost:5000';
+        const TRACK_API_URL = API_BASE + '/api/orders/track/';
+
+        const STATUS_STEPS = ['pending', 'confirmed', 'processing', 'shipped', 'delivered'];
+        const STATUS_LABELS = {
+            pending: 'Placed', confirmed: 'Confirmed', processing: 'Preparing',
+            shipped: 'Shipped', delivered: 'Delivered', cancelled: 'Cancelled',
+        };
+
+        function money(n) { return '₹' + Math.round(n || 0).toLocaleString('en-IN'); }
+
+        function renderSteps(currentStatus) {
+            const wrap = document.getElementById('stepTrack');
+            if (currentStatus === 'cancelled') {
+                wrap.innerHTML = `<p class="text-kumkum font-semibold text-sm w-full text-center">This order was cancelled.</p>`;
+                return;
+            }
+            const currentIndex = STATUS_STEPS.indexOf(currentStatus);
+            wrap.innerHTML = STATUS_STEPS.map((s, i) => `
+                <div class="step ${i <= currentIndex ? 'done' : ''}">
+                    <div class="dot">${i <= currentIndex ? '<i class="fas fa-check" style="font-size:.6rem;"></i>' : (i + 1)}</div>
+                    <div class="label">${STATUS_LABELS[s]}</div>
+                </div>
+            `).join('');
+        }
+
+        async function loadOrder() {
+            const params = new URLSearchParams(window.location.search);
+            const orderNumber = params.get('order');
+
+            if (!orderNumber) {
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('errorState').classList.remove('hidden');
+                return;
+            }
+
+            try {
+                const res = await fetch(TRACK_API_URL + encodeURIComponent(orderNumber));
+                if (!res.ok) throw new Error('Not found');
+                const json = await res.json();
+                if (!json.success || !json.data) throw new Error('Not found');
+
+                const order = json.data;
+
+                document.getElementById('orderNumberChip').textContent = 'Order #' + order.orderNumber;
+                renderSteps(order.status);
+
+                document.getElementById('itemsList').innerHTML = (order.items || []).map(item => `
+                    <div class="item-row">
+                        <span>${item.name} ${item.weightLabel ? '(' + item.weightLabel + ')' : ''} × ${item.qty}</span>
+                        <span class="font-semibold">${money(item.price * item.qty)}</span>
+                    </div>
+                `).join('');
+                document.getElementById('orderTotal').textContent = money(order.totalAmount);
+
+                document.getElementById('custName').textContent = order.customer?.name || '-';
+                document.getElementById('custPhone').textContent = order.customer?.phone || '-';
+                const a = order.shippingAddress || {};
+                document.getElementById('shipAddress').innerHTML =
+                    `${a.line1 || ''}${a.line2 ? ', ' + a.line2 : ''}<br>${a.city || ''}, ${a.state || ''} - ${a.pincode || ''}`;
+
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('successState').classList.remove('hidden');
+            } catch (e) {
+                console.warn('Could not load order:', e.message);
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('errorState').classList.remove('hidden');
+            }
+        }
+
+        loadOrder();
+    </script>
+</body>
+</html>
