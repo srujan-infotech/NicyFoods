@@ -1810,6 +1810,37 @@
         .trust-bar-item i {
             font-size: 1rem;
         }
+
+        /* ===== PRODUCT CARD FONT ADJUSTMENTS ===== */
+        /* Product name - now same size as price (1.5rem) */
+        .product-card-title {
+            font-size: 1.5rem !important;
+            line-height: 1.3 !important;
+            font-weight: 700 !important;
+        }
+        .product-card-price {
+            font-size: 1.5rem !important;
+            font-weight: 700 !important;
+            color: var(--kumkum) !important;
+        }
+        .product-card-weight {
+            font-size: 0.7rem !important;
+        }
+        .product-card-badge {
+            font-size: 0.6rem !important;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .product-card-desc {
+            font-size: 0.85rem !important;
+        }
+        .product-card-courier {
+            font-size: 0.80rem !important;
+        }
+        .product-card-category-tag {
+            font-size: 0.55rem !important;
+            letter-spacing: 0.08em;
+        }
     </style>
 </head>
 <body class="bg-cream">
@@ -2720,6 +2751,46 @@
             const PRODUCTS_API_URL = `${API_BASE_URL}/products`;
             const productGrid = document.getElementById('productGrid');
 
+            // Fallback products matching the image
+            const FALLBACK_PRODUCTS = [
+                {
+                    _id: 'sugar-free-methi-laddu',
+                    name: 'Sugar Free Methi Laddu',
+                    category: 'SUGAR-FREE',
+                    price: '550',
+                    description: 'Made with Methi, Kharik, Coconut, Wheat flour, Dink, Raisins, Dates, Kaju, Almond, Poppy Seeds, Ghee, and Cardamom. A naturally sweetened traditional option for balanced nutrition.',
+                    image: '',
+                    weightOptions: []
+                },
+                {
+                    _id: 'aaliv-laddu',
+                    name: 'Aaliv Laddu',
+                    category: 'TRADITIONAL',
+                    price: '440',
+                    description: 'Made with Halvi, Ghee, Coconut, Jaggery, Cardamom, and Nutmeg. Traditionally valued for nutrition, immunity support, and postnatal wellness.',
+                    image: '',
+                    weightOptions: []
+                },
+                {
+                    _id: 'dink-laddu-gond',
+                    name: 'Dink Laddu (Gond Laddu)',
+                    category: 'TRADITIONAL',
+                    price: '540',
+                    description: 'Made with Dink, Kharik, Coconut, Kaju, Almond, Jaggery, Ghee, Cardamom, and Nutmeg. A nutrient-dense traditional sweet often preferred for bone strength, immunity, and post-pregnancy nourishment.',
+                    image: '',
+                    weightOptions: []
+                },
+                {
+                    _id: 'methi-laddu-pregnancy',
+                    name: 'Methi Laddu',
+                    category: 'PREGNANCY-GIFT',
+                    price: '440',
+                    description: 'Made with Methi, Kaju, Kharik, Wheat Flour, Almond, Coconut, Dink, Cardamom, Ghee, and Jaggery. A nourishing traditional recipe known for post-pregnancy support and daily wellness.',
+                    image: '',
+                    weightOptions: []
+                }
+            ];
+
             function getImageUrl(filename) {
                 if (!filename) return null;
                 if (filename.startsWith('http://') || filename.startsWith('https://')) {
@@ -2734,10 +2805,13 @@
                     if (!response.ok) throw new Error(`HTTP ${response.status}`);
                     const data = await response.json();
                     console.log('✅ Products loaded from server:', data);
-                    return data;
+                    if (data && data.length > 0) {
+                        return data;
+                    }
+                    return FALLBACK_PRODUCTS;
                 } catch (error) {
-                    console.warn('⚠️ Could not fetch products from API:', error.message);
-                    return [];
+                    console.warn('⚠️ Could not fetch products from API, using fallback:', error.message);
+                    return FALLBACK_PRODUCTS;
                 }
             }
 
@@ -2748,10 +2822,13 @@
                 const name = product.name || 'Product';
                 const description = product.description || '';
 
+                // Format category display
+                const categoryDisplay = category.replace(/-/g, ' ').toUpperCase();
+
                 let weightHtml = '';
                 if (product.weightOptions && product.weightOptions.length > 0) {
                     const weightParts = product.weightOptions.map(w => `${w.label}₹${w.price}`).join(' | ');
-                    weightHtml = `<p class="text-sm text-slate-500 mt-2">
+                    weightHtml = `<p class="product-card-courier text-slate-500 mt-2">
                                 <span class="font-semibold text-jaggery">Courier Charges:</span> ${weightParts}
                             </p>`;
                 }
@@ -2764,7 +2841,7 @@
                                             data-wish-name="${name}"
                                             data-wish-img="${imageUrl}"
                                             data-wish-price="${price}"
-                                            data-wish-cat="${category.toUpperCase()}"
+                                            data-wish-cat="${categoryDisplay}"
                                             data-wish-url="product-detail.html?id=${product._id || name.toLowerCase().replace(/\s/g, '-')}"
                                             aria-label="Add to wishlist">
                                         <svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
@@ -2772,10 +2849,10 @@
                                     <img src="${imageUrl}" alt="${name}" class="prod-img max-h-full object-contain rounded-lg" loading="lazy" onerror="this.src='https://nicyfoods.com/images/placeholder.jpg'">
                                 </div>
                                 <div class="p-5 flex flex-col flex-1">
-                                    <span class="badge inline-block w-fit bg-gradient-to-r from-marigold/25 to-turmeric/25 text-kumkum text-xs font-bold px-3 py-1 rounded-full mb-3 border border-turmeric/30">${category.toUpperCase()}</span>
-                                    <h3 class="font-display text-lg text-jaggery">${name}</h3>
-                                    <p class="text-slate-500 text-sm mt-2 flex-1">${description || 'Handcrafted with pure ingredients'}</p>
-                                    <p class="text-kumkum text-2xl font-bold mt-4">₹${price}</p>
+                                    <span class="product-card-category-tag badge inline-block w-fit bg-gradient-to-r from-marigold/25 to-turmeric/25 text-kumkum font-bold px-3 py-1 rounded-full mb-2 border border-turmeric/30">${categoryDisplay}</span>
+                                    <h3 class="product-card-title font-display text-jaggery">${name}</h3>
+                                    <p class="product-card-desc text-slate-500 mt-2 flex-1 leading-relaxed">${description || 'Handcrafted with pure ingredients'}</p>
+                                    <p class="product-card-price mt-3">₹${price}</p>
                                     ${weightHtml}
                                     <div class="add-cart-row">
                                         <button class="add-cart-btn" data-cart-id="${product._id || name.toLowerCase().replace(/\s/g, '-')}"

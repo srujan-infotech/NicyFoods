@@ -1,5 +1,4 @@
 
-// // -------------------- CONFIG --------------------
 // const NAV_API_BASE_URL = "https://nicyfoods.srujaninfotech.com";
 // const NAV_LINKS_URL = `${NAV_API_BASE_URL}/api/navlinks`;
 
@@ -105,6 +104,7 @@
 //       <!-- Mobile menu -->
 //       <ul id="mobile-menu" class="mobile-menu-collapsed md:hidden text-jaggery font-semibold text-base sm:text-lg flex flex-col gap-0.5 px-4 sm:px-6 overflow-hidden" style="font-family:'Poppins', sans-serif;">
 //         <div id="mobile-nav-links"></div>
+//         <li><a href="myorders.html" class="block py-3 border-b border-jaggery/10 hover:text-kumkum hover:pl-2 transition-all">📦 My Orders</a></li>
 //         <div id="mobile-rbac-links"></div>
 //       </ul>
 //     </div>
@@ -840,12 +840,17 @@
 //           ${user.name}
 //           <span class="block text-xs font-normal text-slate-400">${user.email}</span>
 //         </div>
+//         <a href="myorders.html">📦 My Orders</a>
 //         ${isAdmin ? `<a href="dashboard.html">⚙️ Admin Dashboard</a>` : ""}
 //         <div class="dropdown-divider"></div>
 //         <button id="logout-btn">🚪 Logout</button>
 //       `;
 //     } else {
-//       html = `<a href="login.html">🔑 Login</a>`;
+//       html = `
+//         <a href="myorders.html">📦 My Orders</a>
+//         <div class="dropdown-divider"></div>
+//         <a href="login.html">🔑 Login</a>
+//       `;
 //     }
 //     dropdownContent.innerHTML = html;
 
@@ -931,12 +936,6 @@
 
 
 
-
-
-
-
-
-// -------------------- CONFIG --------------------
 const NAV_API_BASE_URL = "https://nicyfoods.srujaninfotech.com";
 const NAV_LINKS_URL = `${NAV_API_BASE_URL}/api/navlinks`;
 
@@ -1196,6 +1195,11 @@ function loadNavbar() {
       /* ─── Desktop "Product" category dropdown ─── */
       #site-navbar .nav-item-has-dropdown {
         position: relative;
+        /* extra bottom padding on the trigger's <li> so there is NO dead
+           gap between the "Product" link and the dropdown box below it -
+           this is what was causing hover to break when moving the mouse
+           down toward the menu */
+        padding-bottom: 4px;
       }
       #site-navbar .nav-dropdown-toggle {
         display: inline-flex;
@@ -1211,7 +1215,7 @@ function loadNavbar() {
       #site-navbar .nav-item-has-dropdown:hover .nav-dropdown-toggle svg {
         transform: rotate(180deg);
       }
-      
+
       /* Dropdown styles - now with click support */
       #site-navbar .nav-category-menu {
         position: absolute;
@@ -1222,8 +1226,15 @@ function loadNavbar() {
         background: #ffffff;
         border-radius: 0.75rem;
         box-shadow: 0 12px 28px -8px rgba(92, 58, 37, 0.3);
-        padding: 0.4rem 0;
-        margin-top: 0.6rem;
+        /* NOTE: no margin-top here anymore. Margin created a real gap that
+           was OUTSIDE both the trigger's hover box and the menu's hover
+           box, so the mouse "lost" hover while crossing it and the menu
+           snapped shut before you could reach it.
+           Instead we use padding-top of the same visual size — padding is
+           still part of this element's own box, so hovering over that
+           padding area still counts as hovering the menu (and therefore
+           the parent <li>), keeping the dropdown open all the way down. */
+        padding: 0.9rem 0 0.4rem 0;
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
@@ -1231,7 +1242,7 @@ function loadNavbar() {
         z-index: 9999;
         border: 1px solid rgba(92, 58, 37, 0.08);
       }
-      
+
       /* Show dropdown on hover */
       #site-navbar .nav-item-has-dropdown:hover .nav-category-menu {
         opacity: 1;
@@ -1239,7 +1250,7 @@ function loadNavbar() {
         transform: translateX(-50%) translateY(0);
         pointer-events: auto;
       }
-      
+
       /* Show dropdown when active class is added (for click) */
       #site-navbar .nav-item-has-dropdown.dropdown-active .nav-category-menu {
         opacity: 1;
@@ -1247,7 +1258,7 @@ function loadNavbar() {
         transform: translateX(-50%) translateY(0);
         pointer-events: auto;
       }
-      
+
       /* Also show when focus is within (for keyboard users) */
       #site-navbar .nav-item-has-dropdown:focus-within .nav-category-menu {
         opacity: 1;
@@ -1255,7 +1266,7 @@ function loadNavbar() {
         transform: translateX(-50%) translateY(0);
         pointer-events: auto;
       }
-      
+
       #site-navbar .nav-category-menu a {
         display: block;
         padding: 0.55rem 1.1rem;
@@ -1561,46 +1572,61 @@ function loadNavbar() {
       }
     });
 
-    // ─── Desktop Dropdown Click Handler ───
-    // Find all product dropdown items and add click functionality
+    // ─── Desktop Dropdown: hover (with grace-period) + click ───
     document.querySelectorAll('.nav-item-has-dropdown').forEach((dropdownItem) => {
       const toggleLink = dropdownItem.querySelector('.nav-dropdown-toggle');
       const dropdownMenu = dropdownItem.querySelector('.nav-category-menu');
-      
-      if (toggleLink && dropdownMenu) {
-        // Click on the dropdown toggle (Product link or arrow)
-        toggleLink.addEventListener('click', function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          
-          // Toggle the active class on the dropdown item
-          const isActive = dropdownItem.classList.toggle('dropdown-active');
-          
-          // If we're opening this dropdown, close any others
-          if (isActive) {
-            document.querySelectorAll('.nav-item-has-dropdown.dropdown-active').forEach((other) => {
-              if (other !== dropdownItem) {
-                other.classList.remove('dropdown-active');
-              }
-            });
-          }
+      if (!toggleLink || !dropdownMenu) return;
+
+      let closeTimer = null;
+
+      const openDropdown = () => {
+        clearTimeout(closeTimer);
+        document.querySelectorAll('.nav-item-has-dropdown.dropdown-active').forEach((other) => {
+          if (other !== dropdownItem) other.classList.remove('dropdown-active');
         });
-        
-        // Click on category items should navigate, not close dropdown
-        dropdownMenu.querySelectorAll('a').forEach((categoryLink) => {
-          categoryLink.addEventListener('click', function(e) {
-            // Don't prevent default - let the navigation happen
-            // But close the dropdown after navigation
-            setTimeout(() => {
-              dropdownItem.classList.remove('dropdown-active');
-            }, 100);
-          });
+        dropdownItem.classList.add('dropdown-active');
+      };
+
+      const scheduleClose = () => {
+        clearTimeout(closeTimer);
+        // small grace period so a slightly imprecise mouse path
+        // (e.g. moving diagonally toward the menu) doesn't close it
+        closeTimer = setTimeout(() => {
+          dropdownItem.classList.remove('dropdown-active');
+        }, 250);
+      };
+
+      // Mouse users: open on enter, close after a short delay on leave.
+      // This works together with the CSS :hover rule and is what keeps
+      // the menu open even if the cursor briefly leaves the tightest
+      // bounding box while moving down into the menu.
+      dropdownItem.addEventListener('mouseenter', openDropdown);
+      dropdownItem.addEventListener('mouseleave', scheduleClose);
+
+      // Click / tap: toggle explicitly (useful for touch & keyboard-ish use)
+      toggleLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const isActive = dropdownItem.classList.contains('dropdown-active');
+        document.querySelectorAll('.nav-item-has-dropdown.dropdown-active').forEach((other) => {
+          other.classList.remove('dropdown-active');
         });
-      }
+        if (!isActive) dropdownItem.classList.add('dropdown-active');
+      });
+
+      // Clicking a category item should navigate, then close the dropdown
+      dropdownMenu.querySelectorAll('a').forEach((categoryLink) => {
+        categoryLink.addEventListener('click', function () {
+          setTimeout(() => {
+            dropdownItem.classList.remove('dropdown-active');
+          }, 100);
+        });
+      });
     });
 
     // Close dropdowns when clicking outside
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
       if (!e.target.closest('.nav-item-has-dropdown')) {
         document.querySelectorAll('.nav-item-has-dropdown.dropdown-active').forEach((item) => {
           item.classList.remove('dropdown-active');
@@ -1609,7 +1635,7 @@ function loadNavbar() {
     });
 
     // Close dropdowns on escape key
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') {
         document.querySelectorAll('.nav-item-has-dropdown.dropdown-active').forEach((item) => {
           item.classList.remove('dropdown-active');

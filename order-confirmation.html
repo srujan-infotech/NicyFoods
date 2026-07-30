@@ -33,6 +33,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
 
+    <!-- PDF generation libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <style>
         :root {
             --cream: #FFFFFF; --jaggery: #5C3A25; --ink: #3A2417;
@@ -56,10 +60,16 @@
         .confirm-glow {
             position: absolute; inset: -20%; pointer-events: none; z-index: 0;
             background: radial-gradient(circle at 25% 25%, rgba(255,199,44,.45), transparent 55%),
-                        radial-gradient(circle at 80% 60%, rgba(215,38,61,.4), transparent 55%);
+                        radial-gradient(circle at 80% 60%, rgba(215,38,61,.4), transparent 55%),
+                        radial-gradient(circle at 15% 80%, rgba(95,122,79,.3), transparent 55%);
             animation: glowDrift 12s ease-in-out infinite;
         }
         @keyframes glowDrift { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(3%,-2%) scale(1.08); } }
+
+        .ladoo-particle { position: absolute; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #FFC72C, #D7263D 70%); opacity: .22; pointer-events: none; }
+        .float-drift-slow { animation: driftY 10s ease-in-out infinite; }
+        .float-drift { animation: driftY 7s ease-in-out infinite; }
+        @keyframes driftY { 0%,100% { transform: translateY(0) translateX(0); } 50% { transform: translateY(-16px) translateX(6px); } }
 
         .confetti-piece {
             position: absolute; top: -10%; border-radius: 2px; opacity: 0; pointer-events: none;
@@ -71,18 +81,19 @@
             100% { transform: translateY(420px) rotate(340deg); opacity: 0; }
         }
 
-        .success-ring {
-            width: 100px; height: 100px; border-radius: 50%; position: relative; z-index: 2;
+        .success-ring { width: 100px; height: 100px; border-radius: 50%; position: relative; z-index: 2;
             background: linear-gradient(135deg, var(--herbal), #3f8a55);
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 18px 40px -10px rgba(0,0,0,.5);
             animation: ringPop .6s cubic-bezier(.34,1.56,.64,1) both;
         }
-        .success-ring::before {
-            content: ''; position: absolute; inset: -14px; border-radius: 50%;
-            border: 2px solid rgba(95,122,79,.5); animation: ringPulse 2s ease-out infinite;
+        .success-ring::before { content: ''; position: absolute; inset: -14px; border-radius: 50%;
+            border: 2px solid rgba(255,199,44,.55); animation: ringPulse 2s ease-out infinite;
         }
-        @keyframes ringPulse { 0% { transform: scale(.85); opacity: .9; } 100% { transform: scale(1.35); opacity: 0; } }
+        .success-ring::after { content: ''; position: absolute; inset: -14px; border-radius: 50%;
+            border: 2px solid rgba(95,122,79,.5); animation: ringPulse 2s ease-out infinite .5s;
+        }
+        @keyframes ringPulse { 0% { transform: scale(.85); opacity: .9; } 100% { transform: scale(1.4); opacity: 0; } }
         @keyframes ringPop { from { transform: scale(.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .success-ring svg { width: 48px; height: 48px; position: relative; z-index: 2; }
 
@@ -93,8 +104,8 @@
         }
         .order-chip {
             display: inline-flex; align-items: center; gap: .6rem; font-family: 'Poppins', monospace;
-            font-weight: 600; font-size: .85rem; background: rgba(255,255,255,.95); color: var(--jaggery);
-            padding: .55rem .6rem .55rem 1.1rem; border-radius: 999px; box-shadow: 0 8px 22px -8px rgba(0,0,0,.35);
+            font-weight: 600; font-size: .85rem; background: linear-gradient(180deg, #fff, #fff7ea); color: var(--jaggery);
+            padding: .55rem .6rem .55rem 1.1rem; border-radius: 999px; box-shadow: 0 8px 22px -8px rgba(0,0,0,.4), 0 0 0 1px rgba(255,199,44,.35);
         }
         .copy-btn {
             display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px;
@@ -106,32 +117,79 @@
 
         /* ===== CONTENT CARDS (pulled up over the hero) ===== */
         .confirm-content { position: relative; z-index: 3; margin-top: -3.4rem; }
-        .track-card { background: #FFFDF9; border-radius: 1.25rem; box-shadow: 0 16px 40px -18px rgba(92,58,37,.3); border: 1px solid rgba(92,58,37,.05); }
+        .track-card {
+            position: relative; overflow: hidden;
+            background: #FFFDF9; border-radius: 1.25rem;
+            box-shadow: 0 16px 40px -18px rgba(92,58,37,.3); border: 1px solid rgba(92,58,37,.05);
+        }
+        .track-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, var(--turmeric), var(--kumkum), var(--herbal));
+        }
 
         .step-track { display: flex; align-items: flex-start; justify-content: space-between; margin: 1.5rem 0 .5rem; }
         .step { display: flex; flex-direction: column; align-items: center; gap: .5rem; flex: 1; position: relative; }
         .step .dot {
             width: 34px; height: 34px; border-radius: 50%; background: #f1e6d8; color: #9a8a7c;
             display: flex; align-items: center; justify-content: center; font-size: .85rem; z-index: 1;
-            transition: background-color .4s ease, color .4s ease, transform .3s ease;
+            transition: background-color .4s ease, color .4s ease, transform .3s ease, box-shadow .3s ease;
         }
         .step.done .dot { background: linear-gradient(135deg, var(--herbal), #3f8a55); color: #fff; }
-        .step.current .dot { background: linear-gradient(135deg, var(--turmeric), var(--kumkum)); color: #fff; transform: scale(1.12); box-shadow: 0 0 0 4px rgba(245,166,35,.18); }
+        .step.current .dot { background: linear-gradient(135deg, var(--turmeric), var(--kumkum)); color: #fff; transform: scale(1.15); box-shadow: 0 0 0 5px rgba(245,166,35,.2), 0 0 18px rgba(215,38,61,.35); }
         .step .label { font-size: .68rem; color: #9a8a7c; text-align: center; font-weight: 500; }
         .step.done .label, .step.current .label { color: var(--jaggery); font-weight: 700; }
         .step::after { content: ''; position: absolute; top: 17px; left: 50%; width: 100%; height: 3px; background: #f1e6d8; z-index: 0; border-radius: 2px; }
         .step:last-child::after { display: none; }
-        .step.done::after { background: var(--herbal); }
+        .step.done::after { background: linear-gradient(90deg, var(--herbal), #3f8a55); }
 
         .item-row { display: flex; align-items: center; gap: .7rem; padding: .6rem 0; border-bottom: 1px dashed rgba(92,58,37,.1); font-size: .88rem; }
         .item-row:last-child { border-bottom: none; }
         .item-thumb { width: 42px; height: 42px; border-radius: .55rem; overflow: hidden; flex-shrink: 0; background: rgba(255,199,44,.1); }
         .item-thumb img { width: 100%; height: 100%; object-fit: cover; }
 
-        .price-details-box { background: #fffaf1; border: 1.5px solid rgba(92,58,37,.08); border-radius: .8rem; padding: .9rem 1rem; margin-top: .8rem; }
-        .price-details-box .pd-row { display: flex; justify-content: space-between; font-size: .85rem; color: #6b5a4d; margin-bottom: .45rem; }
-        .price-details-box .pd-row.pd-free { color: var(--herbal); font-weight: 600; }
-        .price-details-box .pd-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 1rem; color: var(--jaggery); padding-top: .55rem; border-top: 1.5px dashed rgba(92,58,37,.15); }
+        /* ===== ENHANCED PRICE / COURIER SUMMARY BOX ===== */
+        .price-details-box {
+            background: linear-gradient(180deg, #fffaf1, #fff5e6);
+            border: 1.5px solid rgba(92,58,37,.1);
+            border-radius: 1rem;
+            padding: 1.1rem 1.2rem;
+            margin-top: .9rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .price-details-box::before {
+            content: '';
+            position: absolute; top: -30%; right: -20%; width: 130px; height: 130px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,199,44,.12), transparent 70%);
+            pointer-events: none;
+        }
+        .pd-row {
+            display: flex; align-items: center; justify-content: space-between;
+            font-size: .87rem; color: #6b5a4d; margin-bottom: .55rem; position: relative; z-index: 1;
+        }
+        .pd-row .pd-label { display: flex; align-items: center; gap: .45rem; }
+        .pd-row .pd-label i { width: 15px; text-align: center; color: var(--turmeric); font-size: .8rem; }
+        .pd-row.pd-free { color: var(--herbal); font-weight: 700; }
+        .pd-row.pd-free .pd-label i { color: var(--herbal); }
+        .pd-total {
+            display: flex; align-items: center; justify-content: space-between;
+            font-weight: 700; font-size: 1.05rem; color: var(--jaggery);
+            padding-top: .7rem; margin-top: .3rem; border-top: 1.5px dashed rgba(92,58,37,.18);
+            position: relative; z-index: 1;
+        }
+        .pd-total .pd-total-amount { color: var(--kumkum); font-family: 'Rozha One', serif; font-size: 1.25rem; }
+        .pd-breakdown { font-size: .72rem; color: #a8988a; margin: -.25rem 0 .55rem 1.6rem; position: relative; z-index: 1; }
+        .pd-free-strip {
+            display: flex; align-items: center; gap: .5rem; font-size: .74rem; font-weight: 700; color: var(--herbal);
+            background: rgba(95,122,79,.1); padding: .5rem .7rem; border-radius: .6rem; margin-bottom: .8rem;
+            position: relative; z-index: 1; animation: fadeUp .4s ease both;
+        }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+        .zone-badge { display: inline-flex; align-items: center; gap: .3rem; font-size: .64rem; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; padding: .18rem .55rem; border-radius: 999px; margin-left: .5rem; }
+        .zone-badge.zone-local { background: rgba(95,122,79,.14); color: var(--herbal); }
+        .zone-badge.zone-state { background: rgba(245,166,35,.16); color: #b5760f; }
+        .zone-badge.zone-national { background: rgba(215,38,61,.12); color: var(--kumkum); }
 
         .info-row { display: flex; align-items: flex-start; gap: .6rem; margin-bottom: .8rem; }
         .info-row i { color: var(--turmeric); margin-top: .2rem; width: 16px; text-align: center; }
@@ -139,20 +197,52 @@
         .payment-badge.cod { background: rgba(95,122,79,.1); color: var(--herbal); }
         .payment-badge.online { background: rgba(215,38,61,.08); color: var(--kumkum); }
 
-        .action-btn { display: inline-flex; align-items: center; gap: .5rem; font-weight: 600; padding: .8rem 1.6rem; border-radius: .8rem; font-size: .88rem; transition: transform .2s ease, box-shadow .25s ease, background-color .2s ease; }
+        .action-btn { display: inline-flex; align-items: center; gap: .5rem; font-weight: 600; padding: .8rem 1.6rem; border-radius: .8rem; font-size: .88rem; transition: transform .2s ease, box-shadow .25s ease, background-color .2s ease; border: none; cursor: pointer; }
         .action-btn.primary { background: linear-gradient(135deg, var(--turmeric), var(--kumkum)); color: #fff; box-shadow: 0 10px 24px -10px rgba(215,38,61,.5); }
         .action-btn.primary:hover { transform: translateY(-2px); box-shadow: 0 14px 30px -10px rgba(215,38,61,.6); }
-        .action-btn.outline { border: 2px solid var(--kumkum); color: var(--kumkum); }
+        .action-btn.outline { border: 2px solid var(--kumkum); color: var(--kumkum); background: transparent; }
         .action-btn.outline:hover { background: var(--kumkum); color: #fff; }
-        .action-btn.ghost { color: #8a7362; }
+        .action-btn.pdf { border: 2px solid var(--herbal); color: var(--herbal); background: transparent; }
+        .action-btn.pdf:hover { background: var(--herbal); color: #fff; }
+        .action-btn.pdf:disabled { opacity: .6; cursor: wait; transform: none; }
+        .action-btn.ghost { color: #8a7362; background: transparent; }
         .action-btn.ghost:hover { color: var(--kumkum); }
 
         .skeleton { background: linear-gradient(90deg, #f3ede2 25%, #ece2d2 37%, #f3ede2 63%); background-size: 400% 100%; animation: shimmer 1.4s ease infinite; border-radius: .5rem; }
         @keyframes shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
 
+        /* ===== PRINTABLE RECEIPT (hidden on screen, used for Print + PDF export) ===== */
+        #printableReceipt { display: none; }
+        .pr-wrap { width: 700px; background: #fff; padding: 40px; font-family: 'Poppins', sans-serif; color: #3A2417; }
+        .pr-head { display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #F5A623; padding-bottom: 16px; margin-bottom: 20px; }
+        .pr-brand { font-family: 'Rozha One', serif; font-size: 28px; color: #5C3A25; }
+        .pr-brand span { color: #D7263D; }
+        .pr-brand-sub { font-size: 11px; color: #8a7362; margin-top: 2px; }
+        .pr-status-pill { display: inline-block; padding: 6px 16px; border-radius: 999px; background: #5F7A4F; color: #fff; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; }
+        .pr-meta { display: flex; justify-content: space-between; margin-bottom: 22px; font-size: 13px; }
+        .pr-meta-block b { display: block; color: #5C3A25; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
+        .pr-section-title { font-size: 13px; font-weight: 700; color: #5C3A25; text-transform: uppercase; letter-spacing: .04em; margin: 22px 0 10px; border-bottom: 1px dashed #d8c9b8; padding-bottom: 6px; }
+        .pr-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .pr-table th { text-align: left; font-size: 11px; text-transform: uppercase; color: #8a7362; padding: 6px 4px; border-bottom: 2px solid #f1e6d8; }
+        .pr-table td { padding: 8px 4px; border-bottom: 1px solid #f1e6d8; }
+        .pr-table td.pr-right, .pr-table th.pr-right { text-align: right; }
+        .pr-totals { margin-top: 14px; margin-left: auto; width: 260px; font-size: 13px; }
+        .pr-totals div { display: flex; justify-content: space-between; padding: 5px 0; }
+        .pr-totals .pr-grand { border-top: 2px solid #5C3A25; margin-top: 6px; padding-top: 10px; font-weight: 700; font-size: 16px; color: #D7263D; }
+        .pr-footer { margin-top: 34px; text-align: center; font-size: 11px; color: #a8988a; border-top: 1px dashed #d8c9b8; padding-top: 14px; }
+
         @media (prefers-reduced-motion: reduce) {
             * { animation: none !important; transition: none !important; }
-            .success-ring::before { display: none; }
+            .success-ring::before, .success-ring::after { display: none; }
+        }
+
+        /* ===== PRINT STYLES ===== */
+        @media print {
+            body * { visibility: hidden; }
+            #printableReceipt, #printableReceipt * { visibility: visible; }
+            #printableReceipt { display: block !important; position: absolute; top: 0; left: 0; width: 100%; }
+            .pr-wrap { width: 100%; padding: 0; }
+            @page { margin: 16mm; }
         }
     </style>
 </head>
@@ -164,6 +254,9 @@
     <section class="confirm-hero">
         <div class="confirm-hero-pattern"></div>
         <div class="confirm-glow"></div>
+        <div class="ladoo-particle w-16 h-16 float-drift-slow" style="top:10%; left:6%;"></div>
+        <div class="ladoo-particle w-10 h-10 float-drift" style="top:65%; right:8%;"></div>
+        <div class="ladoo-particle w-8 h-8 float-drift-slow" style="top:20%; right:14%;"></div>
         <div id="confettiWrap" class="absolute inset-0 pointer-events-none z-[1]"></div>
 
         <div class="relative z-[2] max-w-3xl mx-auto flex flex-col items-center text-center">
@@ -210,10 +303,17 @@
                 <div class="track-card p-6">
                     <h2 class="font-display text-lg text-jaggery mb-3"><i class="fas fa-box text-turmeric mr-1"></i> Items</h2>
                     <div id="itemsList"></div>
-                    <div class="price-details-box">
-                        <div class="pd-row"><span id="orderItemLabel">Price</span><span id="orderSubtotal">₹0</span></div>
-                        <div class="pd-row pd-free"><span>Delivery Charges</span><span>As confirmed by our team</span></div>
-                        <div class="pd-total"><span>Total Payable</span><span id="orderTotal">₹0</span></div>
+                    <div class="price-details-box" id="priceDetailsBox">
+                        <div class="pd-row">
+                            <span class="pd-label"><i class="fas fa-receipt"></i><span id="orderItemLabel">Price</span></span>
+                            <span id="orderSubtotal">₹0</span>
+                        </div>
+                        <div class="pd-row" id="orderDeliveryRow">
+                            <span class="pd-label"><i class="fas fa-truck-fast" id="orderDeliveryIcon"></i>Delivery / Courier<span id="orderZoneBadge"></span></span>
+                            <span id="orderDeliveryCharge">₹0</span>
+                        </div>
+                        <p class="pd-breakdown" id="orderDeliveryBreakdown"></p>
+                        <div class="pd-total"><span>Total Payable</span><span id="orderTotal" class="pd-total-amount">₹0</span></div>
                     </div>
                 </div>
                 <div class="track-card p-6">
@@ -227,8 +327,62 @@
 
             <div class="flex flex-wrap items-center justify-center gap-4">
                 <a href="product.html" class="action-btn primary"><i class="fas fa-bag-shopping"></i> Continue Shopping</a>
-                <button type="button" onclick="window.print()" class="action-btn outline"><i class="fas fa-print"></i> Print / Save Receipt</button>
+                <button type="button" onclick="window.print()" class="action-btn outline"><i class="fas fa-print"></i> Print Receipt</button>
+                <button type="button" id="downloadPdfBtn" onclick="downloadReceiptPDF()" class="action-btn pdf"><i class="fas fa-file-arrow-down"></i> Download PDF</button>
                 <a href="mailto:nicyfoods5@gmail.com" class="action-btn ghost"><i class="fas fa-circle-question"></i> Need help with this order?</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden, print/PDF-only clean receipt -->
+    <div id="printableReceipt">
+        <div class="pr-wrap">
+            <div class="pr-head">
+                <div>
+                    <div class="pr-brand">Nicy<span>Foods</span></div>
+                    <div class="pr-brand-sub">Plot No 20, Saikrupa Society, Ingale Nagar, Warje Jakat Naka, Warje, Pune – 411052</div>
+                </div>
+                <div class="pr-status-pill" id="prStatusPill">Confirmed</div>
+            </div>
+
+            <div class="pr-meta">
+                <div class="pr-meta-block">
+                    <b>Order Number</b>
+                    <span id="prOrderNumber">-</span>
+                </div>
+                <div class="pr-meta-block">
+                    <b>Order Date</b>
+                    <span id="prOrderDate">-</span>
+                </div>
+                <div class="pr-meta-block">
+                    <b>Payment Method</b>
+                    <span id="prPaymentMethod">-</span>
+                </div>
+            </div>
+
+            <div class="pr-section-title">Billed / Shipped To</div>
+            <div style="font-size:13px; line-height:1.6;">
+                <div><b id="prCustName">-</b></div>
+                <div id="prCustPhone">-</div>
+                <div id="prShipAddress">-</div>
+            </div>
+
+            <div class="pr-section-title">Order Items</div>
+            <table class="pr-table">
+                <thead>
+                    <tr><th>Item</th><th class="pr-right">Qty</th><th class="pr-right">Price</th><th class="pr-right">Amount</th></tr>
+                </thead>
+                <tbody id="prItemsBody"></tbody>
+            </table>
+
+            <div class="pr-totals">
+                <div><span>Subtotal</span><span id="prSubtotal">₹0</span></div>
+                <div><span>Delivery / Courier</span><span id="prDelivery">₹0</span></div>
+                <div class="pr-grand"><span>Total Paid</span><span id="prTotal">₹0</span></div>
+            </div>
+
+            <div class="pr-footer">
+                Thank you for shopping with NicyFoods — freshly packed by hand. For queries, write to nicyfoods5@gmail.com
             </div>
         </div>
     </div>
@@ -242,6 +396,12 @@
         // Keep this in sync with the API_BASE used on cart.html
         const API_BASE = 'https://nicyfoods.srujaninfotech.com';
         const TRACK_API_URL = API_BASE + '/api/orders/track/';
+        const COURIER_CHARGE_API_URL = API_BASE + '/api/courier-charge';
+
+        // Keep this in sync with SHOP_PINCODE in cart.html.
+        // Shop address: Plot No 20, Saikrupa Society, Ingale Nagar,
+        // Warje Jakat Naka, Warje, Pune – 411052
+        const SHOP_PINCODE = '411052';
 
         const STATUS_STEPS = ['pending', 'confirmed', 'processing', 'shipped', 'delivered'];
         const STATUS_LABELS = {
@@ -259,7 +419,76 @@
             online_netbanking: { text: 'Paid Online · Netbanking', cls: 'online', icon: 'fa-building-columns' },
         };
 
+        // Store the last-loaded order + resolved pricing so the PDF/print
+        // receipt can be (re)built without re-fetching.
+        var LAST_ORDER = null;
+        var LAST_PRICING = null;
+
         function money(n) { return '₹' + Math.round(n || 0).toLocaleString('en-IN'); }
+
+        // ---------- WEIGHT PARSING (client-side only, for the legacy-order fallback below) ----------
+        function parseGramsFromWeightLabel(label) {
+            if (!label) return 250;
+            var m = String(label).toLowerCase().replace(/\s/g, '').match(/([\d.]+)(kg|g)/);
+            if (!m) return 250;
+            var val = parseFloat(m[1]);
+            if (isNaN(val)) return 250;
+            return m[2] === 'kg' ? val * 1000 : val;
+        }
+
+        function totalOrderGrams(items) {
+            return items.reduce(function(sum, i) {
+                return sum + parseGramsFromWeightLabel(i.weightLabel) * (i.qty || 1);
+            }, 0);
+        }
+
+        function formatWeight(grams) {
+            if (grams >= 1000) {
+                var kg = grams / 1000;
+                return (kg % 1 === 0 ? kg : kg.toFixed(2)) + 'kg';
+            }
+            return grams + 'g';
+        }
+
+        // ---------- COURIER CHARGE FALLBACK (same backend endpoint as cart.html) ----------
+        async function computeDeliveryCharge(pincode, items) {
+            var grams = totalOrderGrams(items);
+            var cleanPincode = (pincode || '').trim();
+
+            if (!cleanPincode || cleanPincode.length < 6) {
+                return { charge: 0, breakdown: [], isLocal: false, matched: 'none', area: null, zoneLabel: null, grams: grams };
+            }
+
+            if (cleanPincode === SHOP_PINCODE) {
+                return { charge: 0, breakdown: [], isLocal: true, matched: 'exact', area: 'Shop Pincode', zoneLabel: null, grams: grams };
+            }
+
+            try {
+                var res = await fetch(COURIER_CHARGE_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ pincode: cleanPincode, grams: grams }),
+                });
+                var json = await res.json();
+                if (!json.success) throw new Error(json.message || 'Lookup failed');
+                return json.data;
+            } catch (err) {
+                console.warn('Courier charge API unavailable (legacy order fallback):', err.message);
+                return { charge: 0, breakdown: [], isLocal: false, matched: 'error', area: null, zoneLabel: null, grams: grams };
+            }
+        }
+
+        function zoneBadgeHtml(matched, area, zoneLabel) {
+            if (!matched || matched === 'exact' || matched === 'none' || matched === 'error') return '';
+            if (matched === 'admin-override') {
+                return area ? '<span class="zone-badge zone-local"><i class="fas fa-star" style="font-size:.55rem;"></i> ' + area + '</span>' : '';
+            }
+            if (matched === 'distance-zone' && zoneLabel) {
+                var cls = zoneLabel === 'Same City' ? 'zone-local' : zoneLabel === 'Same District' ? 'zone-state' : 'zone-national';
+                return '<span class="zone-badge ' + cls + '">' + zoneLabel + '</span>';
+            }
+            return '';
+        }
 
         function renderSteps(currentStatus) {
             var wrap = document.getElementById('stepTrack');
@@ -283,7 +512,6 @@
         function renderPaymentUI(paymentMethod) {
             var info = PAYMENT_LABELS[paymentMethod] || PAYMENT_LABELS.cod;
             var chip = document.getElementById('paymentChip');
-            chip.className = info.cls === 'online' ? 'cod-chip' : 'cod-chip'; // same pill shape, color set via icon/text
             chip.innerHTML = '<i class="fas ' + info.icon + '"></i> ' + info.text;
 
             var badge = document.getElementById('paymentMethodBadge');
@@ -321,6 +549,124 @@
             setTimeout(function() { wrap.innerHTML = ''; }, 4500);
         }
 
+        // ---------- RESOLVE COURIER/PRICING FOR THIS ORDER ----------
+        async function resolveOrderPricing(order, items) {
+            var hasFlatCourier = typeof order.courierCharge === 'number';
+            var hasNestedCourier = order.pricing && typeof order.pricing.courierCharge === 'number';
+
+            var subtotal = typeof order.subtotal === 'number' ? order.subtotal
+                : (order.pricing && typeof order.pricing.subtotal === 'number') ? order.pricing.subtotal
+                : items.reduce(function(sum, i) { return sum + (parseFloat(i.price) || 0) * (i.qty || 1); }, 0);
+
+            if (hasFlatCourier || hasNestedCourier) {
+                var courierCharge = hasFlatCourier ? order.courierCharge : order.pricing.courierCharge;
+                var isLocal = hasFlatCourier ? !!order.courierChargeIsLocal : !!order.pricing.courierChargeIsLocal;
+                var weightGrams = (hasFlatCourier ? order.totalWeightGrams : order.pricing.totalWeightGrams) || totalOrderGrams(items);
+                var matched = (hasFlatCourier ? order.courierChargeMatched : order.pricing.courierChargeMatched) || null;
+                var area = (hasFlatCourier ? order.courierChargeArea : order.pricing.courierChargeArea) || null;
+                var zoneLabel = (hasFlatCourier ? order.courierChargeZoneLabel : order.pricing.courierChargeZoneLabel) || null;
+                return {
+                    subtotal: subtotal, courierCharge: courierCharge, isLocal: isLocal,
+                    weightGrams: weightGrams, breakdown: null, matched: matched, area: area, zoneLabel: zoneLabel,
+                };
+            }
+
+            var a = order.shippingAddress || {};
+            var delivery = await computeDeliveryCharge(a.pincode, items);
+            return {
+                subtotal: subtotal, courierCharge: delivery.charge || 0, isLocal: delivery.isLocal,
+                weightGrams: delivery.grams, breakdown: delivery.breakdown, matched: delivery.matched,
+                area: delivery.area, zoneLabel: delivery.zoneLabel,
+            };
+        }
+
+        // ---------- POPULATE THE HIDDEN PRINTABLE RECEIPT ----------
+        function fillPrintableReceipt(order, items, pricing) {
+            var subtotal = pricing.subtotal;
+            var courierCharge = pricing.courierCharge;
+            var isLocal = pricing.isLocal;
+            var totalPayable = subtotal + courierCharge;
+            var a = order.shippingAddress || {};
+
+            document.getElementById('prStatusPill').textContent = STATUS_LABELS[order.status] || order.status || 'Confirmed';
+            document.getElementById('prOrderNumber').textContent = order.orderNumber || '-';
+            var orderDate = order.createdAt ? new Date(order.createdAt) : new Date();
+            document.getElementById('prOrderDate').textContent = orderDate.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+            var payInfo = PAYMENT_LABELS[order.paymentMethod] || PAYMENT_LABELS.cod;
+            document.getElementById('prPaymentMethod').textContent = payInfo.text;
+
+            document.getElementById('prCustName').textContent = (order.customer && order.customer.name) || '-';
+            document.getElementById('prCustPhone').textContent = (order.customer && order.customer.phone) || '-';
+            document.getElementById('prShipAddress').textContent =
+                (a.line1 || '') + (a.line2 ? ', ' + a.line2 : '') + ', ' +
+                (a.city || '') + ', ' + (a.state || '') + ' - ' + (a.pincode || '');
+
+            document.getElementById('prItemsBody').innerHTML = items.map(function(item) {
+                return '<tr>' +
+                    '<td>' + (item.name || '') + (item.weightLabel ? ' (' + item.weightLabel + ')' : '') + '</td>' +
+                    '<td class="pr-right">' + item.qty + '</td>' +
+                    '<td class="pr-right">' + money(item.price) + '</td>' +
+                    '<td class="pr-right">' + money(item.price * item.qty) + '</td>' +
+                    '</tr>';
+            }).join('');
+
+            document.getElementById('prSubtotal').textContent = money(subtotal);
+            document.getElementById('prDelivery').textContent = isLocal ? 'FREE' : money(courierCharge);
+            document.getElementById('prTotal').textContent = money(totalPayable);
+        }
+
+        // ---------- DOWNLOAD AS PDF (single page, sized exactly to content) ----------
+        async function downloadReceiptPDF() {
+            if (!LAST_ORDER) return;
+            var btn = document.getElementById('downloadPdfBtn');
+            var originalHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Preparing PDF...';
+
+            try {
+                var receipt = document.getElementById('printableReceipt');
+                receipt.style.display = 'block'; // must be visible for html2canvas to capture
+
+                var canvas = await html2canvas(receipt.querySelector('.pr-wrap'), {
+                    scale: 2,
+                    backgroundColor: '#ffffff',
+                    useCORS: true,
+                });
+
+                receipt.style.display = 'none';
+
+                var imgData = canvas.toDataURL('image/png');
+                var { jsPDF } = window.jspdf;
+
+                // Convert canvas pixel size -> PDF points (1px @ 96dpi = 0.75pt).
+                // Divide by 2 because scale:2 doubled the pixel density of the canvas.
+                var pxToPt = 0.75;
+                var imgWidthPt = (canvas.width * pxToPt) / 2;
+                var imgHeightPt = (canvas.height * pxToPt) / 2;
+
+                var margin = 24;
+                var pageWidth = imgWidthPt + margin * 2;
+                var pageHeight = imgHeightPt + margin * 2;
+
+                // Custom page size that exactly fits the receipt -> guarantees ONE page, no blank pages
+                var pdf = new jsPDF({
+                    orientation: pageHeight >= pageWidth ? 'p' : 'l',
+                    unit: 'pt',
+                    format: [pageWidth, pageHeight],
+                });
+
+                pdf.addImage(imgData, 'PNG', margin, margin, imgWidthPt, imgHeightPt);
+                pdf.save('NicyFoods-Order-' + LAST_ORDER.orderNumber + '.pdf');
+            } catch (err) {
+                console.error('PDF generation failed:', err);
+                alert('Sorry, we could not generate the PDF right now. Please try Print instead.');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+            }
+        }
+        window.downloadReceiptPDF = downloadReceiptPDF;
+
         async function loadOrder() {
             var params = new URLSearchParams(window.location.search);
             var orderNumber = params.get('order');
@@ -338,6 +684,7 @@
                 if (!json.success || !json.data) throw new Error('Not found');
 
                 var order = json.data;
+                LAST_ORDER = order;
 
                 document.getElementById('orderNumberChip').innerHTML =
                     'Order #' + order.orderNumber +
@@ -348,6 +695,8 @@
                 renderPaymentUI(order.paymentMethod || 'cod');
 
                 var items = order.items || [];
+                var a = order.shippingAddress || {};
+
                 document.getElementById('itemsList').innerHTML = items.map(function(item) {
                     return '<div class="item-row">' +
                         '<div class="item-thumb">' +
@@ -360,17 +709,63 @@
                         '</div>';
                 }).join('');
 
+                var pricing = await resolveOrderPricing(order, items);
+                LAST_PRICING = pricing;
+                var subtotal = pricing.subtotal;
+                var courierCharge = pricing.courierCharge;
+                var isLocal = pricing.isLocal;
+                var weightGrams = pricing.weightGrams;
+                var breakdown = pricing.breakdown;
+                var matched = pricing.matched;
+                var area = pricing.area;
+                var zoneLabel = pricing.zoneLabel;
+
                 var totalQty = items.reduce(function(sum, i) { return sum + (i.qty || 1); }, 0);
+                var totalPayable = subtotal + courierCharge;
+
                 document.getElementById('orderItemLabel').textContent = 'Price (' + totalQty + ' item' + (totalQty === 1 ? '' : 's') + ')';
-                document.getElementById('orderSubtotal').textContent = money(order.totalAmount);
-                document.getElementById('orderTotal').textContent = money(order.totalAmount);
+                document.getElementById('orderSubtotal').textContent = money(subtotal);
+
+                var deliveryRow = document.getElementById('orderDeliveryRow');
+                var deliveryEl = document.getElementById('orderDeliveryCharge');
+                var deliveryIconEl = document.getElementById('orderDeliveryIcon');
+                var breakdownEl = document.getElementById('orderDeliveryBreakdown');
+                var zoneBadgeEl = document.getElementById('orderZoneBadge');
+                var priceBox = document.getElementById('priceDetailsBox');
+
+                var existingStrip = priceBox.querySelector('.pd-free-strip');
+                if (existingStrip) existingStrip.remove();
+
+                zoneBadgeEl.innerHTML = zoneBadgeHtml(matched, area, zoneLabel);
+
+                if (isLocal) {
+                    deliveryEl.innerHTML = '<i class="fas fa-check-circle" style="font-size:.75rem; margin-right:.25rem;"></i>FREE';
+                    deliveryRow.classList.add('pd-free');
+                    deliveryIconEl.className = 'fas fa-house-circle-check';
+                    breakdownEl.textContent = '';
+                    priceBox.insertAdjacentHTML('afterbegin',
+                        '<div class="pd-free-strip"><i class="fas fa-gift"></i> Local delivery — courier charge waived for this pincode!</div>');
+                } else {
+                    deliveryEl.textContent = money(courierCharge);
+                    deliveryRow.classList.remove('pd-free');
+                    deliveryIconEl.className = 'fas fa-truck-fast';
+                    var sourceNote = matched === 'admin-override' ? 'Rate set for your area'
+                        : matched === 'distance-zone' ? 'Calculated by delivery distance'
+                        : '';
+                    breakdownEl.textContent = 'Order weight: ' + formatWeight(weightGrams) +
+                        (breakdown && breakdown.length ? '  (' + breakdown.join(' + ') + ')' : '') +
+                        (sourceNote ? '  ·  ' + sourceNote : '');
+                }
+
+                document.getElementById('orderTotal').textContent = money(totalPayable);
 
                 document.getElementById('custName').textContent = (order.customer && order.customer.name) || '-';
                 document.getElementById('custPhone').textContent = (order.customer && order.customer.phone) || '-';
-                var a = order.shippingAddress || {};
                 document.getElementById('shipAddress').innerHTML =
                     (a.line1 || '') + (a.line2 ? ', ' + a.line2 : '') + '<br>' +
                     (a.city || '') + ', ' + (a.state || '') + ' - ' + (a.pincode || '');
+
+                fillPrintableReceipt(order, items, pricing);
 
                 document.getElementById('loadingState').classList.add('hidden');
                 document.getElementById('successState').classList.remove('hidden');

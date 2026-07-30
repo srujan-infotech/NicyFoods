@@ -752,6 +752,9 @@
         .filter-btn.active .cat-icon {
             color: #fff !important;
         }
+        .filter-tabs-loading {
+            display: flex; align-items: center; gap: .5rem; color: #b0a396; font-size: .85rem;
+        }
 
         .weight-select {
             width: 100%;
@@ -1407,52 +1410,12 @@
             </p>
         </div>
 
-        <!-- Filter Tabs -->
+        <!-- Filter Tabs — built dynamically in JS from the categories actually present in
+             live backend product data (see renderFilterTabs()). This is the single source
+             of truth, so any category added in the admin panel appears here automatically,
+             with no code changes needed on this page. -->
         <div id="filter-tabs" class="reveal flex flex-wrap justify-center gap-3 mb-12">
-            <button data-filter="all" class="filter-btn active px-6 py-2.5 rounded-full border border-kumkum text-sm font-semibold text-kumkum">
-                <i class="fas fa-th-large cat-icon"></i>All Products
-                <span class="count-pill" data-count-for="all">0</span>
-            </button>
-            <button data-filter="millet" class="filter-btn px-6 py-2.5 rounded-full border border-slate-300 text-sm font-semibold text-slate-700 hover:border-kumkum hover:text-kumkum">
-                <i class="fas fa-seedling cat-icon" style="color:#8B7D3C;"></i>Millet
-                <span class="count-pill" data-count-for="millet">0</span>
-            </button>
-            <button data-filter="traditional" class="filter-btn px-6 py-2.5 rounded-full border border-slate-300 text-sm font-semibold text-slate-700 hover:border-kumkum hover:text-kumkum">
-                <i class="fas fa-utensils cat-icon" style="color:#D7263D;"></i>Traditional
-                <span class="count-pill" data-count-for="traditional">0</span>
-            </button>
-            <button data-filter="herbal" class="filter-btn px-6 py-2.5 rounded-full border border-slate-300 text-sm font-semibold text-slate-700 hover:border-kumkum hover:text-kumkum">
-                <i class="fas fa-leaf cat-icon" style="color:#5F7A4F;"></i>Herbal
-                <span class="count-pill" data-count-for="herbal">0</span>
-            </button>
-            <button data-filter="snacks" class="filter-btn px-6 py-2.5 rounded-full border border-slate-300 text-sm font-semibold text-slate-700 hover:border-kumkum hover:text-kumkum">
-                <i class="fas fa-pepper-hot cat-icon" style="color:#F5A623;"></i>Snacks
-                <span class="count-pill" data-count-for="snacks">0</span>
-            </button>
-            <button data-filter="pregnancy-gift" class="filter-btn px-6 py-2.5 rounded-full border border-slate-300 text-sm font-semibold text-slate-700 hover:border-kumkum hover:text-kumkum">
-                <i class="fas fa-baby-carriage cat-icon" style="color:#E91E63;"></i>Pregnancy Gift
-                <span class="count-pill" data-count-for="pregnancy-gift">0</span>
-            </button>
-            <button data-filter="sugar-free" class="filter-btn px-6 py-2.5 rounded-full border border-slate-300 text-sm font-semibold text-slate-700 hover:border-kumkum hover:text-kumkum">
-                <i class="fas fa-cube cat-icon" style="color:#009688;"></i>Sugar Free
-                <span class="count-pill" data-count-for="sugar-free">0</span>
-            </button>
-            <button data-filter="diet-friendly" class="filter-btn px-6 py-2.5 rounded-full border border-slate-300 text-sm font-semibold text-slate-700 hover:border-kumkum hover:text-kumkum">
-                <i class="fas fa-apple-alt cat-icon" style="color:#4CAF50;"></i>Diet Friendly
-                <span class="count-pill" data-count-for="diet-friendly">0</span>
-            </button>
-            <button data-filter="fasting" class="filter-btn px-6 py-2.5 rounded-full border border-slate-300 text-sm font-semibold text-slate-700 hover:border-kumkum hover:text-kumkum">
-                <i class="fas fa-moon cat-icon" style="color:#FF9800;"></i>उपवास Fasting
-                <span class="count-pill" data-count-for="fasting">0</span>
-            </button>
-            <button data-filter="guest-gift" class="filter-btn px-6 py-2.5 rounded-full border border-slate-300 text-sm font-semibold text-slate-700 hover:border-kumkum hover:text-kumkum">
-                <i class="fas fa-gift cat-icon" style="color:#9C27B0;"></i>Guest Gift
-                <span class="count-pill" data-count-for="guest-gift">0</span>
-            </button>
-            <button data-filter="kids-special" class="filter-btn px-6 py-2.5 rounded-full border border-slate-300 text-sm font-semibold text-slate-700 hover:border-kumkum hover:text-kumkum">
-                <i class="fas fa-child cat-icon" style="color:#2196F3;"></i>Kids Special
-                <span class="count-pill" data-count-for="kids-special">0</span>
-            </button>
+            <span class="filter-tabs-loading"><i class="fas fa-spinner fa-spin"></i> Loading categories...</span>
         </div>
 
         <!-- Product Grid -->
@@ -1473,6 +1436,11 @@
     </div>
 
     <!-- ============ PRODUCT CATEGORIES ============ -->
+    <!-- NOTE: These 6 cards are curated marketing content (hand-written descriptions),
+         so they stay static here. They still link into the dynamic filter tabs above
+         via filterCategory(), so clicking one always filters real, live products. If a
+         NEW category doesn't have a hand-written card yet, that's fine — customers can
+         still reach it through the filter tabs, which are always up to date. -->
     <section class="relative max-w-7xl mx-auto px-6 py-12 pb-16">
         <div class="ladoo-particle w-8 h-8 float-drift-slow" style="top:10%; right:5%;"></div>
         <div class="ladoo-particle w-6 h-6 float-y-slow" style="bottom:15%; left:5%;"></div>
@@ -1491,8 +1459,8 @@
         <div class="stagger reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <div class="rise-card bg-white rounded-2xl p-7 text-center ring-1 ring-jaggery/5 shadow-[0_1px_2px_rgba(92,58,37,.04)] hover:-translate-y-2 hover:shadow-[0_24px_40px_-18px_rgba(92,58,37,.25)] transition-all duration-400 cursor-pointer cat-card-pregnancy" onclick="filterCategory('pregnancy-gift')">
                 <div class="cat-card-icon"><i class="fas fa-baby-carriage" style="color:#E91E63;"></i></div>
-                <h3 class="font-display text-xl text-kumkum mb-2">Pregnancy Gift Pack</h3>
-                <p class="text-sm text-slate-500 leading-relaxed">Methi, Dink, Dryfruit, Aaliv laddus — specially formulated for expecting mothers with essential nutrients for a healthy pregnancy.</p>
+                <h3 class="font-display text-xl text-kumkum mb-2">Motherhood Pack</h3>
+                <p class="text-sm text-slate-500 leading-relaxed">Methi, Dink, Dryfruit, Aaliv laddus — specially formulated for expecting mothers with essential nutrients for a postpartum period.</p>
                 <span class="inline-block mt-3 text-xs font-semibold text-kumkum bg-kumkum/10 px-3 py-1 rounded-full">View Products →</span>
             </div>
 
@@ -1726,21 +1694,47 @@
         // ---------- CONFIG ----------
         const API_BASE = 'https://nicyfoods.srujaninfotech.com';
         const IMAGE_BASE = API_BASE + '/uploads/products/';
-        const CATEGORY_LABEL = {
-            millet: 'MILLET',
-            traditional: 'TRADITIONAL',
-            herbal: 'HERBAL',
-            snacks: 'SNACKS',
-            'pregnancy-gift': 'PREGNANCY GIFT',
-            'sugar-free': 'SUGAR FREE',
-            'diet-friendly': 'DIET FRIENDLY',
-            'fasting': 'उपवास FASTING',
-            'guest-gift': 'GUEST GIFT',
-            'kids-special': 'KIDS SPECIAL'
-        };
         const WHATSAPP_NUMBER = '+918263001410';
         const CART_KEY = 'nicy_cart_items';
         const WISH_KEY = 'nicy_wishlist_items';
+
+        // Known categories get a curated label/icon/color. Any category that isn't in
+        // this map (e.g. one a client adds later from the admin panel) still works —
+        // renderFilterTabs() below auto-generates a readable label + a neutral icon
+        // for it, so nothing needs to be hardcoded here for the site to keep working.
+        const CATEGORY_META = {
+            'millet':          { label: 'Millet',            icon: 'fa-seedling',        color: '#8B7D3C' },
+            'traditional':     { label: 'Traditional',       icon: 'fa-utensils',        color: '#D7263D' },
+            'herbal':          { label: 'Herbal',             icon: 'fa-leaf',            color: '#5F7A4F' },
+            'snacks':          { label: 'Snacks',             icon: 'fa-pepper-hot',      color: '#F5A623' },
+            'pregnancy-gift':  { label: 'Pregnancy Gift',     icon: 'fa-baby-carriage',   color: '#E91E63' },
+            'sugar-free':      { label: 'Sugar Free',         icon: 'fa-cube',            color: '#009688' },
+            'diet-friendly':   { label: 'Diet Friendly',      icon: 'fa-apple-alt',       color: '#4CAF50' },
+            'fasting':         { label: 'उपवास Fasting',      icon: 'fa-moon',            color: '#FF9800' },
+            'guest-gift':      { label: 'Guest Gift',         icon: 'fa-gift',            color: '#9C27B0' },
+            'kids-special':    { label: 'Kids Special',       icon: 'fa-child',           color: '#2196F3' },
+        };
+
+        // Humanizes an unknown category slug into a readable label,
+        // e.g. "diwali-special" -> "Diwali Special". Devanagari/other
+        // scripts are left as-is (no concept of upper/lower case there).
+        function humanizeCategorySlug(slug) {
+            return String(slug || '')
+                .split('-')
+                .map(function(word) {
+                    if (!word) return word;
+                    return word.charAt(0).toUpperCase() + word.slice(1);
+                })
+                .join(' ');
+        }
+
+        // Looks up curated metadata for a category, or builds a sensible
+        // fallback for one that was added later (e.g. via the admin panel)
+        // and isn't in CATEGORY_META yet.
+        function getCategoryMeta(slug) {
+            if (CATEGORY_META[slug]) return CATEGORY_META[slug];
+            return { label: humanizeCategorySlug(slug), icon: 'fa-tag', color: '#8a7362' };
+        }
 
         // ---------- STATE ----------
         let PRODUCTS = [];
@@ -1893,7 +1887,7 @@
                 wishlist.splice(idx, 1);
                 btnEl.classList.remove('liked');
             } else {
-                wishlist.push({ id: key, name: p.name, img: p.img, price: p.price, cat: CATEGORY_LABEL[p.cat],
+                wishlist.push({ id: key, name: p.name, img: p.img, price: p.price, cat: getCategoryMeta(p.cat).label,
                     url: 'product-detail.html?id=' + key });
                 btnEl.classList.add('liked');
                 btnEl.classList.remove('pop');
@@ -1975,9 +1969,59 @@
             const filterBtn = document.querySelector(`[data-filter="${category}"]`);
             if (filterBtn) {
                 filterBtn.click();
-                document.getElementById('product-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                // Category isn't among current products (e.g. no products in it yet) —
+                // still scroll to the grid and show the friendly "no products" state.
+                applyFilter(category);
             }
+            document.getElementById('product-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
+
+        // ---------- DYNAMIC FILTER TABS ----------
+        // Builds the "All Products" + one tab per category actually present in
+        // PRODUCTS (sourced live from the backend). Re-run this any time PRODUCTS
+        // changes (i.e. after every successful fetch) so tabs/counts stay accurate.
+        let currentFilter = 'all';
+
+        function renderFilterTabs() {
+            const wrap = document.getElementById('filter-tabs');
+
+            // Preserve a stable, friendly order: curated categories first (in the
+            // order they're defined in CATEGORY_META), then any newer/custom ones
+            // alphabetically, so newly-added categories slot in predictably.
+            const presentSlugs = Array.from(new Set(PRODUCTS.map(p => p.cat).filter(Boolean)));
+            const known = Object.keys(CATEGORY_META).filter(slug => presentSlugs.includes(slug));
+            const unknown = presentSlugs.filter(slug => !CATEGORY_META[slug]).sort((a, b) => a.localeCompare(b));
+            const orderedSlugs = known.concat(unknown);
+
+            const tabsHtml = [{ slug: 'all', label: 'All Products', icon: 'fa-th-large', color: null }]
+                .concat(orderedSlugs.map(slug => Object.assign({ slug }, getCategoryMeta(slug))))
+                .map(cat => {
+                    const count = cat.slug === 'all' ? PRODUCTS.length : PRODUCTS.filter(p => p.cat === cat.slug).length;
+                    const isActive = cat.slug === currentFilter;
+                    const iconColorStyle = cat.color && !isActive ? ` style="color:${cat.color};"` : '';
+                    return `<button data-filter="${cat.slug}" class="filter-btn ${isActive ? 'active' : ''} px-6 py-2.5 rounded-full border ${isActive ? 'border-kumkum' : 'border-slate-300'} text-sm font-semibold ${isActive ? 'text-kumkum' : 'text-slate-700'} hover:border-kumkum hover:text-kumkum">` +
+                        `<i class="fas ${cat.icon} cat-icon"${iconColorStyle}></i>${cat.label}` +
+                        `<span class="count-pill">${count}</span>` +
+                        `</button>`;
+                }).join('');
+
+            wrap.innerHTML = tabsHtml;
+
+            wrap.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    wrap.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.dataset.filter;
+                    applyFilter(currentFilter);
+                });
+            });
+        }
+
+        function applyFilter(filter) {
+            currentFilter = filter;
+            render(filter);
+        }
 
         // ---------- RENDER PRODUCTS ----------
         function render(filter) {
@@ -2011,6 +2055,7 @@
 
                     var imgUrl = getImageUrl(p.img);
                     var isWished = isWishlisted(p.id);
+                    var catMeta = getCategoryMeta(p.cat);
 
                     var card = document.createElement('div');
                     card.className =
@@ -2031,7 +2076,7 @@
                         '</div>' +
                         '<div class="p-5 flex flex-col flex-1">' +
                         '<span class="badge inline-block w-fit bg-gradient-to-r from-marigold/20 to-turmeric/20 text-kumkum text-xs font-bold px-3 py-1 rounded-full mb-3 border border-turmeric/20">' +
-                        (CATEGORY_LABEL[p.cat] || p.cat) + '</span>' +
+                        catMeta.label.toUpperCase() + '</span>' +
                         '<h3 class="font-display text-lg text-jaggery cursor-pointer" data-nav="' + p.id +
                         '">' + p.name + '</h3>' +
                         '<p class="text-sm text-slate-500 flex-1 mb-3 leading-snug">' + p.desc + '</p>' +
@@ -2063,16 +2108,6 @@
                 grid.classList.remove('grid-fading');
             }, 180);
         }
-
-        // ---------- FILTER BUTTONS ----------
-        document.querySelectorAll('.filter-btn').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove(
-                    'active'); });
-                btn.classList.add('active');
-                render(btn.dataset.filter);
-            });
-        });
 
         // ---------- GRID EVENT DELEGATION ----------
         grid.addEventListener('click', function(e) {
@@ -2124,26 +2159,20 @@
                     };
                 });
 
-                document.querySelectorAll('.count-pill').forEach(function(pill) {
-                    var f = pill.dataset.countFor;
-                    var n = f === 'all' ? PRODUCTS.length : PRODUCTS.filter(function(p) { return p.cat ===
-                        f; }).length;
-                    pill.textContent = n;
-                });
+                // Build the filter tabs fresh from whatever categories are actually
+                // present in this live product data (backend is the source of truth —
+                // any category the admin adds to a product shows up here automatically).
+                renderFilterTabs();
 
                 // Check for category query param
                 const urlParams = new URLSearchParams(window.location.search);
                 const categoryParam = urlParams.get('category');
-                if (categoryParam) {
-                    const filterBtn = document.querySelector(`[data-filter="${categoryParam}"]`);
-                    if (filterBtn) {
-                        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                        filterBtn.classList.add('active');
-                        render(categoryParam);
-                    } else {
-                        render('all');
-                    }
+                if (categoryParam && PRODUCTS.some(p => p.cat === categoryParam)) {
+                    currentFilter = categoryParam;
+                    renderFilterTabs();
+                    render(categoryParam);
                 } else {
+                    currentFilter = 'all';
                     render('all');
                 }
 
@@ -2187,6 +2216,7 @@
 
             } catch (error) {
                 console.error('Failed to load products from API:', error);
+                document.getElementById('filter-tabs').innerHTML = '';
                 grid.innerHTML =
                     '<div class="empty-state col-span-full flex flex-col items-center text-center py-16 text-slate-400">' +
                     '<svg class="w-12 h-12 text-turmeric mb-4" viewBox="0 0 24 24" fill="currentColor">' +

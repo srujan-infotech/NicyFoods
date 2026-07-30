@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NicyFoods · Admin · Courier Rates</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <!-- Shared admin shell styles (sidebar, topbar, etc.) -->
+    <link rel="stylesheet" href="css/admin-styles.css" />
+
+    <!-- ===== Original page-specific styles, unchanged ===== -->
+    <style>
+        #main { font-family: 'Poppins', sans-serif; }
+        .card { background:#fff; border-radius: 1rem; box-shadow: 0 10px 30px -14px rgba(92,58,37,.2); }
+        table th, table td { padding: .55rem .7rem; font-size: .82rem; text-align: left; vertical-align: middle; }
+        table thead { background: #5C3A25; color: #fff; }
+        table tbody tr:nth-child(even) { background: #FDF8F0; }
+        table input { width: 100%; border: 1.5px solid #e5d9c8; border-radius: .4rem; padding: .3rem .5rem; font-size: .8rem; }
+        table input:focus { outline: none; border-color: #D7263D; }
+        .btn { padding:.55rem 1.1rem; border-radius:.6rem; font-weight:600; font-size:.85rem; cursor:pointer; border:none; }
+        .btn-primary { background:#D7263D; color:#fff; }
+        .btn-primary:hover { background:#b81f34; }
+        .btn-danger-outline { background:#fff; color:#D7263D; border:1.5px solid #D7263D; }
+        .btn-danger-outline:hover { background:#D7263D; color:#fff; }
+        .btn-sm { padding:.35rem .7rem; font-size:.75rem; border-radius:.45rem; }
+        .icon-btn { color:#9a8a7c; cursor:pointer; background:none; border:none; padding:.3rem; }
+        .icon-btn:hover { color:#D7263D; }
+        .icon-btn.save { color:#5F7A4F; }
+    </style>
+</head>
+<body data-page="courierRates">
+
+    <div id="sidebar-container"></div>
+
+    <div id="main">
+        <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.2rem; flex-wrap:wrap;" id="topbar-container"></div>
+
+        <div class="max-w-6xl mx-auto">
+            <h1 class="text-2xl font-bold text-[#5C3A25] mb-1"><i class="fas fa-truck-fast text-[#D7263D]"></i> Courier Charges by Pincode</h1>
+            <p class="text-slate-500 text-sm mb-6">Upload Excel for bulk pincodes, or add/edit rates directly below. Pincodes not listed here get charged automatically based on distance from the shop.</p>
+
+            <!-- Excel Upload -->
+            <div class="card p-6 mb-6">
+                <h2 class="font-semibold text-[#5C3A25] mb-3"><i class="fas fa-file-excel text-[#5F7A4F]"></i> Bulk Upload via Excel</h2>
+                <form id="uploadForm" class="flex flex-wrap items-center gap-4">
+                    <input type="file" id="excelFile" accept=".xlsx,.xls" class="text-sm" required />
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-upload mr-1"></i> Upload Excel</button>
+                    <span id="uploadStatus" class="text-sm"></span>
+                </form>
+                <p class="text-xs text-slate-400 mt-2">Columns: Pincode, Area, Rate250, Rate500, Rate1000</p>
+            </div>
+
+            <!-- Distance-zone fallback settings -->
+            <div class="card p-6 mb-6">
+                <h2 class="font-semibold text-[#5C3A25] mb-1"><i class="fas fa-map-location-dot text-[#D7263D]"></i> Distance-Based Fallback Rates</h2>
+                <p class="text-slate-500 text-sm mb-4">Used automatically for any pincode NOT in the table below.</p>
+
+                <div class="grid sm:grid-cols-3 gap-3 mb-4">
+                    <div><label class="text-xs font-bold text-slate-500 block mb-1">Base ₹/250g</label><input id="zc_rate250" type="number" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
+                    <div><label class="text-xs font-bold text-slate-500 block mb-1">Base ₹/500g</label><input id="zc_rate500" type="number" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
+                    <div><label class="text-xs font-bold text-slate-500 block mb-1">Base ₹/1kg</label><input id="zc_rate1000" type="number" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
+                </div>
+
+                <div class="grid sm:grid-cols-4 gap-3 mb-4">
+                    <div><label class="text-xs font-bold text-slate-500 block mb-1">Same City ×</label><input id="zc_m3" type="number" step="0.1" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
+                    <div><label class="text-xs font-bold text-slate-500 block mb-1">Same District ×</label><input id="zc_m2" type="number" step="0.1" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
+                    <div><label class="text-xs font-bold text-slate-500 block mb-1">Same Region ×</label><input id="zc_m1" type="number" step="0.1" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
+                    <div><label class="text-xs font-bold text-slate-500 block mb-1">Other Region ×</label><input id="zc_m0" type="number" step="0.1" class="w-full border rounded-lg px-3 py-2 text-sm" /></div>
+                </div>
+
+                <button onclick="saveZoneConfig()" class="btn btn-primary"><i class="fas fa-save mr-1"></i> Save Fallback Rates</button>
+                <span id="zoneConfigStatus" class="text-sm ml-3"></span>
+            </div>
+
+            <!-- Pincode overrides table -->
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+                    <h2 class="font-semibold text-[#5C3A25]">Pincode Overrides <span id="rateCount" class="text-slate-400 font-normal"></span></h2>
+                    <div class="flex gap-2 flex-wrap">
+                        <button onclick="addNewRow()" class="btn btn-sm btn-primary"><i class="fas fa-plus mr-1"></i> Add Pincode</button>
+                        <button onclick="loadRates()" class="btn btn-sm" style="background:#f1e6d8; color:#5C3A25;"><i class="fas fa-rotate mr-1"></i> Refresh</button>
+                        <button onclick="deleteAllRates()" class="btn btn-sm btn-danger-outline"><i class="fas fa-trash-can mr-1"></i> Delete All</button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full rounded-lg overflow-hidden">
+                        <thead>
+                            <tr><th style="width:14%">Pincode</th><th style="width:22%">Area</th><th>₹/250g</th><th>₹/500g</th><th>₹/1kg</th><th style="width:80px"></th></tr>
+                        </thead>
+                        <tbody id="ratesTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script src="js/auth-client.js"></script>
+<script src="js/admin-common.js"></script>
+<script src="js/sidebar.js"></script>
+
+<script>
+    // ===== Original page logic, unchanged, except wrapped to init the
+    // shared admin sidebar shell (initAdminShell) before loading data. =====
+    const API_BASE = 'https://nicyfoods.srujaninfotech.com';
+
+    function rowHtml(r, isNew) {
+        const pincodeCell = isNew
+            ? '<input type="text" maxlength="6" placeholder="6-digit pincode" data-field="pincode" />'
+            : '<span class="font-semibold">' + r.pincode + '</span><input type="hidden" data-field="pincode" value="' + r.pincode + '" />';
+
+        return '<tr data-row="' + (isNew ? 'new' : r.pincode) + '">' +
+            '<td>' + pincodeCell + '</td>' +
+            '<td><input type="text" data-field="area" value="' + (r.area || '') + '" placeholder="Area/City" /></td>' +
+            '<td><input type="number" data-field="rate250" value="' + (r.rate250 ?? '') + '" /></td>' +
+            '<td><input type="number" data-field="rate500" value="' + (r.rate500 ?? '') + '" /></td>' +
+            '<td><input type="number" data-field="rate1000" value="' + (r.rate1000 ?? '') + '" /></td>' +
+            '<td>' +
+            '<button class="icon-btn save" title="Save" onclick="saveRow(this)"><i class="fas fa-check"></i></button>' +
+            '<button class="icon-btn" title="Delete" onclick="deleteRow(this, \'' + (isNew ? '' : r.pincode) + '\')"><i class="fas fa-trash"></i></button>' +
+            '</td></tr>';
+    }
+
+    async function loadRates() {
+        const res = await fetch(API_BASE + '/api/admin/pincode-rates');
+        const json = await res.json();
+        const rows = json.data || [];
+        document.getElementById('rateCount').textContent = '(' + rows.length + ' entries)';
+        document.getElementById('ratesTableBody').innerHTML = rows.map((r) => rowHtml(r, false)).join('') ||
+            '<tr><td colspan="6" class="text-center text-slate-400 py-6">No pincode overrides yet — add one or upload Excel.</td></tr>';
+    }
+
+    function addNewRow() {
+        const tbody = document.getElementById('ratesTableBody');
+        const emptyMsg = tbody.querySelector('td[colspan]');
+        if (emptyMsg) tbody.innerHTML = '';
+        tbody.insertAdjacentHTML('afterbegin', rowHtml({}, true));
+    }
+
+    async function saveRow(btn) {
+        const tr = btn.closest('tr');
+        const get = (field) => tr.querySelector('[data-field="' + field + '"]').value.trim();
+        const pincode = get('pincode');
+
+        if (!pincode || pincode.length !== 6) {
+            alert('Enter a valid 6-digit pincode.');
+            return;
+        }
+
+        const payload = {
+            area: get('area'),
+            rate250: get('rate250'),
+            rate500: get('rate500'),
+            rate1000: get('rate1000'),
+        };
+
+        try {
+            const res = await fetch(API_BASE + '/api/admin/pincode-rates/' + encodeURIComponent(pincode), {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+            const json = await res.json();
+            if (!json.success) throw new Error(json.message);
+            loadRates();
+        } catch (err) {
+            alert('Error saving: ' + err.message);
+        }
+    }
+
+    async function deleteRow(btn, pincode) {
+        if (!pincode) {
+            btn.closest('tr').remove(); // unsaved new row — just remove locally
+            return;
+        }
+        if (!confirm('Remove rate for pincode ' + pincode + '?')) return;
+        await fetch(API_BASE + '/api/admin/pincode-rates/' + encodeURIComponent(pincode), { method: 'DELETE' });
+        loadRates();
+    }
+
+    // Deletes EVERY pincode override in one go. Distance-zone fallback rates
+    // (the section above) are separate and are NOT affected by this.
+    async function deleteAllRates() {
+        const countEl = document.getElementById('rateCount');
+        const currentCount = countEl.textContent.replace(/[()]/g, '') || '0 entries';
+
+        if (!confirm('Delete ALL pincode overrides (' + currentCount + ')? This cannot be undone. Pincodes will then use the distance-based fallback rates instead.')) {
+            return;
+        }
+
+        try {
+            const res = await fetch(API_BASE + '/api/admin/pincode-rates', { method: 'DELETE' });
+            const json = await res.json();
+            if (!json.success) throw new Error(json.message);
+            loadRates();
+        } catch (err) {
+            alert('Error deleting all rates: ' + err.message);
+        }
+    }
+
+    document.getElementById('uploadForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const fileInput = document.getElementById('excelFile');
+        const statusEl = document.getElementById('uploadStatus');
+        if (!fileInput.files[0]) return;
+
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+
+        statusEl.textContent = 'Uploading...';
+        statusEl.className = 'text-sm text-slate-400';
+
+        try {
+            const res = await fetch(API_BASE + '/api/admin/pincode-rates/upload', { method: 'POST', body: formData });
+            const json = await res.json();
+            if (!json.success) throw new Error(json.message);
+            statusEl.textContent = json.message;
+            statusEl.className = 'text-sm text-green-600 font-semibold';
+            fileInput.value = '';
+            loadRates();
+        } catch (err) {
+            statusEl.textContent = 'Error: ' + err.message;
+            statusEl.className = 'text-sm text-red-600 font-semibold';
+        }
+    });
+
+    async function loadZoneConfig() {
+        const res = await fetch(API_BASE + '/api/admin/zone-config');
+        const { data } = await res.json();
+        document.getElementById('zc_rate250').value = data.baseRate250;
+        document.getElementById('zc_rate500').value = data.baseRate500;
+        document.getElementById('zc_rate1000').value = data.baseRate1000;
+        document.getElementById('zc_m3').value = data.multiplierLevel3;
+        document.getElementById('zc_m2').value = data.multiplierLevel2;
+        document.getElementById('zc_m1').value = data.multiplierLevel1;
+        document.getElementById('zc_m0').value = data.multiplierLevel0;
+    }
+
+    async function saveZoneConfig() {
+        const statusEl = document.getElementById('zoneConfigStatus');
+        statusEl.textContent = 'Saving...';
+        const payload = {
+            baseRate250: document.getElementById('zc_rate250').value,
+            baseRate500: document.getElementById('zc_rate500').value,
+            baseRate1000: document.getElementById('zc_rate1000').value,
+            multiplierLevel3: document.getElementById('zc_m3').value,
+            multiplierLevel2: document.getElementById('zc_m2').value,
+            multiplierLevel1: document.getElementById('zc_m1').value,
+            multiplierLevel0: document.getElementById('zc_m0').value,
+        };
+        const res = await fetch(API_BASE + '/api/admin/zone-config', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
+        const json = await res.json();
+        statusEl.textContent = json.success ? 'Saved ✔' : 'Error: ' + json.message;
+        statusEl.className = json.success ? 'text-sm text-green-600' : 'text-sm text-red-600';
+    }
+
+    // ===== ONLY NEW PART: initialize the shared sidebar shell first =====
+    (function init() {
+        const user = initAdminShell('courierRates');
+        if (!user) return;
+        loadRates();
+        loadZoneConfig();
+    })();
+</script>
+</body>
+</html>

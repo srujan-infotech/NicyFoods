@@ -471,6 +471,7 @@
                         <th>Customer</th>
                         <th>Phone</th>
                         <th>Items</th>
+                        <th>Courier</th>
                         <th>Total</th>
                         <th>Payment</th>
                         <th>Status</th>
@@ -479,7 +480,7 @@
                     </tr>
                 </thead>
                 <tbody id="ordersTableBody">
-                    <tr><td colspan="9"><div class="empty-state"><i class="fas fa-spinner fa-spin"></i> Loading orders...</div></td></tr>
+                    <tr><td colspan="10"><div class="empty-state"><i class="fas fa-spinner fa-spin"></i> Loading orders...</div></td></tr>
                 </tbody>
             </table>
         </div>
@@ -544,6 +545,7 @@
                     <div class="form-group">
                         <label class="form-label"><i class="fas fa-rupee-sign"></i> Courier Charge (₹)</label>
                         <input id="odCourierCharge" type="number" min="0" step="1" placeholder="0" />
+                        <p class="text-xs text-slate-400 mt-1" id="odCourierZoneInfo"></p>
                     </div>
                 </div>
                 <div class="form-row">

@@ -31,6 +31,49 @@ function statusBadgeClass(status) {
     return map[status] || 'pending';
 }
 
+// ---------- PRICING FALLBACK GETTERS ----------
+// Checkout (cart.html) saves pricing nested as order.pricing = { subtotal, courierCharge,
+// totalPayable, courierChargeMatched, courierChargeArea, courierChargeZoneLabel, courierChargeIsLocal }.
+// Some older/legacy orders may instead have flat order.subtotal / order.courierCharge / order.totalAmount.
+// These getters check both so the admin UI always shows the correct value regardless of shape.
+function getSubtotal(order) {
+    if (typeof order.subtotal === 'number') return order.subtotal;
+    if (order.pricing && typeof order.pricing.subtotal === 'number') return order.pricing.subtotal;
+    return (order.items || []).reduce((sum, i) => sum + (i.price || 0) * (i.qty || 1), 0);
+}
+
+function getCourierCharge(order) {
+    if (typeof order.courierCharge === 'number') return order.courierCharge;
+    if (order.pricing && typeof order.pricing.courierCharge === 'number') return order.pricing.courierCharge;
+    return 0;
+}
+
+function getTotalAmount(order) {
+    if (typeof order.totalAmount === 'number') return order.totalAmount;
+    if (order.pricing && typeof order.pricing.totalPayable === 'number') return order.pricing.totalPayable;
+    return getSubtotal(order) + getCourierCharge(order);
+}
+
+function getCourierZoneInfo(order) {
+    // Backend (Order.js schema) stores these as flat top-level fields.
+    // Fall back to a nested order.pricing.* shape too, in case an older
+    // record or a different endpoint ever returns it that way.
+    const p = order.pricing || {};
+    const matched = order.courierChargeMatched ?? p.courierChargeMatched;
+    const area = order.courierChargeArea ?? p.courierChargeArea;
+    const zoneLabel = order.courierChargeZoneLabel ?? p.courierChargeZoneLabel;
+    const isLocal = order.courierChargeIsLocal ?? p.courierChargeIsLocal;
+
+    if (isLocal) return { label: 'Free · Same Pincode', cls: 'delivered' };
+    if (matched === 'admin-override') {
+        return { label: area ? `Admin rate · ${area}` : 'Admin rate', cls: 'processing' };
+    }
+    if (matched === 'distance-zone' && zoneLabel) {
+        return { label: zoneLabel, cls: 'shipped' };
+    }
+    return null;
+}
+
 function debouncedLoadOrders() {
     clearTimeout(orderSearchDebounce);
     orderSearchDebounce = setTimeout(loadOrders, 350);
@@ -71,7 +114,7 @@ async function loadOrders() {
 
         const tbody = document.getElementById('ordersTableBody');
         if (!orders.length) {
-            tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state"><i class="fas fa-shopping-cart"></i> No orders found</div></td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state"><i class="fas fa-shopping-cart"></i> No orders found</div></td></tr>`;
             const badge = document.getElementById('navOrderCount');
             if (badge) badge.textContent = '0';
             return;
@@ -79,13 +122,20 @@ async function loadOrders() {
 
         tbody.innerHTML = orders.map(o => {
             const itemCount = (o.items || []).reduce((sum, i) => sum + (i.qty || 1), 0);
+            const courierCharge = getCourierCharge(o);
+            const totalAmount = getTotalAmount(o);
+            const zoneInfo = getCourierZoneInfo(o);
             return `
                 <tr>
                     <td class="font-mono text-xs">${o.orderNumber}</td>
                     <td>${o.customer?.name || '-'}</td>
                     <td class="text-xs">${o.customer?.phone || '-'}</td>
                     <td>${itemCount} item${itemCount === 1 ? '' : 's'}</td>
-                    <td>${moneyFmt(o.totalAmount)}</td>
+                    <td>
+                        ${courierCharge > 0 ? moneyFmt(courierCharge) : '<span class="text-herbal font-semibold">Free</span>'}
+                        ${zoneInfo ? `<div class="text-[10px] text-slate-400 mt-0.5">${zoneInfo.label}</div>` : ''}
+                    </td>
+                    <td>${moneyFmt(totalAmount)}</td>
                     <td><span class="badge-status ${statusBadgeClass(o.paymentStatus)}">${o.paymentStatus || 'pending'}</span></td>
                     <td><span class="badge-status ${statusBadgeClass(o.status)}">${o.status}</span></td>
                     <td>${new Date(o.createdAt).toLocaleDateString()}</td>
@@ -113,7 +163,7 @@ function renderStats(orders) {
     const shipped = orders.filter(o => o.status === 'shipped').length;
     const revenue = orders
         .filter(o => o.paymentStatus === 'paid')
-        .reduce((sum, o) => sum + (o.totalAmount || 0), 0);
+        .reduce((sum, o) => sum + getTotalAmount(o), 0);
 
     document.getElementById('statTotalOrders').textContent = total;
     document.getElementById('statPendingOrders').textContent = pending;
@@ -161,13 +211,35 @@ async function openOrderDetail(id) {
             </div>
         `).join('') || '<p class="text-xs text-slate-400">No history yet.</p>';
 
+        // ---- pricing (now uses fallback-safe getters, was previously reading
+        // order.subtotal / order.courierCharge directly which are usually undefined
+        // because checkout saves them nested under order.pricing) ----
+        const subtotal = getSubtotal(order);
+        const courierCharge = getCourierCharge(order);
+        const totalAmount = getTotalAmount(order);
+        const zoneInfo = getCourierZoneInfo(order);
+
         document.getElementById('odStatus').value = order.status;
-        document.getElementById('odCourierCharge').value = order.courierCharge || 0;
+        document.getElementById('odCourierCharge').value = courierCharge;
         document.getElementById('odPaymentStatus').value = order.paymentStatus || 'pending';
         document.getElementById('odNotes').value = order.notes || '';
         document.getElementById('odStatusNote').value = '';
-        document.getElementById('odSubtotal').textContent = moneyFmt(order.subtotal);
-        document.getElementById('odTotal').textContent = moneyFmt(order.totalAmount);
+        document.getElementById('odSubtotal').textContent = moneyFmt(subtotal);
+        document.getElementById('odTotal').textContent = moneyFmt(totalAmount);
+
+        const zoneEl = document.getElementById('odCourierZoneInfo');
+        if (zoneEl) {
+            const weightGrams = order.totalWeightGrams || order.pricing?.totalWeightGrams;
+            if (zoneInfo) {
+                zoneEl.textContent = `Auto-calculated at checkout: ${zoneInfo.label} (weight: ${weightGrams ? weightGrams + 'g' : 'n/a'})`;
+            } else if (weightGrams) {
+                zoneEl.textContent = `Auto-calculated at checkout (weight: ${weightGrams}g)`;
+            } else {
+                zoneEl.textContent = courierCharge > 0 || order.status !== 'pending'
+                    ? 'Manually set courier charge.'
+                    : 'No checkout pricing snapshot found — edit manually below.';
+            }
+        }
 
         openModal('orderDetailModal');
     } catch (e) {
@@ -186,12 +258,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = document.getElementById('odOrderId').value;
         const saveBtn = document.getElementById('odSaveBtn');
 
+        const courierCharge = parseFloat(document.getElementById('odCourierCharge').value) || 0;
+        const subtotal = parseFloat((document.getElementById('odSubtotal').textContent || '0').replace(/[^\d.]/g, '')) || 0;
+
         const payload = {
             status: document.getElementById('odStatus').value,
-            courierCharge: parseFloat(document.getElementById('odCourierCharge').value) || 0,
+            courierCharge: courierCharge,
             paymentStatus: document.getElementById('odPaymentStatus').value,
             notes: document.getElementById('odNotes').value.trim(),
             note: document.getElementById('odStatusNote').value.trim(),
+            // Also send a nested pricing update so backends that store pricing.*
+            // (the shape checkout actually writes) stay in sync with a manual courier edit.
+            pricing: {
+                courierCharge: courierCharge,
+                totalPayable: subtotal + courierCharge,
+            },
         };
 
         saveBtn.disabled = true;

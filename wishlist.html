@@ -27,15 +27,6 @@
                         display: ['"Rozha One"', 'serif'],
                         body: ['Poppins', 'sans-serif'],
                     },
-                    keyframes: {
-                        logoScroll: {
-                            '0%': { transform: 'translateX(0)' },
-                            '100%': { transform: 'translateX(-50%)' },
-                        },
-                    },
-                    animation: {
-                        'logo-scroll': 'logoScroll 28s linear infinite',
-                    },
                 },
             },
         };
@@ -114,382 +105,61 @@
                 transform: translateY(0);
             }
         }
-        .wipe {
-            clip-path: inset(0 100% 0 0);
-            transition: clip-path 1s cubic-bezier(.16, .84, .44, 1);
+        .kolam-divider path,
+        .kolam-divider circle.node {
+            stroke-dasharray: 340;
+            stroke-dashoffset: 340;
+            transition: stroke-dashoffset 1.6s cubic-bezier(.16, .84, .44, 1);
         }
-        .wipe.in {
-            clip-path: inset(0 0 0 0);
-        }
-        .eyebrow {
-            position: relative;
-            display: inline-block;
-        }
-        .eyebrow svg {
-            display: block;
-            margin: 6px auto 0;
-            overflow: visible;
-        }
-        .eyebrow path {
-            stroke-dasharray: 120;
-            stroke-dashoffset: 120;
-            transition: stroke-dashoffset .9s cubic-bezier(.16, .84, .44, 1) .15s;
-        }
-        .reveal.in .eyebrow path,
-        .hero-title-in .eyebrow path {
+        .kolam-divider.in path,
+        .kolam-divider.in circle.node {
             stroke-dashoffset: 0;
         }
-        .hero-title-in .eyebrow path {
-            animation: brushDraw .9s cubic-bezier(.16, .84, .44, 1) .55s both;
-        }
-        @keyframes brushDraw {
-            from {
-                stroke-dashoffset: 120;
-            }
-            to {
-                stroke-dashoffset: 0;
-            }
-        }
-        .hero-parallax {
-            will-change: transform;
-        }
-        .hero-glow {
-            position: absolute;
-            inset: -20%;
-            pointer-events: none;
-            background: radial-gradient(circle at 30% 35%, rgba(255, 199, 44, .5), transparent 55%),
-                radial-gradient(circle at 75% 70%, rgba(215, 38, 61, .45), transparent 60%),
-                radial-gradient(circle at 15% 80%, rgba(95, 122, 79, .3), transparent 55%);
-            animation: glowDrift 12s ease-in-out infinite;
-        }
-        @keyframes glowDrift {
-            0%,
-            100% {
-                transform: translate(0, 0) scale(1);
-            }
-            50% {
-                transform: translate(3%, -2%) scale(1.08);
-            }
-        }
-        .light-ray {
-            position: absolute;
-            top: -30%;
-            left: 20%;
-            width: 2px;
-            height: 160%;
-            background: linear-gradient(to bottom, rgba(255, 199, 44, .6), transparent 70%);
-            transform-origin: top center;
-            animation: raySwing 9s ease-in-out infinite;
-            filter: blur(1px);
-        }
-        @keyframes raySwing {
-            0%,
-            100% {
-                transform: rotate(8deg);
-                opacity: .5;
-            }
-            50% {
-                transform: rotate(18deg);
-                opacity: .9;
-            }
-        }
 
-        /* ===== DIYA (LAMP) HERO ACCENT ===== */
-        .diya-wrap {
+        /* ===== COMPACT PAGE HEADER (replaces the old big hero) ===== */
+        #wishlist-header {
             position: relative;
-            width: 72px;
-            height: 96px;
-            margin-bottom: -10px;
-        }
-        .diya-svg {
-            position: relative;
-            z-index: 2;
-            filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .35));
-        }
-        .diya-glow-circle {
-            animation: diyaGlowPulse 2.6s ease-in-out infinite;
-            transform-origin: 35px 26px;
-        }
-        @keyframes diyaGlowPulse {
-            0%,
-            100% {
-                opacity: .55;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.18);
-            }
-        }
-        .diya-flame-group {
-            transform-origin: 35px 34px;
-            animation: diyaFlicker 1.6s ease-in-out infinite;
-        }
-        @keyframes diyaFlicker {
-            0% {
-                transform: scaleY(1) rotate(0deg);
-            }
-            20% {
-                transform: scaleY(1.06) rotate(-2deg);
-            }
-            40% {
-                transform: scaleY(.94) rotate(2deg);
-            }
-            60% {
-                transform: scaleY(1.08) rotate(-1deg);
-            }
-            80% {
-                transform: scaleY(.97) rotate(1.5deg);
-            }
-            100% {
-                transform: scaleY(1) rotate(0deg);
-            }
-        }
-        .diya-flame-inner {
-            animation: diyaInnerFlicker 1.1s ease-in-out infinite;
-            transform-origin: 35px 30px;
-        }
-        @keyframes diyaInnerFlicker {
-            0%,
-            100% {
-                opacity: .8;
-            }
-            50% {
-                opacity: 1;
-            }
-        }
-        .diya-spark {
-            position: absolute;
-            border-radius: 50%;
-            background: radial-gradient(circle, #FFE9A8, rgba(255, 233, 168, 0));
-            pointer-events: none;
-            animation: diyaSparkRise 3.2s ease-in infinite;
-        }
-        .diya-spark.s1 {
-            left: 14px;
-            top: 30px;
-            width: 5px;
-            height: 5px;
-            animation-delay: 0s;
-        }
-        .diya-spark.s2 {
-            left: 44px;
-            top: 26px;
-            width: 4px;
-            height: 4px;
-            animation-delay: 1.1s;
-        }
-        .diya-spark.s3 {
-            left: 30px;
-            top: 20px;
-            width: 3px;
-            height: 3px;
-            animation-delay: 2s;
-        }
-        @keyframes diyaSparkRise {
-            0% {
-                transform: translateY(0) scale(.4);
-                opacity: 0;
-            }
-            15% {
-                opacity: .9;
-            }
-            100% {
-                transform: translateY(-46px) scale(1.2);
-                opacity: 0;
-            }
-        }
-        .ghee-pool {
-            position: absolute;
-            left: 22px;
-            bottom: 4px;
-            width: 30px;
-            height: 8px;
-            border-radius: 50%;
-            background: radial-gradient(ellipse at center, var(--marigold), var(--turmeric) 70%, transparent 100%);
-            opacity: 0;
-            transform: scale(.2);
-            box-shadow: 0 0 18px 4px rgba(255, 199, 44, .55);
-            animation: poolPop .7s cubic-bezier(.34, 1.56, .64, 1) .3s forwards;
-        }
-        @keyframes poolPop {
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .hero-title-in {
-            opacity: 0;
-            animation: titleIn 1s cubic-bezier(.16, .84, .44, 1) both;
-            text-shadow: 0 2px 14px rgba(26, 12, 6, 0.35);
-        }
-        @keyframes titleIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .float-y {
-            animation: floatY 5s ease-in-out infinite;
-        }
-        @keyframes floatY {
-            0%,
-            100% {
-                transform: translateY(-50%);
-            }
-            50% {
-                transform: translateY(-58%);
-            }
-        }
-        .scroll-cue {
-            animation: cueBounce 2s ease-in-out infinite;
-        }
-        @keyframes cueBounce {
-            0%,
-            100% {
-                transform: translateY(0);
-                opacity: .6;
-            }
-            50% {
-                transform: translateY(8px);
-                opacity: 1;
-            }
-        }
-        .steam {
-            position: absolute;
-            bottom: 0;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 199, 44, .55), rgba(255, 199, 44, 0) 70%);
-            pointer-events: none;
-        }
-        .steam-1 {
-            animation: steamRise 6s ease-in infinite;
-        }
-        .steam-2 {
-            animation: steamRise 8s ease-in infinite;
-            animation-delay: 1.5s;
-        }
-        .steam-3 {
-            animation: steamRise 7s ease-in infinite;
-            animation-delay: 3s;
-        }
-        .steam-4 {
-            animation: steamRise 9s ease-in infinite;
-            animation-delay: .7s;
-        }
-        @keyframes steamRise {
-            0% {
-                transform: translateY(0) scale(.6);
-                opacity: 0;
-            }
-            15% {
-                opacity: .8;
-            }
-            100% {
-                transform: translateY(-420px) scale(1.6);
-                opacity: 0;
-            }
-        }
-        .thali-wrap {
-            width: 280px;
-            height: 280px;
-        }
-        @media (min-width:1024px) {
-            .thali-wrap {
-                width: 340px;
-                height: 340px;
-            }
-        }
-        .thali-orbit {
-            position: absolute;
-            inset: -26px;
-            animation: orbitSpin 11s linear infinite;
-        }
-        .thali-orbit-dot {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            width: 9px;
-            height: 9px;
-            margin-left: -4.5px;
-            border-radius: 50%;
-            background: var(--kumkum);
-            box-shadow: 0 0 12px 2px rgba(215, 38, 61, .65);
-        }
-        @keyframes orbitSpin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        .thali-ring {
-            position: absolute;
-            inset: -12px;
-            border-radius: 50%;
-            padding: 4px;
-            background: conic-gradient(from 0deg, var(--turmeric), var(--marigold), var(--kumkum), var(--herbal), var(--turmeric));
-            animation: ringSpin 16s linear infinite;
-        }
-        @keyframes ringSpin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        .thali-ring-inner {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: var(--cream);
-        }
-        .thali-photo {
-            position: absolute;
-            inset: 16px;
-            border-radius: 50%;
             overflow: hidden;
-            box-shadow: inset 0 0 0 6px rgba(255, 255, 255, .6);
+            background: linear-gradient(120deg, var(--jaggery) 0%, var(--ink) 55%, var(--kumkum) 100%);
         }
-        .thali-photo img {
+        .header-pattern {
+            background-image: radial-gradient(circle, rgba(255, 255, 255, .12) 1px, transparent 1px);
+            background-size: 24px 24px;
             position: absolute;
             inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0;
-            animation: thaliFade 9s infinite;
+            opacity: .5;
         }
-        .thali-photo img:nth-child(1) {
-            animation-delay: 0s;
+        .header-glow {
+            position: absolute;
+            inset: -40%;
+            pointer-events: none;
+            background: radial-gradient(circle at 20% 30%, rgba(255, 199, 44, .35), transparent 55%),
+                radial-gradient(circle at 85% 70%, rgba(215, 38, 61, .35), transparent 60%);
         }
-        .thali-photo img:nth-child(2) {
-            animation-delay: 3s;
+        .header-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            color: var(--marigold);
+            font-weight: 700;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            font-size: .7rem;
         }
-        .thali-photo img:nth-child(3) {
-            animation-delay: 6s;
+        .header-stat {
+            background: rgba(255, 255, 255, .08);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, .18);
+            border-radius: .9rem;
+            padding: .85rem 1.4rem;
+            text-align: center;
+            transition: transform .3s cubic-bezier(.34, 1.56, .64, 1), border-color .3s ease;
         }
-        @keyframes thaliFade {
-            0% {
-                opacity: 0;
-            }
-            6% {
-                opacity: 1;
-            }
-            30% {
-                opacity: 1;
-            }
-            36% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 0;
-            }
+        .header-stat:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 199, 44, .5);
         }
-        .stat-num {
-            font-variant-numeric: tabular-nums;
-        }
+
         .torn-edge {
             height: 22px;
             background: var(--cream);
@@ -502,16 +172,16 @@
             mask-position: 0 0, 11px 0;
             mask-repeat: repeat-x;
         }
-        .kolam-divider path,
-        .kolam-divider circle.node {
-            stroke-dasharray: 340;
-            stroke-dashoffset: 340;
-            transition: stroke-dashoffset 1.6s cubic-bezier(.16, .84, .44, 1);
+        .marathi-highlight {
+            color: var(--kumkum);
+            font-weight: 700;
+            background: rgba(215, 38, 61, 0.08);
+            padding: 0.05em 0.4em;
+            border-radius: 0.35em;
+            white-space: nowrap;
         }
-        .kolam-divider.in path,
-        .kolam-divider.in circle.node {
-            stroke-dashoffset: 0;
-        }
+
+        /* ===== WISHLIST CARDS ===== */
         .rise-card {
             position: relative;
             overflow: hidden;
@@ -530,6 +200,7 @@
             transform: scaleX(0);
             transform-origin: left;
             transition: transform .5s cubic-bezier(.16, .84, .44, 1);
+            z-index: 2;
         }
         .rise-card:hover::before {
             transform: scaleX(1);
@@ -559,6 +230,7 @@
             background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, .35), transparent 60%);
             transition: opacity .35s ease;
             mix-blend-mode: soft-light;
+            z-index: 1;
         }
         .rise-card:hover .card-shine {
             opacity: 1;
@@ -581,12 +253,6 @@
         .cta-btn:hover::before {
             left: 130%;
         }
-        .icon-spin {
-            transition: transform .5s cubic-bezier(.34, 1.56, .64, 1);
-        }
-        .rise-card:hover .icon-spin {
-            transform: rotate(8deg) scale(1.08);
-        }
         .grow-underline {
             position: relative;
             display: inline-block;
@@ -605,95 +271,46 @@
             width: 64px;
             left: calc(50% - 32px);
         }
-        .ladoo-particle {
+
+        /* Image area: gradient plate behind the photo + graceful placeholder
+           when a product has no usable image, instead of a broken icon */
+        .prod-img-wrap {
+            position: relative;
+            height: 12rem;
+            background: radial-gradient(circle at 30% 20%, rgba(255, 199, 44, .18), transparent 60%),
+                linear-gradient(160deg, #FFF6E9 0%, #FFEAC9 100%);
+            overflow: hidden;
+        }
+        .prod-img-wrap .img-fallback {
             position: absolute;
-            border-radius: 50%;
-            background: radial-gradient(circle at 35% 30%, #FFC72C, #D7263D 70%);
-            opacity: .28;
-        }
-        .float-drift {
-            animation: driftY 7s ease-in-out infinite;
-        }
-        .float-drift-slow {
-            animation: driftY 10s ease-in-out infinite;
-        }
-        .float-y-slow {
-            animation: driftY 9s ease-in-out infinite;
-        }
-        @keyframes driftY {
-            0%,
-            100% {
-                transform: translateY(0) translateX(0);
-            }
-            50% {
-                transform: translateY(-16px) translateX(6px);
-            }
-        }
-
-        /* ===== HERO EYEBROW BADGE ===== */
-        #heroEyebrow {
-            display: inline-flex;
+            inset: 0;
+            display: none;
             align-items: center;
-            gap: 0.5rem;
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(3px);
-            border: 1.5px solid rgba(255, 199, 44, 0.6);
-            color: var(--marigold);
-            font-weight: 700;
-            letter-spacing: 0.18em;
-            padding: 0.5rem 1.1rem;
-            border-radius: 999px;
-            box-shadow: 0 6px 18px -6px rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            flex-direction: column;
+            gap: .35rem;
+            color: var(--turmeric);
         }
-
-        /* ===== MARATHI HIGHLIGHT ===== */
-        .marathi-highlight {
-            color: var(--marigold);
-            font-weight: 700;
-            background: rgba(255, 199, 44, 0.16);
-            padding: 0.05em 0.4em;
-            border-radius: 0.35em;
-            white-space: nowrap;
+        .prod-img-wrap.no-image .img-fallback {
+            display: flex;
         }
-
-        .hero-pattern {
-            background-image: radial-gradient(circle, rgba(255, 255, 255, .12) 1px, transparent 1px);
-            background-size: 26px 26px;
-            z-index: 1;
+        .prod-img-wrap.no-image .prod-img {
+            display: none;
         }
-        .premium-badge {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 20;
-            align-items: center;
-            gap: .4rem;
-            background: linear-gradient(135deg, rgba(255, 199, 44, .95), rgba(215, 38, 61, .95));
-            color: #fff;
+        .prod-img-wrap .img-fallback i {
+            font-size: 1.9rem;
+            opacity: .55;
+        }
+        .prod-img-wrap .img-fallback span {
             font-size: .68rem;
-            font-weight: 700;
-            letter-spacing: .06em;
-            padding: .5rem 1rem;
-            border-radius: 999px;
-            box-shadow: 0 8px 22px -6px rgba(0, 0, 0, .45);
-            border: 1px solid rgba(255, 255, 255, .35);
-        }
-        .stat-card {
-            background: rgba(255, 255, 255, .08);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            border: 1px solid rgba(255, 255, 255, .18);
-            border-radius: .9rem;
-            padding: .75rem 1.15rem;
-            transition: transform .35s cubic-bezier(.34, 1.56, .64, 1), background-color .3s ease, border-color .3s ease;
-        }
-        .stat-card:hover {
-            transform: translateY(-4px);
-            background: rgba(255, 255, 255, .15);
-            border-color: rgba(255, 199, 44, .45);
+            font-weight: 600;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            color: var(--jaggery);
+            opacity: .5;
         }
 
-        /* ===== WISHLIST SPECIFIC ===== */
+        /* Wishlist-specific card chrome */
         .remove-btn {
             position: absolute;
             top: 10px;
@@ -723,6 +340,28 @@
             height: 16px;
             stroke: var(--jaggery);
             transition: stroke .25s ease;
+        }
+
+        .saved-chip {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 10;
+            display: inline-flex;
+            align-items: center;
+            gap: .3rem;
+            background: rgba(255, 255, 255, .92);
+            color: var(--kumkum);
+            font-size: .65rem;
+            font-weight: 700;
+            padding: .3rem .6rem;
+            border-radius: 9999px;
+            box-shadow: 0 4px 10px -3px rgba(92, 58, 37, .12);
+        }
+        .saved-chip svg {
+            width: 11px;
+            height: 11px;
+            fill: var(--kumkum);
         }
 
         .card-leaving {
@@ -1054,23 +693,6 @@
                 transform: none !important;
                 clip-path: none !important;
             }
-            .hero-title-in {
-                opacity: 1 !important;
-            }
-            .ghee-pool {
-                opacity: 1 !important;
-                transform: scale(1) !important;
-            }
-            .diya-flame-group,
-            .diya-flame-inner,
-            .diya-glow-circle,
-            .diya-spark {
-                animation: none !important;
-                opacity: 1 !important;
-            }
-            .ladoo-particle {
-                display: none;
-            }
             .card-leaving {
                 opacity: 1 !important;
                 transform: none !important;
@@ -1082,115 +704,20 @@
 
     <div id="navbar-placeholder"></div>
 
-    <!-- ============ HERO ============ -->
-    <section id="hero" class="relative overflow-hidden bg-gradient-to-br from-ink via-jaggery to-kumkum">
-        <img id="heroImg" src="" alt="My Wishlist" class="hero-parallax absolute inset-0 w-full h-full object-cover opacity-60 scale-110" style="display:none;">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-        <div class="hero-glow"></div>
-        <div class="light-ray hidden md:block"></div>
-        <div class="hero-pattern absolute inset-0 pointer-events-none"></div>
-        <div class="premium-badge hidden sm:flex">
-            <i class="fas fa-crown"></i> Saved For Later
-        </div>
-
-        <div class="steam steam-1 w-3 h-3" style="left:22%;"></div>
-        <div class="steam steam-2 w-2 h-2" style="left:48%;"></div>
-        <div class="steam steam-3 w-4 h-4" style="left:66%;"></div>
-        <div class="steam steam-4 w-2.5 h-2.5" style="left:35%;"></div>
-
-        <div class="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 xl:px-16 py-20 md:py-28 grid lg:grid-cols-[1.15fr_.85fr] gap-14 items-center">
-
-            <div class="max-w-2xl text-cream">
-                <div class="diya-wrap">
-                    <svg class="diya-svg" width="72" height="96" viewBox="0 0 70 90" fill="none">
-                        <defs>
-                            <radialGradient id="flameGlow" cx="50%" cy="35%" r="60%">
-                                <stop offset="0%" stop-color="#FFE9A8" stop-opacity="0.95" />
-                                <stop offset="100%" stop-color="#FFE9A8" stop-opacity="0" />
-                            </radialGradient>
-                            <linearGradient id="flameGrad" x1="0" y1="1" x2="0" y2="0">
-                                <stop offset="0%" stop-color="#D7263D" />
-                                <stop offset="45%" stop-color="#F5A623" />
-                                <stop offset="100%" stop-color="#FFF3C4" />
-                            </linearGradient>
-                            <linearGradient id="diyaBodyGrad" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stop-color="#FFC72C" />
-                                <stop offset="100%" stop-color="#B8770F" />
-                            </linearGradient>
-                        </defs>
-
-                        <circle class="diya-glow-circle" cx="35" cy="28" r="26" fill="url(#flameGlow)" />
-
-                        <g class="diya-flame-group">
-                            <path class="diya-flame" d="M35 10 C 26 23, 29 30, 35 35 C 41 30, 44 23, 35 10 Z" fill="url(#flameGrad)" />
-                            <path class="diya-flame-inner" d="M35 19 C 31 26, 33 31, 35 34 C 37 31, 39 26, 35 19 Z" fill="#FFF6D8" />
-                        </g>
-
-                        <ellipse cx="35" cy="46" rx="3.5" ry="7" fill="#7a4a12" />
-
-                        <path class="diya-body" d="M6 58 Q 35 82 64 58 Q 56 72 35 74 Q 14 72 6 58 Z" fill="url(#diyaBodyGrad)" stroke="#7a4a12" stroke-width="1" />
-                        <ellipse cx="35" cy="58" rx="29" ry="7.5" fill="#FFD65C" opacity="0.9" />
-                        <ellipse cx="35" cy="58.5" rx="21" ry="4.5" fill="#FFF3C4" opacity="0.55" />
-                    </svg>
-
-                    <span class="diya-spark s1"></span>
-                    <span class="diya-spark s2"></span>
-                    <span class="diya-spark s3"></span>
-
-                    <div class="ghee-pool"></div>
-                </div>
-
-                <p id="heroEyebrow" class="hero-title-in uppercase text-xs md:text-sm" style="animation-delay:1.15s">
-                    <i class="fas fa-heart mr-2"></i> Saved Items
-                </p>
-
-                <h1 id="heroTitle" class="hero-title-in gild-glow font-display text-4xl md:text-5xl lg:text-6xl leading-[1.1] mt-4 text-cream" style="animation-delay:1.3s">
-                    My Wishlist
-                </h1>
-
-                <p id="heroSubtitle" class="hero-title-in mt-6 text-lg md:text-xl text-cream/90 font-light" style="animation-delay:1.5s">
-                    Your favorite <span class="marathi-highlight">लाडू</span>s, saved for later
-                </p>
-
-                <a id="heroCta" href="#wishlist-root" class="hero-title-in cta-btn inline-flex items-center gap-2 bg-gradient-to-r from-turmeric to-kumkum text-white font-semibold px-7 py-3.5 rounded-xl mt-9 hover:-translate-y-0.5 hover:shadow-lg transition-transform duration-300" style="animation-delay:1.65s">
-                    View Wishlist <span>&rarr;</span>
-                </a>
-
-                <div id="heroStats" class="hero-title-in flex items-center gap-4 sm:gap-6 mt-10" style="animation-delay:1.8s">
-                    <div class="stat-card text-center">
-                        <p class="stat-num font-display text-3xl text-marigold" data-count="25" data-suffix="+">0</p>
-                        <p class="text-xs tracking-wide uppercase text-cream/70 mt-1">Varieties</p>
-                    </div>
-                    <div class="w-px h-10 bg-cream/25"></div>
-                    <div class="stat-card text-center">
-                        <p class="stat-num font-display text-3xl text-marigold" data-count="100" data-suffix="%">0</p>
-                        <p class="text-xs tracking-wide uppercase text-cream/70 mt-1">Handmade</p>
-                    </div>
-                    <div class="w-px h-10 bg-cream/25"></div>
-                    <div class="stat-card text-center">
-                        <p class="stat-num font-display text-3xl text-marigold" data-count="0" data-suffix="">0</p>
-                        <p class="text-xs tracking-wide uppercase text-cream/70 mt-1">Preservatives</p>
-                    </div>
-                </div>
+    <!-- ============ COMPACT PAGE HEADER (hero removed) ============ -->
+    <section id="wishlist-header" class="relative">
+        <div class="header-pattern"></div>
+        <div class="header-glow"></div>
+        <div class="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-10 md:py-14 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+            <div>
+                <p class="header-eyebrow mb-2"><i class="fas fa-heart"></i> Saved Items</p>
+                <h1 class="font-display text-3xl md:text-4xl text-cream">My Wishlist</h1>
+                <p class="text-cream/70 mt-2 text-sm md:text-base">Your favorite <span class="marathi-highlight" style="background:rgba(255,199,44,.16); color:var(--marigold);">लाडू</span>s, saved for later</p>
             </div>
-
-            <div class="hero-title-in relative mx-auto hidden sm:block">
-                <div class="thali-wrap relative">
-                    <div class="thali-orbit"><span class="thali-orbit-dot"></span></div>
-                    <div class="thali-ring"><div class="thali-ring-inner"></div></div>
-                    <div class="thali-photo">
-                        <img src="assets/images/slogan.png" alt="Aaliv Laddu">
-                        <img src="assets/images/slogan.png" alt="Dink Laddu">
-                        <img src="assets/images/slogan.png" alt="Nachni Laddu">
-                    </div>
-                </div>
+            <div class="header-stat">
+                <p class="font-display text-2xl text-marigold" id="header-item-count">0</p>
+                <p class="text-[11px] tracking-wide uppercase text-cream/70 mt-1">Saved</p>
             </div>
-        </div>
-
-        <div class="scroll-cue absolute bottom-6 left-1/2 -translate-x-1/2 text-cream/70">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 5v14"/><path d="M6 13l6 6 6-6"/>
-            </svg>
         </div>
     </section>
 
@@ -1338,7 +865,7 @@
             if (existing) {
                 existing.qty = (existing.qty || 1) + 1;
             } else {
-                items.push({ id: item.id, name: item.name || '', img: item.img || '', price: item.price || null,
+                items.push({ id: item.id, name: item.name || '', img: resolveImage(item) || '', price: item.price || null,
                     qty: 1 });
             }
             saveCart(items);
@@ -1347,6 +874,23 @@
         function removeItem(id) {
             var items = getWishlist().filter(function(i) { return i.id !== id; });
             saveWishlist(items);
+        }
+
+        // Products get added to the wishlist from other pages (product.html,
+        // product cards, etc.) which may not all use the exact same field
+        // name for the image. Check every common variant before giving up,
+        // so a saved item still shows its real photo instead of a blank box.
+        function resolveImage(item) {
+            var candidates = [
+                item.img, item.image, item.imageUrl, item.imgUrl,
+                item.thumbnail, item.thumb, item.photo, item.picture
+            ];
+            for (var i = 0; i < candidates.length; i++) {
+                if (candidates[i] && String(candidates[i]).trim() !== '') {
+                    return candidates[i];
+                }
+            }
+            return null;
         }
 
         // ---------- CHAT WIDGET ----------
@@ -1442,77 +986,6 @@
             });
         })();
 
-        // ---------- HERO LOADER ----------
-        (function loadHero() {
-            var HERO_API_URL = API_BASE + '/api/hero';
-            var heroImg = document.getElementById('heroImg');
-            var heroEyebrow = document.getElementById('heroEyebrow');
-            var heroTitle = document.getElementById('heroTitle');
-            var heroSubtitle = document.getElementById('heroSubtitle');
-            var heroCta = document.getElementById('heroCta');
-
-            var DEFAULT_HERO = {
-                title: 'My Wishlist',
-                subtitle: 'Your favorite <span class="marathi-highlight">लाडू</span>s, saved for later',
-                eyebrow: '<i class="fas fa-heart mr-2"></i> Saved Items',
-                heroImage: 'https://nicyfoods.com/images/products_hero.jpg',
-                ctaText: 'View Wishlist',
-                ctaLink: '#wishlist-root',
-            };
-
-            async function fetchHeroData() {
-                try {
-                    var response = await fetch(HERO_API_URL);
-                    if (!response.ok) throw new Error('HTTP ' + response.status);
-                    var data = await response.json();
-                    console.log('✅ Hero data loaded from server:', data);
-                    return data;
-                } catch (error) {
-                    console.warn('⚠️ Could not fetch hero data from API, using fallback:', error.message);
-                    return DEFAULT_HERO;
-                }
-            }
-
-            function renderHero(data) {
-                if (heroEyebrow && data.eyebrow) heroEyebrow.innerHTML = data.eyebrow;
-                if (heroTitle && data.title) heroTitle.innerHTML = data.title;
-                if (heroSubtitle && data.subtitle) heroSubtitle.innerHTML = data.subtitle;
-                if (heroCta) {
-                    if (data.ctaText) heroCta.innerHTML = data.ctaText + ' <span>&rarr;</span>';
-                    if (data.ctaLink) heroCta.href = data.ctaLink;
-                }
-                if (heroImg && data.heroImage) {
-                    heroImg.src = data.heroImage;
-                    heroImg.style.display = 'block';
-                    heroImg.alt = data.title || 'My Wishlist';
-                }
-
-                // Hero stat counter
-                document.querySelectorAll('#heroStats .stat-num').forEach(function(el) {
-                    var target = parseInt(el.dataset.count, 10);
-                    var suffix = el.dataset.suffix || '';
-                    var duration = 1400;
-                    var start = performance.now();
-
-                    function tick(now) {
-                        var p = Math.min((now - start) / duration, 1);
-                        var eased = 1 - Math.pow(1 - p, 3);
-                        el.textContent = Math.round(eased * target) + suffix;
-                        if (p < 1) requestAnimationFrame(tick);
-                    }
-                    requestAnimationFrame(tick);
-                });
-
-                document.querySelectorAll('.hero-title-in').forEach(function(el) {
-                    el.style.animation = 'none';
-                    void el.offsetWidth;
-                    el.style.animation = '';
-                });
-            }
-
-            fetchHeroData().then(function(data) { renderHero(data); });
-        })();
-
         // ---------- RENDER WISHLIST ----------
         function render() {
             var items = getWishlist();
@@ -1520,7 +993,10 @@
             var listEl = document.getElementById('wishlist-has-items');
             var grid = document.getElementById('wishlist-grid');
             var countEl = document.getElementById('wishlist-count');
+            var headerCountEl = document.getElementById('header-item-count');
             var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            if (headerCountEl) headerCountEl.textContent = items.length;
 
             if (items.length === 0) {
                 emptyEl.classList.remove('hidden');
@@ -1541,20 +1017,25 @@
 
                 var priceLine = item.price != null ? '₹' + item.price : '';
                 var name = item.name || 'Product';
-                var imgSrc = item.img || FALLBACK_IMG;
+                var imgSrc = resolveImage(item);
                 var cat = item.cat || '';
                 var url = item.url || 'product-detail.html?id=' + item.id;
+                var hasImage = !!imgSrc;
+                if (!hasImage) {
+                    console.warn('Wishlist item "' + name + '" has no image field the page recognizes. Check what key product.html saves (expected one of: img, image, imageUrl, thumbnail, photo).');
+                }
 
                 card.innerHTML =
                     '<div class="card-shine"></div>' +
+                    '<span class="saved-chip"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>Saved</span>' +
                     '<button class="remove-btn" aria-label="Remove from wishlist">' +
                     '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>' +
                     '</button>' +
                     '<a href="' + url + '" class="block relative">' +
-                    '<div class="h-44 bg-gradient-to-br from-orange-50/60 to-amber-50/40 overflow-hidden">' +
-                    '<img src="' + imgSrc + '" alt="' + name +
-                    '" class="prod-img w-full h-full object-cover" onerror="this.onerror=null;this.src=\'' +
-                    FALLBACK_IMG + '\'">' +
+                    '<div class="prod-img-wrap' + (hasImage ? '' : ' no-image') + '">' +
+                    '<img src="' + (imgSrc || FALLBACK_IMG) + '" alt="' + name +
+                    '" class="prod-img w-full h-full object-cover" loading="lazy" onerror="this.closest(\'.prod-img-wrap\').classList.add(\'no-image\')">' +
+                    '<div class="img-fallback"><i class="fas fa-cookie-bite"></i><span>Image unavailable</span></div>' +
                     '</div>' +
                     '</a>' +
                     '<div class="p-5 flex flex-col flex-1">' +

@@ -76,6 +76,9 @@
             margin: .25rem 0 0 3.3rem;
             position: relative; z-index: 1;
         }
+        .products-page-head .head-actions {
+            display: flex; align-items: center; gap: .6rem; position: relative; z-index: 1; flex-wrap: wrap;
+        }
 
         .btn-primary {
             background: linear-gradient(135deg, var(--turmeric), var(--kumkum));
@@ -104,6 +107,20 @@
             transition: all .25s ease;
         }
         .btn-secondary:hover { background: #fff; border-color: var(--kumkum); color: var(--kumkum); }
+
+        .btn-header-ghost {
+            background: rgba(255,255,255,.1);
+            color: #fff;
+            font-weight: 600;
+            border: 1.5px solid rgba(255,255,255,.3);
+            border-radius: .85rem;
+            padding: .75rem 1.1rem;
+            cursor: pointer;
+            display: inline-flex; align-items: center; gap: .5rem;
+            font-size: .82rem;
+            transition: all .25s ease;
+        }
+        .btn-header-ghost:hover { background: rgba(255,255,255,.2); }
 
         /* ========== TABLE ========== */
         .table-wrap {
@@ -191,6 +208,7 @@
             transition: transform .35s cubic-bezier(.34,1.56,.64,1);
         }
         .modal-overlay.open .modal-box { transform: translateY(0) scale(1); }
+        .modal-box.modal-box-sm { max-width: 460px; }
         .modal-header {
             display: flex; align-items: center; justify-content: space-between;
             padding-bottom: 1.1rem;
@@ -303,6 +321,14 @@
             background: #fff;
             box-shadow: 0 0 0 3px rgba(215,38,61,.1);
         }
+        .category-select-row { display: flex; align-items: stretch; gap: .5rem; }
+        .category-select-row .input-icon-wrap { flex: 1; }
+        .btn-manage-cat {
+            flex-shrink: 0; width: 44px; border: 1.5px solid rgba(92,58,37,.14); border-radius: .8rem;
+            background: var(--sand); color: var(--jaggery); cursor: pointer; transition: all .2s ease;
+            display: flex; align-items: center; justify-content: center; font-size: .9rem;
+        }
+        .btn-manage-cat:hover { background: var(--herbal); color: #fff; border-color: var(--herbal); }
 
         /* ========== TOGGLE SWITCH ========== */
         .toggle-wrap { display: flex; align-items: center; gap: .7rem; }
@@ -346,6 +372,31 @@
             background: #fff;
         }
 
+        /* ========== CATEGORY MANAGER MODAL ========== */
+        .cat-slug-preview {
+            font-size: .74rem; color: #9a8a7a; margin-top: .35rem;
+            display: flex; align-items: center; gap: .35rem;
+        }
+        .cat-slug-preview code { background: var(--sand); padding: .1rem .5rem; border-radius: .4rem; color: var(--jaggery); font-weight: 600; }
+        .custom-cat-list { margin-top: 1.4rem; }
+        .custom-cat-list-title {
+            font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+            color: #9a8a7a; margin-bottom: .6rem;
+        }
+        .custom-cat-row {
+            display: flex; align-items: center; justify-content: space-between;
+            background: var(--sand); border-radius: .7rem; padding: .55rem .8rem; margin-bottom: .5rem;
+            font-size: .82rem; color: var(--jaggery); font-weight: 600;
+        }
+        .custom-cat-row .cat-tag-slug { font-size: .68rem; color: #9a8a7a; font-weight: 500; margin-left: .4rem; }
+        .custom-cat-row button {
+            border: none; background: rgba(215,38,61,.1); color: var(--kumkum);
+            width: 26px; height: 26px; border-radius: 999px; cursor: pointer; transition: all .2s ease;
+            display: flex; align-items: center; justify-content: center; font-size: .7rem;
+        }
+        .custom-cat-row button:hover { background: var(--kumkum); color: #fff; }
+        .custom-cat-empty { font-size: .78rem; color: #b0a396; font-style: italic; padding: .4rem 0; }
+
         /* ========== TOAST ========== */
         .toast {
             position: fixed; bottom: 24px; right: 24px;
@@ -374,7 +425,10 @@
                 <h1><i class="fas fa-box"></i> Products</h1>
                 <p>Add, edit and manage everything in your product catalog</p>
             </div>
-            <button class="btn-primary" onclick="openProductModal()"><i class="fas fa-plus"></i> Add Product</button>
+            <div class="head-actions">
+                <button class="btn-header-ghost" onclick="openCategoryModal()"><i class="fas fa-tags"></i> Manage Categories</button>
+                <button class="btn-primary" onclick="openProductModal()"><i class="fas fa-plus"></i> Add Product</button>
+            </div>
         </div>
 
         <div class="table-wrap">
@@ -422,33 +476,45 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label"><i class="fas fa-folder"></i> Category</label>
-                        <div class="input-icon-wrap">
-                            <i class="fas fa-th-list"></i>
-                            <select id="pCategory">
-                                <!-- ===== UPDATED CATEGORIES ===== -->
-                                <!-- 1** Pregnancy Gift Pack -->
-                                <option value="pregnancy-gift">Pregnancy Gift Pack</option>
+                        <div class="category-select-row">
+                            <div class="input-icon-wrap">
+                                <i class="fas fa-th-list"></i>
+                                <select id="pCategory">
+                                    <!-- ===== UPDATED CATEGORIES ===== -->
+                                    <!-- 1** Pregnancy Gift Pack -->
+                                    <option value="pregnancy-gift">Pregnancy Gift Pack</option>
 
-                                <!-- 2** Sugar Free Range -->
-                                <option value="sugar-free">Sugar Free Range</option>
+                                    <!-- 2** Sugar Free Range -->
+                                    <option value="sugar-free">Sugar Free Range</option>
 
-                                <!-- 3** Diet Friendly -->
-                                <option value="diet-friendly">Diet Friendly</option>
+                                    <!-- 3** Diet Friendly -->
+                                    <option value="diet-friendly">Diet Friendly</option>
 
-                                <!-- 4** उपवास Fasting Range -->
-                                <option value="fasting">उपवास Fasting Range</option>
+                                    <!-- 4** उपवास Fasting Range -->
+                                    <option value="fasting">उपवास Fasting Range</option>
 
-                                <!-- 5** Guest Gift Pack -->
-                                <option value="guest-gift">Guest Gift Pack</option>
+                                    <!-- 5** Guest Gift Pack -->
+                                    <option value="guest-gift">Guest Gift Pack</option>
 
-                                <!-- 6** Kids Special -->
-                                <option value="kids-special">Kids Special</option>
+                                    <!-- 6** Kids Special -->
+                                    <option value="kids-special">Kids Special</option>
 
-                                <!-- ===== EXISTING CATEGORIES ===== -->
-                                <option value="millet">Millet</option>
-                                <option value="traditional">Traditional</option>
-                                <option value="herbal">Herbal</option>
-                            </select>
+                                    <!-- ===== EXISTING CATEGORIES ===== -->
+                                    <option value="millet">Millet</option>
+                                    <option value="traditional">Traditional</option>
+                                    <option value="herbal">Herbal</option>
+
+                                    <!-- ⬇ Any category the client adds via "Manage Categories" gets
+                                         injected here automatically by products.js (id="customCategoryOptions") ⬇ -->
+                                    <optgroup id="customCategoryOptions" label="Custom Categories"></optgroup>
+
+                                    <option disabled>──────────</option>
+                                    <option value="__add_new__">+ Add New Category…</option>
+                                </select>
+                            </div>
+                            <button type="button" class="btn-manage-cat" title="Manage categories" onclick="openCategoryModal()">
+                                <i class="fas fa-cog"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -513,6 +579,39 @@
                     <button type="submit" id="productSaveBtn" class="btn-primary"><i class="fas fa-save"></i> Save Product</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- ===== MANAGE / ADD CATEGORY MODAL ===== -->
+    <!-- Lets a non-technical client add (or remove) product categories themselves,
+         no code editing required. New categories are saved in this browser
+         (localStorage) and immediately usable in the Product form's dropdown. -->
+    <div id="categoryModal" class="modal-overlay">
+        <div class="modal-box modal-box-sm">
+            <div class="modal-header">
+                <h2><i class="fas fa-tags"></i> Manage Categories</h2>
+                <button class="modal-close" onclick="closeModal('categoryModal')"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-plus-circle"></i> New Category Name</label>
+                <div class="input-icon-wrap">
+                    <i class="fas fa-tag"></i>
+                    <input id="newCategoryName" placeholder="e.g. Diwali Special" autocomplete="off" />
+                </div>
+                <p class="cat-slug-preview">Will be saved as <code id="newCategorySlugPreview">—</code></p>
+            </div>
+
+            <button type="button" class="btn-primary" style="width:100%; justify-content:center;" onclick="addCustomCategory()">
+                <i class="fas fa-plus"></i> Add Category
+            </button>
+            <p id="categoryAddStatus" class="image-upload-status"></p>
+
+            <div class="custom-cat-list">
+                <p class="custom-cat-list-title">Your Custom Categories</p>
+                <div id="customCategoryManageList"></div>
+                <p class="form-hint"><i class="fas fa-info-circle"></i> The 9 built-in categories (Pregnancy Gift Pack, Millet, etc.) can't be removed here — only categories you add show up in this list.</p>
+            </div>
         </div>
     </div>
 
