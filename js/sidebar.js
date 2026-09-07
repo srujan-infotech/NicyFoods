@@ -219,6 +219,7 @@ const NAV_ITEMS = [
     { key: 'qualityPromises',  label: 'Quality Promises',  icon: 'fa-shield-alt',        href: 'quality-promises.html', badgeId: 'navQualityPromiseCount', showBadge: true },
     { key: 'whyChooseUs',      label: 'Why Choose Us',     icon: 'fa-question-circle',   href: 'why-choose-us.html',    badgeId: 'navWhyChooseUsCount',  showBadge: true },
     { key: 'missionVision',    label: 'Mission & Vision',  icon: 'fa-bullseye',          href: 'mission-vision.html',   badgeId: 'navMissionVisionCount', showBadge: true, staticCount: 1 },
+    { key: 'settings',         label: 'Settings',          icon: 'fa-gear',              href: 'settings.html',         badgeId: 'navSettingsCount_UNUSED', showBadge: false },
 ];
 
 const PAGE_TITLES = {
@@ -237,6 +238,7 @@ const PAGE_TITLES = {
     qualityPromises: { title: 'Quality Promises', icon: 'fa-shield-alt' },
     whyChooseUs: { title: 'Why Choose Us', icon: 'fa-question-circle' },
     missionVision: { title: 'Mission & Vision', icon: 'fa-bullseye' },
+    settings: { title: 'Settings', icon: 'fa-gear' },
 };
 
 function renderSidebar(activePage) {

@@ -1590,6 +1590,7 @@
 
 <script src="js/navbar.js"></script>
 <script src="js/footer.js"></script>
+<script src="js/site-settings.js"></script>
 
 <!-- ============================================================ -->
 <!-- ===== NAMKEEN PRODUCTS SCRIPT ===== -->
@@ -1611,11 +1612,11 @@
                 name: 'Patal Pohe Chiwda',
                 desc: 'Thin flattened rice roasted till crisp and tossed with peanuts, curry leaves, and a light homemade tempering. Light, crunchy, and never greasy.',
                 cat: 'chiwda',
-                img: null,
+                img: 'patal-pohe-chiwda-1.jpg',
                 weights: [
-                    { label: '250g', price: 130 },
-                    { label: '500g', price: 240 },
-                    { label: '1kg', price: 450 },
+                    { label: '250g', price: 80 },
+                    { label: '500g', price: 160 },
+                    { label: '1kg', price: 320 },
                 ],
             },
             {
@@ -1623,11 +1624,11 @@
                 name: 'Murmura Chiwda',
                 desc: 'Puffed rice tossed with roasted peanuts, curry leaves, and mild spices for an airy, guilt-free crunch that\'s perfect with evening chai.',
                 cat: 'chiwda',
-                img: null,
+                img: 'murmura-chiwda-1.jpg',
                 weights: [
-                    { label: '250g', price: 110 },
-                    { label: '500g', price: 200 },
-                    { label: '1kg', price: 380 },
+                    { label: '250g', price: 80 },
+                    { label: '500g', price: 160 },
+                    { label: '1kg', price: 320 },
                 ],
             },
             {
@@ -1635,11 +1636,11 @@
                 name: 'Bhajni Chakli (चकली)',
                 desc: 'Traditional spiral chakli made from a home-roasted bhajni flour blend of rice, chana, and urad dal, hand-pressed and slow-fried for that authentic crunch.',
                 cat: 'chakli',
-                img: null,
+                img: 'bhajni-chakli-1.jpg',
                 weights: [
-                    { label: '250g', price: 160 },
-                    { label: '500g', price: 300 },
-                    { label: '1kg', price: 570 },
+                    { label: '250g', price: 100 },
+                    { label: '500g', price: 200 },
+                    { label: '1kg', price: 400 },
                 ],
             },
             {
@@ -1647,10 +1648,11 @@
                 name: 'Black Homemade Masala',
                 desc: 'Our signature dark, aromatic spice blend ground in-house from whole roasted spices. Sprinkle over chiwda, sev, or any namkeen for that extra homemade kick.',
                 cat: 'masala',
-                img: null,
+                img: 'black-homemade-masala-1.jpg',
                 weights: [
-                    { label: '100g', price: 90 },
-                    { label: '250g', price: 200 },
+                    { label: '250g', price: 150 },
+                    { label: '500g', price: 300 },
+                    { label: '1kg', price: 600 },
                 ],
             },
         ];
@@ -1858,7 +1860,8 @@
                 '\n━━━━━━━━━━━━━━\n*Subtotal: ₹' + cartSubtotal() +
                 '*\n_Courier charges to be confirmed based on weight_\n\nPlease confirm availability and the total with delivery. Thank you! 🙏' :
                 'Hi NicyFoods! 👋 I\'d like to place an order.';
-            const phone = WHATSAPP_NUMBER.replace(/\D/g, '');
+            const livePhone = (window.NICY_SETTINGS && window.NICY_SETTINGS.whatsapp) || WHATSAPP_NUMBER;
+            const phone = livePhone.replace(/\D/g, '');
             document.getElementById('checkoutBtn').href = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
         }
 

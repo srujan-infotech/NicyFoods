@@ -964,7 +964,7 @@ function loadNavbar() {
         <!-- Logo -->
         <div class="flex items-center gap-1.5 sm:gap-2 md:gap-3 flex-shrink-0">
           <a href="index.html" class="flex items-center gap-1.5 sm:gap-2 md:gap-3 group">
-            <img src="https://nicyfoods.com/images/logo.png" 
+            <img id="site-logo-img" src="https://nicyfoods.com/images/logo.png" 
                  alt="NicyFoods Logo" 
                  class="w-7 h-7 sm:w-9 sm:h-9 md:w-11 md:h-11 rounded-md object-cover ring-2 ring-kumkum/25 transition-transform duration-300 group-hover:scale-105"
                  width="44" height="44"

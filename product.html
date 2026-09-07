@@ -1685,6 +1685,7 @@
 
 <script src="js/navbar.js"></script>
 <script src="js/footer.js"></script>
+<script src="js/site-settings.js"></script>
 
 <!-- ============================================================ -->
 <!-- ===== MAIN PRODUCTS SCRIPT ===== -->
@@ -1938,7 +1939,8 @@
                 '\n━━━━━━━━━━━━━━\n*Subtotal: ₹' + cartSubtotal() +
                 '*\n_Courier charges to be confirmed based on weight_\n\nPlease confirm availability and the total with delivery. Thank you! 🙏' :
                 'Hi NicyFoods! 👋 I\'d like to place an order.';
-            const phone = WHATSAPP_NUMBER.replace(/\D/g, '');
+            const livePhone = (window.NICY_SETTINGS && window.NICY_SETTINGS.whatsapp) || WHATSAPP_NUMBER;
+            const phone = livePhone.replace(/\D/g, '');
             document.getElementById('checkoutBtn').href = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
         }
 

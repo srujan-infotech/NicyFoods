@@ -1581,6 +1581,7 @@
 
 <script src="js/navbar.js"></script>
 <script src="js/footer.js"></script>
+<script src="js/site-settings.js"></script>
 
 <!-- ============================================================ -->
 <!-- ===== NAMKEEN DETAIL SCRIPT ===== -->
@@ -1602,14 +1603,14 @@
                 id: 'patal-pohe-chiwda',
                 name: 'Patal Pohe Chiwda',
                 desc: 'Thin flattened rice roasted till crisp and tossed with peanuts, curry leaves, and a light homemade tempering. Light, crunchy, and never greasy.',
-                price: 130,
+                price: 80,
                 cat: 'chiwda',
-                img: FALLBACK_IMG,
-                images: [FALLBACK_IMG],
+                img: 'patal-pohe-chiwda-1.jpg',
+                images: ['patal-pohe-chiwda-1.jpg', 'patal-pohe-chiwda-2.jpg', 'patal-pohe-chiwda-3.jpg'],
                 weights: [
-                    { label: '250g', price: 130 },
-                    { label: '500g', price: 240 },
-                    { label: '1kg', price: 450 },
+                    { label: '250g', price: 80 },
+                    { label: '500g', price: 160 },
+                    { label: '1kg', price: 320 },
                 ],
                 features: [
                     'Ultra-thin flattened rice (patal poha)',
@@ -1635,14 +1636,14 @@
                 id: 'murmura-chiwda',
                 name: 'Murmura Chiwda',
                 desc: 'Puffed rice tossed with roasted peanuts, curry leaves, and mild spices for an airy, guilt-free crunch that\'s perfect with evening chai.',
-                price: 110,
+                price: 80,
                 cat: 'chiwda',
-                img: FALLBACK_IMG,
-                images: [FALLBACK_IMG],
+                img: 'murmura-chiwda-1.jpg',
+                images: ['murmura-chiwda-1.jpg', 'murmura-chiwda-2.jpg', 'murmura-chiwda-3.jpg'],
                 weights: [
-                    { label: '250g', price: 110 },
-                    { label: '500g', price: 200 },
-                    { label: '1kg', price: 380 },
+                    { label: '250g', price: 80 },
+                    { label: '500g', price: 160 },
+                    { label: '1kg', price: 320 },
                 ],
                 features: [
                     'Airy puffed rice base',
@@ -1668,14 +1669,14 @@
                 id: 'bhajni-chakli',
                 name: 'Bhajni Chakli (चकली)',
                 desc: 'Traditional spiral chakli made from a home-roasted bhajni flour blend of rice, chana, and urad dal, hand-pressed and slow-fried for that authentic crunch.',
-                price: 160,
+                price: 100,
                 cat: 'chakli',
-                img: FALLBACK_IMG,
-                images: [FALLBACK_IMG],
+                img: 'bhajni-chakli-1.jpg',
+                images: ['bhajni-chakli-1.jpg'],
                 weights: [
-                    { label: '250g', price: 160 },
-                    { label: '500g', price: 300 },
-                    { label: '1kg', price: 570 },
+                    { label: '250g', price: 100 },
+                    { label: '500g', price: 200 },
+                    { label: '1kg', price: 400 },
                 ],
                 features: [
                     'Traditional hand-pressed spiral shape',
@@ -1701,13 +1702,14 @@
                 id: 'black-homemade-masala',
                 name: 'Black Homemade Masala',
                 desc: 'Our signature dark, aromatic spice blend ground in-house from whole roasted spices. Sprinkle over chiwda, sev, or any namkeen for that extra homemade kick.',
-                price: 90,
+                price: 150,
                 cat: 'masala',
-                img: FALLBACK_IMG,
-                images: [FALLBACK_IMG],
+                img: 'black-homemade-masala-1.jpg',
+                images: ['black-homemade-masala-1.jpg'],
                 weights: [
-                    { label: '100g', price: 90 },
-                    { label: '250g', price: 200 },
+                    { label: '250g', price: 150 },
+                    { label: '500g', price: 300 },
+                    { label: '1kg', price: 600 },
                 ],
                 features: [
                     'Dark roasted whole-spice blend',
@@ -1883,7 +1885,8 @@
                 '\n━━━━━━━━━━━━━━\n*Subtotal: ₹' + subtotal +
                 '*\n_Courier charges to be confirmed based on weight_\n\nPlease confirm availability and the total with delivery. Thank you! 🙏' :
                 'Hi NicyFoods! 👋 I\'d like to place an order.';
-            const phone = WHATSAPP_NUMBER.replace(/\D/g, '');
+            const livePhone = (window.NICY_SETTINGS && window.NICY_SETTINGS.whatsapp) || WHATSAPP_NUMBER;
+            const phone = livePhone.replace(/\D/g, '');
             document.getElementById('checkoutBtn').href = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
         }
 
