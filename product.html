@@ -8,7 +8,38 @@
     <!-- ===== FONTAWESOME ===== -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
-    <link rel="stylesheet" href="css/tailwind-built.css" />
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#FFFFFF',
+                        jaggery: '#5C3A25',
+                        ink: '#3A2417',
+                        turmeric: '#F5A623',
+                        marigold: '#FFC72C',
+                        kumkum: '#D7263D',
+                        herbal: '#5F7A4F',
+                    },
+                    fontFamily: {
+                        display: ['"Rozha One"', 'serif'],
+                        body: ['Poppins', 'sans-serif'],
+                    },
+                    keyframes: {
+                        logoScroll: {
+                            '0%': { transform: 'translateX(0)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        },
+                    },
+                    animation: {
+                        'logo-scroll': 'logoScroll 28s linear infinite',
+                    },
+                },
+            },
+        };
+    </script>
     <link rel="stylesheet" href="css/style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1654,7 +1685,6 @@
 
 <script src="js/navbar.js"></script>
 <script src="js/footer.js"></script>
-<script src="js/site-settings.js"></script>
 
 <!-- ============================================================ -->
 <!-- ===== MAIN PRODUCTS SCRIPT ===== -->
@@ -1908,8 +1938,7 @@
                 '\n━━━━━━━━━━━━━━\n*Subtotal: ₹' + cartSubtotal() +
                 '*\n_Courier charges to be confirmed based on weight_\n\nPlease confirm availability and the total with delivery. Thank you! 🙏' :
                 'Hi NicyFoods! 👋 I\'d like to place an order.';
-            const livePhone = (window.NICY_SETTINGS && window.NICY_SETTINGS.whatsapp) || WHATSAPP_NUMBER;
-            const phone = livePhone.replace(/\D/g, '');
+            const phone = WHATSAPP_NUMBER.replace(/\D/g, '');
             document.getElementById('checkoutBtn').href = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
         }
 
