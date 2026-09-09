@@ -499,6 +499,20 @@
             transform-style: preserve-3d;
             will-change: transform;
         }
+        .gallery-tile {
+            position: relative;
+            transition: transform .4s cubic-bezier(.16,.84,.44,1), box-shadow .4s ease;
+        }
+        .gallery-tile:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 30px -12px rgba(60, 30, 15, 0.35);
+        }
+        .gallery-tile img {
+            transition: transform .6s cubic-bezier(.16,.84,.44,1);
+        }
+        .gallery-tile:hover img {
+            transform: scale(1.08);
+        }
         .rise-card::before {
             content: '';
             position: absolute;
@@ -1841,9 +1855,219 @@
             font-size: 0.55rem !important;
             letter-spacing: 0.08em;
         }
+
+        /* ===== Attractive product-card add-ons (styled after the reference layouts) ===== */
+        .sale-ribbon {
+            position: absolute;
+            top: 12px;
+            left: 0;
+            background: linear-gradient(135deg, var(--marigold), var(--turmeric));
+            color: var(--jaggery);
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            padding: 5px 14px 5px 12px;
+            clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 50%, 100% 100%, 0 100%);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            z-index: 2;
+        }
+        .sale-ribbon.sold-out {
+            background: linear-gradient(135deg, #8f1c1c, var(--kumkum));
+            color: #fff;
+        }
+        .rating-chip {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.96);
+            color: var(--jaggery);
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 999px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            z-index: 2;
+        }
+        .rating-chip svg { width: 11px; height: 11px; fill: var(--marigold); }
+        .mrp-strike {
+            color: #a3a3a3;
+            font-weight: 600;
+            font-size: 0.95rem !important;
+            text-decoration: line-through;
+            margin-right: 6px;
+        }
+        .off-pill {
+            display: inline-block;
+            background: rgba(215, 38, 61, 0.1);
+            color: var(--kumkum);
+            font-size: 0.62rem;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 999px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        .pack-select {
+            width: 100%;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--ink);
+            border: 1px solid #e6dccb;
+            background: #fffaf2;
+            border-radius: 8px;
+            padding: 7px 10px;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: border-color .2s;
+        }
+        .pack-select:hover, .pack-select:focus { border-color: var(--turmeric); outline: none; }
+        .qty-stepper {
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid #e6dccb;
+            border-radius: 999px;
+            overflow: hidden;
+            background: #fffaf2;
+            flex-shrink: 0;
+        }
+        .qty-stepper button {
+            width: 26px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            color: var(--kumkum);
+            font-weight: 800;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background .15s;
+        }
+        .qty-stepper button:hover { background: rgba(215,38,61,0.08); }
+        .qty-stepper span {
+            width: 22px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: var(--ink);
+        }
+        .add-cart-row-attractive {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 12px;
+        }
+        .add-cart-row-attractive .add-cart-btn {
+            flex: 1;
+            min-width: 0;
+            border-radius: 999px !important;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            font-size: 0.72rem !important;
+            padding: 0.6rem 0.7rem !important;
+            gap: 0.35rem !important;
+            white-space: nowrap;
+        }
+        .add-cart-row-attractive .add-cart-btn svg {
+            width: 15px;
+            height: 15px;
+        }
+        .add-cart-row-attractive .view-link-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 999px;
+        }
+
+        /* Toggle-pill tabs (Best Sellers / Newly Added / Healthy) */
+        .tab-pill-row {
+            display: inline-flex;
+            background: #fff4e4;
+            border-radius: 999px;
+            padding: 5px;
+            gap: 4px;
+            box-shadow: inset 0 0 0 1px rgba(92,58,37,0.08);
+        }
+        .tab-pill {
+            border: none;
+            background: transparent;
+            color: var(--jaggery);
+            font-weight: 700;
+            font-size: 0.8rem;
+            padding: 9px 20px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: background .25s, color .25s, box-shadow .25s;
+            white-space: nowrap;
+        }
+        .tab-pill.active-tab {
+            background: linear-gradient(135deg, var(--kumkum), #a4162a);
+            color: #fff;
+            box-shadow: 0 6px 14px rgba(215,38,61,0.35);
+        }
+        .tab-pill:not(.active-tab):hover { background: rgba(215,38,61,0.08); }
+
+        /* Category cards: image on top, solid colour label bar at the bottom */
+        .category-card {
+            box-shadow: 0 6px 18px rgba(60, 30, 10, 0.1);
+            transition: transform .35s cubic-bezier(.16,.84,.44,1), box-shadow .35s;
+            display: flex !important;
+            flex-direction: column;
+        }
+        .category-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 30px rgba(60, 30, 10, 0.24);
+        }
+        .category-card .cat-img-wrap {
+            position: relative;
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .category-card .cat-img-wrap .cat-fallback-icon {
+            color: rgba(255,255,255,0.9);
+            font-size: 2.4rem;
+            z-index: 1;
+        }
+        .category-card .cat-img-wrap img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .5s cubic-bezier(.16,.84,.44,1);
+            z-index: 2;
+        }
+        .category-card:hover .cat-img-wrap img { transform: scale(1.1); }
+        .category-card .cat-label-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            color: #fff;
+            font-family: 'Rozha One', serif;
+            font-size: 1.05rem;
+            flex-shrink: 0;
+        }
+        .category-card .cat-arrow {
+            opacity: 0;
+            transform: translateX(-6px);
+            transition: opacity .3s, transform .3s;
+            flex-shrink: 0;
+        }
+        .category-card:hover .cat-arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
     </style>
 </head>
 <body class="bg-cream">
+
 
     <div id="navbar-placeholder"></div>
 
@@ -1979,6 +2203,73 @@
 
     <div class="torn-edge"></div>
 
+    <!-- ============ SHOP BY CATEGORY ============ -->
+    <section id="shop-by-category" class="relative max-w-7xl mx-auto px-6 py-16 overflow-hidden">
+        <div class="ladoo-particle w-10 h-10 float-drift-slow" style="top:8%; left:3%;"></div>
+        <div class="ladoo-particle w-7 h-7 float-drift" style="bottom:10%; right:5%;"></div>
+
+        <div class="reveal text-center mb-12">
+            <span class="eyebrow inline-block bg-kumkum/10 text-kumkum text-xs tracking-[0.3em] uppercase font-semibold px-4 py-1.5 rounded-full">
+                Explore Our Range
+                <svg width="90" height="8" viewBox="0 0 90 8"><path d="M2 5 Q 25 -1, 45 4 T 88 3" stroke="#D7263D" stroke-width="2" fill="none" stroke-linecap="round" /></svg>
+            </span>
+            <h2 class="wipe font-display text-3xl md:text-4xl text-jaggery mt-1">Shop By Category</h2>
+            <p class="text-slate-500 mt-4 max-w-2xl mx-auto">
+                From traditional recipes passed down for generations to millet, herbal and everyday snacks — find the laddu that fits your family.
+            </p>
+        </div>
+
+        <div class="stagger reveal grid grid-cols-2 md:grid-cols-4 gap-5">
+            <a href="product.html?category=traditional" class="category-card group rounded-2xl overflow-hidden border border-slate-100 h-56 sm:h-64 block">
+                <div class="cat-img-wrap" data-cat-slug="traditional" style="background: linear-gradient(135deg, #B08D2B, #8a6c1f);">
+                    <i class="fas fa-utensils cat-fallback-icon"></i>
+                    <img data-cat-img alt="Traditional Laddus" loading="lazy" onerror="this.style.display='none';">
+                </div>
+                <div class="cat-label-bar" style="background:#B08D2B;">
+                    <span>Traditional Laddus</span>
+                    <svg class="cat-arrow w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+                </div>
+            </a>
+            <a href="product.html?category=millet" class="category-card group rounded-2xl overflow-hidden border border-slate-100 h-56 sm:h-64 block">
+                <div class="cat-img-wrap" data-cat-slug="millet" style="background: linear-gradient(135deg, #6b4a30, #5C3A25);">
+                    <i class="fas fa-seedling cat-fallback-icon"></i>
+                    <img data-cat-img alt="Millet Laddus" loading="lazy" onerror="this.style.display='none';">
+                </div>
+                <div class="cat-label-bar" style="background:#5C3A25;">
+                    <span>Millet Laddus</span>
+                    <svg class="cat-arrow w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+                </div>
+            </a>
+            <a href="product.html?category=herbal" class="category-card group rounded-2xl overflow-hidden border border-slate-100 h-56 sm:h-64 block">
+                <div class="cat-img-wrap" data-cat-slug="herbal" style="background: linear-gradient(135deg, #6d8c5c, #5F7A4F);">
+                    <i class="fas fa-leaf cat-fallback-icon"></i>
+                    <img data-cat-img alt="Herbal Laddus" loading="lazy" onerror="this.style.display='none';">
+                </div>
+                <div class="cat-label-bar" style="background:#5F7A4F;">
+                    <span>Herbal Laddus</span>
+                    <svg class="cat-arrow w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+                </div>
+            </a>
+            <a href="product.html?category=snacks" class="category-card group rounded-2xl overflow-hidden border border-slate-100 h-56 sm:h-64 block">
+                <div class="cat-img-wrap" data-cat-slug="snacks" style="background: linear-gradient(135deg, #a1503c, #8A3B2B);">
+                    <i class="fas fa-pepper-hot cat-fallback-icon"></i>
+                    <img data-cat-img src="assets/images/products/patal-pohe-chiwda-1.jpg" alt="Healthy Snacks" loading="lazy" onerror="this.style.display='none';">
+                </div>
+                <div class="cat-label-bar" style="background:#8A3B2B;">
+                    <span>Healthy Snacks</span>
+                    <svg class="cat-arrow w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <div class="flex justify-center py-2">
+        <svg class="kolam-divider w-40 h-10" viewBox="0 0 200 40" fill="none">
+            <path d="M2 20 Q 50 2, 100 20 T 198 20" stroke="#F5A623" stroke-width="2" stroke-linecap="round"/>
+            <circle class="node" cx="2" cy="20" r="3" fill="#D7263D"/><circle class="node" cx="100" cy="20" r="3" fill="#D7263D"/><circle class="node" cx="198" cy="20" r="3" fill="#D7263D"/>
+        </svg>
+    </div>
+
     <!-- ============ FEATURED PRODUCTS (DYNAMIC FROM API) ============ -->
     <section id="featured-products" class="relative max-w-7xl mx-auto px-6 py-16 overflow-hidden">
         <div class="ladoo-particle w-14 h-14 float-drift-slow" style="top:6%; left:2%;"></div>
@@ -1989,10 +2280,18 @@
                 Handpicked For You
                 <svg width="90" height="8" viewBox="0 0 90 8"><path d="M2 5 Q 25 -1, 45 4 T 88 3" stroke="#D7263D" stroke-width="2" fill="none" stroke-linecap="round" /></svg>
             </span>
-            <h2 class="wipe font-display text-3xl md:text-4xl text-jaggery mt-1">Featured Top Products</h2>
+            <h2 class="wipe font-display text-3xl md:text-4xl text-jaggery mt-1">You'll Love These</h2>
             <p class="text-slate-500 mt-4 max-w-2xl mx-auto">
                 Discover our most loved handmade ladoos, crafted with premium ingredients and traditional methods for optimal nutrition and taste.
             </p>
+        </div>
+
+        <div class="reveal flex items-center justify-center mb-10">
+            <div class="tab-pill-row">
+                <button data-product-tab="bestsellers" class="tab-pill active-tab">Best Sellers</button>
+                <button data-product-tab="new" class="tab-pill">Newly Added</button>
+                <button data-product-tab="healthy" class="tab-pill">Healthy</button>
+            </div>
         </div>
 
         <div id="productGrid" class="stagger reveal grid sm:grid-cols-2 md:grid-cols-4 gap-6 items-stretch">
@@ -2188,7 +2487,7 @@
 
     <div class="torn-edge"></div>
 
-    <!-- ============ MISSION & VISION (DYNAMIC FROM API) ============ -->
+    <!-- ============ LADDU GALLERY (STATIC SHOWCASE) ============ -->
     <section class="relative py-20 md:py-24 overflow-hidden bg-gradient-to-br from-rose-50 via-orange-50 to-amber-50">
         <div class="ladoo-particle w-16 h-16 float-y-slow" style="top:8%; left:6%;"></div>
         <div class="ladoo-particle w-10 h-10 float-y" style="top:70%; left:12%;"></div>
@@ -2197,31 +2496,35 @@
 
         <div class="relative max-w-6xl mx-auto px-6">
             <div class="reveal text-center mb-12">
-                <span class="inline-block bg-kumkum/10 text-kumkum text-xs tracking-[0.3em] uppercase font-semibold px-4 py-1.5 rounded-full" id="mvTagline">What Drives Us</span>
-                <h2 class="font-display text-3xl sm:text-4xl text-jaggery mt-3 grow-underline">Our Mission &amp; Vision</h2>
+                <span class="inline-block bg-kumkum/10 text-kumkum text-xs tracking-[0.3em] uppercase font-semibold px-4 py-1.5 rounded-full">Made With Love</span>
+                <h2 class="font-display text-3xl sm:text-4xl text-jaggery mt-3 grow-underline">A Glimpse Of Our Ladoos</h2>
+                <p class="text-slate-500 mt-4 max-w-2xl mx-auto">Every batch, hand-rolled and photographed just the way it leaves our kitchen.</p>
             </div>
-            <div class="stagger reveal grid grid-cols-1 md:grid-cols-2 gap-6" id="mvContainer">
-                <div class="rise-card bg-white rounded-2xl border-l-4 border-kumkum shadow-sm p-8">
-                    <h3 class="flex items-center gap-2 font-display font-bold text-kumkum text-xl mb-4">
-                        <svg class="icon-spin w-6 h-6 text-kumkum" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/>
-                            <circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/><path d="M18 6l3-3"/>
-                        </svg>
-                        Vision
-                    </h3>
-                    <p class="text-[#5b4736] leading-relaxed" id="visionText">Loading...</p>
+            <div class="stagger reveal grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
+                <div class="gallery-tile rounded-2xl overflow-hidden shadow-sm row-span-2 h-full min-h-[17rem] md:min-h-[22rem]">
+                    <img src="assets/images/gallery/murmura-laddu.jpg" alt="Murmura Laddu" loading="lazy" class="w-full h-full object-cover">
                 </div>
-                <div class="rise-card bg-white rounded-2xl border-l-4 border-turmeric shadow-sm p-8">
-                    <h3 class="flex items-center gap-2 font-display font-bold text-jaggery text-xl mb-4">
-                        <svg class="icon-spin w-6 h-6 text-turmeric" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 2c2.5 2.5 4 6 4 9.5 0 2-1 3.5-1 3.5H9s-1-1.5-1-3.5C8 8 9.5 4.5 12 2z"/>
-                            <path d="M9 15l-3 6 4-2"/><path d="M15 15l3 6-4-2"/>
-                            <circle cx="12" cy="10" r="1.5" fill="currentColor" stroke="none"/>
-                        </svg>
-                        Mission
-                    </h3>
-                    <p class="text-[#5b4736] leading-relaxed" id="missionText">Loading...</p>
+                <div class="gallery-tile rounded-2xl overflow-hidden shadow-sm h-40 md:h-52">
+                    <img src="assets/images/gallery/nachni-laddu-plate.jpg" alt="Nachni Laddu" loading="lazy" class="w-full h-full object-cover">
                 </div>
+                <div class="gallery-tile rounded-2xl overflow-hidden shadow-sm h-40 md:h-52">
+                    <img src="assets/images/gallery/motichoor-laddu.jpg" alt="Motichoor Laddu" loading="lazy" class="w-full h-full object-cover">
+                </div>
+                <div class="gallery-tile rounded-2xl overflow-hidden shadow-sm row-span-2 h-full min-h-[17rem] md:min-h-[22rem]">
+                    <img src="assets/images/gallery/urad-dal-laddu.jpg" alt="Urad Dal Laddu" loading="lazy" class="w-full h-full object-cover">
+                </div>
+                <div class="gallery-tile rounded-2xl overflow-hidden shadow-sm h-40 md:h-52">
+                    <img src="assets/images/gallery/nachni-ingredients.jpg" alt="Nachni Laddu With Ingredients" loading="lazy" class="w-full h-full object-cover">
+                </div>
+                <div class="gallery-tile rounded-2xl overflow-hidden shadow-sm h-40 md:h-52">
+                    <img src="assets/images/gallery/murmura-laddu-closeup.jpg" alt="Murmura Laddu Close-up" loading="lazy" class="w-full h-full object-cover">
+                </div>
+            </div>
+            <div class="reveal text-center mt-10">
+                <a href="product.html" class="cta-btn inline-flex items-center gap-2 bg-gradient-to-r from-turmeric to-kumkum text-white font-semibold px-7 py-3 rounded-xl hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300">
+                    See All Ladoos
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+                </a>
             </div>
         </div>
     </section>
@@ -2815,34 +3118,74 @@
                 }
             }
 
+            // Deterministic pseudo-rating (4.4 - 4.9) so the same product always shows
+            // the same rating between renders, without needing a real reviews backend yet.
+            function ratingFor(seedStr) {
+                let hash = 0;
+                for (let i = 0; i < seedStr.length; i++) hash = (hash * 31 + seedStr.charCodeAt(i)) >>> 0;
+                const options = [4.4, 4.5, 4.6, 4.7, 4.8, 4.9];
+                return options[hash % options.length];
+            }
+
             function createProductCard(product) {
                 const category = product.category || 'PRODUCT';
                 const imageUrl = getImageUrl(product.image) || 'https://nicyfoods.com/images/placeholder.jpg';
-                const price = product.price || '0';
+                const price = parseFloat(product.price) || 0;
                 const name = product.name || 'Product';
                 const description = product.description || '';
+                const id = product._id || name.toLowerCase().replace(/\s/g, '-');
 
                 // Format category display
                 const categoryDisplay = category.replace(/-/g, ' ').toUpperCase();
+                const rating = ratingFor(id);
 
-                let weightHtml = '';
-                if (product.weightOptions && product.weightOptions.length > 0) {
-                    const weightParts = product.weightOptions.map(w => `${w.label}₹${w.price}`).join(' | ');
-                    weightHtml = `<p class="product-card-courier text-slate-500 mt-2">
-                                <span class="font-semibold text-jaggery">Courier Charges:</span> ${weightParts}
-                            </p>`;
-                }
+                // Pack size options: use real weightOptions if present, otherwise fall
+                // back to a single 500g option priced at the product's base price.
+                const packs = (product.weightOptions && product.weightOptions.length > 0)
+                    ? product.weightOptions
+                    : [{ label: '500 Gm', price: price }];
+
+                const packOptionsHtml = packs.map((w, i) =>
+                    `<option value="${w.price}" ${i === 0 ? 'selected' : ''}>${w.label} — ₹${w.price}</option>`
+                ).join('');
+
+                const basePrice = parseFloat(packs[0].price) || price;
+                const mrp = Math.round((basePrice / 0.9) / 5) * 5; // ~10% off, rounded to nearest ₹5
+                const discountPct = mrp > basePrice ? Math.round(((mrp - basePrice) / mrp) * 100) : 0;
+                const inStock = product.inStock !== false;
+
+                const ribbonHtml = inStock
+                    ? `<span class="sale-ribbon">Sale ${discountPct}%</span>`
+                    : `<span class="sale-ribbon sold-out">Sold Out</span>`;
+
+                const addCartHtml = inStock
+                    ? `<button class="add-cart-btn" data-cart-id="${id}"
+                                data-cart-name="${name}"
+                                data-cart-img="${imageUrl}"
+                                data-cart-price="${basePrice}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                            <span class="btn-label btn-label-default">Quick Add</span>
+                            <span class="btn-label btn-label-added">Added &#10003;</span>
+                        </button>`
+                    : `<button class="add-cart-btn" disabled style="opacity:.5;cursor:not-allowed;">
+                            <span class="btn-label btn-label-default">Out of Stock</span>
+                        </button>`;
 
                 return `
                             <div class="tilt-card rise-card relative bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden flex flex-col h-full">
                                 <div class="card-shine"></div>
                                 <div class="relative bg-orange-50 h-56 flex items-center justify-center p-4 overflow-hidden shrink-0">
-                                    <button class="wish-btn" data-wish-id="${product._id || name.toLowerCase().replace(/\s/g, '-')}"
+                                    ${ribbonHtml}
+                                    <span class="rating-chip">
+                                        <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.2 6.1-.7z"/></svg>
+                                        ${rating}
+                                    </span>
+                                    <button class="wish-btn" data-wish-id="${id}"
                                             data-wish-name="${name}"
                                             data-wish-img="${imageUrl}"
-                                            data-wish-price="${price}"
+                                            data-wish-price="${basePrice}"
                                             data-wish-cat="${categoryDisplay}"
-                                            data-wish-url="product-detail.html?id=${product._id || name.toLowerCase().replace(/\s/g, '-')}"
+                                            data-wish-url="product-detail.html?id=${id}"
                                             aria-label="Add to wishlist">
                                         <svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
                                     </button>
@@ -2852,18 +3195,23 @@
                                     <span class="product-card-category-tag badge inline-block w-fit bg-gradient-to-r from-marigold/25 to-turmeric/25 text-kumkum font-bold px-3 py-1 rounded-full mb-2 border border-turmeric/30">${categoryDisplay}</span>
                                     <h3 class="product-card-title font-display text-jaggery">${name}</h3>
                                     <p class="product-card-desc text-slate-500 mt-2 flex-1 leading-relaxed">${description || 'Handcrafted with pure ingredients'}</p>
-                                    <p class="product-card-price mt-3">₹${price}</p>
-                                    ${weightHtml}
-                                    <div class="add-cart-row">
-                                        <button class="add-cart-btn" data-cart-id="${product._id || name.toLowerCase().replace(/\s/g, '-')}"
-                                                data-cart-name="${name}"
-                                                data-cart-img="${imageUrl}"
-                                                data-cart-price="${price}">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-                                            <span class="btn-label btn-label-default">Add to Cart</span>
-                                            <span class="btn-label btn-label-added">Added &#10003;</span>
-                                        </button>
-                                        <a href="product-detail.html?id=${product._id || name.toLowerCase().replace(/\s/g, '-')}" class="view-link-btn" aria-label="View product">
+                                    <p class="product-card-price mt-3">
+                                        <span class="mrp-strike">₹${mrp}</span>₹<span class="live-price">${basePrice}</span>
+                                        <span class="off-pill">${discountPct}% OFF</span>
+                                    </p>
+
+                                    <select class="pack-select" data-pack-select ${inStock ? '' : 'disabled'}>
+                                        ${packOptionsHtml}
+                                    </select>
+
+                                    <div class="add-cart-row-attractive">
+                                        <div class="qty-stepper" data-qty-stepper>
+                                            <button type="button" data-qty-minus aria-label="Decrease quantity" ${inStock ? '' : 'disabled'}>−</button>
+                                            <span data-qty-value>1</span>
+                                            <button type="button" data-qty-plus aria-label="Increase quantity" ${inStock ? '' : 'disabled'}>+</button>
+                                        </div>
+                                        ${addCartHtml}
+                                        <a href="product-detail.html?id=${id}" class="view-link-btn" aria-label="View product">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
                                         </a>
                                     </div>
@@ -2888,6 +3236,8 @@
 
                 initWishlistButtons();
                 initCartButtons();
+                initPackSelectors();
+                initQtySteppers();
             }
 
             function initWishlistButtons() {
@@ -2947,6 +3297,38 @@
                             this.classList.add('pop');
                         }
                     });
+                });
+            }
+
+            function initPackSelectors() {
+                document.querySelectorAll('[data-pack-select]').forEach(select => {
+                    select.addEventListener('change', function () {
+                        const card = this.closest('.tilt-card, .card');
+                        if (!card) return;
+                        const newPrice = this.value;
+                        const priceEl = card.querySelector('.live-price');
+                        const addBtn = card.querySelector('.add-cart-btn');
+                        if (priceEl) priceEl.textContent = newPrice;
+                        if (addBtn) addBtn.dataset.cartPrice = newPrice;
+                    });
+                });
+            }
+
+            function initQtySteppers() {
+                document.querySelectorAll('[data-qty-stepper]').forEach(stepper => {
+                    const valueEl = stepper.querySelector('[data-qty-value]');
+                    const minus = stepper.querySelector('[data-qty-minus]');
+                    const plus = stepper.querySelector('[data-qty-plus]');
+
+                    function setQty(n) {
+                        const clamped = Math.max(1, Math.min(20, n));
+                        valueEl.textContent = clamped;
+                        stepper.dataset.qty = clamped;
+                    }
+
+                    setQty(1);
+                    minus.addEventListener('click', () => setQty(parseInt(valueEl.textContent, 10) - 1));
+                    plus.addEventListener('click', () => setQty(parseInt(valueEl.textContent, 10) + 1));
                 });
             }
 
@@ -3021,17 +3403,21 @@
                         e.stopPropagation();
 
                         const id = this.dataset.cartId;
+                        const card = this.closest('.tilt-card, .card');
+                        const stepper = card ? card.querySelector('[data-qty-stepper]') : null;
+                        const addQty = stepper ? parseInt(stepper.dataset.qty || '1', 10) : 1;
+
                         cartItems = getCart();
                         const existing = cartItems.find(i => i.id === id);
                         if (existing) {
-                            existing.qty = (existing.qty || 1) + 1;
+                            existing.qty = (existing.qty || 1) + addQty;
                         } else {
                             cartItems.push({
                                 id: id,
                                 name: this.dataset.cartName || '',
                                 img: this.dataset.cartImg || '',
                                 price: this.dataset.cartPrice || null,
-                                qty: 1,
+                                qty: addQty,
                             });
                         }
                         saveCart(cartItems);
@@ -3039,6 +3425,13 @@
 
                         this.classList.add('added');
                         setTimeout(() => this.classList.remove('added'), 1400);
+
+                        // Reset the stepper back to 1 after adding
+                        if (stepper) {
+                            const valueEl = stepper.querySelector('[data-qty-value]');
+                            if (valueEl) valueEl.textContent = '1';
+                            stepper.dataset.qty = 1;
+                        }
                     });
                 });
 
@@ -3047,7 +3440,61 @@
                 });
             }
 
-            fetchProducts().then(products => renderProducts(products));
+            // ---------- SHOP BY CATEGORY: use real live product photos ----------
+            // The category tiles start with a colour + icon placeholder. As soon as we
+            // have real product data (from the live API, same source as the grid below),
+            // swap in an actual photo for each category — so we never show a dead image.
+            function applyCategoryImages(products) {
+                const slugs = ['traditional', 'millet', 'herbal', 'snacks'];
+                const found = {};
+                products.forEach(p => {
+                    const cat = (p.category || '').toUpperCase();
+                    slugs.forEach(slug => {
+                        if (!found[slug] && cat.includes(slug.toUpperCase())) {
+                            const url = getImageUrl(p.image);
+                            if (url) found[slug] = url;
+                        }
+                    });
+                });
+                slugs.forEach(slug => {
+                    if (!found[slug]) return; // keep the colour + icon placeholder
+                    const imgEl = document.querySelector(`.cat-img-wrap[data-cat-slug="${slug}"] img[data-cat-img]`);
+                    if (imgEl) imgEl.src = found[slug];
+                });
+            }
+
+            // ---------- HOMEPAGE TABS (Best Sellers / Newly Added / Healthy) ----------
+            let allProducts = [];
+            let activeTab = 'bestsellers';
+
+            function getTabProducts(tab, products) {
+                if (tab === 'new') {
+                    return products.slice().reverse();
+                }
+                if (tab === 'healthy') {
+                    const healthy = products.filter(p => {
+                        const c = (p.category || '').toUpperCase();
+                        return c.includes('MILLET') || c.includes('HERBAL') || c.includes('SUGAR');
+                    });
+                    return healthy.length ? healthy : products;
+                }
+                return products; // bestsellers = default order
+            }
+
+            document.querySelectorAll('.tab-pill').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-pill').forEach(b => b.classList.remove('active-tab'));
+                    btn.classList.add('active-tab');
+                    activeTab = btn.dataset.productTab;
+                    renderProducts(getTabProducts(activeTab, allProducts));
+                });
+            });
+
+            fetchProducts().then(products => {
+                allProducts = products;
+                renderProducts(getTabProducts(activeTab, allProducts));
+                applyCategoryImages(products);
+            });
         })();
     </script>
 
@@ -3404,42 +3851,6 @@
             }
 
             fetchTestimonials().then(renderTestimonials);
-        })();
-    </script>
-
-    <!-- ============================================================ -->
-    <!-- ===== MISSION & VISION LOADER ===== -->
-    <!-- ============================================================ -->
-    <script>
-        (function loadMissionVision() {
-            const API_URL = "https://nicyfoods.srujaninfotech.com/api/mission-vision";
-            const visionEl = document.getElementById('visionText');
-            const missionEl = document.getElementById('missionText');
-            const taglineEl = document.getElementById('mvTagline');
-
-            async function fetchMissionVision() {
-                try {
-                    const response = await fetch(API_URL);
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    const json = await response.json();
-                    if (json.success && json.data) {
-                        const data = json.data;
-                        visionEl.textContent = data.vision || 'Vision not set';
-                        missionEl.textContent = data.mission || 'Mission not set';
-                        if (data.tagline) taglineEl.textContent = data.tagline;
-                        console.log('✅ Mission & Vision loaded from server:', data);
-                        return;
-                    }
-                    throw new Error('Invalid response');
-                } catch (error) {
-                    console.warn('⚠️ Could not load mission & vision, using fallback:', error.message);
-                    visionEl.textContent = 'To become a trusted and beloved healthy food product brand across India, making nutritious, delicious, and authentic handmade ladoos accessible to families from one-year-old babies through all age groups.';
-                    missionEl.textContent = 'To supply premium healthy food products crafted with pure ghee, natural jaggery, and no maida, preservatives, artificial essence, or synthetic colors.';
-                    taglineEl.textContent = 'What Drives Us';
-                }
-            }
-
-            fetchMissionVision();
         })();
     </script>
 

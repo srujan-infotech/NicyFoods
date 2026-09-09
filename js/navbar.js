@@ -964,10 +964,10 @@ function loadNavbar() {
         <!-- Logo -->
         <div class="flex items-center gap-1.5 sm:gap-2 md:gap-3 flex-shrink-0">
           <a href="index.html" class="flex items-center gap-1.5 sm:gap-2 md:gap-3 group">
-            <img src="https://nicyfoods.com/images/logo.png" 
+            <img src="assets/images/logo-nicy.png" 
                  alt="NicyFoods Logo" 
-                 class="w-7 h-7 sm:w-9 sm:h-9 md:w-11 md:h-11 rounded-md object-cover ring-2 ring-kumkum/25 transition-transform duration-300 group-hover:scale-105"
-                 width="44" height="44"
+                 class="w-9 h-9 sm:w-11 sm:h-11 md:w-14 md:h-14 object-contain transition-transform duration-300 group-hover:scale-105"
+                 width="56" height="56"
                  onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2244%22 height=%2244%22 viewBox=%220 0 44 44%22%3E%3Crect width=%2244%22 height=%2244%22 fill=%22%23F5A623%22/%3E%3Ctext x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.35em%22 font-size=%2220%22 font-weight=%22bold%22 fill=%22white%22%3ENF%3C/text%3E%3C/svg%3E'">
             <span class="text-jaggery text-base sm:text-xl md:text-2xl" style="font-family:'Rozha One', serif;">NicyFoods</span>
           </a>

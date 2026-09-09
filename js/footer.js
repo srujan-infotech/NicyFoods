@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <!-- About -->
         <div>
+          <img src="assets/images/logo-nicy.png" alt="NicyFoods Logo" class="w-16 h-16 object-contain mb-3" width="64" height="64">
           <h3 class="text-marigold font-bold text-lg mb-4" style="font-family:'Rozha One', serif;">About NicyFoods</h3>
           <p class="text-sm leading-relaxed text-cream/60">
             NicyFoods is a trusted brand of handmade healthy food products established in 2017.
