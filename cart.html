@@ -759,6 +759,7 @@
 
     <script src="js/navbar.js"></script>
     <script src="js/footer.js"></script>
+    <script src="js/auth-client.js"></script>
 
     <!-- ============================================================ -->
     <!-- ===== CART PAGE SCRIPT ===== -->
@@ -771,6 +772,14 @@
         const COURIER_CHARGE_API_URL = API_BASE + '/api/courier-charge';
         const CART_KEY = 'nicy_cart_items';
         const SAVED_ADDRESS_KEY = 'nicy_saved_address';
+
+        // Saved addresses are now namespaced per logged-in account (falls back to the
+        // old shared key only if somehow used while logged out) so one browser/device
+        // used by two different accounts never shows one person's address to the other.
+        function savedAddressKey() {
+            var user = window.AUTH && AUTH.getUser();
+            return user && user.email ? SAVED_ADDRESS_KEY + '_' + user.email : SAVED_ADDRESS_KEY;
+        }
 
         // Shop pincode: Plot No 20, Saikrupa Society, Ingale Nagar,
         // Warje Jakat Naka, Warje, Pune – 411052
@@ -883,12 +892,12 @@
 
         function getSavedAddress() {
             try {
-                return JSON.parse(localStorage.getItem(SAVED_ADDRESS_KEY) || 'null');
+                return JSON.parse(localStorage.getItem(savedAddressKey()) || 'null');
             } catch (e) { return null; }
         }
 
         function setSavedAddress(addr) {
-            localStorage.setItem(SAVED_ADDRESS_KEY, JSON.stringify(addr));
+            localStorage.setItem(savedAddressKey(), JSON.stringify(addr));
         }
 
         // ---------- CHAT WIDGET ----------
@@ -1161,6 +1170,19 @@
             if (savedCard) savedCard.classList.remove('selected');
             document.getElementById('checkoutForm').reset();
             document.getElementById('checkoutForm').style.display = 'block';
+            prefillFromAccount();
+        }
+
+        // Auto-fills Name & Email from the logged-in account (what was entered at
+        // registration). Phone/address aren't collected at registration, so those
+        // stay blank the first time and get remembered via the saved address after that.
+        function prefillFromAccount() {
+            var user = window.AUTH && AUTH.getUser();
+            if (!user) return;
+            var nameEl = document.getElementById('custName');
+            var emailEl = document.getElementById('custEmail');
+            if (nameEl && !nameEl.value) nameEl.value = user.name || '';
+            if (emailEl && !emailEl.value) emailEl.value = user.email || '';
         }
 
         // NEW: lets the user edit the fields of their saved address (instead of
@@ -1194,6 +1216,7 @@
                 wrap.style.display = 'none';
                 form.style.display = 'block';
                 usingSavedAddress = false;
+                prefillFromAccount();
             }
         }
 
@@ -1350,9 +1373,22 @@
             document.getElementById('payFieldsNetbanking').style.display = sub === 'netbanking' ? 'block' : 'none';
         }
 
+        // Require an account before checkout — same pattern as any e-commerce site
+        // (Amazon/Flipkart-style: browse & add to cart as a guest, but sign in to
+        // actually place the order). Sends the user to login, and login.html/register.html
+        // will bounce them straight back here (with ?checkout=1) once they're signed in.
+        function requireLoginForCheckout() {
+            var here = window.location.pathname.split('/').pop() + '?checkout=1';
+            window.location.href = 'login.html?redirect=' + encodeURIComponent(here);
+        }
+
         function openCheckoutModal() {
             var items = getCart();
             if (items.length === 0) return;
+            if (!window.AUTH || !AUTH.isLoggedIn()) {
+                requireLoginForCheckout();
+                return;
+            }
             document.getElementById('checkoutModal').classList.add('open');
             document.body.style.overflow = 'hidden';
             initAddressStep();
@@ -1377,6 +1413,15 @@
         document.getElementById('checkoutModal').addEventListener('click', function(e) {
             if (e.target === this) closeCheckoutModal();
         });
+
+        // Resume checkout automatically if we just got bounced back from
+        // login.html/register.html (?checkout=1) after signing in.
+        (function resumeCheckoutIfRequested() {
+            var params = new URLSearchParams(window.location.search);
+            if (params.get('checkout') === '1' && window.AUTH && AUTH.isLoggedIn() && getCart().length > 0) {
+                openCheckoutModal();
+            }
+        })();
 
         // ---------- MOCK PAYMENT OVERLAY CONTROL ----------
         // Purely visual — simulates a payment gateway confirming the charge before
@@ -1413,6 +1458,14 @@
         async function submitOrder() {
             var items = getCart();
             if (items.length === 0) return;
+
+            // Safety net: don't let an order be placed if the session expired
+            // mid-checkout (e.g. token cleared in another tab).
+            if (!window.AUTH || !AUTH.isLoggedIn()) {
+                closeCheckoutModal();
+                requireLoginForCheckout();
+                return;
+            }
 
             var addr = readAddressForm();
             var statusEl = document.getElementById('checkoutStatus');
@@ -1514,10 +1567,17 @@
                 },
             };
 
+            // Attach the logged-in user's token so the backend can link this order
+            // to their account (if/when the Order model supports it) instead of it
+            // staying a purely anonymous submission.
+            var orderHeaders = { 'Content-Type': 'application/json' };
+            var authToken = window.AUTH && AUTH.getToken();
+            if (authToken) orderHeaders['Authorization'] = 'Bearer ' + authToken;
+
             try {
                 var res = await fetch(ORDERS_API_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: orderHeaders,
                     body: JSON.stringify(payload),
                 });
                 var json = await res.json();

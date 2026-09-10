@@ -45,7 +45,7 @@ async function loadCompanies() {
         }
         tbody.innerHTML = data.map(c => `
                     <tr>
-                        <td>${c.logo ? `<img src="${c.logo}" alt="${c.altText || c.name}" class="product-thumb" onerror="this.style.display='none';this.parentElement.innerHTML='<div class=\\'product-thumb-placeholder\\'><i class=\\'fas fa-image\\'></i></div>';" />` : '<div class="product-thumb-placeholder"><i class="fas fa-image"></i></div>'}</td>
+                        <td>${c.logo ? `<img src="${getImageUrl(c.logo, 'companies')}" alt="${c.altText || c.name}" class="product-thumb" onerror="this.style.display='none';this.parentElement.innerHTML='<div class=\\'product-thumb-placeholder\\'><i class=\\'fas fa-image\\'></i></div>';" />` : '<div class="product-thumb-placeholder"><i class="fas fa-image"></i></div>'}</td>
                         <td class="font-medium">${c.name}</td>
                         <td class="max-w-xs truncate">${c.altText || ''}</td>
                         <td>${c.order ?? 0}</td>
@@ -86,7 +86,7 @@ function openCompanyModal(data = null) {
         label.textContent = 'No, hidden';
     }
     if (data?.logo) {
-        companyImagePreview.src = data.logo;
+        companyImagePreview.src = getImageUrl(data.logo, 'companies');
         companyImagePreview.classList.add('show');
     } else {
         companyImagePreview.src = '';

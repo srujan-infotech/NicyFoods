@@ -312,6 +312,21 @@
 
   <script src="js/auth-client.js"></script>
   <script>
+    // ---------- Checkout / redirect-after-register support ----------
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectParam = urlParams.get('redirect');
+
+    // Already logged in? No need to show the form again — go straight back.
+    if (AUTH.isLoggedIn()) {
+      window.location.href = AUTH.isAdmin() ? 'dashboard.html' : (redirectParam || 'index.html');
+    }
+
+    // Keep the "Sign in" link pointed at the same destination.
+    if (redirectParam) {
+      const loginLink = document.querySelector('a[href="login.html"]');
+      if (loginLink) loginLink.href = 'login.html?redirect=' + encodeURIComponent(redirectParam);
+    }
+
     function initPasswordToggle(btnId, inputId){
       const btn = document.getElementById(btnId);
       const input = document.getElementById(inputId);
@@ -394,7 +409,7 @@
         successEl.textContent = '✅ Account created! Redirecting...';
         successEl.style.display = 'block';
 
-        const redirectTo = AUTH.isAdmin() ? 'dashboard.html' : 'index.html';
+        const redirectTo = AUTH.isAdmin() ? 'dashboard.html' : (redirectParam || 'index.html');
         setTimeout(() => {
           window.location.href = redirectTo;
         }, 600);

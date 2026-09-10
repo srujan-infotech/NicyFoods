@@ -1977,6 +1977,37 @@
             document.getElementById('product-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
+        // ---------- CURATED "FIND YOUR FIT" CARDS: hide empty categories ----------
+        // Maps each hand-written card (by its CSS class) to the category slug it
+        // links to via filterCategory(). Any card whose category has zero live
+        // products gets hidden, so customers never land on an empty grid.
+        const CURATED_CATEGORY_CARDS = {
+            'cat-card-pregnancy': 'pregnancy-gift',
+            'cat-card-sugar':     'sugar-free',
+            'cat-card-diet':      'diet-friendly',
+            'cat-card-fasting':   'fasting',
+            'cat-card-guest':     'guest-gift',
+            'cat-card-kids':      'kids-special',
+        };
+
+        function updateCuratedCategoryCards() {
+            Object.keys(CURATED_CATEGORY_CARDS).forEach(function(cardClass) {
+                const category = CURATED_CATEGORY_CARDS[cardClass];
+                const card = document.querySelector('.' + cardClass);
+                if (!card) return;
+                const hasProducts = PRODUCTS.some(function(p) { return p.cat === category && p.inStock !== false; });
+                card.style.display = hasProducts ? '' : 'none';
+            });
+
+            // If every curated card ended up hidden (e.g. a brand-new store with
+            // only "millet"/"traditional"/"herbal" products so far), hide the
+            // whole "Find Your Fit" section instead of showing an empty grid of cards.
+            const cards = Object.keys(CURATED_CATEGORY_CARDS).map(function(c) { return document.querySelector('.' + c); }).filter(Boolean);
+            const anyVisible = cards.some(function(c) { return c.style.display !== 'none'; });
+            const section = cards.length ? cards[0].closest('section') : null;
+            if (section) section.style.display = anyVisible ? '' : 'none';
+        }
+
         // ---------- DYNAMIC FILTER TABS ----------
         // Builds the "All Products" + one tab per category actually present in
         // PRODUCTS (sourced live from the backend). Re-run this any time PRODUCTS
@@ -2163,6 +2194,12 @@
                 // present in this live product data (backend is the source of truth —
                 // any category the admin adds to a product shows up here automatically).
                 renderFilterTabs();
+
+                // The 6 "Find Your Fit" curated cards further down the page are
+                // hand-written marketing copy, but they should only be shown when
+                // that category actually has at least one live product — otherwise
+                // a customer clicks "View Products" and lands on an empty grid.
+                updateCuratedCategoryCards();
 
                 // Check for category query param
                 const urlParams = new URLSearchParams(window.location.search);

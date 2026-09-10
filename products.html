@@ -480,32 +480,12 @@
                             <div class="input-icon-wrap">
                                 <i class="fas fa-th-list"></i>
                                 <select id="pCategory">
-                                    <!-- ===== UPDATED CATEGORIES ===== -->
-                                    <!-- 1** Pregnancy Gift Pack -->
-                                    <option value="pregnancy-gift">Pregnancy Gift Pack</option>
-
-                                    <!-- 2** Sugar Free Range -->
-                                    <option value="sugar-free">Sugar Free Range</option>
-
-                                    <!-- 3** Diet Friendly -->
-                                    <option value="diet-friendly">Diet Friendly</option>
-
-                                    <!-- 4** उपवास Fasting Range -->
-                                    <option value="fasting">उपवास Fasting Range</option>
-
-                                    <!-- 5** Guest Gift Pack -->
-                                    <option value="guest-gift">Guest Gift Pack</option>
-
-                                    <!-- 6** Kids Special -->
-                                    <option value="kids-special">Kids Special</option>
-
-                                    <!-- ===== EXISTING CATEGORIES ===== -->
-                                    <option value="millet">Millet</option>
-                                    <option value="traditional">Traditional</option>
-                                    <option value="herbal">Herbal</option>
-
-                                    <!-- ⬇ Any category the client adds via "Manage Categories" gets
-                                         injected here automatically by products.js (id="customCategoryOptions") ⬇ -->
+                                    <!-- All categories (the 9 built-in ones + anything the client has
+                                         added) are injected here automatically by products.js, in
+                                         <optgroup id="builtinCategoryOptions"> and
+                                         <optgroup id="customCategoryOptions">. Any category can now be
+                                         removed from "Manage Categories" below — built-in ones included. -->
+                                    <optgroup id="builtinCategoryOptions" label="Categories"></optgroup>
                                     <optgroup id="customCategoryOptions" label="Custom Categories"></optgroup>
 
                                     <option disabled>──────────</option>
@@ -608,9 +588,9 @@
             <p id="categoryAddStatus" class="image-upload-status"></p>
 
             <div class="custom-cat-list">
-                <p class="custom-cat-list-title">Your Custom Categories</p>
+                <p class="custom-cat-list-title">All Categories</p>
                 <div id="customCategoryManageList"></div>
-                <p class="form-hint"><i class="fas fa-info-circle"></i> The 9 built-in categories (Pregnancy Gift Pack, Millet, etc.) can't be removed here — only categories you add show up in this list.</p>
+                <p class="form-hint"><i class="fas fa-info-circle"></i> Any category can be removed here, including the built-in ones — it will simply stop appearing in this dropdown for new products. Products already saved with a removed category keep it and still show normally on the site.</p>
             </div>
         </div>
     </div>

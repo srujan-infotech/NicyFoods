@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/auth-client.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -560,8 +561,10 @@
     <!-- ============ LOOKUP + RESULTS ============ -->
     <div class="container">
 
-        <!-- Lookup form -->
-        <div class="lookup-card">
+        <!-- Lookup form: only shown when nobody is logged in. If the customer
+             is logged in, their orders load automatically below via userId,
+             so they don't need to re-type their phone/email. -->
+        <div class="lookup-card" id="lookupCard">
             <div class="lookup-icon-circle"><i class="fas fa-magnifying-glass"></i></div>
             <div class="card-title">Find Your Orders</div>
             <div class="card-subtitle">We'll show you all orders linked to your contact details</div>
@@ -674,9 +677,13 @@
             const cmKeepBtn = document.getElementById('cmKeepBtn');
             const cmConfirmBtn = document.getElementById('cmConfirmBtn');
             const cancelFormMsg = document.getElementById('cancelFormMsg');
+            const lookupCard = document.getElementById('lookupCard');
 
             let lastLookup = { phone: '', email: '' };
             let pendingCancelOrderNumber = null;
+            // Set once we know the customer is logged in, so cancel calls
+            // authenticate instead of relying on a phone/email match.
+            const isAccountMode = !!(window.AUTH && AUTH.isLoggedIn());
 
             phoneInput.addEventListener('input', function() {
                 this.value = this.value.replace(/\D/g, '').slice(0, 10);
@@ -708,11 +715,13 @@
                 cancelFormMsg.textContent = '';
 
                 try {
-                    const res = await fetch(`${CANCEL_API_URL}/${encodeURIComponent(pendingCancelOrderNumber)}/cancel`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ phone: lastLookup.phone, email: lastLookup.email }),
-                    });
+                    const cancelUrl = `${CANCEL_API_URL}/${encodeURIComponent(pendingCancelOrderNumber)}/cancel`;
+                    const cancelBody = JSON.stringify({ phone: lastLookup.phone, email: lastLookup.email });
+                    // Logged-in customers cancel via their account (Bearer token,
+                    // matched by userId on the backend) instead of phone/email.
+                    const res = isAccountMode
+                        ? await AUTH.authFetch(cancelUrl.replace(API_BASE, ''), { method: 'PUT', body: cancelBody })
+                        : await fetch(cancelUrl, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: cancelBody });
                     const json = await res.json();
 
                     if (!res.ok || !json.success) {
@@ -720,8 +729,12 @@
                     }
 
                     closeCancelModal();
-                    // Re-run the last search so the card updates to "Cancelled"
-                    await performLookup(lastLookup.phone, lastLookup.email);
+                    // Refresh the list so the card updates to "Cancelled"
+                    if (isAccountMode) {
+                        await loadMyAccountOrders();
+                    } else {
+                        await performLookup(lastLookup.phone, lastLookup.email);
+                    }
                 } catch (err) {
                     cancelFormMsg.textContent = err.message || 'Something went wrong. Please try again.';
                     cmConfirmBtn.disabled = false;
@@ -741,11 +754,14 @@
                 console.log('Rendering orders:', orders);
 
                 if (!orders || orders.length === 0) {
+                    const emptyMsg = isAccountMode
+                        ? "You haven't placed any orders yet."
+                        : "We couldn't find any orders with those details. Double-check your phone number or email.";
                     resultsWrap.innerHTML = `
                         <div class="state-block">
                             <div class="state-icon-circle"><i class="fas fa-magnifying-glass"></i></div>
                             <h3>No orders found</h3>
-                            <p>We couldn't find any orders with those details. Double-check your phone number or email.</p>
+                            <p>${emptyMsg}</p>
                             <a href="product.html" class="browse-link"><i class="fas fa-bag-shopping"></i> Browse Products</a>
                         </div>
                     `;
@@ -863,6 +879,42 @@
                 `;
 
                 console.log('Orders rendered successfully.');
+            }
+
+            // ---------- ACCOUNT MODE: auto-load orders for a logged-in customer ----------
+            // This is what actually makes an order show up under "My Account" after a
+            // purchase — previously this page only ever looked orders up by phone/email
+            // and never used the login session at all, even though checkout (cart.html)
+            // was already sending the auth token.
+            async function loadMyAccountOrders() {
+                resultsWrap.innerHTML = `
+                    <div class="state-block">
+                        <div class="state-icon-circle spin"><i class="fas fa-spinner"></i></div>
+                        <p>Loading your orders...</p>
+                    </div>
+                `;
+                try {
+                    const res = await AUTH.authFetch('/api/orders/my');
+                    const json = await res.json();
+                    if (!res.ok || !json.success) throw new Error(json.message || 'Could not load your orders.');
+                    renderOrders(json.data || []);
+                } catch (err) {
+                    console.error('Error loading account orders:', err);
+                    resultsWrap.innerHTML = `
+                        <div class="state-block">
+                            <div class="state-icon-circle"><i class="fas fa-face-frown"></i></div>
+                            <p>${err.message || 'Could not fetch your orders. Please try again.'}</p>
+                            <button onclick="location.reload()" class="retry-btn"><i class="fas fa-arrows-rotate"></i> Try Again</button>
+                        </div>
+                    `;
+                }
+            }
+
+            if (isAccountMode) {
+                // Logged in: skip the phone/email lookup form entirely and show
+                // this account's orders straight away.
+                lookupCard.style.display = 'none';
+                loadMyAccountOrders();
             }
 
             // ---------- LOOKUP (shared by form submit + post-cancel refresh) ----------

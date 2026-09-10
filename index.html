@@ -2203,6 +2203,21 @@
 
     <div class="torn-edge"></div>
 
+    <!-- ============ FIRST 50 CUSTOMERS PROMO BANNER ============ -->
+    <section id="firstFiftyBanner" class="relative overflow-hidden" style="background:linear-gradient(90deg, var(--kumkum), var(--turmeric));">
+        <div class="max-w-6xl mx-auto px-6 py-3.5 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-center">
+            <span class="text-white font-display text-lg sm:text-xl tracking-wide">
+                🎉 First 50 Customers Get <span class="underline decoration-2 decoration-white/60">10% OFF</span> on all products!
+            </span>
+            <span id="firstFiftyCount" class="hidden sm:inline-block bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap">
+                Loading offer status&hellip;
+            </span>
+            <a href="#welcomeOverlay" id="firstFiftyCta" class="bg-white text-kumkum text-xs sm:text-sm font-bold px-4 py-1.5 rounded-full hover:-translate-y-0.5 hover:shadow-md transition-transform duration-200 whitespace-nowrap">
+                Claim My 10% Off
+            </a>
+        </div>
+    </section>
+
     <!-- ============ SHOP BY CATEGORY ============ -->
     <section id="shop-by-category" class="relative max-w-7xl mx-auto px-6 py-16 overflow-hidden">
         <div class="ladoo-particle w-10 h-10 float-drift-slow" style="top:8%; left:3%;"></div>
@@ -2670,6 +2685,7 @@
     <script>
     (function() {
         const LEADS_API_URL = "https://nicyfoods.com/api/welcome-leads";
+        const LEADS_STATS_API_URL = "https://nicyfoods.com/api/welcome-leads/stats";
 
         const overlay = document.getElementById('welcomeOverlay');
         const closeBtn = document.getElementById('wmCloseBtn');
@@ -2689,6 +2705,55 @@
 
         const SESSION_KEY = 'nicy_session_lead_submitted';
         const REMEMBER_KEY = 'nicy_remember_me';
+
+        let offerIsFull = false;
+
+        // ---------- "First 50 customers" banner + popup state ----------
+        function applyOfferState(stats) {
+            offerIsFull = !!stats.soldOut;
+            const countEl = document.getElementById('firstFiftyCount');
+            const ctaEl = document.getElementById('firstFiftyCta');
+            const wmBadge = document.querySelector('#welcomeModal .wm-badge');
+
+            if (countEl) {
+                countEl.textContent = offerIsFull
+                    ? 'Offer fully claimed'
+                    : `Only ${stats.remaining} of ${stats.limit} spots left`;
+            }
+            if (ctaEl) {
+                if (offerIsFull) {
+                    ctaEl.textContent = 'Offer Full';
+                    ctaEl.style.opacity = '0.6';
+                    ctaEl.style.pointerEvents = 'none';
+                } else {
+                    ctaEl.textContent = 'Claim My 10% Off';
+                }
+            }
+            if (submitBtn && offerIsFull) {
+                submitBtn.textContent = 'Notify Me Next Time';
+            }
+            if (wmBadge && offerIsFull) {
+                wmBadge.textContent = 'Launch Offer Fully Claimed';
+            }
+        }
+
+        fetch(LEADS_STATS_API_URL)
+            .then(res => res.ok ? res.json() : Promise.reject(new Error('stats unavailable')))
+            .then(json => { if (json && json.data) applyOfferState(json.data); })
+            .catch(err => {
+                console.warn('⚠️ Could not load first-50 offer stats:', err.message);
+                const countEl = document.getElementById('firstFiftyCount');
+                if (countEl) countEl.textContent = 'Limited spots available';
+            });
+
+        const ctaTrigger = document.getElementById('firstFiftyCta');
+        if (ctaTrigger) {
+            ctaTrigger.addEventListener('click', function(e) {
+                if (offerIsFull) { e.preventDefault(); return; }
+                e.preventDefault();
+                openPopup();
+            });
+        }
 
         let isSubmitting = false;
 
@@ -2852,6 +2917,7 @@
                     body: JSON.stringify(payload),
                 });
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const resData = await res.json().catch(() => ({}));
 
                 if (rememberPreference) {
                     try {
@@ -2865,6 +2931,18 @@
 
                 form.style.display = 'none';
                 successEl.classList.add('show');
+                const successMsgEl = successEl.querySelector('p');
+                if (successMsgEl) {
+                    successMsgEl.textContent = resData.offerFull
+                        ? "Thanks for your interest! Our first-50 launch offer has already been fully claimed, but we'll keep you posted on the next one."
+                        : 'Thank you! Your 10% discount code has been sent to your email.';
+                }
+                // Refresh the banner/popup counters right away so the next
+                // visitor sees an up-to-date "X spots left".
+                fetch(LEADS_STATS_API_URL)
+                    .then(res2 => res2.ok ? res2.json() : null)
+                    .then(json2 => { if (json2 && json2.data) applyOfferState(json2.data); })
+                    .catch(() => {});
 
                 setTimeout(closePopup, 4000);
 
@@ -3150,12 +3228,14 @@
                 ).join('');
 
                 const basePrice = parseFloat(packs[0].price) || price;
-                const mrp = Math.round((basePrice / 0.9) / 5) * 5; // ~10% off, rounded to nearest ₹5
-                const discountPct = mrp > basePrice ? Math.round(((mrp - basePrice) / mrp) * 100) : 0;
                 const inStock = product.inStock !== false;
 
+                // The old "Sale X%" corner ribbon showed a made-up discount (price
+                // was just divided by 0.9 to invent an MRP). That's gone — the site
+                // now promotes the real "first 50 customers get 10% OFF" offer via
+                // the banner/popup instead of a fake per-product ribbon.
                 const ribbonHtml = inStock
-                    ? `<span class="sale-ribbon">Sale ${discountPct}%</span>`
+                    ? ''
                     : `<span class="sale-ribbon sold-out">Sold Out</span>`;
 
                 const addCartHtml = inStock
@@ -3196,8 +3276,7 @@
                                     <h3 class="product-card-title font-display text-jaggery">${name}</h3>
                                     <p class="product-card-desc text-slate-500 mt-2 flex-1 leading-relaxed">${description || 'Handcrafted with pure ingredients'}</p>
                                     <p class="product-card-price mt-3">
-                                        <span class="mrp-strike">₹${mrp}</span>₹<span class="live-price">${basePrice}</span>
-                                        <span class="off-pill">${discountPct}% OFF</span>
+                                        ₹<span class="live-price">${basePrice}</span>
                                     </p>
 
                                     <select class="pack-select" data-pack-select ${inStock ? '' : 'disabled'}>

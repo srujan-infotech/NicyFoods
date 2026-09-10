@@ -569,6 +569,37 @@
 //  Products page logic
 // ============================================================
 
+// ============================================================
+//  CLIENT-MANAGEABLE CATEGORIES
+//  Lets a non-technical admin add or remove product categories from
+//  the UI, with no code changes needed — including the 9 categories
+//  the site ships with. Saved in this browser's localStorage, so
+//  it's specific to this device/admin login unless/until it's wired
+//  up to a real backend endpoint.
+// ============================================================
+const CUSTOM_CATEGORY_STORAGE_KEY = 'nicy_admin_custom_categories';
+const HIDDEN_BUILTIN_CATEGORY_STORAGE_KEY = 'nicy_admin_hidden_builtin_categories';
+
+// The 9 categories the site ships with. These used to be hardcoded
+// <option> tags with no way to remove them — they're now just the
+// starting/default set, and can be deleted like any other category.
+const BUILTIN_CATEGORIES = [
+    { value: 'pregnancy-gift', label: 'Pregnancy Gift Pack' },
+    { value: 'sugar-free',     label: 'Sugar Free Range' },
+    { value: 'diet-friendly',  label: 'Diet Friendly' },
+    { value: 'fasting',        label: 'उपवास Fasting Range' },
+    { value: 'guest-gift',     label: 'Guest Gift Pack' },
+    { value: 'kids-special',   label: 'Kids Special' },
+    { value: 'millet',         label: 'Millet' },
+    { value: 'traditional',    label: 'Traditional' },
+    { value: 'herbal',         label: 'Herbal' },
+];
+
+// NOTE: this IIFE must run AFTER the constants/functions above are
+// declared (it calls injectCustomCategories(), which reads
+// BUILTIN_CATEGORIES). It used to sit above them, which threw
+// "Cannot access 'BUILTIN_CATEGORIES' before initialization"
+// because `const` declarations are not hoisted the way functions are.
 (function init() {
     const user = initAdminShell('products');
     if (!user) return;
@@ -579,15 +610,6 @@
         openProductModal();
     }
 })();
-
-// ============================================================
-//  CLIENT-MANAGEABLE CATEGORIES
-//  Lets a non-technical admin add (or remove) product categories
-//  from the UI, with no code changes needed. Saved in this
-//  browser's localStorage, so it's specific to this device/admin
-//  login unless/until it's wired up to a real backend endpoint.
-// ============================================================
-const CUSTOM_CATEGORY_STORAGE_KEY = 'nicy_admin_custom_categories';
 
 function slugifyCategory(text) {
     return String(text || '')
@@ -608,6 +630,22 @@ function saveCustomCategories(list) {
     localStorage.setItem(CUSTOM_CATEGORY_STORAGE_KEY, JSON.stringify(list));
 }
 
+function getHiddenBuiltinCategories() {
+    try {
+        const raw = JSON.parse(localStorage.getItem(HIDDEN_BUILTIN_CATEGORY_STORAGE_KEY) || '[]');
+        return Array.isArray(raw) ? raw : [];
+    } catch (e) { return []; }
+}
+
+function saveHiddenBuiltinCategories(list) {
+    localStorage.setItem(HIDDEN_BUILTIN_CATEGORY_STORAGE_KEY, JSON.stringify(list));
+}
+
+function getVisibleBuiltinCategories() {
+    const hidden = getHiddenBuiltinCategories();
+    return BUILTIN_CATEGORIES.filter(cat => !hidden.includes(cat.value));
+}
+
 function getAllKnownCategoryValues() {
     const select = document.getElementById('pCategory');
     const values = [];
@@ -617,32 +655,46 @@ function getAllKnownCategoryValues() {
     return values;
 }
 
-// Rebuilds the <optgroup id="customCategoryOptions"> inside the Category
-// dropdown from whatever is currently saved in localStorage. Safe to call
-// any time (e.g. right after adding/removing a category).
+// Rebuilds both <optgroup> lists inside the Category dropdown from
+// whatever is currently saved in localStorage (built-ins minus any
+// that were removed, plus any custom ones added). Safe to call any
+// time (e.g. right after adding/removing a category).
 function injectCustomCategories(selectedValue) {
     const select = document.getElementById('pCategory');
-    const group = document.getElementById('customCategoryOptions');
-    if (!select || !group) return;
+    const builtinGroup = document.getElementById('builtinCategoryOptions');
+    const customGroup = document.getElementById('customCategoryOptions');
+    if (!select || !builtinGroup || !customGroup) return;
 
     const prev = selectedValue !== undefined ? selectedValue : select.value;
-    group.innerHTML = '';
+
+    builtinGroup.innerHTML = '';
+    getVisibleBuiltinCategories().forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat.value;
+        opt.textContent = cat.label;
+        builtinGroup.appendChild(opt);
+    });
+
+    customGroup.innerHTML = '';
     getCustomCategories().forEach(cat => {
         const opt = document.createElement('option');
         opt.value = cat.value;
         opt.textContent = cat.label;
-        group.appendChild(opt);
+        customGroup.appendChild(opt);
     });
 
     if (prev && getAllKnownCategoryValues().includes(prev)) {
         select.value = prev;
+    } else if (getAllKnownCategoryValues().length) {
+        select.value = getAllKnownCategoryValues()[0];
     }
 }
 
-// If a product was saved (maybe from a different browser/admin) with a
-// category value that isn't in this browser's list yet, register it here
-// too so the dropdown can display it correctly instead of silently
-// falling back to something else.
+// If a product was saved (maybe from a different browser/admin, or with
+// a category later removed here) with a category value that isn't in
+// this browser's list, register it as a custom category so the dropdown
+// can display it correctly instead of silently falling back to something
+// else.
 function ensureCategoryOptionExists(value, label) {
     if (!value) return;
     if (getAllKnownCategoryValues().includes(value)) return;
@@ -657,15 +709,19 @@ function ensureCategoryOptionExists(value, label) {
 function renderCategoryManageList() {
     const wrap = document.getElementById('customCategoryManageList');
     if (!wrap) return;
-    const list = getCustomCategories();
-    if (!list.length) {
-        wrap.innerHTML = '<p class="custom-cat-empty">No custom categories added yet.</p>';
+
+    const builtins = getVisibleBuiltinCategories().map(cat => ({ ...cat, builtin: true }));
+    const customs = getCustomCategories().map(cat => ({ ...cat, builtin: false }));
+    const all = [...builtins, ...customs];
+
+    if (!all.length) {
+        wrap.innerHTML = '<p class="custom-cat-empty">No categories left — add one above.</p>';
         return;
     }
-    wrap.innerHTML = list.map(cat => `
+    wrap.innerHTML = all.map(cat => `
         <div class="custom-cat-row">
             <span>${cat.label}<span class="cat-tag-slug">(${cat.value})</span></span>
-            <button type="button" title="Remove" onclick="deleteCustomCategory('${cat.value}')"><i class="fas fa-times"></i></button>
+            <button type="button" title="Remove" onclick="deleteCustomCategory('${cat.value}', ${cat.builtin})"><i class="fas fa-times"></i></button>
         </div>
     `).join('');
 }
@@ -706,15 +762,26 @@ function addCustomCategory() {
     showToast('Category added: ' + label);
 }
 
-function deleteCustomCategory(value) {
+// value: the category slug to remove. isBuiltin: true if it's one of the
+// 9 default categories (hidden via localStorage rather than deleted,
+// since it isn't a real record to begin with) or false for a custom one
+// (removed from the custom list outright).
+function deleteCustomCategory(value, isBuiltin) {
     if (!confirm('Remove this category? Products already saved with it will keep the value, but it will no longer appear in the dropdown for new products.')) return;
-    let list = getCustomCategories();
-    list = list.filter(c => c.value !== value);
-    saveCustomCategories(list);
 
-    const select = document.getElementById('pCategory');
-    const wasSelected = select.value === value;
-    injectCustomCategories(wasSelected ? 'millet' : undefined);
+    if (isBuiltin) {
+        const hidden = getHiddenBuiltinCategories();
+        if (!hidden.includes(value)) {
+            hidden.push(value);
+            saveHiddenBuiltinCategories(hidden);
+        }
+    } else {
+        let list = getCustomCategories();
+        list = list.filter(c => c.value !== value);
+        saveCustomCategories(list);
+    }
+
+    injectCustomCategories();
     renderCategoryManageList();
     showToast('Category removed');
 }
