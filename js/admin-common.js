@@ -141,7 +141,7 @@
 //  and any page-specific script.
 // ============================================================
 
-const API_BASE_URL = "https://nicyfoods.srujaninfotech.com";
+const API_BASE_URL = "https://nicyfoods.com";
 
 // ============================================================
 //  AUTH GATE
