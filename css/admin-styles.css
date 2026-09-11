@@ -1216,3 +1216,34 @@ select:focus {
     font-size: 1.1rem;
     flex-shrink: 0;
 }
+
+/* ========== INLINE STATUS SELECT (table quick-update) ========== */
+.status-select {
+    appearance: none;
+    -webkit-appearance: none;
+    border: none;
+    cursor: pointer;
+    font-size: .7rem;
+    font-weight: 700;
+    padding: .38rem 1.7rem .38rem .85rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    background-repeat: no-repeat;
+    background-position: right .55rem center;
+    background-size: 10px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    transition: all .2s ease;
+}
+.status-select:hover { filter: brightness(0.96); }
+.status-select:focus { outline: none; box-shadow: 0 0 0 3px rgba(215,38,61,.15); }
+.status-select:disabled { opacity: .55; cursor: wait; }
+
+.status-select.pending    { background-color: rgba(245,166,35,.15); color: #B87A0E; }
+.status-select.confirmed,
+.status-select.processing { background-color: rgba(215,38,61,.1);  color: var(--kumkum); }
+.status-select.shipped    { background-color: rgba(59,130,246,.12); color: #2563eb; }
+.status-select.delivered  { background-color: rgba(34,197,94,.14);  color: #16a34a; }
+.status-select.cancelled  { background-color: rgba(148,148,148,.14); color: #6b7280; }
+
+.status-select option { background: #fff; color: var(--ink); font-weight: 600; }

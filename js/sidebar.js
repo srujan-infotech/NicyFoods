@@ -1,18 +1,11 @@
-// // ============================================================
-// //  NicyFoods Admin — Reusable Sidebar
-// //  Renders the sidebar + hamburger + overlay into the page,
-// //  highlights the active nav item based on <body data-page="...">,
-// //  and loads live badge counts.
-// //
-// //  Requires: admin-common.js (apiFetch, safeJson, requireAdmin)
-// //  Include AFTER admin-common.js.
-// // ============================================================
+
 
 // const NAV_ITEMS = [
 //     { key: 'dashboard',        label: 'Dashboard',         icon: 'fa-chart-pie',        href: 'dashboard.html',        badgeId: 'navProductCount_UNUSED', showBadge: false },
 //     { key: 'products',         label: 'Products',          icon: 'fa-box',               href: 'products.html',         badgeId: 'navProductCount',      showBadge: true },
 //     { key: 'testimonials',     label: 'Testimonials',      icon: 'fa-star',              href: 'testimonials.html',     badgeId: 'navTestimonialCount',  showBadge: true },
 //     { key: 'orders',           label: 'Orders',            icon: 'fa-shopping-cart',     href: 'orders.html',           badgeId: 'navOrderCount',        showBadge: true },
+//     { key: 'courierRates',     label: 'Courier Rates',     icon: 'fa-truck-fast',        href: 'courier-rates.html',    badgeId: 'navCourierRateCount',  showBadge: true },
 //     { key: 'contacts',         label: 'Messages',          icon: 'fa-envelope',          href: 'contacts.html',         badgeId: 'navContactCount',      showBadge: true },
 //     { key: 'welcomeLeads',     label: 'Welcome Leads',     icon: 'fa-user-plus',         href: 'welcome-leads.html',    badgeId: 'navWelcomeLeadCount',  showBadge: true },
 //     { key: 'users',            label: 'Registered Users',  icon: 'fa-users',             href: 'users.html',            badgeId: 'navUserCount',         showBadge: true },
@@ -30,6 +23,7 @@
 //     products: { title: 'Products', icon: 'fa-box' },
 //     testimonials: { title: 'Testimonials', icon: 'fa-star' },
 //     orders: { title: 'Orders', icon: 'fa-shopping-cart' },
+//     courierRates: { title: 'Courier Rates', icon: 'fa-truck-fast' },
 //     contacts: { title: 'Messages', icon: 'fa-envelope' },
 //     welcomeLeads: { title: 'Welcome Leads', icon: 'fa-user-plus' },
 //     users: { title: 'Registered Users', icon: 'fa-users' },
@@ -144,11 +138,12 @@
 //     setBadge('navStoryCount', 1);
 //     setBadge('navMissionVisionCount', 1);
 
-//     const [products, testimonials, orders, contacts, welcomeLeadsNew, users, companies, coreValues, qualityPromises, whyChooseUs] =
+//     const [products, testimonials, orders, courierRates, contacts, welcomeLeadsNew, users, companies, coreValues, qualityPromises, whyChooseUs] =
 //         await Promise.all([
 //             fetchCount('/api/products'),
 //             fetchCount('/api/testimonials'),
 //             fetchCount('/api/orders'),
+//             fetchCount('/api/admin/pincode-rates', true),
 //             fetchCount('/api/contact'),
 //             fetchCount('/api/welcome-leads?status=new', true),
 //             fetchCount('/api/auth/users', true),
@@ -161,6 +156,7 @@
 //     setBadge('navProductCount', products);
 //     setBadge('navTestimonialCount', testimonials);
 //     setBadge('navOrderCount', orders);
+//     setBadge('navCourierRateCount', courierRates);
 //     setBadge('navContactCount', contacts);
 //     setBadge('navWelcomeLeadCount', welcomeLeadsNew);
 //     setBadge('navUserCount', users);
@@ -193,15 +189,8 @@
 
 
 
-// ============================================================
-//  NicyFoods Admin — Reusable Sidebar
-//  Renders the sidebar + hamburger + overlay into the page,
-//  highlights the active nav item based on <body data-page="...">,
-//  and loads live badge counts.
-//
-//  Requires: admin-common.js (apiFetch, safeJson, requireAdmin)
-//  Include AFTER admin-common.js.
-// ============================================================
+
+
 
 const NAV_ITEMS = [
     { key: 'dashboard',        label: 'Dashboard',         icon: 'fa-chart-pie',        href: 'dashboard.html',        badgeId: 'navProductCount_UNUSED', showBadge: false },
@@ -253,9 +242,15 @@ function renderSidebar(activePage) {
     container.innerHTML = `
         <div id="sidebarOverlay"></div>
         <aside id="sidebar">
-            <div class="brand">
-                <h1><i class="fas fa-leaf"></i>NicyFoods</h1>
-                <span>Administration</span>
+            <div class="brand" style="display:flex; align-items:center; justify-content:center; gap:0.65rem;">
+                <img src="assets/images/logo-nicy.png"
+                     alt="NicyFoods Logo"
+                     style="width:38px; height:38px; object-fit:contain; border-radius:8px; flex-shrink:0; display:block;"
+                     onerror="this.style.display='none';">
+                <div style="display:flex; flex-direction:column; align-items:flex-start; line-height:1.15;">
+                    <h1 style="margin:0;">NicyFoods</h1>
+                    <span>Administration</span>
+                </div>
             </div>
             <nav style="flex:1; padding: 0.4rem 0;">
                 ${navHtml}

@@ -1686,28 +1686,23 @@
             flex-shrink: 0;
         }
 
-        /* ===== QUALITY PROMISE ICON STYLES ===== */
+        /* ===== QUALITY PROMISE ICON STYLES (plain, bigger, no colored circle) ===== */
         .quality-icon {
-            width: 72px;
-            height: 72px;
+            width: 90px;
+            height: 90px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 0.9rem;
+            margin: 0 auto 1rem;
             flex-shrink: 0;
         }
+        .quality-icon img,
         .quality-icon svg {
-            width: 48px;
-            height: 48px;
-        }
-        .quality-icon img {
-            width: 56px;
-            height: 56px;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
         }
-        .quality-icon .default-icon {
-            width: 48px;
-            height: 48px;
+        .quality-icon svg {
             color: var(--kumkum);
         }
 
@@ -2238,7 +2233,7 @@
             <a href="product.html?category=traditional" class="category-card group rounded-2xl overflow-hidden border border-slate-100 h-56 sm:h-64 block">
                 <div class="cat-img-wrap" data-cat-slug="traditional" style="background: linear-gradient(135deg, #B08D2B, #8a6c1f);">
                     <i class="fas fa-utensils cat-fallback-icon"></i>
-                    <img data-cat-img alt="Traditional Laddus" loading="lazy" onerror="this.style.display='none';">
+                    <img data-cat-img src="assets/images/categories/image.png" alt="Traditional Laddus" loading="lazy" onerror="this.style.display='none';">
                 </div>
                 <div class="cat-label-bar" style="background:#B08D2B;">
                     <span>Traditional Laddus</span>
@@ -2248,7 +2243,7 @@
             <a href="product.html?category=millet" class="category-card group rounded-2xl overflow-hidden border border-slate-100 h-56 sm:h-64 block">
                 <div class="cat-img-wrap" data-cat-slug="millet" style="background: linear-gradient(135deg, #6b4a30, #5C3A25);">
                     <i class="fas fa-seedling cat-fallback-icon"></i>
-                    <img data-cat-img alt="Millet Laddus" loading="lazy" onerror="this.style.display='none';">
+                    <img data-cat-img src="assets/images/categories/millet.png" alt="Millet Laddus" loading="lazy" onerror="this.style.display='none';">
                 </div>
                 <div class="cat-label-bar" style="background:#5C3A25;">
                     <span>Millet Laddus</span>
@@ -2258,7 +2253,7 @@
             <a href="product.html?category=herbal" class="category-card group rounded-2xl overflow-hidden border border-slate-100 h-56 sm:h-64 block">
                 <div class="cat-img-wrap" data-cat-slug="herbal" style="background: linear-gradient(135deg, #6d8c5c, #5F7A4F);">
                     <i class="fas fa-leaf cat-fallback-icon"></i>
-                    <img data-cat-img alt="Herbal Laddus" loading="lazy" onerror="this.style.display='none';">
+                    <img data-cat-img src="assets/images/categories/herbal.png" alt="Herbal Laddus" loading="lazy" onerror="this.style.display='none';">
                 </div>
                 <div class="cat-label-bar" style="background:#5F7A4F;">
                     <span>Herbal Laddus</span>
@@ -3254,7 +3249,8 @@
                 return `
                             <div class="tilt-card rise-card relative bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden flex flex-col h-full">
                                 <div class="card-shine"></div>
-                                <div class="relative bg-orange-50 h-56 flex items-center justify-center p-4 overflow-hidden shrink-0">
+                                <div class="relative bg-gradient-to-br from-orange-50 via-amber-50 to-orange-100 h-72 flex items-center justify-center p-6 overflow-hidden shrink-0">
+                                    <div class="absolute w-48 h-48 rounded-full bg-gradient-to-br from-turmeric/30 to-kumkum/20 blur-2xl pointer-events-none"></div>
                                     ${ribbonHtml}
                                     <span class="rating-chip">
                                         <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.2 6.1-.7z"/></svg>
@@ -3269,7 +3265,7 @@
                                             aria-label="Add to wishlist">
                                         <svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
                                     </button>
-                                    <img src="${imageUrl}" alt="${name}" class="prod-img max-h-full object-contain rounded-lg" loading="lazy" onerror="this.src='https://nicyfoods.com/images/placeholder.jpg'">
+                                    <img src="${imageUrl}" alt="${name}" class="prod-img relative z-[1] max-h-full object-contain rounded-xl shadow-lg ring-1 ring-white/70" loading="lazy" onerror="this.src='https://nicyfoods.com/images/placeholder.jpg'">
                                 </div>
                                 <div class="p-5 flex flex-col flex-1">
                                     <span class="product-card-category-tag badge inline-block w-fit bg-gradient-to-r from-marigold/25 to-turmeric/25 text-kumkum font-bold px-3 py-1 rounded-full mb-2 border border-turmeric/30">${categoryDisplay}</span>
@@ -3520,9 +3516,12 @@
             }
 
             // ---------- SHOP BY CATEGORY: use real live product photos ----------
-            // The category tiles start with a colour + icon placeholder. As soon as we
-            // have real product data (from the live API, same source as the grid below),
-            // swap in an actual photo for each category — so we never show a dead image.
+            // The category tiles now start with an actual, attractive laddu photo
+            // (assets/images/categories/) as a baked-in default. As soon as we have
+            // real product data from the live API (same source as the grid below),
+            // we still try to swap in a live product photo per category — but we
+            // only overwrite the default if the API actually returns a usable image,
+            // so the tiles never fall back to the plain colour + icon placeholder.
             function applyCategoryImages(products) {
                 const slugs = ['traditional', 'millet', 'herbal', 'snacks'];
                 const found = {};
@@ -3536,7 +3535,7 @@
                     });
                 });
                 slugs.forEach(slug => {
-                    if (!found[slug]) return; // keep the colour + icon placeholder
+                    if (!found[slug]) return; // keep the baked-in attractive default photo
                     const imgEl = document.querySelector(`.cat-img-wrap[data-cat-slug="${slug}"] img[data-cat-img]`);
                     if (imgEl) imgEl.src = found[slug];
                 });
@@ -3572,7 +3571,12 @@
             fetchProducts().then(products => {
                 allProducts = products;
                 renderProducts(getTabProducts(activeTab, allProducts));
-                applyCategoryImages(products);
+                // NOTE: applyCategoryImages(products) is intentionally NOT called
+                // anymore. It used to swap the curated "Shop By Category" photos
+                // for whatever live product photo the API returned, which is why
+                // "Traditional Laddus" kept showing the plain plastic-container
+                // photo instead of the nice photo we set below. The 4 category
+                // tiles now always use the static images set in the HTML.
             });
         })();
     </script>
@@ -3948,19 +3952,29 @@
                 { title: 'Zero Additives', description: 'Absolutely no maida, preservatives, artificial essence, synthetic colors, or any harmful substances whatsoever.', icon: '', iconBgColor: '' }
             ];
 
+            const QP_DEFAULT_ICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>`;
+
+            // Called via onerror on a quality-promise <img> when its icon URL
+            // is broken/missing — replaces it with the clean default checkmark
+            // instead of the browser's broken-image icon + alt text.
+            window.qpIconError = function(imgEl) {
+                if (imgEl && imgEl.parentElement) {
+                    imgEl.parentElement.innerHTML = QP_DEFAULT_ICON;
+                }
+            };
+
             function getIconHtml(item) {
                 const icon = item.icon || '';
-                const defaultIcon = `<svg class="default-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>`;
 
                 if (typeof icon === 'string' && icon.trim().startsWith('<svg')) {
                     return `<div class="quality-icon">${icon}</div>`;
                 }
 
                 if (icon && (icon.startsWith('http') || icon.startsWith('/uploads'))) {
-                    return `<div class="quality-icon"><img src="${icon}" alt="${item.title}" /></div>`;
+                    return `<div class="quality-icon"><img src="${icon}" alt="${item.title}" onerror="window.qpIconError(this)"></div>`;
                 }
 
-                return `<div class="quality-icon">${defaultIcon}</div>`;
+                return `<div class="quality-icon">${QP_DEFAULT_ICON}</div>`;
             }
 
             function renderPromises(promises) {
@@ -3974,7 +3988,7 @@
                     return;
                 }
 
-                grid.innerHTML = promises.map(p => `
+                grid.innerHTML = promises.map((p) => `
                             <div class="rise-card bg-white rounded-2xl p-8 text-center shadow-sm border border-slate-100">
                                 ${getIconHtml(p)}
                                 <h3 class="font-bold text-kumkum text-lg mb-3">${p.title}</h3>
