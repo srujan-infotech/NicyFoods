@@ -3249,7 +3249,7 @@
                 return `
                             <div class="tilt-card rise-card relative bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden flex flex-col h-full">
                                 <div class="card-shine"></div>
-                                <div class="relative bg-gradient-to-br from-orange-50 via-amber-50 to-orange-100 h-72 flex items-center justify-center p-6 overflow-hidden shrink-0">
+                                <div class="relative bg-gradient-to-br from-orange-50 via-amber-50 to-orange-100 h-72 flex items-center justify-center p-2 overflow-hidden shrink-0">
                                     <div class="absolute w-48 h-48 rounded-full bg-gradient-to-br from-turmeric/30 to-kumkum/20 blur-2xl pointer-events-none"></div>
                                     ${ribbonHtml}
                                     <span class="rating-chip">
@@ -3265,7 +3265,7 @@
                                             aria-label="Add to wishlist">
                                         <svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
                                     </button>
-                                    <img src="${imageUrl}" alt="${name}" class="prod-img relative z-[1] max-h-full object-contain rounded-xl shadow-lg ring-1 ring-white/70" loading="lazy" onerror="this.src='https://nicyfoods.com/images/placeholder.jpg'">
+                                    <img src="${imageUrl}" alt="${name}" class="prod-img relative z-[1] w-full h-full object-cover rounded-xl shadow-lg ring-1 ring-white/70" loading="lazy" onerror="this.src='https://nicyfoods.com/images/placeholder.jpg'">
                                 </div>
                                 <div class="p-5 flex flex-col flex-1">
                                     <span class="product-card-category-tag badge inline-block w-fit bg-gradient-to-r from-marigold/25 to-turmeric/25 text-kumkum font-bold px-3 py-1 rounded-full mb-2 border border-turmeric/30">${categoryDisplay}</span>
