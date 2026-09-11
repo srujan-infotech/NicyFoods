@@ -202,6 +202,7 @@ const NAV_ITEMS = [
     { key: 'welcomeLeads',     label: 'Welcome Leads',     icon: 'fa-user-plus',         href: 'welcome-leads.html',    badgeId: 'navWelcomeLeadCount',  showBadge: true },
     { key: 'users',            label: 'Registered Users',  icon: 'fa-users',             href: 'users.html',            badgeId: 'navUserCount',         showBadge: true },
     { key: 'hero',             label: 'Hero',               icon: 'fa-image',             href: 'hero.html',             badgeId: 'navHeroCount',         showBadge: true },
+    { key: 'gallery',          label: 'Gallery',           icon: 'fa-images',            href: 'gallery.html',          badgeId: 'navGalleryCount',      showBadge: true },
     { key: 'companies',        label: 'Companies',         icon: 'fa-building',          href: 'companies.html',        badgeId: 'navCompanyCount',      showBadge: true },
     { key: 'story',            label: 'Our Story',         icon: 'fa-book-open',         href: 'story.html',            badgeId: 'navStoryCount',        showBadge: true },
     { key: 'coreValues',       label: 'Core Values',       icon: 'fa-gem',               href: 'core-values.html',      badgeId: 'navCoreValueCount',    showBadge: true },
@@ -220,6 +221,7 @@ const PAGE_TITLES = {
     welcomeLeads: { title: 'Welcome Leads', icon: 'fa-user-plus' },
     users: { title: 'Registered Users', icon: 'fa-users' },
     hero: { title: 'Hero Section', icon: 'fa-image' },
+    gallery: { title: 'Gallery', icon: 'fa-images' },
     companies: { title: 'Companies', icon: 'fa-building' },
     story: { title: 'Our Story', icon: 'fa-book-open' },
     coreValues: { title: 'Core Values', icon: 'fa-gem' },
@@ -336,7 +338,7 @@ async function loadNavCounts() {
     setBadge('navStoryCount', 1);
     setBadge('navMissionVisionCount', 1);
 
-    const [products, testimonials, orders, courierRates, contacts, welcomeLeadsNew, users, companies, coreValues, qualityPromises, whyChooseUs] =
+    const [products, testimonials, orders, courierRates, contacts, welcomeLeadsNew, users, companies, coreValues, qualityPromises, whyChooseUs, gallery] =
         await Promise.all([
             fetchCount('/api/products'),
             fetchCount('/api/testimonials'),
@@ -349,6 +351,7 @@ async function loadNavCounts() {
             fetchCount('/api/core-values', true),
             fetchCount('/api/quality-promise', true),
             fetchCount('/api/why-choose-us', true),
+            fetchCount('/api/gallery/all', true),
         ]);
 
     setBadge('navProductCount', products);
@@ -362,6 +365,7 @@ async function loadNavCounts() {
     setBadge('navCoreValueCount', coreValues);
     setBadge('navQualityPromiseCount', qualityPromises);
     setBadge('navWhyChooseUsCount', whyChooseUs);
+    setBadge('navGalleryCount', gallery);
 }
 
 // ============================================================
