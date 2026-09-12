@@ -661,34 +661,22 @@
 
                 <div class="pay-method-card" data-pay-method="online" onclick="selectPayMethod('online')">
                     <div class="pay-method-head"><span class="pay-radio"></span><i class="fas fa-credit-card" style="color:var(--kumkum);"></i> Pay Online</div>
-                    <p class="pay-method-sub">UPI, Credit/Debit Card or Netbanking — pay now, securely.</p>
-
-                    <div class="pay-online-options" id="onlineSubTabs">
-                        <span class="pay-tab active" data-pay-sub="upi" onclick="event.stopPropagation(); selectPaySub('upi')">UPI</span>
-                        <span class="pay-tab" data-pay-sub="card" onclick="event.stopPropagation(); selectPaySub('card')">Card</span>
-                        <span class="pay-tab" data-pay-sub="netbanking" onclick="event.stopPropagation(); selectPaySub('netbanking')">Netbanking</span>
-                    </div>
-
-                    <div class="pay-online-fields" id="payFieldsUpi">
-                        <input type="text" placeholder="Enter UPI ID (e.g. name@upi)" id="upiId" onclick="event.stopPropagation();" />
-                    </div>
-                    <div class="pay-online-fields" id="payFieldsCard" style="display:none;">
-                        <input type="text" placeholder="Card Number" id="cardNumber" onclick="event.stopPropagation();" />
-                        <div class="field-row">
-                            <input type="text" placeholder="MM/YY" id="cardExpiry" onclick="event.stopPropagation();" />
-                            <input type="text" placeholder="CVV" id="cardCvv" onclick="event.stopPropagation();" />
-                        </div>
-                    </div>
-                    <div class="pay-online-fields" id="payFieldsNetbanking" style="display:none;">
-                        <input type="text" placeholder="Select Bank (e.g. HDFC, SBI, ICICI)" id="netbankBank" onclick="event.stopPropagation();" />
-                    </div>
+                    <p class="pay-method-sub">UPI, Credit/Debit Card, Netbanking or Wallet — pay securely via Razorpay.</p>
 
                     <p class="mock-gateway-note" id="onlineSubTabsNote">
-                        <i class="fas fa-circle-info mr-1"></i>Demo checkout — no real payment gateway is connected yet, so no amount will actually be charged. Order will still be marked as "Paid" so the admin team knows to treat it as such.
+                        <i class="fas fa-lock mr-1"></i>You'll be taken to Razorpay's secure payment window to complete this step. Your card/UPI details never touch our servers.
                     </p>
                 </div>
 
                 <p id="checkoutStatus"></p>
+
+                <!-- Fallback: shown only if a Razorpay popup was opened and got stuck
+                     (payment actually went through — money debited, UPI app showed
+                     success — but the popup itself never closed/returned control to
+                     us, which happens sometimes on certain in-app browsers/webviews). -->
+                <button type="button" id="paymentStuckLink" style="display:none;" class="text-sm underline text-gray-600 mt-1" onclick="handleStuckPayment()">
+                    <i class="fas fa-circle-question mr-1"></i>Already paid but stuck here? Tap to check status
+                </button>
 
                 <div class="checkout-nav">
                     <button type="button" class="btn-back" onclick="goToStep(2)"><i class="fas fa-arrow-left mr-1"></i>Back</button>
@@ -699,12 +687,12 @@
                 </div>
             </div>
 
-            <!-- ===== MOCK PAYMENT PROCESSING OVERLAY (shown only for "Pay Online") ===== -->
+            <!-- ===== PAYMENT PROCESSING OVERLAY (shown right after Razorpay confirms payment, while we save the order) ===== -->
             <div class="payment-overlay" id="paymentOverlay">
                 <div class="payment-overlay-stage active" data-stage="processing">
                     <div class="pay-spinner-ring"></div>
-                    <p class="payment-overlay-title">Processing Payment</p>
-                    <p class="payment-overlay-sub">Confirming your payment via <span id="payOverlayMethodLabel">UPI</span>...</p>
+                    <p class="payment-overlay-title">Confirming Payment</p>
+                    <p class="payment-overlay-sub">Please wait a moment...</p>
                     <p class="payment-overlay-amount" id="payOverlayAmount">₹0</p>
                 </div>
                 <div class="payment-overlay-stage" data-stage="success">
@@ -760,6 +748,8 @@
     <script src="js/navbar.js"></script>
     <script src="js/footer.js"></script>
     <script src="js/auth-client.js"></script>
+    <!-- Razorpay Checkout — loads the "Pay Online" popup used in submitOrder() -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <!-- ============================================================ -->
     <!-- ===== CART PAGE SCRIPT ===== -->
@@ -769,6 +759,7 @@
         const API_BASE = 'https://nicyfoods.com';
         const IMAGE_BASE = API_BASE + '/uploads/products/';
         const ORDERS_API_URL = API_BASE + '/api/orders';
+        const PAYMENT_API_URL = API_BASE + '/api/payment';
         const COURIER_CHARGE_API_URL = API_BASE + '/api/courier-charge';
         const CART_KEY = 'nicy_cart_items';
         const SAVED_ADDRESS_KEY = 'nicy_saved_address';
@@ -1123,7 +1114,6 @@
         //  the order confirmation page.
         // ============================================================
         var checkoutPayMethod = 'cod';
-        var checkoutPaySub = 'upi';
         var usingSavedAddress = false;
         var lastDeliveryResult = { charge: null, breakdown: [], isLocal: false, matched: 'none', area: null, zoneLabel: null, grams: 0 };
         var pincodeCheckTimer = null;
@@ -1357,20 +1347,8 @@
             document.querySelectorAll('.pay-method-card').forEach(function(card) {
                 card.classList.toggle('selected', card.dataset.payMethod === method);
             });
-            var onlineOptions = document.getElementById('onlineSubTabs');
-            onlineOptions.classList.toggle('show', method === 'online');
             document.getElementById('checkoutSubmitLabel').textContent =
                 method === 'online' ? 'Pay & Place Order' : 'Place Order';
-        }
-
-        function selectPaySub(sub) {
-            checkoutPaySub = sub;
-            document.querySelectorAll('.pay-tab').forEach(function(tab) {
-                tab.classList.toggle('active', tab.dataset.paySub === sub);
-            });
-            document.getElementById('payFieldsUpi').style.display = sub === 'upi' ? 'block' : 'none';
-            document.getElementById('payFieldsCard').style.display = sub === 'card' ? 'block' : 'none';
-            document.getElementById('payFieldsNetbanking').style.display = sub === 'netbanking' ? 'block' : 'none';
         }
 
         // Require an account before checkout — same pattern as any e-commerce site
@@ -1393,12 +1371,14 @@
             document.body.style.overflow = 'hidden';
             initAddressStep();
             selectPayMethod('cod');
-            selectPaySub('upi');
             goToStep(1);
         }
         function closeCheckoutModal() {
             document.getElementById('checkoutModal').classList.remove('open');
             document.body.style.overflow = '';
+            hideStuckPaymentLink();
+            pendingCheckout = null;
+            pendingRazorpayOrderId = null;
         }
         window.closeCheckoutModal = closeCheckoutModal;
         window.goToStep = goToStep;
@@ -1407,7 +1387,6 @@
         window.showNewAddressForm = showNewAddressForm;
         window.editSavedAddress = editSavedAddress;
         window.selectPayMethod = selectPayMethod;
-        window.selectPaySub = selectPaySub;
 
         document.getElementById('checkoutBtn').addEventListener('click', openCheckoutModal);
         document.getElementById('checkoutModal').addEventListener('click', function(e) {
@@ -1423,113 +1402,157 @@
             }
         })();
 
-        // ---------- MOCK PAYMENT OVERLAY CONTROL ----------
-        // Purely visual — simulates a payment gateway confirming the charge before
-        // we actually create the order. Swap the body of runMockPayment() for a
-        // real gateway SDK call (Razorpay/PhonePe/etc.) once one is integrated;
-        // whatever that gateway confirms should decide paymentStatus, the same
-        // way this mock version does.
-        function showPaymentOverlay(amount, methodLabel) {
+        // ---------- RAZORPAY PAYMENT OVERLAY CONTROL ----------
+        // Shown briefly after Razorpay confirms the payment, while we save the
+        // order on our backend (which independently re-verifies the payment).
+        function showPaymentOverlay(amount) {
             var overlay = document.getElementById('paymentOverlay');
             document.getElementById('payOverlayAmount').textContent = money(amount);
-            document.getElementById('payOverlayMethodLabel').textContent = methodLabel;
             overlay.querySelectorAll('.payment-overlay-stage').forEach(function(s) { s.classList.remove('active'); });
-            overlay.querySelector('[data-stage="processing"]').classList.add('active');
+            overlay.querySelector('[data-stage="success"]').classList.add('active');
             overlay.classList.add('show');
-        }
-        function setPaymentOverlayStage(stage) {
-            var overlay = document.getElementById('paymentOverlay');
-            overlay.querySelectorAll('.payment-overlay-stage').forEach(function(s) { s.classList.remove('active'); });
-            overlay.querySelector('[data-stage="' + stage + '"]').classList.add('active');
         }
         function hidePaymentOverlay() {
             document.getElementById('paymentOverlay').classList.remove('show');
         }
 
-        async function runMockPayment(amount) {
-            var methodLabel = checkoutPaySub === 'upi' ? 'UPI' : checkoutPaySub === 'card' ? 'Card' : 'Netbanking';
-            showPaymentOverlay(amount, methodLabel);
-            await wait(1500);
-            setPaymentOverlayStage('success');
-            await wait(1000);
-            hidePaymentOverlay();
+        // Opens the real Razorpay Checkout popup for the given amount (₹).
+        // Resolves with the payment proof (order id / payment id / signature) once
+        // Razorpay confirms success — our backend re-verifies this proof before
+        // it ever marks an order "paid" (see orderController.js createOrder).
+        // Rejects with an Error('__CANCELLED__') if the user closes the popup,
+        // or a normal Error with a message on payment failure.
+        // `onOrderCreated(orderId)` fires as soon as the Razorpay order exists,
+        // *before* the popup even opens — this is what lets the "stuck payment"
+        // fallback below know which order to reconcile even if the popup itself
+        // never returns control to us afterwards.
+        function openRazorpayCheckout(amount, addr, onOrderCreated) {
+            return new Promise(function(resolve, reject) {
+                (async function() {
+                    try {
+                        if (typeof Razorpay === 'undefined') {
+                            throw new Error('Payment gateway failed to load. Please check your connection and try again.');
+                        }
+
+                        var authToken = window.AUTH && AUTH.getToken();
+                        var headers = { 'Content-Type': 'application/json' };
+                        if (authToken) headers['Authorization'] = 'Bearer ' + authToken;
+
+                        var res = await fetch(PAYMENT_API_URL + '/create-order', {
+                            method: 'POST',
+                            headers: headers,
+                            body: JSON.stringify({ amount: amount }),
+                        });
+                        var json = await res.json();
+                        if (!res.ok || !json.success) {
+                            throw new Error(json.message || 'Could not start the payment.');
+                        }
+
+                        if (typeof onOrderCreated === 'function') onOrderCreated(json.data.orderId);
+
+                        var settled = false;
+                        var pollTimer = null;
+                        var rzp = null;
+
+                        function finish(result, err) {
+                            if (settled) return;
+                            settled = true;
+                            if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+                            try { if (rzp && rzp.close) rzp.close(); } catch (e) { /* ignore */ }
+                            if (err) reject(err); else resolve(result);
+                        }
+
+                        rzp = new Razorpay({
+                            key: json.data.key,
+                            amount: json.data.amount,
+                            currency: json.data.currency,
+                            order_id: json.data.orderId,
+                            name: 'Nicy Foods',
+                            description: 'Order payment',
+                            prefill: {
+                                name: addr.name || '',
+                                email: addr.email || '',
+                                contact: addr.phone || '',
+                            },
+                            theme: { color: '#D7263D' },
+                            handler: function(response) {
+                                finish({
+                                    razorpayOrderId: response.razorpay_order_id,
+                                    razorpayPaymentId: response.razorpay_payment_id,
+                                    razorpaySignature: response.razorpay_signature,
+                                });
+                            },
+                            modal: {
+                                ondismiss: function() {
+                                    finish(null, new Error('__CANCELLED__'));
+                                },
+                            },
+                        });
+
+                        rzp.on('payment.failed', function(resp) {
+                            finish(null, new Error((resp.error && resp.error.description) || 'Payment failed. Please try again.'));
+                        });
+
+                        rzp.open();
+
+                        // Backup auto-detection: poll our own backend (which checks
+                        // directly with Razorpay's servers) every few seconds. This
+                        // catches payments that actually succeeded even when the
+                        // Checkout popup's own success detection stalls and never
+                        // calls `handler` — seen on some browsers/ad-blockers/extensions
+                        // that interfere with Razorpay's status polling, independent of
+                        // device or browser vendor. No button, no waiting on the user.
+                        pollTimer = setInterval(async function() {
+                            try {
+                                var statusHeaders = {};
+                                if (authToken) statusHeaders['Authorization'] = 'Bearer ' + authToken;
+                                var sres = await fetch(PAYMENT_API_URL + '/status/' + encodeURIComponent(json.data.orderId), {
+                                    headers: statusHeaders,
+                                });
+                                var sjson = await sres.json();
+                                if (sjson && sjson.success && sjson.data && sjson.data.captured) {
+                                    finish({
+                                        razorpayOrderId: json.data.orderId,
+                                        razorpayPaymentId: sjson.data.paymentId,
+                                        razorpaySignature: null, // reconciled server-side instead — see orderController.js
+                                    });
+                                }
+                            } catch (e) {
+                                // transient network hiccup — just try again on the next tick
+                            }
+                        }, 3000);
+                    } catch (err) {
+                        reject(err);
+                    }
+                })();
+            });
         }
 
-        async function submitOrder() {
-            var items = getCart();
-            if (items.length === 0) return;
+        // Holds enough info to (re)create the order once payment is confirmed —
+        // set right before opening the Razorpay popup, read by both the normal
+        // success path and the "stuck payment" fallback below.
+        var pendingCheckout = null;
+        var pendingRazorpayOrderId = null;
+        var stuckLinkTimer = null;
 
-            // Safety net: don't let an order be placed if the session expired
-            // mid-checkout (e.g. token cleared in another tab).
-            if (!window.AUTH || !AUTH.isLoggedIn()) {
-                closeCheckoutModal();
-                requireLoginForCheckout();
-                return;
-            }
+        function showStuckPaymentLink() {
+            document.getElementById('paymentStuckLink').style.display = 'inline-block';
+        }
+        function hideStuckPaymentLink() {
+            document.getElementById('paymentStuckLink').style.display = 'none';
+            if (stuckLinkTimer) { clearTimeout(stuckLinkTimer); stuckLinkTimer = null; }
+        }
 
-            var addr = readAddressForm();
+        // Sends the order to our backend. `paymentProof` is either:
+        //   - the full { razorpayOrderId, razorpayPaymentId, razorpaySignature } from
+        //     Checkout's own handler (normal path), or
+        //   - just { razorpayOrderId } when recovering a "stuck" popup — the backend
+        //     then reconciles directly against Razorpay's servers instead (see
+        //     orderController.js createOrder for both paths).
+        async function finalizePlaceOrder(items, addr, subtotal, delivery, totalPayable, paymentMethod, paymentStatus, paymentProof) {
             var statusEl = document.getElementById('checkoutStatus');
             var submitBtn = document.getElementById('checkoutSubmitBtn');
 
-            var paymentMethod = checkoutPayMethod === 'cod' ? 'cod' : ('online_' + checkoutPaySub);
-
-            if (checkoutPayMethod === 'online') {
-                if (checkoutPaySub === 'upi' && !document.getElementById('upiId').value.trim()) {
-                    statusEl.textContent = 'Please enter your UPI ID.';
-                    statusEl.className = 'error';
-                    return;
-                }
-                if (checkoutPaySub === 'card' &&
-                    (!document.getElementById('cardNumber').value.trim() ||
-                     !document.getElementById('cardExpiry').value.trim() ||
-                     !document.getElementById('cardCvv').value.trim())) {
-                    statusEl.textContent = 'Please fill all card details.';
-                    statusEl.className = 'error';
-                    return;
-                }
-                if (checkoutPaySub === 'netbanking' && !document.getElementById('netbankBank').value.trim()) {
-                    statusEl.textContent = 'Please select your bank.';
-                    statusEl.className = 'error';
-                    return;
-                }
-            }
-
-            var subtotal = items.reduce(function(sum, i) { return sum + (parseFloat(i.price) || 0) * (i.qty || 1); }, 0);
-            var delivery = await computeDeliveryCharge(addr.pincode, items);
-
-            if (delivery.charge === null) {
-                statusEl.textContent = delivery.message || "We don't currently deliver to this pincode.";
-                statusEl.className = 'error';
-                return;
-            }
-
-            var totalPayable = subtotal + delivery.charge;
-
-            submitBtn.disabled = true;
-
-            // paymentStatus is now decided HERE and sent to the backend, instead of
-            // being left out of the payload entirely (which is why paid orders were
-            // always showing "pending" in the admin panel before this fix).
-            var paymentStatus = 'pending'; // COD: collected on delivery, admin marks paid manually later
-
-            if (checkoutPayMethod === 'online') {
-                statusEl.textContent = '';
-                statusEl.className = '';
-                await runMockPayment(totalPayable);
-                // Demo gateway note: there's no real payment gateway wired up yet, so we
-                // can't get an actual "payment confirmed" webhook/callback. Once a real
-                // gateway (Razorpay/PhonePe/etc.) is integrated, replace this line with
-                // that gateway's confirmed result instead of assuming success.
-                paymentStatus = 'paid';
-                statusEl.textContent = 'Placing your order...';
-                statusEl.className = 'loading';
-            } else {
-                statusEl.textContent = 'Placing your order...';
-                statusEl.className = 'loading';
-            }
-
-            // Sent under `pricing` — backend's createOrder controller reads this to save the
-            // real courier charge (as flat fields) on the order, instead of hardcoding it to 0.
             var payload = {
                 items: items.map(function(i) {
                     return {
@@ -1555,6 +1578,7 @@
                 },
                 paymentMethod: paymentMethod,
                 paymentStatus: paymentStatus,
+                payment: paymentProof, // verified/reconciled server-side — see orderController.js
                 pricing: {
                     subtotal: subtotal,
                     courierCharge: delivery.charge,
@@ -1567,9 +1591,6 @@
                 },
             };
 
-            // Attach the logged-in user's token so the backend can link this order
-            // to their account (if/when the Order model supports it) instead of it
-            // staying a purely anonymous submission.
             var orderHeaders = { 'Content-Type': 'application/json' };
             var authToken = window.AUTH && AUTH.getToken();
             if (authToken) orderHeaders['Authorization'] = 'Bearer ' + authToken;
@@ -1588,6 +1609,9 @@
 
                 var order = json.data;
 
+                hidePaymentOverlay();
+                hideStuckPaymentLink();
+                pendingCheckout = null;
                 statusEl.textContent = 'Order placed! Redirecting...';
                 statusEl.className = '';
 
@@ -1599,10 +1623,103 @@
 
             } catch (err) {
                 console.error('Order creation failed:', err);
+                hidePaymentOverlay();
                 statusEl.textContent = err.message || "Couldn't place your order. Please try again.";
                 statusEl.className = 'error';
                 submitBtn.disabled = false;
             }
+        }
+
+        // Fallback for when the Razorpay popup gets stuck after a successful
+        // payment (money debited, UPI app showed success) instead of closing
+        // and returning control to us — seen on some in-app browsers/webviews.
+        async function handleStuckPayment() {
+            if (!pendingCheckout || !pendingRazorpayOrderId) return;
+            var statusEl = document.getElementById('checkoutStatus');
+            hideStuckPaymentLink();
+            statusEl.textContent = 'Checking payment status with Razorpay...';
+            statusEl.className = 'loading';
+            var c = pendingCheckout;
+            await finalizePlaceOrder(
+                c.items, c.addr, c.subtotal, c.delivery, c.totalPayable,
+                c.paymentMethod, 'paid', { razorpayOrderId: pendingRazorpayOrderId }
+            );
+        }
+        window.handleStuckPayment = handleStuckPayment;
+
+        async function submitOrder() {
+            var items = getCart();
+            if (items.length === 0) return;
+
+            // Safety net: don't let an order be placed if the session expired
+            // mid-checkout (e.g. token cleared in another tab).
+            if (!window.AUTH || !AUTH.isLoggedIn()) {
+                closeCheckoutModal();
+                requireLoginForCheckout();
+                return;
+            }
+
+            var addr = readAddressForm();
+            var statusEl = document.getElementById('checkoutStatus');
+            var submitBtn = document.getElementById('checkoutSubmitBtn');
+
+            var paymentMethod = checkoutPayMethod === 'cod' ? 'cod' : 'online_razorpay';
+
+            var subtotal = items.reduce(function(sum, i) { return sum + (parseFloat(i.price) || 0) * (i.qty || 1); }, 0);
+            var delivery = await computeDeliveryCharge(addr.pincode, items);
+
+            if (delivery.charge === null) {
+                statusEl.textContent = delivery.message || "We don't currently deliver to this pincode.";
+                statusEl.className = 'error';
+                return;
+            }
+
+            var totalPayable = subtotal + delivery.charge;
+
+            submitBtn.disabled = true;
+
+            // paymentStatus is only ever a starting hint here — the backend is the
+            // final source of truth (it verifies the Razorpay signature itself and
+            // will only save "paid" once that check passes; COD always stays "pending"
+            // until an admin marks it received).
+            var paymentStatus = 'pending';
+            var paymentProof = null;
+
+            if (checkoutPayMethod === 'online') {
+                pendingCheckout = { items: items, addr: addr, subtotal: subtotal, delivery: delivery, totalPayable: totalPayable, paymentMethod: paymentMethod };
+                pendingRazorpayOrderId = null;
+
+                statusEl.textContent = 'Opening secure payment window...';
+                statusEl.className = 'loading';
+
+                // If the popup hasn't resolved within 12s, offer the manual
+                // "already paid?" check — most genuine payments confirm faster.
+                stuckLinkTimer = setTimeout(showStuckPaymentLink, 12000);
+
+                try {
+                    paymentProof = await openRazorpayCheckout(totalPayable, addr, function(orderId) {
+                        pendingRazorpayOrderId = orderId;
+                    });
+                } catch (err) {
+                    hideStuckPaymentLink();
+                    submitBtn.disabled = false;
+                    statusEl.textContent = err.message === '__CANCELLED__'
+                        ? 'Payment cancelled — you can try again.'
+                        : (err.message || 'Payment failed. Please try again.');
+                    statusEl.className = 'error';
+                    return;
+                }
+                hideStuckPaymentLink();
+                paymentStatus = 'paid';
+                showPaymentOverlay(totalPayable);
+                statusEl.textContent = '';
+                statusEl.className = '';
+            } else {
+                statusEl.textContent = 'Placing your order...';
+                statusEl.className = 'loading';
+            }
+
+            await finalizePlaceOrder(items, addr, subtotal, delivery, totalPayable, paymentMethod, paymentStatus, paymentProof);
         }
         window.submitOrder = submitOrder;
 
@@ -1618,7 +1735,7 @@
         }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
         revealEls.forEach(function(el) { io.observe(el); });
 
-        console.log('✅ NicyFoods Cart page — SHOP_PINCODE=411052, courier charges fetched from /api/courier-charge, saved-address editing enabled, paymentStatus now sent with the order payload.');
+        console.log('✅ NicyFoods Cart page — SHOP_PINCODE=411052, courier charges fetched from /api/courier-charge, saved-address editing enabled, Razorpay live payment integrated for online checkout.');
     </script>
 
 </body>
