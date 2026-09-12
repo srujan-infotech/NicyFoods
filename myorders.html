@@ -408,6 +408,30 @@
             font-size: 0.78rem; color: #9a8a7a;
         }
 
+        /* ========== SHIPMENT TRACKING ========== */
+        .tracking-box {
+            margin-top: 0.9rem;
+            padding: 0.85rem 1rem;
+            border-radius: 0.9rem;
+            background: rgba(37, 99, 235, .06);
+            border: 1px dashed rgba(37, 99, 235, .25);
+            display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.6rem;
+        }
+        .tracking-box .tb-info { display: flex; flex-direction: column; gap: 0.15rem; }
+        .tracking-box .tb-label {
+            font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.05em; color: #6b7fa8;
+        }
+        .tracking-box .tb-value { font-size: 0.88rem; font-weight: 700; color: #2563eb; font-family: monospace; }
+        .tracking-box .tb-courier { font-size: 0.78rem; color: #5a6b8c; font-weight: 600; }
+        .tracking-box .tb-link {
+            display: inline-flex; align-items: center; gap: .4rem;
+            font-size: .8rem; font-weight: 700; color: #fff;
+            text-decoration: none; padding: 0.5rem 1rem; border-radius: 0.7rem;
+            background: #2563eb;
+        }
+        .tracking-box .tb-link:hover { background: #1d4ed8; }
+
         /* ========== TIMELINE ========== */
         .order-timeline {
             margin-top: 0.9rem;
@@ -825,6 +849,19 @@
                         `;
                     }
 
+                    let trackingBoxHtml = '';
+                    if (order.trackingId || order.courierName) {
+                        trackingBoxHtml = `
+                            <div class="tracking-box">
+                                <div class="tb-info">
+                                    ${order.courierName ? `<span class="tb-courier"><i class="fas fa-truck"></i> ${order.courierName}</span>` : ''}
+                                    ${order.trackingId ? `<span class="tb-label">Tracking / Docket ID</span><span class="tb-value">${order.trackingId}</span>` : ''}
+                                </div>
+                                ${order.courierTrackingUrl ? `<a href="${order.courierTrackingUrl}" target="_blank" rel="noopener" class="tb-link"><i class="fas fa-arrow-up-right-from-square"></i> Track with Courier</a>` : ''}
+                            </div>
+                        `;
+                    }
+
                     const cancelledRibbon = isCancelled
                         ? `<div class="cancelled-ribbon"><i class="fas fa-ban"></i> Cancelled</div>`
                         : '';
@@ -857,6 +894,7 @@
                                     <span class="total-label"><i class="fas fa-wallet"></i> Total</span>
                                     <span class="total-amount">${money(totalAmount)}</span>
                                 </div>
+                                ${trackingBoxHtml}
                                 ${statusHistoryHtml}
                                 <div class="order-actions">
                                     <a href="order-confirmation.html?order=${encodeURIComponent(orderNumber)}" class="track-link">

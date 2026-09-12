@@ -297,6 +297,16 @@
             <div class="track-card p-6 mb-6">
                 <h2 class="font-display text-lg text-jaggery mb-1"><i class="fas fa-route text-turmeric mr-1"></i> Order Status</h2>
                 <div id="stepTrack" class="step-track"></div>
+                <div id="trackingInfoBox" class="hidden" style="margin-top:1rem;padding:0.9rem 1.1rem;border-radius:0.9rem;background:rgba(37,99,235,.06);border:1px dashed rgba(37,99,235,.25);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:0.7rem;">
+                    <div style="display:flex;flex-direction:column;gap:0.2rem;">
+                        <span id="trackingCourierName" style="font-size:.82rem;font-weight:700;color:#2f4a7a;"></span>
+                        <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#6b7fa8;">Tracking / Docket ID</span>
+                        <span id="trackingIdValue" style="font-size:.95rem;font-weight:700;color:#2563eb;font-family:monospace;"></span>
+                    </div>
+                    <a id="trackingUrlLink" href="#" target="_blank" rel="noopener" class="hidden" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.82rem;font-weight:700;color:#fff;text-decoration:none;padding:0.55rem 1.1rem;border-radius:0.7rem;background:#2563eb;">
+                        <i class="fas fa-arrow-up-right-from-square"></i> Track with Courier
+                    </a>
+                </div>
             </div>
 
             <div class="grid md:grid-cols-2 gap-6 mb-6">
@@ -693,6 +703,17 @@
 
                 renderSteps(order.status);
                 renderPaymentUI(order.paymentMethod || 'cod');
+
+                if (order.trackingId || order.courierName) {
+                    document.getElementById('trackingInfoBox').classList.remove('hidden');
+                    document.getElementById('trackingCourierName').textContent = order.courierName || '';
+                    document.getElementById('trackingIdValue').textContent = order.trackingId || '—';
+                    var trackLink = document.getElementById('trackingUrlLink');
+                    if (order.courierTrackingUrl) {
+                        trackLink.href = order.courierTrackingUrl;
+                        trackLink.classList.remove('hidden');
+                    }
+                }
 
                 var items = order.items || [];
                 var a = order.shippingAddress || {};

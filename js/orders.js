@@ -513,6 +513,18 @@ function renderStats(orders) {
 // ---------- quick status update (dropdown in table row) ----------
 async function handleQuickStatusChange(id, selectEl) {
     const newStatus = selectEl.value;
+
+    // Shipping needs courier/tracking details filled in alongside the status
+    // change (so the customer email actually has something to track with),
+    // so send the admin to the full order modal instead of a bare quick-update.
+    if (newStatus === 'shipped') {
+        loadOrders(); // revert the dropdown back to its current server value
+        await openOrderDetail(id);
+        document.getElementById('odStatus').value = 'shipped';
+        showToast('Add courier name & tracking ID below, then Save Changes');
+        return;
+    }
+
     const previousClass = STATUS_OPTIONS.find(s => selectEl.classList.contains(statusBadgeClass(s)));
     selectEl.disabled = true;
 
@@ -612,6 +624,9 @@ async function openOrderDetail(id) {
         document.getElementById('odPaymentStatus').value = order.paymentStatus || 'pending';
         document.getElementById('odNotes').value = order.notes || '';
         document.getElementById('odStatusNote').value = '';
+        document.getElementById('odCourierName').value = order.courierName || '';
+        document.getElementById('odTrackingId').value = order.trackingId || '';
+        document.getElementById('odCourierTrackingUrl').value = order.courierTrackingUrl || '';
         document.getElementById('odSubtotal').textContent = moneyFmt(subtotal);
         document.getElementById('odTotal').textContent = moneyFmt(totalAmount);
 
@@ -648,13 +663,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const courierCharge = parseFloat(document.getElementById('odCourierCharge').value) || 0;
         const subtotal = parseFloat((document.getElementById('odSubtotal').textContent || '0').replace(/[^\d.]/g, '')) || 0;
+        const newStatus = document.getElementById('odStatus').value;
+        const trackingId = document.getElementById('odTrackingId').value.trim();
+
+        // Gentle nudge, not a hard block — some shipments (e.g. local hand delivery)
+        // genuinely have no AWB/docket number.
+        if (newStatus === 'shipped' && !trackingId) {
+            const proceed = confirm('No tracking / docket ID entered yet. Mark as Shipped without it?');
+            if (!proceed) return;
+        }
 
         const payload = {
-            status: document.getElementById('odStatus').value,
+            status: newStatus,
             courierCharge: courierCharge,
             paymentStatus: document.getElementById('odPaymentStatus').value,
             notes: document.getElementById('odNotes').value.trim(),
             note: document.getElementById('odStatusNote').value.trim(),
+            courierName: document.getElementById('odCourierName').value.trim(),
+            trackingId: trackingId,
+            courierTrackingUrl: document.getElementById('odCourierTrackingUrl').value.trim(),
             pricing: {
                 courierCharge: courierCharge,
                 totalPayable: subtotal + courierCharge,

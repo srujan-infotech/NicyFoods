@@ -563,6 +563,22 @@
                         <p class="text-sm pt-2"><span id="odSubtotal" class="text-slate-500"></span> → <strong id="odTotal" class="text-kumkum"></strong></p>
                     </div>
                 </div>
+                <div class="form-section-title mt-1"><i class="fas fa-truck-fast"></i> Shipment Tracking <span class="text-xs text-slate-400 font-normal">(shown to customer once filled in)</span></div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-building"></i> Courier Name</label>
+                        <input id="odCourierName" placeholder="e.g. Delhivery, BlueDart, DTDC" />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-barcode"></i> Tracking / Docket ID</label>
+                        <input id="odTrackingId" placeholder="e.g. AWB123456789" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-link"></i> Courier Tracking Link <span class="text-xs text-slate-400 font-normal">(the courier's own tracking page for this shipment)</span></label>
+                    <input id="odCourierTrackingUrl" type="url" placeholder="e.g. https://www.delhivery.com/track/package/AWB123456789" />
+                </div>
+
                 <div class="form-group">
                     <label class="form-label"><i class="fas fa-sticky-note"></i> Internal Notes <span class="text-xs text-slate-400 font-normal">(not shown to customer)</span></label>
                     <textarea id="odNotes" rows="2" placeholder="e.g. Customer requested morning delivery"></textarea>
