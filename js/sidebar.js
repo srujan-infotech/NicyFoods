@@ -197,6 +197,7 @@ const NAV_ITEMS = [
     { key: 'products',         label: 'Products',          icon: 'fa-box',               href: 'products.html',         badgeId: 'navProductCount',      showBadge: true },
     { key: 'testimonials',     label: 'Testimonials',      icon: 'fa-star',              href: 'testimonials.html',     badgeId: 'navTestimonialCount',  showBadge: true },
     { key: 'orders',           label: 'Orders',            icon: 'fa-shopping-cart',     href: 'orders.html',           badgeId: 'navOrderCount',        showBadge: true },
+    { key: 'coupons',          label: 'Coupons',           icon: 'fa-tags',              href: 'coupons.html',          badgeId: 'navCouponCount',       showBadge: true },
     { key: 'courierRates',     label: 'Courier Rates',     icon: 'fa-truck-fast',        href: 'courier-rates.html',    badgeId: 'navCourierRateCount',  showBadge: true },
     { key: 'contacts',         label: 'Messages',          icon: 'fa-envelope',          href: 'contacts.html',         badgeId: 'navContactCount',      showBadge: true },
     { key: 'welcomeLeads',     label: 'Welcome Leads',     icon: 'fa-user-plus',         href: 'welcome-leads.html',    badgeId: 'navWelcomeLeadCount',  showBadge: true },
@@ -216,6 +217,7 @@ const PAGE_TITLES = {
     products: { title: 'Products', icon: 'fa-box' },
     testimonials: { title: 'Testimonials', icon: 'fa-star' },
     orders: { title: 'Orders', icon: 'fa-shopping-cart' },
+    coupons: { title: 'Coupons', icon: 'fa-tags' },
     courierRates: { title: 'Courier Rates', icon: 'fa-truck-fast' },
     contacts: { title: 'Messages', icon: 'fa-envelope' },
     welcomeLeads: { title: 'Welcome Leads', icon: 'fa-user-plus' },
@@ -338,7 +340,7 @@ async function loadNavCounts() {
     setBadge('navStoryCount', 1);
     setBadge('navMissionVisionCount', 1);
 
-    const [products, testimonials, orders, courierRates, contacts, welcomeLeadsNew, users, companies, coreValues, qualityPromises, whyChooseUs, gallery] =
+    const [products, testimonials, orders, courierRates, contacts, welcomeLeadsNew, users, companies, coreValues, qualityPromises, whyChooseUs, gallery, coupons] =
         await Promise.all([
             fetchCount('/api/products'),
             fetchCount('/api/testimonials'),
@@ -352,6 +354,7 @@ async function loadNavCounts() {
             fetchCount('/api/quality-promise', true),
             fetchCount('/api/why-choose-us', true),
             fetchCount('/api/gallery/all', true),
+            fetchCount('/api/coupons', true),
         ]);
 
     setBadge('navProductCount', products);
@@ -366,6 +369,7 @@ async function loadNavCounts() {
     setBadge('navQualityPromiseCount', qualityPromises);
     setBadge('navWhyChooseUsCount', whyChooseUs);
     setBadge('navGalleryCount', gallery);
+    setBadge('navCouponCount', coupons);
 }
 
 // ============================================================
