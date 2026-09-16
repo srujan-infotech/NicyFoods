@@ -594,64 +594,6 @@
             box-shadow: 0 4px 14px rgba(215, 38, 61, .5);
             transition: transform .7s cubic-bezier(.55, 0, .2, 1), opacity .7s ease .35s;
         }
-        .cart-fab {
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-            z-index: 999;
-            display: flex;
-            align-items: center;
-            gap: .6rem;
-            background: var(--jaggery);
-            color: var(--cream);
-            padding: .8rem 1.1rem;
-            border-radius: 9999px;
-            box-shadow: 0 12px 28px -10px rgba(58, 36, 23, .55);
-            transform: translateY(120%);
-            opacity: 0;
-            pointer-events: none;
-            transition: transform .45s cubic-bezier(.34, 1.56, .64, 1), opacity .35s ease, box-shadow .3s ease;
-            cursor: pointer;
-            border: none;
-        }
-        .cart-fab.show {
-            transform: translateY(0);
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .cart-fab:hover {
-            box-shadow: 0 16px 34px -8px rgba(58, 36, 23, .65);
-        }
-        .cart-fab svg {
-            width: 20px;
-            height: 20px;
-        }
-        .cart-fab .cart-fab-count {
-            background: var(--marigold);
-            color: var(--ink);
-            font-weight: 700;
-            font-size: .75rem;
-            width: 22px;
-            height: 22px;
-            border-radius: 9999px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .cart-fab.bump {
-            animation: fabBump .4s cubic-bezier(.34, 1.56, .64, 1);
-        }
-        @keyframes fabBump {
-            0% {
-                transform: translateY(0) scale(1);
-            }
-            40% {
-                transform: translateY(0) scale(1.12);
-            }
-            100% {
-                transform: translateY(0) scale(1);
-            }
-        }
         .seal {
             position: relative;
             border-radius: 50% !important;
@@ -1505,11 +1447,6 @@
     </section>
 
     <!-- ============ CART ============ -->
-    <button id="cartFab" class="cart-fab" aria-label="Open cart">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-        <span id="cartFabCount" class="cart-fab-count">0</span>
-        <span class="text-sm font-semibold hidden sm:inline">View Cart</span>
-    </button>
 
     <div id="cartOverlay" class="cart-overlay"></div>
 
@@ -1839,19 +1776,8 @@
 
         // ---------- CART PANEL ----------
         function updateCartBadge() {
-            const cart = getCart();
-            const totalQty = cart.reduce((s, i) => s + (i.qty || 1), 0);
-            const badge = document.getElementById('cartFabCount');
-            badge.textContent = totalQty;
-            const fab = document.getElementById('cartFab');
-            if (totalQty > 0) {
-                fab.classList.add('show');
-                fab.classList.remove('bump');
-                void fab.offsetWidth;
-                fab.classList.add('bump');
-            } else {
-                fab.classList.remove('show');
-            }
+            // Floating cart pill removed — navbar badge is refreshed via the
+            // 'nicy:counts-updated' event that saveCart() already dispatches.
         }
 
         function renderCartPanel() {
@@ -1904,17 +1830,33 @@
         }
 
         // ---------- CART PANEL EVENTS ----------
-        document.getElementById('cartFab').addEventListener('click', function() {
-            document.getElementById('cartOverlay').classList.add('open');
-            document.getElementById('cartPanel').classList.add('open');
-        });
+        // The navbar cart icon now opens the slide-in cart panel (it used to be
+        // the floating pill). Delegated because navbar.js injects the header async.
+        //
+        // The chat bubble (#chatToggleBtn) is fixed to the same bottom-right
+        // corner as the cart panel's "Checkout on WhatsApp" button, so it was
+        // floating on top of that button whenever the cart was open. We hide
+        // the chat bubble (and close its panel, if open) while the cart is open,
+        // and restore it when the cart closes.
+        // The navbar cart icon (#cart-link) now behaves exactly like it does on
+        // index.html: it's a plain <a href="cart.html">, so clicking it just
+        // navigates to the full cart page (same "Address / Review / Payment"
+        // checkout used everywhere else on the site). We no longer intercept
+        // the click to open this page's side panel + "Checkout on WhatsApp"
+        // button, so that flow (and its big empty-space look) never shows.
+        //
+        // cartPanel/cartOverlay stay in the page (harmless, always hidden)
+        // only because renderCartPanel()/changeQty()/removeFromCart() below
+        // still reference them; nothing sets .open on them anymore.
+        function setCartOpen(isOpen) {
+            document.getElementById('cartOverlay').classList.toggle('open', isOpen);
+            document.getElementById('cartPanel').classList.toggle('open', isOpen);
+        }
         document.getElementById('cartCloseBtn').addEventListener('click', function() {
-            document.getElementById('cartOverlay').classList.remove('open');
-            document.getElementById('cartPanel').classList.remove('open');
+            setCartOpen(false);
         });
         document.getElementById('cartOverlay').addEventListener('click', function() {
-            document.getElementById('cartOverlay').classList.remove('open');
-            document.getElementById('cartPanel').classList.remove('open');
+            setCartOpen(false);
         });
         document.getElementById('cartItems').addEventListener('click', function(e) {
             var plus = e.target.closest('[data-qty-plus]');

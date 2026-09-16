@@ -426,6 +426,141 @@
             color: #fff;
             transform: translateY(-1px);
         }
+
+        /* ===== COMBO PACK CARD (e.g. Pregnancy Combo Pack) =====
+           A "combo" product is any product whose name or slug contains the
+           word "combo" (case-insensitive) — no backend/admin changes needed.
+           Just create it as a normal product from the admin panel with a
+           name like "Pregnancy Combo Pack" and it automatically gets this
+           highlighted treatment wherever it appears in the product grid. */
+        .combo-card {
+            border: 1.5px solid rgba(233, 30, 99, .35) !important;
+            background: linear-gradient(180deg, #FFF6FA 0%, #FFFFFF 55%);
+        }
+        .combo-card:hover {
+            border-color: rgba(233, 30, 99, .55) !important;
+        }
+        .combo-ribbon {
+            position: absolute;
+            top: 12px;
+            left: 0;
+            z-index: 3;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #E91E63, #D7263D);
+            color: #fff;
+            font-size: .68rem;
+            font-weight: 800;
+            letter-spacing: .02em;
+            padding: 6px 14px 6px 12px;
+            border-radius: 0 999px 999px 0;
+            box-shadow: 0 4px 10px rgba(215, 38, 61, .35);
+        }
+        .combo-ribbon svg {
+            width: 13px;
+            height: 13px;
+            flex-shrink: 0;
+        }
+
+        /* ===== SHARED COMBO FEATURE CARD (Pregnancy / Kids / future combos) =====
+           Generalized big feature-card treatment. Any category can opt in by
+           adding an entry to COMBO_THEMES in the JS section below — no new
+           CSS needed per category, just theme colors at the bottom of this block. */
+        .combo-feature-card {
+            grid-column: 1 / -1;
+            border-radius: 1.55rem !important;
+            background: #fffdf9;
+            box-shadow: 0 18px 42px rgba(92, 58, 37, .10);
+        }
+        .combo-feature-card::before { display: none; }
+        .combo-feature-card .wish-btn { top: 1rem; right: 1rem; width: 46px; height: 46px; }
+        .combo-feature-card .wish-btn svg { width: 23px; height: 23px; }
+        .combo-feature-content { padding: 1.8rem 2rem 2rem; }
+        .combo-feature-head { display: flex; gap: 1.5rem; justify-content: space-between; align-items: flex-start; }
+        .combo-feature-title { font-size: clamp(2rem, 4vw, 3.25rem); line-height: .98; }
+        .combo-feature-subtitle { margin-top: .4rem; font-size: 1.04rem; font-weight: 600; }
+        .combo-feature-gift-callout { min-width: 285px; display: flex; align-items: center; gap: .85rem; padding: .85rem 1rem; border: 1px dashed; border-radius: 1rem; }
+        .combo-feature-gift-callout i { font-size: 2.2rem; }
+        .combo-feature-gift-callout strong { display: block; line-height: 1.25; font-size: 1rem; }
+        .combo-feature-gift-callout small { display: block; line-height: 1.35; margin-top: .2rem; font-size: .73rem; }
+        .combo-feature-description { max-width: 850px; margin: 1.25rem 0; color: #697586; line-height: 1.55; }
+
+        /* ===== COMBO CONTENTS GRID (inside any combo feature card) ===== */
+        .combo-contents { margin: 1.1rem 0 1.5rem; }
+        .combo-contents-title { font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--jaggery); margin-bottom: .75rem; }
+        .combo-contents-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .9rem; }
+        .combo-content-item { text-align: center; }
+        .combo-content-item img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: .9rem; box-shadow: 0 6px 16px rgba(92,58,37,.12); }
+        .combo-content-item .cci-name { margin-top: .5rem; font-weight: 700; font-size: .82rem; color: var(--jaggery); }
+        .combo-content-item .cci-desc { margin-top: .15rem; font-size: .71rem; color: #8a7362; line-height: 1.35; }
+        @media (max-width: 700px) {
+            .combo-contents-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .combo-feature-benefits { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; }
+        .combo-feature-benefit { display: flex; align-items: center; gap: .65rem; min-height: 64px; padding: .75rem .9rem; border-radius: 1rem; font-size: .86rem; font-weight: 700; line-height: 1.25; }
+        .combo-feature-benefit i { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; border-radius: 50%; }
+        .combo-feature-purchase { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 390px); gap: 1.25rem; align-items: end; margin-top: 1.35rem; }
+        .combo-feature-price-row { display: flex; flex-wrap: wrap; align-items: center; gap: .85rem; }
+        .combo-feature-price { font-size: clamp(2.25rem, 4vw, 3.4rem); font-weight: 800; letter-spacing: -.04em; line-height: 1; }
+        .combo-feature-mrp { color: #8c837d; font-size: 1.1rem; text-decoration: line-through; }
+        .combo-feature-save { padding: .45rem .7rem; border-radius: .65rem; font-weight: 700; font-size: .88rem; }
+        .combo-feature-card .weight-select { margin-bottom: .7rem; background-color: #fff; font-weight: 600; }
+        .combo-feature-card .add-cart-row { margin-top: 0; }
+        .combo-feature-card .add-cart-btn { padding: .9rem 1rem; font-size: 1rem; }
+        .combo-feature-card .view-link-btn { width: 52px; }
+
+        @media (max-width: 700px) {
+            .combo-feature-content { padding: 1.35rem; }
+            .combo-feature-card .wish-btn { top: .75rem; right: .75rem; width: 38px; height: 38px; }
+            .combo-feature-head, .combo-feature-purchase { display: block; }
+            .combo-feature-gift-callout { min-width: 0; margin-top: 1.1rem; }
+            .combo-feature-benefits { grid-template-columns: 1fr; }
+            .combo-feature-purchase > div:last-child { margin-top: 1.25rem; }
+        }
+
+        /* Theme-specific colors */
+        .combo-feature-card.theme-pregnancy { border: 1px solid rgba(92, 58, 37, .10) !important; }
+        .combo-feature-card.theme-pregnancy:hover { border-color: rgba(95, 122, 79, .38) !important; box-shadow: 0 24px 52px rgba(92, 58, 37, .16); }
+        .combo-feature-card.theme-pregnancy .combo-feature-title,
+        .combo-feature-card.theme-pregnancy .combo-feature-subtitle { color: var(--jaggery); }
+        .combo-feature-card.theme-pregnancy .combo-feature-gift-callout { border-color: rgba(95, 122, 79, .6); background: linear-gradient(110deg, #fbfff7, #eff7e9); color: #3f6238; }
+        .combo-feature-card.theme-pregnancy .combo-feature-benefit { background: #fff7f3; color: var(--jaggery); }
+        .combo-feature-card.theme-pregnancy .combo-feature-benefit i { background: #fbe8dc; color: #8b421e; }
+        .combo-feature-card.theme-pregnancy .combo-feature-price { color: var(--kumkum); }
+        .combo-feature-card.theme-pregnancy .combo-feature-save { background: #fbe6e8; color: var(--kumkum); }
+
+        .combo-feature-card.theme-kids { border: 1px solid rgba(33, 150, 243, .15) !important; background: #f7fbff; }
+        .combo-feature-card.theme-kids:hover { border-color: rgba(33, 150, 243, .40) !important; box-shadow: 0 24px 52px rgba(33, 150, 243, .16); }
+        .combo-feature-card.theme-kids .combo-feature-title,
+        .combo-feature-card.theme-kids .combo-feature-subtitle { color: #14507a; }
+        .combo-feature-card.theme-kids .combo-feature-gift-callout { border-color: rgba(33, 150, 243, .55); background: linear-gradient(110deg, #f3faff, #e3f2fd); color: #0d47a1; }
+        .combo-feature-card.theme-kids .combo-feature-benefit { background: #eef8ff; color: #14507a; }
+        .combo-feature-card.theme-kids .combo-feature-benefit i { background: #d6ecff; color: #1565c0; }
+        .combo-feature-card.theme-kids .combo-feature-price { color: #2196F3; }
+        .combo-feature-card.theme-kids .combo-feature-save { background: #e3f2fd; color: #1565c0; }
+
+        .combo-feature-card.theme-fasting { border: 1px solid rgba(255, 152, 0, .15) !important; background: #fffaf3; }
+        .combo-feature-card.theme-fasting:hover { border-color: rgba(255, 152, 0, .40) !important; box-shadow: 0 24px 52px rgba(255, 152, 0, .16); }
+        .combo-feature-card.theme-fasting .combo-feature-title,
+        .combo-feature-card.theme-fasting .combo-feature-subtitle { color: #8a4b00; }
+        .combo-feature-card.theme-fasting .combo-feature-gift-callout { border-color: rgba(255, 152, 0, .55); background: linear-gradient(110deg, #fffaf3, #ffe9d1); color: #8a4b00; }
+        .combo-feature-card.theme-fasting .combo-feature-benefit { background: #fff5e8; color: #8a4b00; }
+        .combo-feature-card.theme-fasting .combo-feature-benefit i { background: #ffe3bd; color: #b25900; }
+        .combo-feature-card.theme-fasting .combo-feature-price { color: #FF9800; }
+        .combo-feature-card.theme-fasting .combo-feature-save { background: #fff0dc; color: #b25900; }
+
+        .combo-feature-card.theme-guest { border: 1px solid rgba(156, 39, 176, .15) !important; background: #fbf6fc; }
+        .combo-feature-card.theme-guest:hover { border-color: rgba(156, 39, 176, .40) !important; box-shadow: 0 24px 52px rgba(156, 39, 176, .16); }
+        .combo-feature-card.theme-guest .combo-feature-title,
+        .combo-feature-card.theme-guest .combo-feature-subtitle { color: #6a1b7a; }
+        .combo-feature-card.theme-guest .combo-feature-gift-callout { border-color: rgba(156, 39, 176, .55); background: linear-gradient(110deg, #fbf6fc, #f3e5f5); color: #6a1b7a; }
+        .combo-feature-card.theme-guest .combo-feature-benefit { background: #f7edf9; color: #6a1b7a; }
+        .combo-feature-card.theme-guest .combo-feature-benefit i { background: #ecd6f0; color: #7b2d8e; }
+        .combo-feature-card.theme-guest .combo-feature-price { color: #9C27B0; }
+        .combo-feature-card.theme-guest .combo-feature-save { background: #f3e5f5; color: #7b2d8e; }
+
         .card-shine {
             position: absolute;
             inset: 0;
@@ -593,64 +728,6 @@
             background: radial-gradient(circle at 35% 30%, var(--marigold), var(--kumkum) 75%);
             box-shadow: 0 4px 14px rgba(215, 38, 61, .5);
             transition: transform .7s cubic-bezier(.55, 0, .2, 1), opacity .7s ease .35s;
-        }
-        .cart-fab {
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-            z-index: 999;
-            display: flex;
-            align-items: center;
-            gap: .6rem;
-            background: var(--jaggery);
-            color: var(--cream);
-            padding: .8rem 1.1rem;
-            border-radius: 9999px;
-            box-shadow: 0 12px 28px -10px rgba(58, 36, 23, .55);
-            transform: translateY(120%);
-            opacity: 0;
-            pointer-events: none;
-            transition: transform .45s cubic-bezier(.34, 1.56, .64, 1), opacity .35s ease, box-shadow .3s ease;
-            cursor: pointer;
-            border: none;
-        }
-        .cart-fab.show {
-            transform: translateY(0);
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .cart-fab:hover {
-            box-shadow: 0 16px 34px -8px rgba(58, 36, 23, .65);
-        }
-        .cart-fab svg {
-            width: 20px;
-            height: 20px;
-        }
-        .cart-fab .cart-fab-count {
-            background: var(--marigold);
-            color: var(--ink);
-            font-weight: 700;
-            font-size: .75rem;
-            width: 22px;
-            height: 22px;
-            border-radius: 9999px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .cart-fab.bump {
-            animation: fabBump .4s cubic-bezier(.34, 1.56, .64, 1);
-        }
-        @keyframes fabBump {
-            0% {
-                transform: translateY(0) scale(1);
-            }
-            40% {
-                transform: translateY(0) scale(1.12);
-            }
-            100% {
-                transform: translateY(0) scale(1);
-            }
         }
         .seal {
             position: relative;
@@ -1410,6 +1487,17 @@
             </p>
         </div>
 
+        <!-- Shown only when the visitor arrived via the navbar search box
+             (product.html?search=...). Lets them see what they searched for
+             and clear it to go back to browsing everything. -->
+        <div id="search-banner" class="reveal hidden flex flex-wrap items-center justify-center gap-2 mb-8 text-sm">
+            <span class="text-slate-500">Showing results for</span>
+            <span id="search-banner-term" class="font-semibold text-kumkum"></span>
+            <button id="search-banner-clear" type="button" class="ml-1 inline-flex items-center gap-1 text-jaggery/70 hover:text-kumkum underline underline-offset-2">
+                Clear search
+            </button>
+        </div>
+
         <!-- Filter Tabs — built dynamically in JS from the categories actually present in
              live backend product data (see renderFilterTabs()). This is the single source
              of truth, so any category added in the admin panel appears here automatically,
@@ -1609,11 +1697,6 @@
     </section>
 
     <!-- ============ CART ============ -->
-    <button id="cartFab" class="cart-fab" aria-label="Open cart">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-        <span id="cartFabCount" class="cart-fab-count">0</span>
-        <span class="text-sm font-semibold hidden sm:inline">View Cart</span>
-    </button>
 
     <div id="cartOverlay" class="cart-overlay"></div>
 
@@ -1750,6 +1833,170 @@
             return IMAGE_BASE + filename;
         }
 
+        /*
+        =====================================================================
+        COMBO THEMES CONFIG
+        Add a new entry here any time you want another category (e.g. a
+        "Guest Gift Combo", "Fasting Combo") to get the big feature-card
+        treatment instead of the normal small product card. A product opts
+        in automatically when its name/slug matches `match()` — no backend
+        or admin-panel changes needed.
+        =====================================================================
+        */
+        const COMBO_THEMES = {
+            pregnancy: {
+                cssClass: 'theme-pregnancy',
+                category: 'pregnancy-gift',
+                match: function(p) {
+                    return /pregnancy/i.test(p.name + ' ' + p.id) && /(pack|combo)/i.test(p.name + ' ' + p.id);
+                },
+                subtitle: 'Methi Laddu + Aaliv Laddu + Dryfruit Laddu',
+                descriptionFallback: 'A wholesome combination of Methi, Aaliv and Dryfruit laddus made with premium ingredients for post-pregnancy recovery, immunity and everyday wellness.',
+                giftIcon: 'fas fa-gift',
+                giftTitle: '3 Nutritious Laddus<br>in 1 Combo',
+                giftSubtitle: 'Complete nutrition for Mom &amp; Baby',
+                benefits: [
+                    { icon: 'fas fa-leaf', text: '100% Natural<br>Ingredients' },
+                    { icon: 'fas fa-shield-heart', text: 'Supports Immunity<br>&amp; Wellness' },
+                    { icon: 'fas fa-person-breastfeeding', text: 'Perfect for<br>Post-Pregnancy Care' },
+                ],
+            },
+            kids: {
+                cssClass: 'theme-kids',
+                category: 'kids-special',
+                match: function(p) {
+                    return /kids/i.test(p.name + ' ' + p.id) && /(pack|combo)/i.test(p.name + ' ' + p.id);
+                },
+                subtitle: 'Chocolate Laddu + Nachni Laddu + Til Laddu',
+                descriptionFallback: 'A fun, nutritious combo of Chocolate, Nachni and Til laddus — made with wholesome ingredients kids will actually enjoy eating.',
+                giftIcon: 'fas fa-child',
+                giftTitle: '3 Fun Laddus<br>in 1 Combo',
+                giftSubtitle: 'Tasty nutrition kids love',
+                benefits: [
+                    { icon: 'fas fa-leaf', text: '100% Natural<br>Ingredients' },
+                    { icon: 'fas fa-face-smile', text: 'Kid-Approved<br>Taste' },
+                    { icon: 'fas fa-bolt', text: 'Great for<br>School &amp; Play' },
+                ],
+            },
+            fasting: {
+                cssClass: 'theme-fasting',
+                category: 'fasting',
+                match: function(p) {
+                    return /(fasting|upvas|upawas|उपवास)/i.test(p.name + ' ' + p.id) && /(pack|combo)/i.test(p.name + ' ' + p.id);
+                },
+                subtitle: 'Peanut Laddu + Khajur Laddu + Dink Laddu + Dryfruit Laddu',
+                descriptionFallback: 'A wholesome combo of Peanut, Khajur, Dink and Dryfruit laddus made for fasting days — sustained energy without compromising on nutrition.',
+                giftIcon: 'fas fa-moon',
+                giftTitle: '4 Energising Laddus<br>in 1 Combo',
+                giftSubtitle: 'Sustained energy for upvas days',
+                benefits: [
+                    { icon: 'fas fa-leaf', text: '100% Natural<br>Ingredients' },
+                    { icon: 'fas fa-battery-full', text: 'Sustained<br>Energy' },
+                    { icon: 'fas fa-moon', text: 'Perfect for<br>Fasting Days' },
+                ],
+            },
+            guest: {
+                cssClass: 'theme-guest',
+                category: 'guest-gift',
+                match: function(p) {
+                    return /guest/i.test(p.name + ' ' + p.id) && /(pack|combo)/i.test(p.name + ' ' + p.id);
+                },
+                subtitle: 'Patal Pohe Laddu + Dryfruit Laddu + Nachni Laddu + Tulshi Laddu',
+                descriptionFallback: 'A delightful assortment of Patal Pohe, Dryfruit, Nachni and Tulshi laddus — perfect for gifting to guests and loved ones.',
+                giftIcon: 'fas fa-gift',
+                giftTitle: '4 Delightful Laddus<br>in 1 Combo',
+                giftSubtitle: 'A thoughtful gift for guests',
+                benefits: [
+                    { icon: 'fas fa-leaf', text: '100% Natural<br>Ingredients' },
+                    { icon: 'fas fa-gifts', text: 'Perfect for<br>Gifting' },
+                    { icon: 'fas fa-heart', text: 'Made with<br>Love &amp; Care' },
+                ],
+            },
+        };
+
+        // Finds which combo theme (if any) a product belongs to.
+        function getComboTheme(p) {
+            for (var key in COMBO_THEMES) {
+                if (COMBO_THEMES[key].match(p)) return COMBO_THEMES[key];
+            }
+            return null;
+        }
+
+        // Builds the "What's Inside" contents grid for a combo, pulling the
+        // individual products live from PRODUCTS (same category, excluding
+        // the combo/pack itself) — updates automatically if admin edits products.
+        function buildComboContentsHtml(category, excludeMatch) {
+            var comboItems = PRODUCTS.filter(function(x) {
+                return x.cat === category && !excludeMatch(x);
+            });
+            if (!comboItems.length) return '';
+            return '<div class="combo-contents"><p class="combo-contents-title">What\'s Inside</p><div class="combo-contents-grid">' +
+                comboItems.map(function(ci) {
+                    var ciImg = getImageUrl(ci.img);
+                    return '<div class="combo-content-item">' +
+                        (ciImg ? '<img src="' + ciImg + '" alt="' + ci.name + '" loading="lazy" onerror="this.src=\'https://nicyfoods.com/images/placeholder.jpg\'">' : '') +
+                        '<p class="cci-name">' + ci.name + '</p>' +
+                        '<p class="cci-desc">' + ci.desc + '</p>' +
+                        '</div>';
+                }).join('') + '</div></div>';
+        }
+
+        // Builds the full feature-card element for any combo theme.
+        // (Replaces the old one-off "Pregnancy card" builder — now shared
+        // by Pregnancy, Kids, and any future combo added to COMBO_THEMES.)
+        function renderComboCard(p, theme, i) {
+            var defaultIndex = p.weights.findIndex(function(w) { return w.price !== null && w.price !== undefined; });
+            var defaultWeight = defaultIndex >= 0 ? p.weights[defaultIndex] : { label: null, price: p.price };
+            var saving = Math.max(1, Math.round(defaultWeight.price * 0.135));
+            var mrp = defaultWeight.price + saving;
+            var isWished = isWishlisted(p.id);
+
+            var weightOptions = p.weights.map(function(w, wi) {
+                return (w.price !== null && w.price !== undefined) ?
+                    '<option value="' + wi + '">' + w.label + ' — ₹' + w.price + '</option>' : '';
+            }).join('');
+            var weightHtml = p.weights.length > 1 ?
+                '<select class="weight-select" data-weight-select aria-label="Select weight for ' + p.name + '">' + weightOptions + '</select>' :
+                '<div class="weight-select" aria-label="Pack weight">' + (defaultWeight.label || 'Combo Pack') + ' — ₹' + defaultWeight.price + '</div>';
+
+            var contentsHtml = buildComboContentsHtml(theme.category, theme.match);
+            var benefitsHtml = theme.benefits.map(function(b) {
+                return '<div class="combo-feature-benefit"><i class="' + b.icon + '"></i><span>' + b.text + '</span></div>';
+            }).join('');
+
+            var card = document.createElement('div');
+            card.className = 'rise-card product-card combo-feature-card ' + theme.cssClass + ' relative overflow-hidden flex flex-col';
+            card.style.animationDelay = Math.min(i, 7) * 0.06 + 's';
+            card.innerHTML =
+                '<div class="card-shine"></div>' +
+                '<div class="combo-feature-content flex-1">' +
+                '<button class="wish-btn ' + (isWished ? 'liked' : '') + '" data-wish="' + p.id + '" aria-label="Save to wishlist">' +
+                '<svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>' +
+                '</button>' +
+                '<div class="combo-feature-head"><div>' +
+                '<h3 class="combo-feature-title font-display cursor-pointer" data-nav="' + p.id + '">' + p.name + '</h3>' +
+                '<p class="combo-feature-subtitle">' + theme.subtitle + '</p>' +
+                '</div><aside class="combo-feature-gift-callout"><i class="' + theme.giftIcon + '"></i><div><strong>' + theme.giftTitle + '</strong><small>' + theme.giftSubtitle + '</small></div></aside></div>' +
+                '<p class="combo-feature-description">' + (p.desc || theme.descriptionFallback) + '</p>' +
+                contentsHtml +
+                '<div class="combo-feature-benefits">' + benefitsHtml + '</div>' +
+                '<div class="combo-feature-purchase"><div class="combo-feature-price-row"><strong class="combo-feature-price" data-price-display>₹' + defaultWeight.price + '</strong><span class="combo-feature-mrp" data-mrp-display>₹' + mrp + '</span><span class="combo-feature-save" data-save-display>Save ₹' + saving + '</span></div>' +
+                '<div>' + weightHtml + '<div class="add-cart-row"><button class="add-cart-btn" data-add="' + p.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span class="btn-label btn-label-default">Add to Cart</span><span class="btn-label btn-label-added">Added ✓</span></button><a href="product-detail.html?id=' + p.id + '" class="view-link-btn" aria-label="View product details"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></a></div></div></div></div>';
+
+            var select = card.querySelector('[data-weight-select]');
+            if (select) {
+                select.addEventListener('change', function() {
+                    var selected = p.weights[parseInt(select.value, 10)];
+                    if (!selected) return;
+                    var s = Math.max(1, Math.round(selected.price * 0.135));
+                    card.querySelector('[data-price-display]').textContent = '₹' + selected.price;
+                    card.querySelector('[data-mrp-display]').textContent = '₹' + (selected.price + s);
+                    card.querySelector('[data-save-display]').textContent = 'Save ₹' + s;
+                });
+            }
+            return card;
+        }
+
         // ---------- CART ----------
         function getCart() {
             try { const r = JSON.parse(localStorage.getItem(CART_KEY) || '[]'); return Array.isArray(r) ? r : []; } catch { return []; }
@@ -1799,17 +2046,8 @@
         }
 
         function updateCartBadge() {
-            const badge = document.getElementById('cartFabCount');
-            badge.textContent = cartTotalQty();
-            const fab = document.getElementById('cartFab');
-            if (cartTotalQty() > 0) {
-                fab.classList.add('show');
-                fab.classList.remove('bump');
-                void fab.offsetWidth;
-                fab.classList.add('bump');
-            } else {
-                fab.classList.remove('show');
-            }
+            // Floating cart pill removed — navbar badge is refreshed via the
+            // 'nicy:counts-updated' event that saveCart() already dispatches.
         }
 
         function selectedWeightFor(p, cardEl) {
@@ -1840,7 +2078,8 @@
         function flyToCart(startEl) {
             const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             if (prefersReduced || !startEl) return;
-            const fab = document.getElementById('cartFab');
+            const fab = document.getElementById('cart-link');
+            if (!fab) return;
             const startRect = startEl.getBoundingClientRect();
             const endRect = fab.getBoundingClientRect();
             const dot = document.createElement('div');
@@ -1944,17 +2183,15 @@
         }
 
         // ---------- CART PANEL EVENTS ----------
-        document.getElementById('cartFab').addEventListener('click', function() {
-            document.getElementById('cartOverlay').classList.add('open');
-            document.getElementById('cartPanel').classList.add('open');
-        });
+        function setCartOpen(isOpen) {
+            document.getElementById('cartOverlay').classList.toggle('open', isOpen);
+            document.getElementById('cartPanel').classList.toggle('open', isOpen);
+        }
         document.getElementById('cartCloseBtn').addEventListener('click', function() {
-            document.getElementById('cartOverlay').classList.remove('open');
-            document.getElementById('cartPanel').classList.remove('open');
+            setCartOpen(false);
         });
         document.getElementById('cartOverlay').addEventListener('click', function() {
-            document.getElementById('cartOverlay').classList.remove('open');
-            document.getElementById('cartPanel').classList.remove('open');
+            setCartOpen(false);
         });
         document.getElementById('cartItems').addEventListener('click', function(e) {
             var plus = e.target.closest('[data-qty-plus]');
@@ -1971,17 +2208,12 @@
             if (filterBtn) {
                 filterBtn.click();
             } else {
-                // Category isn't among current products (e.g. no products in it yet) —
-                // still scroll to the grid and show the friendly "no products" state.
                 applyFilter(category);
             }
             document.getElementById('product-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
         // ---------- CURATED "FIND YOUR FIT" CARDS: hide empty categories ----------
-        // Maps each hand-written card (by its CSS class) to the category slug it
-        // links to via filterCategory(). Any card whose category has zero live
-        // products gets hidden, so customers never land on an empty grid.
         const CURATED_CATEGORY_CARDS = {
             'cat-card-pregnancy': 'pregnancy-gift',
             'cat-card-sugar':     'sugar-free',
@@ -2000,9 +2232,6 @@
                 card.style.display = hasProducts ? '' : 'none';
             });
 
-            // If every curated card ended up hidden (e.g. a brand-new store with
-            // only "millet"/"traditional"/"herbal" products so far), hide the
-            // whole "Find Your Fit" section instead of showing an empty grid of cards.
             const cards = Object.keys(CURATED_CATEGORY_CARDS).map(function(c) { return document.querySelector('.' + c); }).filter(Boolean);
             const anyVisible = cards.some(function(c) { return c.style.display !== 'none'; });
             const section = cards.length ? cards[0].closest('section') : null;
@@ -2010,17 +2239,26 @@
         }
 
         // ---------- DYNAMIC FILTER TABS ----------
-        // Builds the "All Products" + one tab per category actually present in
-        // PRODUCTS (sourced live from the backend). Re-run this any time PRODUCTS
-        // changes (i.e. after every successful fetch) so tabs/counts stay accurate.
         let currentFilter = 'all';
+        let currentSearch = '';
+
+        function updateSearchBanner() {
+            const banner = document.getElementById('search-banner');
+            const termEl = document.getElementById('search-banner-term');
+            if (!banner || !termEl) return;
+            if (currentSearch) {
+                termEl.textContent = '"' + currentSearch + '"';
+                banner.classList.remove('hidden');
+                banner.classList.add('flex');
+            } else {
+                banner.classList.add('hidden');
+                banner.classList.remove('flex');
+            }
+        }
 
         function renderFilterTabs() {
             const wrap = document.getElementById('filter-tabs');
 
-            // Preserve a stable, friendly order: curated categories first (in the
-            // order they're defined in CATEGORY_META), then any newer/custom ones
-            // alphabetically, so newly-added categories slot in predictably.
             const presentSlugs = Array.from(new Set(PRODUCTS.map(p => p.cat).filter(Boolean)));
             const known = Object.keys(CATEGORY_META).filter(slug => presentSlugs.includes(slug));
             const unknown = presentSlugs.filter(slug => !CATEGORY_META[slug]).sort((a, b) => a.localeCompare(b));
@@ -2060,20 +2298,57 @@
             grid.classList.add('grid-fading');
             setTimeout(function() {
                 grid.innerHTML = '';
-                var filtered = PRODUCTS.filter(function(p) { return filter === 'all' || p.cat === filter; });
+                var q = (currentSearch || '').toLowerCase();
+                var filtered = PRODUCTS.filter(function(p) {
+                    var matchesCategory = filter === 'all' || p.cat === filter;
+                    var matchesSearch = !q ||
+                        (p.name && p.name.toLowerCase().indexOf(q) !== -1) ||
+                        (p.desc && p.desc.toLowerCase().indexOf(q) !== -1) ||
+                        (p.cat && p.cat.toLowerCase().indexOf(q) !== -1);
+                    return matchesCategory && matchesSearch;
+                });
+
+                // If we're viewing a category that has its own combo pack (Pregnancy,
+                // Kids Special, or any future entry in COMBO_THEMES), the individual
+                // laddus belonging to that combo are already shown inside the combo
+                // card's own "What's Inside" grid — so don't also render them again
+                // below as separate small product cards. This only hides the
+                // duplicate small cards; the combo card itself (renderComboCard) is
+                // untouched.
+                var activeComboTheme = null;
+                for (var themeKey in COMBO_THEMES) {
+                    if (COMBO_THEMES[themeKey].category === filter) {
+                        activeComboTheme = COMBO_THEMES[themeKey];
+                        break;
+                    }
+                }
+                if (activeComboTheme) {
+                    filtered = filtered.filter(function(p) {
+                        return activeComboTheme.match(p) || p.cat !== activeComboTheme.category;
+                    });
+                }
 
                 if (filtered.length === 0) {
+                    var emptyTitle = q ? 'No products match "' + currentSearch + '"' : 'No products in this category';
+                    var emptyHint = q ? 'Try a different search term, or clear it to see everything.' : 'Try another category to see what\'s available.';
                     grid.innerHTML =
                         '<div class="empty-state col-span-full flex flex-col items-center text-center py-16">' +
                         '<svg class="w-12 h-12 text-turmeric mb-4" viewBox="0 0 24 24" fill="currentColor">' +
                         '<path d="M12 2c1 3-2 4-2 7a3 3 0 006 0c0-1-1-2-1-2 2 1 4 3.5 4 6.5A7 7 0 015 13.5C5 9 8 7 8 4c1 1 1.5 2 1.5 3.5C10.5 5 11 3.5 12 2z"/></svg>' +
-                        '<p class="font-display text-xl text-jaggery mb-1">No products in this category</p>' +
-                        '<p class="text-sm text-slate-400">Try another category to see what\'s available.</p></div>';
+                        '<p class="font-display text-xl text-jaggery mb-1">' + emptyTitle + '</p>' +
+                        '<p class="text-sm text-slate-400">' + emptyHint + '</p></div>';
                     grid.classList.remove('grid-fading');
                     return;
                 }
 
                 filtered.forEach(function(p, i) {
+                    var comboTheme = getComboTheme(p);
+                    if (comboTheme) {
+                        if (filter !== comboTheme.category) return; // hide combo feature card outside its own tab
+                        grid.appendChild(renderComboCard(p, comboTheme, i));
+                        return;
+                    }
+
                     var defaultIndex = p.weights.findIndex(function(w) { return w.price !== null && w
                             .price !== undefined; });
                     var defaultWeight = defaultIndex >= 0 ? p.weights[defaultIndex] : { label: null,
@@ -2089,13 +2364,22 @@
                     var isWished = isWishlisted(p.id);
                     var catMeta = getCategoryMeta(p.cat);
 
+                    var isCombo = /combo/i.test(p.name) || /combo/i.test(p.id);
+
+                    var comboRibbonHtml = isCombo ?
+                        '<span class="combo-ribbon">' +
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>' +
+                        'Combo Pack</span>' : '';
+
                     var card = document.createElement('div');
                     card.className =
-                        'rise-card product-card relative bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden flex flex-col h-full';
+                        'rise-card product-card relative bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden flex flex-col h-full' +
+                        (isCombo ? ' combo-card' : '');
                     card.style.animationDelay = Math.min(i, 7) * 0.06 + 's';
                     card.innerHTML =
                         '<div class="card-shine"></div>' +
                         '<div class="relative bg-orange-50/40 h-44 flex items-center justify-center p-4 overflow-hidden shrink-0">' +
+                        comboRibbonHtml +
                         '<button class="wish-btn ' + (isWished ? 'liked' : '') + '" data-wish="' + p.id +
                         '" aria-label="Save to wishlist">' +
                         '<svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>' +
@@ -2114,8 +2398,9 @@
                         '<p class="text-sm text-slate-500 flex-1 mb-3 leading-snug">' + p.desc + '</p>' +
                         '<div class="text-2xl font-extrabold text-kumkum mb-2" data-price-display>₹' +
                         defaultWeight.price + '</div>' +
-                        '<select class="weight-select mb-3" data-weight-select aria-label="Select weight for ' +
-                        p.name + '">' + weightOptions + '</select>' +
+                        (p.weights.length > 1 ?
+                            '<select class="weight-select mb-3" data-weight-select aria-label="Select weight for ' +
+                            p.name + '">' + weightOptions + '</select>' : '') +
                         '<div class="add-cart-row mt-auto">' +
                         '<button class="add-cart-btn" data-add="' + p.id + '">' +
                         '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>' +
@@ -2129,10 +2414,12 @@
 
                     var select = card.querySelector('[data-weight-select]');
                     var priceDisplay = card.querySelector('[data-price-display]');
-                    select.addEventListener('change', function() {
-                        var w = p.weights[parseInt(select.value, 10)];
-                        if (w) priceDisplay.textContent = '₹' + w.price;
-                    });
+                    if (select) {
+                        select.addEventListener('change', function() {
+                            var w = p.weights[parseInt(select.value, 10)];
+                            if (w) priceDisplay.textContent = '₹' + w.price;
+                        });
+                    }
 
                     grid.appendChild(card);
                 });
@@ -2191,33 +2478,41 @@
                     };
                 });
 
-                // Build the filter tabs fresh from whatever categories are actually
-                // present in this live product data (backend is the source of truth —
-                // any category the admin adds to a product shows up here automatically).
                 renderFilterTabs();
-
-                // The 6 "Find Your Fit" curated cards further down the page are
-                // hand-written marketing copy, but they should only be shown when
-                // that category actually has at least one live product — otherwise
-                // a customer clicks "View Products" and lands on an empty grid.
                 updateCuratedCategoryCards();
 
-                // Check for category query param
                 const urlParams = new URLSearchParams(window.location.search);
                 const categoryParam = urlParams.get('category');
+                const searchParam = (urlParams.get('search') || '').trim();
+
+                currentSearch = searchParam;
+                updateSearchBanner();
+
                 if (categoryParam && PRODUCTS.some(p => p.cat === categoryParam)) {
                     currentFilter = categoryParam;
                     renderFilterTabs();
                     render(categoryParam);
                 } else {
                     currentFilter = 'all';
+                    renderFilterTabs();
                     render('all');
+                }
+
+                const clearBtn = document.getElementById('search-banner-clear');
+                if (clearBtn) {
+                    clearBtn.addEventListener('click', function() {
+                        currentSearch = '';
+                        updateSearchBanner();
+                        const url = new URL(window.location.href);
+                        url.searchParams.delete('search');
+                        window.history.replaceState({}, '', url);
+                        render(currentFilter);
+                    });
                 }
 
                 updateCartBadge();
                 renderCartPanel();
 
-                // Re-run reveal animations
                 var revealEls = document.querySelectorAll('.reveal, .kolam-divider, .wipe');
                 var io = new IntersectionObserver(function(entries) {
                     entries.forEach(function(entry) {
@@ -2229,7 +2524,6 @@
                 }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
                 revealEls.forEach(function(el) { io.observe(el); });
 
-                // Hero stat counter
                 document.querySelectorAll('.stat-num').forEach(function(el) {
                     var target = parseInt(el.dataset.count, 10);
                     var suffix = el.dataset.suffix || '';
@@ -2245,7 +2539,6 @@
                     requestAnimationFrame(tick);
                 });
 
-                // kolam divider animation
                 setTimeout(function() {
                     document.querySelectorAll('.kolam-divider').forEach(function(el) {
                         el.classList.add('in');
