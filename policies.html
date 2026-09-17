@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NicyFoods · Admin · Policies & Factory Address</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <link rel="stylesheet" href="css/admin-styles.css" />
+</head>
+<body data-page="policies">
+
+    <div id="sidebar-container"></div>
+
+    <div id="main">
+        <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.8rem; flex-wrap:wrap;" id="topbar-container"></div>
+
+        <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
+            <h2 class="font-display text-xl text-jaggery">
+                <i class="fas fa-file-contract text-kumkum"></i> Manage Policies & Factory Address
+            </h2>
+            <button class="btn-primary" onclick="savePolicies()">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+        </div>
+        <div class="bg-white rounded-xl p-4 mb-4 border border-jaggery/5 shadow-sm">
+            <p class="text-sm text-slate-500 flex items-center gap-2">
+                <i class="fas fa-info-circle text-kumkum"></i>
+                Edit the factory address (shown in the website footer) and the Disclaimer, Return, Refund &amp; Cancellation policy pages. Changes are live on the website immediately after saving.
+            </p>
+        </div>
+
+        <form id="policiesForm" class="bg-white rounded-xl p-6 border border-jaggery/5 shadow-sm">
+
+            <h3 class="font-display text-lg text-jaggery mb-3"><i class="fas fa-address-book text-kumkum"></i> Contact Details (shown in footer)</h3>
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-phone"></i> Phone Number</label>
+                <div class="input-icon-wrap">
+                    <i class="fas fa-phone"></i>
+                    <input id="contactPhoneInput" placeholder="e.g. +91 8263001410" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-envelope"></i> Email Address</label>
+                <div class="input-icon-wrap">
+                    <i class="fas fa-envelope"></i>
+                    <input id="contactEmailInput" type="email" placeholder="e.g. nicyfoods5@gmail.com" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-location-dot"></i> Office / Correspondence Address</label>
+                <div class="input-icon-wrap">
+                    <i class="fas fa-map-pin"></i>
+                    <textarea id="contactAddressInput" rows="3" placeholder="Plot no, society, area, city, pin code..."></textarea>
+                </div>
+            </div>
+
+            <div style="border-top:1px solid rgba(92,58,37,0.08); margin:1.5rem 0;"></div>
+
+            <h3 class="font-display text-lg text-jaggery mb-3"><i class="fas fa-industry text-kumkum"></i> Factory Location</h3>
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-signature"></i> Factory / Unit Name</label>
+                <div class="input-icon-wrap">
+                    <i class="fas fa-tag"></i>
+                    <input id="factoryNameInput" placeholder="e.g. Kulkarni Paushtik Ladu" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-map-marker-alt"></i> Factory Address</label>
+                <div class="input-icon-wrap">
+                    <i class="fas fa-map-pin"></i>
+                    <textarea id="factoryAddressInput" rows="3" placeholder="Plot no, road, village, taluka, pin code, district..."></textarea>
+                </div>
+            </div>
+
+            <div style="border-top:1px solid rgba(92,58,37,0.08); margin:1.5rem 0;"></div>
+
+            <h3 class="font-display text-lg text-jaggery mb-3"><i class="fas fa-scroll text-kumkum"></i> Policy Pages</h3>
+
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-circle-info"></i> Disclaimer</label>
+                <div class="input-icon-wrap">
+                    <i class="fas fa-align-left"></i>
+                    <textarea id="disclaimerInput" rows="6" placeholder="Disclaimer text shown on disclaimer.html..."></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-rotate-left"></i> Return Policy</label>
+                <div class="input-icon-wrap">
+                    <i class="fas fa-align-left"></i>
+                    <textarea id="returnPolicyInput" rows="6" placeholder="Return policy text shown on return-policy.html..."></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-indian-rupee-sign"></i> Refund Policy</label>
+                <div class="input-icon-wrap">
+                    <i class="fas fa-align-left"></i>
+                    <textarea id="refundPolicyInput" rows="6" placeholder="Refund policy text shown on refund-policy.html..."></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-ban"></i> Cancellation Policy</label>
+                <div class="input-icon-wrap">
+                    <i class="fas fa-align-left"></i>
+                    <textarea id="cancellationPolicyInput" rows="6" placeholder="Cancellation policy text shown on cancellation-policy.html..."></textarea>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:0.8rem; padding-top:1rem; border-top:1px solid rgba(92,58,37,0.06); margin-top:0.5rem;">
+                <button type="button" class="btn-primary" onclick="savePolicies()">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div id="toast" class="toast"><i class="fas fa-check-circle"></i> <span id="toastMsg">Success</span></div>
+
+    <script src="js/auth-client.js"></script>
+    <script src="js/admin-common.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/policies.js"></script>
+</body>
+</html>

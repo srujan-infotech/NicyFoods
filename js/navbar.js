@@ -44,7 +44,7 @@ function loadNavbar() {
 
         <!-- Right Icons -->
         <div class="flex items-center gap-1.5 sm:gap-2 md:gap-4 flex-shrink-0">
-          <div class="relative hidden sm:block">
+          <div class="relative block">
             <button id="search-btn" aria-label="Search" class="nav-icon-btn text-jaggery hover:text-kumkum transition-colors p-1.5">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>

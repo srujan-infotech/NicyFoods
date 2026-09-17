@@ -1,6 +1,9 @@
 // js/footer.js
 // Injects the site-wide footer into <div id="footer-placeholder"></div>
 
+const FOOTER_API_BASE_URL = "https://nicyfoods.com";
+const FOOTER_SETTINGS_URL = `${FOOTER_API_BASE_URL}/api/site-settings`;
+
 document.addEventListener("DOMContentLoaded", () => {
   const el = document.getElementById("footer-placeholder");
   if (!el) return;
@@ -16,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
         </g>    
       </svg>
 
-      <div class="relative max-w-7xl mx-auto px-6 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+      <div class="relative max-w-7xl mx-auto px-6 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10">
 
         <!-- About -->
         <div>
@@ -39,6 +42,17 @@ document.addEventListener("DOMContentLoaded", () => {
           </ul>
         </div>
 
+        <!-- Policies -->
+        <div>
+          <h3 class="text-marigold font-bold text-lg mb-4" style="font-family:'Rozha One', serif;">Policies</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="disclaimer.html" class="footer-link text-cream/70 hover:text-marigold transition-colors">Disclaimer</a></li>
+            <li><a href="return-policy.html" class="footer-link text-cream/70 hover:text-marigold transition-colors">Return Policy</a></li>
+            <li><a href="refund-policy.html" class="footer-link text-cream/70 hover:text-marigold transition-colors">Refund Policy</a></li>
+            <li><a href="cancellation-policy.html" class="footer-link text-cream/70 hover:text-marigold transition-colors">Cancellation Policy</a></li>
+          </ul>
+        </div>
+
         <!-- Popular Products -->
         <div>
           <h3 class="text-marigold font-bold text-lg mb-4" style="font-family:'Rozha One', serif;">Popular Products</h3>
@@ -58,21 +72,27 @@ document.addEventListener("DOMContentLoaded", () => {
               <svg class="footer-icon w-4 h-4 mt-0.5 flex-shrink-0 text-turmeric" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
               </svg>
-              <span><span class="text-cream font-semibold">Phone:</span> +91 8263001410</span>
+              <span id="footer-contact-phone"><span class="text-cream font-semibold">Phone:</span> +91 8263001410</span>
             </li>
             <li class="footer-contact-item flex items-start gap-2">
               <svg class="footer-icon w-4 h-4 mt-0.5 flex-shrink-0 text-turmeric" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M22 6l-10 7L2 6"/>
                 <path d="M2 6h20v12H2z"/>
               </svg>
-              <span><span class="text-cream font-semibold">Email:</span> nicyfoods5@gmail.com</span>
+              <span id="footer-contact-email"><span class="text-cream font-semibold">Email:</span> nicyfoods5@gmail.com</span>
             </li>
             <li class="footer-contact-item flex items-start gap-2">
               <svg class="footer-icon w-4 h-4 mt-0.5 flex-shrink-0 text-turmeric" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z"/>
                 <circle cx="12" cy="10" r="3"/>
               </svg>
-              <span><span class="text-cream font-semibold">Address:</span> Plot No 20, Saikrupa Society, Ingale Nagar, Warje Jakat Naka, Warje, Pune – 411052</span>
+              <span id="footer-contact-address"><span class="text-cream font-semibold">Address:</span> Plot No 20, Saikrupa Society, Ingale Nagar, Warje Jakat Naka, Warje, Pune – 411052</span>
+            </li>
+            <li class="footer-contact-item flex items-start gap-2">
+              <svg class="footer-icon w-4 h-4 mt-0.5 flex-shrink-0 text-turmeric" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9v.01M9 12v.01M9 15v.01M9 18v.01"/>
+              </svg>
+              <span id="footer-factory-address"><span class="text-cream font-semibold">Factory:</span> Kulkarni Paushtik Ladu, Plot No 26, Bypass Road (Bhosare), Kurduwadi - 413208, Dist. Solapur</span>
             </li>
           </ul>
 
@@ -149,4 +169,38 @@ document.addEventListener("DOMContentLoaded", () => {
       </style>
     </footer>
   `;
+
+  // Pull the latest factory name/address from the admin-managed Site
+  // Settings so an admin edit on policies.html shows up here without
+  // needing a code change. Falls back to the text already in the markup
+  // above if the API is unreachable.
+  fetch(FOOTER_SETTINGS_URL)
+    .then((res) => res.json())
+    .then((json) => {
+      if (!json || !json.success || !json.data) return;
+      const { factoryName, factoryAddress, contactPhone, contactEmail, contactAddress } = json.data;
+
+      const factoryTarget = document.getElementById("footer-factory-address");
+      if (factoryTarget && (factoryName || factoryAddress)) {
+        factoryTarget.innerHTML = `<span class="text-cream font-semibold">Factory:</span> ${[factoryName, factoryAddress].filter(Boolean).join(", ")}`;
+      }
+
+      const phoneTarget = document.getElementById("footer-contact-phone");
+      if (phoneTarget && contactPhone) {
+        phoneTarget.innerHTML = `<span class="text-cream font-semibold">Phone:</span> ${contactPhone}`;
+      }
+
+      const emailTarget = document.getElementById("footer-contact-email");
+      if (emailTarget && contactEmail) {
+        emailTarget.innerHTML = `<span class="text-cream font-semibold">Email:</span> ${contactEmail}`;
+      }
+
+      const addressTarget = document.getElementById("footer-contact-address");
+      if (addressTarget && contactAddress) {
+        addressTarget.innerHTML = `<span class="text-cream font-semibold">Address:</span> ${contactAddress}`;
+      }
+    })
+    .catch(() => {
+      /* keep the static fallback contact details already rendered */
+    });
 });
