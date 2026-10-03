@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Product Details | NicyFoods</title>
+    <meta name="description" content="Buy handmade ladoos in Pune from NicyFoods, made with quality ingredients and traditional recipes." />
+    <meta name="keywords" content="healthy Handmade Ladoos in Pune, Handmade ladoos in Pune, Healthy food brand in Pune, Homemade healthy food, healthy homemade dishes, pure ghee ladoos near me, Handmade food products in Pune, Handmade sweets near me" />
+    <script src="js/seo-meta.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
@@ -658,6 +661,11 @@
             document.getElementById("heroProductTitle").textContent = product.name;
             document.getElementById("heroProductDesc").textContent = product.desc || 'Handcrafted with pure ingredients and traditional methods';
             document.title = product.name + " | NicyFoods";
+            if (!(window.SeoMeta && window.SeoMeta.applyProduct(product.id))) {
+                // no sheet entry for this product: keep a sensible generic title/description
+                var _d = document.querySelector('meta[name="description"]');
+                if (_d) _d.setAttribute("content", "Buy handmade " + product.name + " in Pune from NicyFoods, made with quality ingredients and traditional recipes.");
+            }
 
             const root = document.getElementById("detail-root");
             const p = product;
